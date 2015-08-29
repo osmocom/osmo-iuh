@@ -10,9 +10,43 @@
 
 = Protocols =
 
-== RANAP ==
+h2. RANAP
 
 ASN1, BASIC-PER aligned
+
+h3. Classes of Elementary Procedures
+
+* Class 1: EPs with response (success and/or failure)
+* Class 2: EPs without response
+* Class 3: EPs with possibility of multiple responses
+
+h3. Functions 
+
+* Paging
+* Common ID management
+* Transport of NAS information
+* Security Mode Control
+* Radio Access Bearer (RAB) Management
+* Iu release
+* Relocating Serving RNC (SRNC)
+* Overload management
+* Reset
+* Location reporting
+* Data volume reporting
+
+h3. Procedures
+
+* Paging
+* Initial UE Message
+* Common ID (tie IMSI of UE to RRC connection)
+* Direct Transfer (like LAPDm)
+* Security Mode Control
+* RAB Assignment (CN->RAN)
+* Iu Release (CN->RAN, clear a connection to a UE)
+* Iu Release Request (RAN->CN, request release)
+* 
+
+
 
 == HNBAP ==
 
