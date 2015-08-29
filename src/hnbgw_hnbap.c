@@ -29,7 +29,31 @@ struct ProtocolIE_Field_1 *find_ie(const struct ProtocolIE_Container_1 *cont, Pr
 	return NULL;
 }
 
-static int hnbgw_rx_hnb_register_req(struct HNBRegisterRequest *req)
+static inline uint16_t asn1str_to_u16(ASN1String *as)
+{
+	if (as->len < 2)
+		return 0;
+	else
+		return *(uint16_t *)as->buf;
+}
+
+static inline uint8_t asn1str_to_u8(ASN1String *as)
+{
+	if (as->len < 1)
+		return 0;
+	else
+		return *(uint8_t *)as->buf;
+}
+
+static inline uint8_t asn1bitstr_to_u32(ASN1BitString *as)
+{
+	if (as->len < 25)
+		return 0;
+	else
+		return *(uint32_t *)as->buf;
+}
+
+static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, struct HNBRegisterRequest *req)
 {
 	HNB_Identity *identity =
 		FIND_IE(req->protocolIEs, HNBAP_IEI_HNB_Identity);
@@ -47,10 +71,19 @@ static int hnbgw_rx_hnb_register_req(struct HNBRegisterRequest *req)
 	if(!identity || !loc || !plmn_id || !cell_id || !lac || !rac || !sac)
 		return -1;
 
+	/* copy all identity parameters from the message to ctx */
+	strncpy(ctx->identity_info, sizeof(ctx->identity_info, identity_info->buf);
+	ctx->id.lac = asn1str_to_u16(lac);
+	ctx->id.sac = asn1str_to_u16(sac);
+	ctx->id.rac = asn1str_to_u8(rac);
+	ctx->id.cid = asn1bitstr_to_u32(cell_id);
+	ctx->id.mcc FIXME
+	ctx->id.mnc FIXME
+
 	/* FIXME: Send HNBRegisterAccept */
 }
 
-static int hnbgw_rx_ue_register_req(struct UERegisterRequest *req)
+static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, struct UERegisterRequest *req)
 {
 	UE_Identity *id =
 		FIND_IE(req->protocolIEs, HNBAP_IEI_UE_Identity);
@@ -65,7 +98,7 @@ static int hnbgw_rx_ue_register_req(struct UERegisterRequest *req)
 	/* FIXME: Send UERegisterAccept */
 }
 
-static int hnbgw_rx_initiating_msg(struct InitiatingMessage *msg)
+static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, struct InitiatingMessage *msg)
 {
 	int rc;
 
@@ -73,14 +106,14 @@ static int hnbgw_rx_initiating_msg(struct InitiatingMessage *msg)
 	case HNBAP_PC_HNBRegister:	/* 8.2 */
 		if (msg->value.type != asn1_type_HNBRegisterRequest)
 			return -1;
-		rc = hnbgw_rx_hnb_register_req();
+		rc = hnbgw_rx_hnb_register_req(hnb, FIXME);
 		break;
 	case HNBAP_PC_HNBDe_Register:	/* 8.3 */
 		break;
 	case HNBAP_PC_UERegister: 	/* 8.4 */
 		if (msg->value.type != asn1_type_UERegisterRequest)
 			return -1;
-		rc = hnbgw_rx_ue_register_req();
+		rc = hnbgw_rx_ue_register_req(hnb, FIXME);
 		break;
 	case HNBAP_PC_UEDe_Register:	/* 8.5 */
 		break;
@@ -107,7 +140,7 @@ static int hnbgw_rx_unsuccessful_outcome_msg(struct UnsuccessfulOutcome *msg)
 }
 
 
-static int _hnbgw_hnbap_rx(struct HNBAP_PDU *pdu)
+static int _hnbgw_hnbap_rx(struct hnb_context *hnb, struct HNBAP_PDU *pdu)
 {
 	/* it's a bit odd that we can't dispatch on procedure code, but
 	 * that's not possible */
@@ -126,7 +159,7 @@ static int _hnbgw_hnbap_rx(struct HNBAP_PDU *pdu)
 	}
 }
 
-int hnbgw_hnbap_rx(struct msgb *msg)
+int hnbgw_hnbap_rx(struct hnb_context *hnb, struct msgb *msg)
 {
 	/* FIXME: decode and handle to _hnbgw_hnbap_rx() */
 }
