@@ -50,6 +50,5 @@ enum hnbap_iei {
 	HNBAP_IEI_HNB_Tunnel_Information	= 41,
 	HNBAP_IEI_CELL_FACHMobilitySupport	= 42,
 	HNBAP_IEI_S_RNTIPrefix			= 43,
-	HNBAP_IEI_S_RNTIPrefix			= 43,
 	/* FIXME */
 };

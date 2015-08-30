@@ -3,6 +3,14 @@
 #include <osmocom/core/select.h>
 #include <osmocom/core/linuxlist.h>
 
+#define DEBUG
+#include <osmocom/core/logging.h>
+
+enum {
+	DMAIN,
+};
+
+
 /* 25.467 Section 7.1 */
 #define IUH_DEFAULT_SCTP_PORT	29169
 #define RNA_DEFAULT_SCTP_PORT	25471
@@ -13,7 +21,7 @@
 #define IUH_PPI_RNA		42
 #define IUH_PPI_PUA		55
 
-#define IHU_MSGB_SIZE	2048
+#define IUH_MSGB_SIZE	2048
 
 struct umts_cell_id {
 	uint16_t mcc;	/*!< Mobile Country Code */
