@@ -11,11 +11,7 @@ IMPORTS
     ProcedureCode,
     ProtocolIE-ID
 
-FROM RANAP-CommonDataTypes
-
-    maxProtocolIEs
-
-FROM RANAP-Constants;
+FROM RANAP-CommonDataTypes;
 
 RANAP-PDU ::= CHOICE {
     initiatingMessage       InitiatingMessage,

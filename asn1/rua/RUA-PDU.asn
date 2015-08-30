@@ -11,11 +11,7 @@ IMPORTS
     ProcedureCode,
     ProtocolIE-ID
 
-FROM RUA-CommonDataTypes
-
-    maxProtocolIEs
-
-FROM RUAP-Constants;
+FROM RUA-CommonDataTypes;
 
 RUA-PDU ::= CHOICE {
     initiatingMessage       InitiatingMessage,

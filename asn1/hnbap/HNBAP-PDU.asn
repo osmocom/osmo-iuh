@@ -1,6 +1,6 @@
 HNBAP-PDU {
 itu-t (0) identified-organization (4) etsi (0) mobileDomain (0) 
-umts-Access (20) modules (3) hnbap(6) version1 (1) hnbap-PDU (1) }
+umts-Access (20) modules (3) hnbap(6) version1 (1) hnbap-PDU (255) }
 
 DEFINITIONS AUTOMATIC TAGS ::=
 
@@ -11,11 +11,7 @@ IMPORTS
     ProcedureCode,
     ProtocolIE-ID
 
-FROM HNBAP-CommonDataTypes
-
-    maxProtocolIEs
-
-FROM HNBAP-Constants;
+FROM HNBAP-CommonDataTypes;
 
 HNBAP-PDU ::= CHOICE {
     initiatingMessage       InitiatingMessage,
