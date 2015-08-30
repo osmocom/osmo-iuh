@@ -7,6 +7,7 @@ DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
 
 IMPORTS
+    maxProtocolIEs,
     Criticality,
     ProcedureCode,
     ProtocolIE-ID
@@ -37,6 +38,38 @@ UnsuccessfulOutcome ::= SEQUENCE {
     criticality     Criticality,
     value           ANY
 }
+
+
+Connect ::= SEQUENCE {
+    connect-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+DirectTransfer ::= SEQUENCE {
+    directTransfer-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+Disconnect ::= SEQUENCE {
+    disconnect-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+ConnectionlessTransfer ::= SEQUENCE {
+    connectionlessTransfer-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+ErrorIndication ::= SEQUENCE {
+    errorIndication-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+PrivateMessage ::= SEQUENCE {
+    privateMessage-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
 
 IE ::= SEQUENCE {
     id ProtocolIE-ID,

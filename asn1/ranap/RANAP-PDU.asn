@@ -11,7 +11,11 @@ IMPORTS
     ProcedureCode,
     ProtocolIE-ID
 
-FROM RANAP-CommonDataTypes;
+FROM RANAP-CommonDataTypes
+
+    maxProtocolIEs
+
+FROM RANAP-Constants;
 
 RANAP-PDU ::= CHOICE {
     initiatingMessage       InitiatingMessage,
@@ -44,6 +48,418 @@ Outcome ::= SEQUENCE {
     criticality     Criticality,
     value           ANY
 }
+
+
+Iu-ReleaseCommand ::= SEQUENCE {
+    iu-ReleaseCommand-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+Iu-ReleaseComplete ::= SEQUENCE {
+    iu-ReleaseComplete-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RelocationRequired ::= SEQUENCE {
+    relocationRequired-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RelocationCommand ::= SEQUENCE {
+    relocationCommand-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RelocationPreparationFailure ::= SEQUENCE {
+    relocationPreparationFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RelocationRequest ::= SEQUENCE {
+    relocationRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RelocationRequestAcknowledge ::= SEQUENCE {
+    relocationRequestAcknowledge-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RelocationFailure ::= SEQUENCE {
+    relocationFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RelocationCancel ::= SEQUENCE {
+    relocationCancel-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RelocationCancelAcknowledge ::= SEQUENCE {
+    relocationCancelAcknowledge-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+SRNS-ContextRequest ::= SEQUENCE {
+    sRNS-ContextRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+SRNS-ContextResponse ::= SEQUENCE {
+    sRNS-ContextResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+SecurityModeCommand ::= SEQUENCE {
+    securityModeCommand-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+SecurityModeComplete ::= SEQUENCE {
+    securityModeComplete-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+SecurityModeReject ::= SEQUENCE {
+    securityModeReject-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+DataVolumeReportRequest ::= SEQUENCE {
+    dataVolumeReportRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+DataVolumeReport ::= SEQUENCE {
+    dataVolumeReport-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+Reset ::= SEQUENCE {
+    reset-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+ResetAcknowledge ::= SEQUENCE {
+    resetAcknowledge-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RAB-ReleaseRequest ::= SEQUENCE {
+    rAB-ReleaseRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+Iu-ReleaseRequest ::= SEQUENCE {
+    iu-ReleaseRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RelocationDetect ::= SEQUENCE {
+    relocationDetect-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RelocationComplete ::= SEQUENCE {
+    relocationComplete-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+Paging ::= SEQUENCE {
+    paging-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+CommonID ::= SEQUENCE {
+    commonID-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+CN-InvokeTrace ::= SEQUENCE {
+    cN-InvokeTrace-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+CN-DeactivateTrace ::= SEQUENCE {
+    cN-DeactivateTrace-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+LocationReportingControl ::= SEQUENCE {
+    locationReportingControl-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+LocationReport ::= SEQUENCE {
+    locationReport-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+InitialUE-Message ::= SEQUENCE {
+    initialUE-Message-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+DirectTransfer ::= SEQUENCE {
+    directTransfer-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+Overload ::= SEQUENCE {
+    overload-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+ErrorIndication ::= SEQUENCE {
+    errorIndication-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+SRNS-DataForwardCommand ::= SEQUENCE {
+    sRNS-DataForwardCommand-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+ForwardSRNS-Context ::= SEQUENCE {
+    forwardSRNS-Context-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RAB-AssignmentRequest ::= SEQUENCE {
+    rAB-AssignmentRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RAB-AssignmentResponse ::= SEQUENCE {
+    rAB-AssignmentResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+PrivateMessage ::= SEQUENCE {
+    privateMessage-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+ResetResource ::= SEQUENCE {
+    resetResource-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+ResetResourceAcknowledge ::= SEQUENCE {
+    resetResourceAcknowledge-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RANAP-RelocationInformation ::= SEQUENCE {
+    rANAP-RelocationInformation-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RAB-ModifyRequest ::= SEQUENCE {
+    rAB-ModifyRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+LocationRelatedDataRequest ::= SEQUENCE {
+    locationRelatedDataRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+LocationRelatedDataResponse ::= SEQUENCE {
+    locationRelatedDataResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+LocationRelatedDataFailure ::= SEQUENCE {
+    locationRelatedDataFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+InformationTransferIndication ::= SEQUENCE {
+    informationTransferIndication-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+InformationTransferConfirmation ::= SEQUENCE {
+    informationTransferConfirmation-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+InformationTransferFailure ::= SEQUENCE {
+    informationTransferFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+UESpecificInformationIndication ::= SEQUENCE {
+    uESpecificInformationIndication-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+DirectInformationTransfer ::= SEQUENCE {
+    directInformationTransfer-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+UplinkInformationExchangeRequest ::= SEQUENCE {
+    uplinkInformationExchangeRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+UplinkInformationExchangeResponse ::= SEQUENCE {
+    uplinkInformationExchangeResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+UplinkInformationExchangeFailure ::= SEQUENCE {
+    uplinkInformationExchangeFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSSessionStart ::= SEQUENCE {
+    mBMSSessionStart-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSSessionStartResponse ::= SEQUENCE {
+    mBMSSessionStartResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSSessionStartFailure ::= SEQUENCE {
+    mBMSSessionStartFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSSessionUpdate ::= SEQUENCE {
+    mBMSSessionUpdate-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSSessionUpdateResponse ::= SEQUENCE {
+    mBMSSessionUpdateResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSSessionUpdateFailure ::= SEQUENCE {
+    mBMSSessionUpdateFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSSessionStop ::= SEQUENCE {
+    mBMSSessionStop-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSSessionStopResponse ::= SEQUENCE {
+    mBMSSessionStopResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSUELinkingRequest ::= SEQUENCE {
+    mBMSUELinkingRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSUELinkingResponse ::= SEQUENCE {
+    mBMSUELinkingResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSRegistrationRequest ::= SEQUENCE {
+    mBMSRegistrationRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSRegistrationResponse ::= SEQUENCE {
+    mBMSRegistrationResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSRegistrationFailure ::= SEQUENCE {
+    mBMSRegistrationFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSCNDe-RegistrationRequest ::= SEQUENCE {
+    mBMSCNDe-RegistrationRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSCNDe-RegistrationResponse ::= SEQUENCE {
+    mBMSCNDe-RegistrationResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSRABEstablishmentIndication ::= SEQUENCE {
+    mBMSRABEstablishmentIndication-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSRABReleaseRequest ::= SEQUENCE {
+    mBMSRABReleaseRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSRABRelease ::= SEQUENCE {
+    mBMSRABRelease-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+MBMSRABReleaseFailure ::= SEQUENCE {
+    mBMSRABReleaseFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+EnhancedRelocationCompleteRequest ::= SEQUENCE {
+    enhancedRelocationCompleteRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+EnhancedRelocationCompleteResponse ::= SEQUENCE {
+    enhancedRelocationCompleteResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+EnhancedRelocationCompleteFailure ::= SEQUENCE {
+    enhancedRelocationCompleteFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+EnhancedRelocationCompleteConfirm ::= SEQUENCE {
+    enhancedRelocationCompleteConfirm-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RANAP-EnhancedRelocationInformationRequest ::= SEQUENCE {
+    rANAP-EnhancedRelocationInformationRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RANAP-EnhancedRelocationInformationResponse ::= SEQUENCE {
+    rANAP-EnhancedRelocationInformationResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+SRVCC-CSKeysRequest ::= SEQUENCE {
+    sRVCC-CSKeysRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+SRVCC-CSKeysResponse ::= SEQUENCE {
+    sRVCC-CSKeysResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+UeRadioCapabilityMatchRequest ::= SEQUENCE {
+    ueRadioCapabilityMatchRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+UeRadioCapabilityMatchResponse ::= SEQUENCE {
+    ueRadioCapabilityMatchResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
 
 IE ::= SEQUENCE {
     id ProtocolIE-ID,
