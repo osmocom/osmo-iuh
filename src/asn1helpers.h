@@ -1,29 +1,12 @@
 #pragma once
 
-#include <asn1defs.h>
+#include <unistd.h>
 
-static inline uint16_t asn1str_to_u16(ASN1String *as)
-{
-	if (as->len < 2)
-		return 0;
-	else
-		return *(uint16_t *)as->buf;
-}
+#include "BIT_STRING.h"
+#include "OCTET_STRING.h"
 
-static inline uint8_t asn1str_to_u8(ASN1String *as)
-{
-	if (as->len < 1)
-		return 0;
-	else
-		return *(uint8_t *)as->buf;
-}
-
-static inline uint8_t asn1bitstr_to_u32(ASN1BitString *as)
-{
-	if (as->len < 25)
-		return 0;
-	else
-		return *(uint32_t *)as->buf;
-}
-
-int asn1_strncpy(char *out, const ASN1String *in, size_t n);
+void asn1_u32_to_bitstring(BIT_STRING_t *bitstr, uint32_t *in);
+int asn1_strncpy(char *out, const OCTET_STRING_t *in, size_t n);
+uint16_t asn1str_to_u16(const OCTET_STRING_t *in);
+uint8_t asn1str_to_u8(const OCTET_STRING_t *in);
+uint32_t asn1bitstr_to_u32(const BIT_STRING_t *in);
