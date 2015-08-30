@@ -46,6 +46,7 @@ static int hnb_socket_cb(struct osmo_fd *fd, unsigned int what)
 			  NULL, NULL, &sinfo, &flags);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error during sctp_recvmsg()\n");
+		/* FIXME: clean up after disappeared HNB */
 		return rc;
 	} else
 		msgb_put(msg, rc);
