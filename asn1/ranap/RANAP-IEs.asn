@@ -44,6 +44,7 @@ IMPORTS
 	maxNrOfVol,
 	maxSizeOfIMSInfo,
 	maxnoofMDTPLMNs,
+	maxProtocolExtensions,
 
 	id-CN-DomainIndicator,
 	id-MessageStructure,
@@ -115,9 +116,10 @@ FROM RANAP-Constants
 	TriggeringMessage
 FROM RANAP-CommonDataTypes
 
-	ProtocolExtensionContainer{},
-	RANAP-PROTOCOL-EXTENSION
-FROM RANAP-Containers;
+	IE
+FROM RANAP-PDU;
+
+IE-Extensions ::= SEQUENCE (SIZE (1..maxProtocolExtensions)) OF IE
 
 -- A
 
@@ -132,32 +134,14 @@ AllocationOrRetentionPriority ::= SEQUENCE {
 	pre-emptionCapability		Pre-emptionCapability,
 	pre-emptionVulnerability	Pre-emptionVulnerability,
 	queuingAllowed			QueuingAllowed,
-	iE-Extensions			ProtocolExtensionContainer { {AllocationOrRetentionPriority-ExtIEs} } OPTIONAL,
-	...
-}
-
-AllocationOrRetentionPriority-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions		 OPTIONAL,
 	...
 }
 
 Alt-RAB-Parameters ::= SEQUENCE {
 	altMaxBitrateInf		Alt-RAB-Parameter-MaxBitrateInf 				OPTIONAL,
 	altGuaranteedBitRateInf		Alt-RAB-Parameter-GuaranteedBitrateInf 				OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { {Alt-RAB-Parameters-ExtIEs} } 	OPTIONAL,
-	...
-}
-
-Alt-RAB-Parameters-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 6 to indicate an alternative RAB configuration --
-	{ ID id-AlternativeRABConfiguration		CRITICALITY ignore	EXTENSION RAB-Parameters	PRESENCE optional }|
--- Extension for Release 7 to indicate an alternative list of Extended Guaranteed Bitrates --
-{ ID id-Alt-RAB-Parameter-ExtendedGuaranteedBitrateInf	CRITICALITY ignore	EXTENSION Alt-RAB-Parameter-ExtendedGuaranteedBitrateInf 	PRESENCE optional }|
--- Extension for Release 7 to indicate an alternative list of Extended Maximum Bitrates --
-{ ID id-Alt-RAB-Parameter-ExtendedMaxBitrateInf		CRITICALITY ignore	EXTENSION Alt-RAB-Parameter-ExtendedMaxBitrateInf 	PRESENCE optional }|
--- Extension for Release 8 to indicate an alternative list of Supported Maximum Bitrates --
-{ ID id-Alt-RAB-Parameter-SupportedMaxBitrateInf	CRITICALITY reject	EXTENSION Alt-RAB-Parameter-SupportedMaxBitrateInf 	PRESENCE optional }|
--- Extension for Release 8 to indicate an alternative list of Supported Guaranteed Bitrates --
-{ ID id-Alt-RAB-Parameter-SupportedGuaranteedBitrateInf	CRITICALITY reject	EXTENSION Alt-RAB-Parameter-SupportedGuaranteedBitrateInf 	PRESENCE optional },
+	iE-Extensions			IE-Extensions		 					OPTIONAL,
 	...
 }
 
@@ -197,12 +181,8 @@ Alt-RAB-Parameter-SupportedGuaranteedBitrateInf ::= SEQUENCE {
 	altSupportedGuaranteedBitrateType	Alt-RAB-Parameter-GuaranteedBitrateType,
 	altSupportedGuaranteedBitrates		Alt-RAB-Parameter-SupportedGuaranteedBitrates	OPTIONAL
 	-- This IE shall be present if the Type of Supported Guaranteed Bit Rates Information IE is set to "Value range" or "Discrete values" --,
-	iE-Extensions			ProtocolExtensionContainer { { Alt-RAB-Parameter-SupportedGuaranteedBitrateInf-ExtIEs} } OPTIONAL,
+	iE-Extensions			IE-Extensions		 					OPTIONAL,
 	...
-}
-
-Alt-RAB-Parameter-SupportedGuaranteedBitrateInf-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-...
 }
 
 Alt-RAB-Parameter-SupportedGuaranteedBitrates ::= SEQUENCE (SIZE (1..maxNrOfAltValues)) OF
@@ -246,11 +226,7 @@ Alt-RAB-Parameter-SupportedMaxBitrateInf ::= SEQUENCE {
 	altSupportedMaxBitrateType	Alt-RAB-Parameter-MaxBitrateType,
 	altSupportedMaxBitrates		Alt-RAB-Parameter-SupportedMaxBitrates			OPTIONAL
 	-- This IE shall be present if the Type of Supported Alternative Maximun Bit Rates Information IE is set to "Value range" or "Discrete values" --,
-	 iE-Extensions			ProtocolExtensionContainer { { Alt-RAB-Parameter-SupportedMaxBitrateInf-ExtIEs} } 	OPTIONAL,
-...
-}
-
-Alt-RAB-Parameter-SupportedMaxBitrateInf-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions		 					OPTIONAL,
 ...
 }
 
@@ -275,19 +251,7 @@ AreaIdentity ::= CHOICE {
 Ass-RAB-Parameters ::= SEQUENCE {
 	assMaxBitrateInf		Ass-RAB-Parameter-MaxBitrateList 				OPTIONAL,
 	assGuaranteedBitRateInf		Ass-RAB-Parameter-GuaranteedBitrateList 			OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { {Ass-RAB-Parameters-ExtIEs} } 	OPTIONAL,
-	...
-}
-
-Ass-RAB-Parameters-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 7 to indicate an extended assigned Guaranteed Bitrate --
-	{ ID id-Ass-RAB-Parameter-ExtendedGuaranteedBitrateList		CRITICALITY reject	EXTENSION Ass-RAB-Parameter-ExtendedGuaranteedBitrateList  PRESENCE optional }|
--- Extension for Release 7 to indicate an extended assigned Maximum Bitrate --
-	{ ID id-Ass-RAB-Parameter-ExtendedMaxBitrateList		CRITICALITY reject	EXTENSION Ass-RAB-Parameter-ExtendedMaxBitrateList 	PRESENCE optional }|
--- Extension for Release 8 to indicate an supported assigned Maximum Bitrate --
-	{ ID id-Ass-RAB-Parameter-SupportedMaxBitrateList		CRITICALITY ignore	EXTENSION SupportedRAB-ParameterBitrateList 	PRESENCE optional }|
--- Extension for Release 8 to indicate an supported assigned Guaranteed Bitrate --
-	{ ID id-Ass-RAB-Parameter-SupportedGuaranteedBitrateList	CRITICALITY ignore	EXTENSION SupportedRAB-ParameterBitrateList	PRESENCE optional },
+	iE-Extensions			IE-Extensions		 					OPTIONAL,
 	...
 }
 
@@ -305,13 +269,9 @@ AuthorisedPLMNs ::= SEQUENCE (SIZE (1..maxNrOfPLMNsSN)) OF
 	SEQUENCE {
 		pLMNidentity		PLMNidentity,
 		authorisedSNAsList	AuthorisedSNAs		OPTIONAL,
-		iE-Extensions		ProtocolExtensionContainer { {AuthorisedPLMNs-ExtIEs} } OPTIONAL,
+		iE-Extensions		IE-Extensions		OPTIONAL,
 		...
 	}
-
-AuthorisedPLMNs-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 AuthorisedSNAs ::= SEQUENCE (SIZE (1..maxNrOfSNAs)) OF SNAC
 
@@ -462,11 +422,7 @@ Cell-Access-Mode::= ENUMERATED {
 
 CellBased::= SEQUENCE {
 	cellIdList		CellIdList,
-	iE-Extensions		ProtocolExtensionContainer { {CellBased-ExtIEs} } OPTIONAL,
-	...
-}
-
-CellBased-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions		OPTIONAL,
 	...
 }
 
@@ -482,11 +438,7 @@ CellLoadInformation ::= SEQUENCE {
 	loadValue			LoadValue,
 	rTLoadValue			RTLoadValue				OPTIONAL,
 	nRTLoadInformationValue		NRTLoadInformationValue			OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { { CellLoadInformation-ExtIEs } }	OPTIONAL,
-	...
-}
-
-CellLoadInformation-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions				OPTIONAL,
 	...
 }
 
@@ -494,11 +446,7 @@ CellLoadInformationGroup ::= SEQUENCE {
 	sourceCellID					SourceCellID,
 	uplinkCellLoadInformation			CellLoadInformation		OPTIONAL,
 	downlinkCellLoadInformation			CellLoadInformation		OPTIONAL,
-	iE-Extensions	ProtocolExtensionContainer { { CellLoadInformationGroup-ExtIEs } }	OPTIONAL,
-	...
-}
-
-CellLoadInformationGroup-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions					IE-Extensions			OPTIONAL,
 	...
 }
 
@@ -527,11 +475,7 @@ CriticalityDiagnostics ::= SEQUENCE {
 	triggeringMessage		TriggeringMessage		OPTIONAL,
 	procedureCriticality		Criticality			OPTIONAL,
 	iEsCriticalityDiagnostics	CriticalityDiagnostics-IE-List 	OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { {CriticalityDiagnostics-ExtIEs} } OPTIONAL,
-	...
-}
-
-CriticalityDiagnostics-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions			OPTIONAL,
 	...
 }
 
@@ -540,41 +484,23 @@ CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF
 		iECriticality		Criticality,
 		iE-ID			ProtocolIE-ID,
 		repetitionNumber	RepetitionNumber0		OPTIONAL,
-		iE-Extensions		ProtocolExtensionContainer { {CriticalityDiagnostics-IE-List-ExtIEs} } OPTIONAL,
+		iE-Extensions		IE-Extensions			OPTIONAL,
 		...
 	}
-
-CriticalityDiagnostics-IE-List-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 99 to enable reporting the message structure down to the erroneous IE --
-	{	ID id-MessageStructure	CRITICALITY ignore		EXTENSION MessageStructure	PRESENCE optional	} |
--- Extension for Release 99 to enable reporting if a reported error is due to a not understood or a missing IE --
-	{	ID id-TypeOfError	CRITICALITY ignore		EXTENSION TypeOfError		PRESENCE mandatory	},
-	...
-}
 
 MessageStructure ::= SEQUENCE (SIZE (1..maxNrOfLevels)) OF
 	SEQUENCE {
 		iE-ID			ProtocolIE-ID,
 		repetitionNumber	RepetitionNumber1		OPTIONAL,
-		iE-Extensions		ProtocolExtensionContainer { {MessageStructure-ExtIEs} } OPTIONAL,
+		iE-Extensions		IE-Extensions			OPTIONAL,
 		...
 	}
-
-MessageStructure-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 CGI ::= SEQUENCE {
 	pLMNidentity	PLMNidentity,
 	lAC		LAC,
 	cI		CI,
-	iE-Extensions	ProtocolExtensionContainer { {CGI-ExtIEs} } OPTIONAL
-}
-
-CGI-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 6 to enable Inter-RAT PS Handover between UTRAN and GERAN A/Gb --
-	{	ID id-RAC	CRITICALITY ignore		EXTENSION RAC	PRESENCE optional	},
-	...
+	iE-Extensions		IE-Extensions			OPTIONAL
 }
 
 ChosenEncryptionAlgorithm 		::= EncryptionAlgorithm
@@ -644,7 +570,7 @@ DeliveryOrder::= ENUMERATED {
 DeltaRAListofIdleModeUEs ::= SEQUENCE {
 	newRAListofIdleModeUEs		NewRAListofIdleModeUEs	OPTIONAL,
 	rAListwithNoIdleModeUEsAnyMore	RAListwithNoIdleModeUEsAnyMore	OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { {DeltaRAListofIdleModeUEs-ExtIEs} } OPTIONAL
+	iE-Extensions			IE-Extensions			OPTIONAL
 }
 
 NewRAListofIdleModeUEs ::= SEQUENCE (SIZE (1..maxMBMSRA)) OF
@@ -652,14 +578,6 @@ NewRAListofIdleModeUEs ::= SEQUENCE (SIZE (1..maxMBMSRA)) OF
 
 RAListwithNoIdleModeUEsAnyMore ::= SEQUENCE (SIZE (1..maxMBMSRA)) OF
 	RAC
-
-DeltaRAListofIdleModeUEs-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-{ ID id-newLAListofIdleModeUEs		CRITICALITY reject	EXTENSION LAListofIdleModeUEs	PRESENCE conditional	}|
-	-- This IE shall be present if the New RA List of Idle Mode UEs IE is included. --
-{ ID id-LAListwithNoIdleModeUEsAnyMore	CRITICALITY reject	EXTENSION LAListofIdleModeUEs	PRESENCE conditional	},
-	-- This IE shall be presentif the RA List with No Idle Mode UEs Any More IE is included. --
-	...
-}
 
 ForwardingIndication::=ENUMERATED{
 	forwarding-admitted,
@@ -694,11 +612,7 @@ EncryptionAlgorithm ::= INTEGER { no-encryption (0), standard-UMTS-encryption-al
 EncryptionInformation ::= SEQUENCE {
 	permittedAlgorithms	PermittedEncryptionAlgorithms,
 	key			EncryptionKey,
-	iE-Extensions		ProtocolExtensionContainer { {EncryptionInformation-ExtIEs} } OPTIONAL
-}
-
-EncryptionInformation-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions		IE-Extensions			OPTIONAL
 }
 
 EncryptionKey ::= BIT STRING (SIZE (128))
@@ -781,11 +695,7 @@ GeographicalCoordinates ::= SEQUENCE {
 	latitudeSign	ENUMERATED { north, south },
 	latitude	INTEGER (0..8388607),
 	longitude	INTEGER (-8388608..8388607),
-	iE-Extensions	ProtocolExtensionContainer { {GeographicalCoordinates-ExtIEs} } OPTIONAL,
-	...
-}
-
-GeographicalCoordinates-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions			OPTIONAL,
 	...
 }
 
@@ -802,32 +712,20 @@ GA-EllipsoidArc ::= SEQUENCE {
 	offsetAngle		INTEGER (0..179),
 	includedAngle		INTEGER(0..179),
 	confidence		INTEGER (0..127),
-	iE-Extensions		ProtocolExtensionContainer { { GA-EllipsoidArc-ExtIEs} } OPTIONAL,
-	...
-}
-
-GA-EllipsoidArc-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions			OPTIONAL,
 	...
 }
 
 GA-Point ::= SEQUENCE {
 	geographicalCoordinates	GeographicalCoordinates,
-	iE-Extensions		ProtocolExtensionContainer { {GA-Point-ExtIEs} } OPTIONAL,
-	...
-}
-
-GA-Point-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions			OPTIONAL,
 	...
 }
 
 GA-PointWithAltitude ::= SEQUENCE {
 	geographicalCoordinates	GeographicalCoordinates,
 	altitudeAndDirection	GA-AltitudeAndDirection,
-	iE-Extensions		ProtocolExtensionContainer { { GA-PointWithAltitude-ExtIEs} } OPTIONAL,
-	...
-}
-
-GA-PointWithAltitude-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions			OPTIONAL,
 	...
 }
 
@@ -837,46 +735,30 @@ GA-PointWithAltitudeAndUncertaintyEllipsoid ::= SEQUENCE {
 	uncertaintyEllipse	GA-UncertaintyEllipse,
 	uncertaintyAltitude	INTEGER (0..127),
 	confidence		INTEGER (0..127),
-	iE-Extensions		ProtocolExtensionContainer { { GA-PointWithAltitudeAndUncertaintyEllipsoid-ExtIEs} } OPTIONAL,
-	...
-}
-
-GA-PointWithAltitudeAndUncertaintyEllipsoid-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions			OPTIONAL,
 	...
 }
 
 GA-PointWithUnCertainty ::=SEQUENCE {
 	geographicalCoordinates	GeographicalCoordinates,
-	iE-Extensions		ProtocolExtensionContainer { {GA-PointWithUnCertainty-ExtIEs} } OPTIONAL,
+	iE-Extensions		IE-Extensions			OPTIONAL,
 	uncertaintyCode		INTEGER (0..127)
-}
-
-GA-PointWithUnCertainty-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
 }
 
 GA-PointWithUnCertaintyEllipse ::= SEQUENCE {
 	geographicalCoordinates	GeographicalCoordinates,
 	uncertaintyEllipse	GA-UncertaintyEllipse,
 	confidence		INTEGER (0..127),
-	iE-Extensions		ProtocolExtensionContainer { { GA-PointWithUnCertaintyEllipse-ExtIEs} } OPTIONAL,
-	...
-}
-
-GA-PointWithUnCertaintyEllipse-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions			OPTIONAL,
 	...
 }
 
 GA-Polygon ::= SEQUENCE (SIZE (1..maxNrOfPoints)) OF
 	SEQUENCE {
 		geographicalCoordinates	GeographicalCoordinates,
-		iE-Extensions		ProtocolExtensionContainer { {GA-Polygon-ExtIEs} } OPTIONAL,
+		iE-Extensions		IE-Extensions			OPTIONAL,
 		...
 	}
-
-GA-Polygon-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 GA-UncertaintyEllipse ::= SEQUENCE {
 	uncertaintySemi-major	INTEGER (0..127),
@@ -893,11 +775,7 @@ GERAN-Cell-ID ::= SEQUENCE {
 	lAI		LAI,
 	rAC		RAC,
 	cI		CI,
-	iE-Extensions	ProtocolExtensionContainer { {GERAN-Cell-ID-ExtIEs} } OPTIONAL
-}
-
-GERAN-Cell-ID-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions	IE-Extensions			OPTIONAL
 }
 
 GERAN-Classmark	 				::= OCTET STRING
@@ -938,11 +816,7 @@ IMEI	::= OCTET STRING (SIZE (8))
 IMEIGroup	::= SEQUENCE {
 	iMEI		IMEI,
 	iMEIMask	BIT STRING (SIZE (7)),
-	iE-Extensions	ProtocolExtensionContainer { { IMEIGroup-ExtIEs} } OPTIONAL
-}
-
-IMEIGroup-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions	IE-Extensions			OPTIONAL
 }
 
 IMEIList	::= SEQUENCE (SIZE (1..maxNrOfUEsToBeTraced)) OF IMEI
@@ -953,11 +827,7 @@ IMEISV		::= OCTET STRING (SIZE (8))
 IMEISVGroup	::= SEQUENCE {
 	iMEISV		IMEISV,
 	iMEISVMask	BIT STRING (SIZE (7)),
-	iE-Extensions	ProtocolExtensionContainer { { IMEISVGroup-ExtIEs} } OPTIONAL
-}
-
-IMEISVGroup-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions	IE-Extensions			OPTIONAL
 }
 
 IMEISVList	::= SEQUENCE (SIZE (1..maxNrOfUEsToBeTraced)) OF IMEISV
@@ -969,19 +839,7 @@ ImmediateMDT	::= SEQUENCE {
 	m2report		M2Report				OPTIONAL,
 	-- Included in case of event-triggered reporting for measurement M2
 	...,
-	iE-Extensions		ProtocolExtensionContainer { { ImmediateMDT-ExtIEs} } OPTIONAL
-}
-
-ImmediateMDT-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {	
-	{ID id-M4Report		CRITICALITY ignore	EXTENSION M4Report		PRESENCE optional}|
-	-- Included in case that measurement M4 is activated
-	{ID id-M5Report		CRITICALITY ignore	EXTENSION M5Report		PRESENCE optional}|
-	-- Included in case that measurement M5 is activated
-	{ID id-M6Report		CRITICALITY ignore	EXTENSION M6Report		PRESENCE optional}|
-	-- Included in case that measurement M6 is activated
-	{ID id-M7Report		CRITICALITY ignore	EXTENSION M7Report		PRESENCE optional},
-	-- Included in case that measurement M7 is activated
-	...
+	iE-Extensions		IE-Extensions			OPTIONAL
 }
 
 IMSI	::= TBCD-STRING (SIZE (3..8))
@@ -1027,11 +885,7 @@ IntegrityProtectionAlgorithm		::= INTEGER {
 IntegrityProtectionInformation ::= SEQUENCE {
 	permittedAlgorithms		PermittedIntegrityProtectionAlgorithms,
 	key				IntegrityProtectionKey,
-	iE-Extensions			ProtocolExtensionContainer { {IntegrityProtectionInformation-ExtIEs} } OPTIONAL
-}
-
-IntegrityProtectionInformation-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions			IE-Extensions			OPTIONAL
 }
 
 IntegrityProtectionKey			::= BIT STRING (SIZE (128))
@@ -1044,12 +898,8 @@ InterSystemInformationTransferType ::= CHOICE {
 InterSystemInformation-TransparentContainer ::= SEQUENCE {
 	downlinkCellLoadInformation	CellLoadInformation		OPTIONAL,
 	uplinkCellLoadInformation	CellLoadInformation		OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { { InterSystemInformation-TransparentContainer-ExtIEs} } OPTIONAL,
+	iE-Extensions			IE-Extensions 			OPTIONAL,
 	...
-}
-
-InterSystemInformation-TransparentContainer-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-...
 }
 
 IPMulticastAddress ::= OCTET STRING (SIZE (4..16))
@@ -1077,34 +927,22 @@ LA-LIST ::= SEQUENCE (SIZE (1..maxNrOfLAs)) OF
 	SEQUENCE {
 		lAC			LAC,
 		listOF-SNAs		ListOF-SNAs,
-		iE-Extensions		ProtocolExtensionContainer { { LA-LIST-ExtIEs} } OPTIONAL,
+		iE-Extensions		IE-Extensions 			OPTIONAL,
 		...
 	}
-
-LA-LIST-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 LAC					::= OCTET STRING (SIZE (2))
 
 LAI ::= SEQUENCE {
 	pLMNidentity			PLMNidentity,
 	lAC				LAC,
-	iE-Extensions			ProtocolExtensionContainer { {LAI-ExtIEs} } OPTIONAL
-}
-
-LAI-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions			IE-Extensions 			OPTIONAL
 }
 
 LastKnownServiceArea	::= SEQUENCE {
 	sAI		SAI,
 	ageOfSAI	INTEGER (0..32767),
-	iE-Extensions	ProtocolExtensionContainer { {LastKnownServiceArea-ExtIEs} } OPTIONAL,	
-	...
-}
-
-LastKnownServiceArea-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions 			OPTIONAL,
 	...
 }
 
@@ -1112,14 +950,7 @@ LastVisitedUTRANCell-Item ::= SEQUENCE {
 	uTRAN-CellID		UTRAN-CellID,
 	cellType		CellType,
 	time-UE-StayedInCell	Time-UE-StayedInCell,
-	iE-Extensions		ProtocolExtensionContainer { {LastVisitedUTRANCell-Item-ExtIEs} } OPTIONAL,
-	...
-}
-
-LastVisitedUTRANCell-Item-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Rel-11 to support enhanced granularity for time UE stayed in cell --
-	{ ID id-Time-UE-StayedInCell-EnhancedGranularity	CRITICALITY ignore	EXTENSION Time-UE-StayedInCell-EnhancedGranularity	PRESENCE	optional }|
-	{ ID id-HO-Cause					CRITICALITY ignore	EXTENSION Cause						PRESENCE	optional },
+	iE-Extensions		IE-Extensions 			OPTIONAL,
 	...
 }
 
@@ -1133,11 +964,7 @@ ListOfInterfacesToTrace ::= SEQUENCE (SIZE (1..maxNrOfInterfaces)) OF Interfaces
 
 InterfacesToTraceItem ::= SEQUENCE {
 	interface	ENUMERATED {iu-cs, iu-ps, iur, iub, uu, ...},
-	iE-Extensions	ProtocolExtensionContainer { {InterfacesToTraceItem-ExtIEs} }	OPTIONAL,
-	...
-}
-
-InterfacesToTraceItem-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions 			OPTIONAL,
 	...
 }
 
@@ -1170,11 +997,7 @@ LocationReportingTransferInformation	::=	SEQUENCE {
 	responseTime			ResponseTime			OPTIONAL,
 	includeVelocity			IncludeVelocity			OPTIONAL,
 	periodicLocationInfo		PeriodicLocationInfo		OPTIONAL,
-	iE-Extensions		ProtocolExtensionContainer { { LocationReportingTransferInformation-ExtIEs } }		OPTIONAL,
-	...
-}
-
-LocationReportingTransferInformation-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions 			OPTIONAL,
 	...
 }
 
@@ -1220,11 +1043,7 @@ M4Report	::= CHOICE {
 M4-Collection-Parameters ::= SEQUENCE {
 	m4-period	M4-Period,
 	m4-threshold	M4-Threshold	OPTIONAL,
-	iE-Extensions	ProtocolExtensionContainer { { M4-Collection-Parameters-ExtIEs} } OPTIONAL,
-	...
-}
-
-M4-Collection-Parameters-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions 	OPTIONAL,
 	...
 }
 
@@ -1246,11 +1065,7 @@ M5-Period ::= ENUMERATED {ms100, ms250, ms500, ms1000, ms2000, ms3000, ms4000, m
 M6Report ::= SEQUENCE {
 	m6-period	M6-Period,
 	m6-links-to-log	Links-to-log,
-	iE-Extensions	ProtocolExtensionContainer { { M6Report-ExtIEs} } OPTIONAL,
-	...
-}
-
-M6Report-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions 	OPTIONAL,
 	...
 }
 
@@ -1259,11 +1074,7 @@ M6-Period ::= ENUMERATED {ms1000, ms2000, ms3000, ms4000, ms6000, ms8000, ms1200
 M7Report ::= SEQUENCE {
 	m7-period	M7-Period,
 	m7-links-to-log	Links-to-log,
-	iE-Extensions	ProtocolExtensionContainer { { M7Report-ExtIEs} } OPTIONAL,
-	...
-}
-
-M7Report-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions 	OPTIONAL,
 	...
 }
 
@@ -1349,13 +1160,8 @@ MDT-Configuration	::= SEQUENCE {
 	mdtActivation		MDT-Activation,
 	mdtAreaScope		MDTAreaScope,
 	mdtMode			MDTMode,
-	iE-Extensions		ProtocolExtensionContainer { { MDT-Configuration-ExtIEs} } OPTIONAL,
+	iE-Extensions		IE-Extensions 	OPTIONAL,
 	...
-}
-
-MDT-Configuration-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	{ ID id-SignallingBasedMDTPLMNList	CRITICALITY ignore	EXTENSION MDT-PLMN-List		PRESENCE optional },
-...
 }
 
 MDTMode	::= CHOICE {
@@ -1411,11 +1217,7 @@ NumberOfSteps		::= INTEGER (1..16)
 Offload-RAB-Parameters ::= SEQUENCE {
 	accessPointName			Offload-RAB-Parameters-APN,
 	chargingCharacteristics		Offload-RAB-Parameters-ChargingCharacteristics,
-	iE-Extensions			ProtocolExtensionContainer { { Offload-RAB-Parameters-ExtIEs} } 	OPTIONAL,
-	...
-}
-
-Offload-RAB-Parameters-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions 	OPTIONAL,
 	...
 }
 
@@ -1476,14 +1278,9 @@ PDUType14FrameSequenceNumber		::=	INTEGER(0..3)
 PeriodicLocationInfo ::= SEQUENCE {
 	reportingAmount		INTEGER (1..8639999, ...),
 	reportingInterval	INTEGER (1..8639999, ...),
-	iE-Extensions		ProtocolExtensionContainer { { PeriodicLocationInfo-ExtIEs } }	OPTIONAL,
+	iE-Extensions		IE-Extensions 	OPTIONAL,
 	...
 }
-
-PeriodicLocationInfo-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
-
 
 PermanentNAS-UE-ID ::= CHOICE {
 	iMSI			IMSI,
@@ -1498,14 +1295,9 @@ PermittedIntegrityProtectionAlgorithms ::= SEQUENCE (SIZE (1..16)) OF
 
 LABased	::= SEQUENCE {
 	laiList			LAI-List,
-	iE-Extensions		ProtocolExtensionContainer { {LABased-ExtIEs} } OPTIONAL,
+	iE-Extensions		IE-Extensions 	OPTIONAL,
 	...
 }
-
-LABased-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
-
 
 LAI-List	::= SEQUENCE (SIZE (1..maxNrOfLAIs)) OF
 	LAI
@@ -1515,11 +1307,7 @@ LAI-List	::= SEQUENCE (SIZE (1..maxNrOfLAIs)) OF
 LoggedMDT	::=	SEQUENCE {
 	loggingInterval		LoggingInterval,
 	loggingDuration		LoggingDuration,
-	iE-Extensions		ProtocolExtensionContainer { {LoggedMDT-ExtIEs} } OPTIONAL,
-	...
-}
-
-LoggedMDT-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions 	OPTIONAL,
 	...
 }
 
@@ -1552,13 +1340,9 @@ PLMNs-in-shared-network ::= SEQUENCE (SIZE (1..maxNrOfPLMNsSN)) OF
 	SEQUENCE {
 		pLMNidentity	PLMNidentity,
 		lA-LIST		LA-LIST,
-		iE-Extensions	ProtocolExtensionContainer { { PLMNs-in-shared-network-ExtIEs} } OPTIONAL,
+		iE-Extensions	IE-Extensions 	OPTIONAL,
 		...
 	}
-
-PLMNs-in-shared-network-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 Port-Number ::= OCTET STRING (SIZE (2))
 
@@ -1578,12 +1362,7 @@ PositionData ::= SEQUENCE {
 	positioningDataDiscriminator	PositioningDataDiscriminator,
 	positioningDataSet		PositioningDataSet			OPTIONAL,
 -- This IE shall be present if the PositioningDataDiscriminator IE is set to the value "0000" --
-	iE-Extensions			ProtocolExtensionContainer { {PositionData-ExtIEs} } OPTIONAL,
-	...
-}
-
-PositionData-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	{ ID id-GANSS-PositioningDataSet	CRITICALITY ignore	EXTENSION GANSS-PositioningDataSet				PRESENCE optional },
+	iE-Extensions			IE-Extensions 	OPTIONAL,
 	...
 }
 
@@ -1628,14 +1407,9 @@ RAB-AsymmetryIndicator::= ENUMERATED {
 
 RABased	::= SEQUENCE {
 	raiList		RAI-List,
-	iE-Extensions	ProtocolExtensionContainer { {RABased-ExtIEs} } OPTIONAL,
+	iE-Extensions	IE-Extensions 	OPTIONAL,
 	...
 }
-
-RABased-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
-
 
 RAI-List	::= SEQUENCE (SIZE (1..maxNrOfRAIs)) OF
 	RAI
@@ -1644,13 +1418,9 @@ RABDataVolumeReport ::= SEQUENCE (SIZE (1..maxNrOfVol)) OF
 	SEQUENCE {
 		dl-UnsuccessfullyTransmittedDataVolume	UnsuccessfullyTransmittedDataVolume,
 		dataVolumeReference			DataVolumeReference	OPTIONAL,
-		iE-Extensions				ProtocolExtensionContainer { {RABDataVolumeReport-ExtIEs} }		OPTIONAL,
+		iE-Extensions				IE-Extensions 		OPTIONAL,
 		...
 	}
-
-RABDataVolumeReport-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 RAB-ID	::= BIT STRING (SIZE (8))
 
@@ -1682,21 +1452,7 @@ RAB-Parameters ::= SEQUENCE {
 	sourceStatisticsDescriptor	SourceStatisticsDescriptor OPTIONAL
 	-- This IE shall be present the traffic class IE is set to "Conversational" or "Streaming" --,
 	relocationRequirement	RelocationRequirement OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { {RAB-Parameters-ExtIEs} } OPTIONAL,
-	...
-}
-
-RAB-Parameters-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 5 to enable indication that Interactive User Plane data is of a signalling nature --
-	{ ID id-SignallingIndication	CRITICALITY ignore		EXTENSION SignallingIndication		PRESENCE optional }|
--- Extension for Release 7 to indicate an Extended Guaranteed Bitrate --
-{ ID id-RAB-Parameter-ExtendedGuaranteedBitrateList	CRITICALITY reject	EXTENSION RAB-Parameter-ExtendedGuaranteedBitrateList		PRESENCE optional }|
--- Extension for Release 7 to indicate an Extended Maximum Bitrate --
-{ ID id-RAB-Parameter-ExtendedMaxBitrateList	CRITICALITY reject		EXTENSION RAB-Parameter-ExtendedMaxBitrateList		PRESENCE optional }|
--- Extension for Release 8 to indicate an Supported Maximum Bitrate --
-{ ID id-RAB-Parameter-SupportedMaxBitrateList	CRITICALITY reject		EXTENSION SupportedRAB-ParameterBitrateList		PRESENCE optional }|
--- Extension for Release 8 to indicate an Supported Guaranteed Bitrate --
-{ ID id-RAB-Parameter-SupportedGuaranteedBitrateList	CRITICALITY reject	EXTENSION SupportedRAB-ParameterBitrateList		PRESENCE optional },
+	iE-Extensions			IE-Extensions OPTIONAL,
 	...
 }
 
@@ -1705,11 +1461,7 @@ RABParametersList	::=	SEQUENCE (SIZE (1.. maxNrOfRABs)) OF SEQUENCE	{
 	cn-domain		CN-DomainIndicator,
 	rabDataVolumeReport	RABDataVolumeReport	OPTIONAL,
 	upInformation		UPInformation	OPTIONAL,
-	iE-Extensions		ProtocolExtensionContainer { { RABParametersList-ExtIEs } }		OPTIONAL,
-	...
-}
-
-RABParametersList-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions OPTIONAL,
 	...
 }
 
@@ -1721,13 +1473,7 @@ RAB-TrCH-Mapping ::=	SEQUENCE ( SIZE (1..maxNrOfRABs)) OF
 RAB-TrCH-MappingItem ::= SEQUENCE {
 	rAB-ID		RAB-ID,
 	trCH-ID-List	TrCH-ID-List,
-	iE-Extensions	ProtocolExtensionContainer { { RAB-TrCH-MappingItem-ExtIEs} } OPTIONAL,
-	...
-}
-
-RAB-TrCH-MappingItem-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 99 to enable transfer of RAB Subflow mapping onto Iur transport channel Ids for a given indicated domain --
-	{	ID id-CN-DomainIndicator	CRITICALITY ignore		EXTENSION CN-DomainIndicator	PRESENCE optional	},
+	iE-Extensions	IE-Extensions OPTIONAL,
 	...
 }
 
@@ -1736,11 +1482,7 @@ RAC ::= OCTET STRING (SIZE (1))
 RAI ::= SEQUENCE {
 	lAI		LAI,
 	rAC		RAC,
-	iE-Extensions	ProtocolExtensionContainer { {RAI-ExtIEs} } OPTIONAL,
-	...
-}
-
-RAI-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions OPTIONAL,
 	...
 }
 
@@ -1752,17 +1494,11 @@ RAListofIdleModeUEs ::= CHOICE {
 
 NotEmptyRAListofIdleModeUEs ::= SEQUENCE {
 	rAofIdleModeUEs	RAofIdleModeUEs,
-	iE-Extensions	ProtocolExtensionContainer { {NotEmptyRAListofIdleModeUEs-ExtIEs} } OPTIONAL
+	iE-Extensions	IE-Extensions OPTIONAL
 }
 
 RAofIdleModeUEs ::= SEQUENCE (SIZE (1..maxMBMSRA)) OF
 	RAC
-
-NotEmptyRAListofIdleModeUEs-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-{ ID id-LAofIdleModeUEs		CRITICALITY reject	EXTENSION LAListofIdleModeUEs PRESENCE conditional },
-	-- This IE shall be present if the RA of Idle Mode UEs IE is included. --
-	...
-}
 
 LAListofIdleModeUEs ::= SEQUENCE (SIZE (1..maxMBMSRA)) OF
 	LAI
@@ -1869,11 +1605,7 @@ MBMSIPMulticastAddressandAPNlist ::= SEQUENCE {
 	tMGI			TMGI,
 	iPMulticastAddress	IPMulticastAddress,
 	aPN			APN,
-	iE-Extensions		ProtocolExtensionContainer { {MBMSIPMulticastAddressandAPNlist-ExtIEs} } 	OPTIONAL,
-	...
-}
-
-MBMSIPMulticastAddressandAPNlist-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions OPTIONAL,
 	...
 }
 
@@ -1883,21 +1615,7 @@ RequestedMulticastServiceList ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPe
 Requested-RAB-Parameter-Values ::= SEQUENCE {
 	requestedMaxBitrates		Requested-RAB-Parameter-MaxBitrateList			OPTIONAL,
 	requestedGuaranteedBitrates	Requested-RAB-Parameter-GuaranteedBitrateList			OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { { Requested-RAB-Parameter-Values-ExtIEs} } 	OPTIONAL,
-	...
-}
-
-Requested-RAB-Parameter-Values-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 6 to enable RNC to request the execution of an alternative RAB configuration --
-	{ ID id-AlternativeRABConfigurationRequest		CRITICALITY ignore	EXTENSION AlternativeRABConfigurationRequest	PRESENCE optional }|
--- Extension for Release 7 to request an Extended Maximum Bitrate --
-	{ ID id-Requested-RAB-Parameter-ExtendedMaxBitrateList		CRITICALITY reject	EXTENSION Requested-RAB-Parameter-ExtendedMaxBitrateList	PRESENCE optional }|
--- Extension for Release 7 to request an Extended Guaranteed Bitrate --
-	{ ID id-Requested-RAB-Parameter-ExtendedGuaranteedBitrateList	CRITICALITY reject	EXTENSION Requested-RAB-Parameter-ExtendedGuaranteedBitrateList	PRESENCE optional }|
--- Extension for Release 8 to request an Supported Maximum Bitrate --
-	{ ID id-Requested-RAB-Parameter-SupportedMaxBitrateList		CRITICALITY reject	EXTENSION SupportedRAB-ParameterBitrateList		PRESENCE optional }|
--- Extension for Release 8 to request an Supported Guaranteed Bitrate --
-	{ ID id-Requested-RAB-Parameter-SupportedGuaranteedBitrateList CRITICALITY reject	EXTENSION SupportedRAB-ParameterBitrateList		PRESENCE optional },
+	iE-Extensions			IE-Extensions OPTIONAL,
 	...
 }
 
@@ -1920,13 +1638,9 @@ RequestType ::= SEQUENCE {
 ResidualBitErrorRatio ::= SEQUENCE {
 	mantissa	INTEGER (1..9),
 	exponent	INTEGER (1..8),
-	iE-Extensions	ProtocolExtensionContainer { {ResidualBitErrorRatio-ExtIEs} } OPTIONAL
+	iE-Extensions	IE-Extensions OPTIONAL
 }
 -- ResidualBitErrorRatio = mantissa * 10^-exponent
-
-ResidualBitErrorRatio-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 ResponseTime	::= ENUMERATED {
 	lowdelay,
@@ -1939,11 +1653,7 @@ RIMInformation	::= OCTET STRING
 RIM-Transfer ::= SEQUENCE {
 	rIMInformation		RIMInformation,
 	rIMRoutingAddress	RIMRoutingAddress	OPTIONAL,
-	iE-Extensions		ProtocolExtensionContainer { {RIM-Transfer-ExtIEs} } OPTIONAL
-}
-
-RIM-Transfer-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions		IE-Extensions OPTIONAL
 }
 
 RIMRoutingAddress ::= CHOICE {
@@ -1964,16 +1674,7 @@ RNCTraceInformation::= SEQUENCE {
 	traceActivationIndicato		ENUMERATED {activated,deactivated},
 	equipmentsToBeTraced		EquipmentsToBeTraced						OPTIONAL,
 	-- This IE shall be present if the Trace Activation Indicator IE is set to "Activated".
-	iE-Extensions			ProtocolExtensionContainer { { RNCTraceInformation-ExtIEs} }	OPTIONAL
-}
-
-RNCTraceInformation-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 11 to enable anonymization MDT for area based MDT --
-	{ID id-TraceRecordingSessionReference		CRITICALITY ignore	EXTENSION TraceRecordingSessionReference	PRESENCE optional}|
-	{ID id-IMSI					CRITICALITY ignore	EXTENSION IMSI					PRESENCE optional}|
-	{ID id-Trace-Collection-Entity-IP-Addess	CRITICALITY ignore	EXTENSION TransportLayerAddress			PRESENCE optional}|
-	{ID id-Serving-Cell-Identifier			CRITICALITY ignore	EXTENSION UTRAN-CellID				PRESENCE optional},
-	...
+	iE-Extensions			IE-Extensions OPTIONAL
 }
 
 RNSAPRelocationParameters ::=	SEQUENCE {
@@ -1981,11 +1682,7 @@ RNSAPRelocationParameters ::=	SEQUENCE {
 	locationReporting	LocationReportingTransferInformation	OPTIONAL,
 	traceInformation	TraceInformation 			OPTIONAL,
 	sourceSAI		SAI					OPTIONAL,
-	iE-Extensions		ProtocolExtensionContainer { { RNSAPRelocationParameters-ExtIEs } }	OPTIONAL,
-	...
-}
-
-RNSAPRelocationParameters-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions OPTIONAL,
 	...
 }
 
@@ -2001,13 +1698,9 @@ RSRVCC-HO-Indication ::= ENUMERATED {
 RSRVCC-Information ::= SEQUENCE {
 	nonce		BIT STRING (SIZE (128)),
 	iMSInformation	OCTET STRING(SIZE(1.. maxSizeOfIMSInfo)),
-	iE-Extensions	ProtocolExtensionContainer { { RSRVCC-Information-ExtIEs} } OPTIONAL,
+	iE-Extensions	IE-Extensions OPTIONAL,
 	...
 
-}
-
-RSRVCC-Information-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
 }
 
 RSRVCC-Operation-Possible ::= ENUMERATED {
@@ -2022,11 +1715,7 @@ SAI ::= SEQUENCE {
 	pLMNidentity	PLMNidentity,
 	lAC		LAC,
 	sAC		SAC,
-	iE-Extensions	ProtocolExtensionContainer { {SAI-ExtIEs} } OPTIONAL
-}
-
-SAI-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions	IE-Extensions OPTIONAL
 }
 
 SAPI ::= ENUMERATED {
@@ -2038,15 +1727,11 @@ SAPI ::= ENUMERATED {
 SessionUpdateID ::= INTEGER (0.. 1048575)
 Shared-Network-Information ::= SEQUENCE {
 	pLMNs-in-shared-network		PLMNs-in-shared-network,
-	iE-Extensions			ProtocolExtensionContainer { {Shared-Network-Information-ExtIEs} } OPTIONAL,
+	iE-Extensions			IE-Extensions OPTIONAL,
 	...
 }
 
 Session-Re-establishment-Indicator	::= ENUMERATED {true, ...}
-
-Shared-Network-Information-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 SignallingIndication ::= ENUMERATED {
 	signalling,
@@ -2056,24 +1741,17 @@ SignallingIndication ::= ENUMERATED {
 SDU-ErrorRatio ::= SEQUENCE {
 	mantissa	INTEGER (1..9),
 	exponent	INTEGER (1..6),
-	iE-Extensions	ProtocolExtensionContainer { {SDU-ErrorRatio-ExtIEs} } OPTIONAL
+	iE-Extensions	IE-Extensions OPTIONAL
 }
 -- SDU-ErrorRatio = mantissa * 10^-exponent
 
-SDU-ErrorRatio-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 SDU-FormatInformationParameters ::= SEQUENCE (SIZE (1..maxRAB-SubflowCombination)) OF
 	SEQUENCE {
 		subflowSDU-Size			SubflowSDU-Size 	OPTIONAL,
 		rAB-SubflowCombinationBitRate	RAB-SubflowCombinationBitRate 	OPTIONAL,
-		iE-Extensions			ProtocolExtensionContainer { {SDU-FormatInformationParameters-ExtIEs} } OPTIONAL,
+		iE-Extensions			IE-Extensions 		OPTIONAL,
 		...
 	}
-
-SDU-FormatInformationParameters-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 SDU-Parameters ::= SEQUENCE (SIZE (1..maxRAB-Subflows)) OF
 	SEQUENCE {
@@ -2082,23 +1760,15 @@ SDU-Parameters ::= SEQUENCE (SIZE (1..maxRAB-Subflows)) OF
 		residualBitErrorRatio		ResidualBitErrorRatio,
 		deliveryOfErroneousSDU		DeliveryOfErroneousSDU,
 		sDU-FormatInformationParameters	SDU-FormatInformationParameters OPTIONAL,
-		iE-Extensions			ProtocolExtensionContainer { {SDU-Parameters-ExtIEs} } OPTIONAL,
+		iE-Extensions			IE-Extensions 		OPTIONAL,
 		...
 	}
-
-SDU-Parameters-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 SNA-Access-Information ::= SEQUENCE {
 		authorisedPLMNs	AuthorisedPLMNs,
-		iE-Extensions	ProtocolExtensionContainer { {SNA-Access-Information-ExtIEs} } OPTIONAL,
+		iE-Extensions	IE-Extensions 		OPTIONAL,
 		...
 	}
-
-SNA-Access-Information-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 SNAC ::= INTEGER (0..65535)
 
@@ -2136,13 +1806,7 @@ SourceID ::= CHOICE {
 SourceRNC-ID ::= SEQUENCE {
 	pLMNidentity	PLMNidentity,
 	rNC-ID		RNC-ID,
-	iE-Extensions	ProtocolExtensionContainer { {SourceRNC-ID-ExtIEs} } OPTIONAL
-}
-
-SourceRNC-ID-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 7 to indicate extended RNC-ID --
-	{ ID id-ExtendedRNC-ID	CRITICALITY reject	EXTENSION ExtendedRNC-ID		PRESENCE optional	},
-	...
+	iE-Extensions	IE-Extensions 		OPTIONAL
 }
 
 SourceRNC-ToTargetRNC-TransparentContainer ::= SEQUENCE {
@@ -2160,35 +1824,7 @@ SourceRNC-ToTargetRNC-TransparentContainer ::= SEQUENCE {
 	targetCellId			TargetCellId				OPTIONAL
 	-- This IE shall be present if the Relocation type IE is set to "UE involved in relocation of SRNS" --,
 	rAB-TrCH-Mapping		RAB-TrCH-Mapping			OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { {SourceRNC-ToTargetRNC-TransparentContainer-ExtIEs} } OPTIONAL,
-	...
-}
-
-SourceRNC-ToTargetRNC-TransparentContainer-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 99 to enable transfer of SRB mapping onto Iur transport channel Ids --
-	{ID id-SRB-TrCH-Mapping			CRITICALITY reject	EXTENSION SRB-TrCH-Mapping			PRESENCE optional}|
--- Extension for Release 5 to enable Inter RAN Load Information Exchange over Iu --
-	{ID id-CellLoadInformationGroup		CRITICALITY ignore	EXTENSION CellLoadInformationGroup		PRESENCE optional}|
--- Extension for Release 6 to provide Trace Recording Session Information to the Target RNC --
-	{ID id-TraceRecordingSessionInformation	CRITICALITY ignore	EXTENSION TraceRecordingSessionInformation	PRESENCE optional}|
--- Extension for Release 6 to indicate to the Target RNC that the UE has activated Multicast Service --
-	{ID id-MBMSLinkingInformation		CRITICALITY ignore	EXTENSION MBMSLinkingInformation		PRESENCE optional}|
-	{ID id-d-RNTI-for-NoIuCSUP		CRITICALITY reject	EXTENSION D-RNTI				PRESENCE optional}|
-	{ID id-UE-History-Information		CRITICALITY ignore	EXTENSION UE-History-Information		PRESENCE optional}|
-	{ID id-SubscriberProfileIDforRFP	CRITICALITY ignore	EXTENSION SubscriberProfileIDforRFP		PRESENCE optional}|
--- Extension for Release 8 to transfer to the Target RNC parameters required for SRVCC operation --
-	{ID id-SRVCC-Information 		CRITICALITY reject	EXTENSION SRVCC-Information			PRESENCE optional}|
-	{ID id-PSRABtobeReplaced 		CRITICALITY reject	EXTENSION RAB-ID				PRESENCE optional}|
--- Extension for Release 9 to transfer to the Target RNC parameters required for CSFB operation --
-	{ID id-CSFB-Information 		CRITICALITY ignore	EXTENSION CSFB-Information 			PRESENCE optional}|
--- Extension for Release 10 to indicate to the Target RNC the need of continued IRAT measurement --
-	{ID id-IRAT-Measurement-Configuration	CRITICALITY ignore	EXTENSION IRAT-Measurement-Configuration	PRESENCE optional}|
--- Extension for Release 10 to indicate Management Based MDT Allowed --
-	{ID id-Management-Based-MDT-Allowed	CRITICALITY ignore	EXTENSION Management-Based-MDT-Allowed		PRESENCE optional}|
--- Extension for Release 11 to indicate Management Based MDT PLMN List --
-	{ID id-Management-Based-MDT-PLMN-List	CRITICALITY ignore	EXTENSION MDT-PLMN-List				PRESENCE optional}|
--- Extension for Release 11 to indicate the last E-UTRAN PLMN Identity --
-	{ID id-LastE-UTRANPLMNIdentity		CRITICALITY ignore	EXTENSION PLMNidentity				PRESENCE optional},
+	iE-Extensions			IE-Extensions 				OPTIONAL,
 	...
 }
 
@@ -2196,22 +1832,12 @@ IRAT-Measurement-Configuration ::= SEQUENCE {
 	rSRP				INTEGER (0..97)			OPTIONAL,
 	rSRQ				INTEGER (0..34)			OPTIONAL,
 	iRATmeasurementParameters	IRATmeasurementParameters,
-	iE-Extensions			ProtocolExtensionContainer { {IRAT-Measurement-Configuration-ExtIEs} } OPTIONAL}
-
-IRAT-Measurement-Configuration-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	{ID id-RSRQ-Type		CRITICALITY ignore	EXTENSION RSRQ-Type				PRESENCE optional}|
-	{ID id-RSRQ-Extension		CRITICALITY ignore	EXTENSION RSRQ-Extension			PRESENCE optional},
-	...
-}
+	iE-Extensions			IE-Extensions OPTIONAL}
 
 IRATmeasurementParameters::= SEQUENCE {
 	measurementDuration	INTEGER (1..100),
 	eUTRANFrequencies	EUTRANFrequencies		OPTIONAL,
-	iE-Extensions		ProtocolExtensionContainer { { IRATmeasurementParameters-ExtIEs} } OPTIONAL}
-
-IRATmeasurementParameters-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
+	iE-Extensions		IE-Extensions OPTIONAL}
 
 RSRQ-Type ::= SEQUENCE {
 	allSymbols		BOOLEAN,
@@ -2223,7 +1849,7 @@ RSRQ-Extension ::= INTEGER (-30..46, ...)
 EUTRANFrequencies ::= SEQUENCE (SIZE (1..maxNrOfEUTRAFreqs)) OF SEQUENCE {
 	earfcn			INTEGER (0..65535),
 	measBand		MeasBand			OPTIONAL,
-	iE-Extensions		ProtocolExtensionContainer { {EUTRANFrequencies-ExtIEs} } OPTIONAL}
+	iE-Extensions		IE-Extensions OPTIONAL}
 
 MeasBand ::= ENUMERATED {
 	v6,
@@ -2232,11 +1858,6 @@ MeasBand ::= ENUMERATED {
 	v50,
 	v75,
 	v100
-}
-
-EUTRANFrequencies-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	{ ID id-EARFCN-Extended		CRITICALITY reject	EXTENSION EARFCN-Extended		PRESENCE optional},
-	...
 }
 
 SubscriberProfileIDforRFP ::= INTEGER (1..256)
@@ -2255,11 +1876,7 @@ SupportedBitrate ::= INTEGER (1..1000000000, ...)
 SourceUTRANCellID ::= SEQUENCE {
 	pLMNidentity	PLMNidentity,
 	uTRANcellID	TargetCellId,
-	iE-Extensions	ProtocolExtensionContainer { {SourceUTRANCellID-ExtIEs} } OPTIONAL
-}
-
-SourceUTRANCellID-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions	IE-Extensions OPTIONAL
 }
 
 SRB-ID ::= INTEGER (1..32)
@@ -2270,14 +1887,10 @@ SRB-TrCH-Mapping ::=	SEQUENCE ( SIZE (1..maxNrOfSRBs)) OF
 SRB-TrCH-MappingItem ::= SEQUENCE {
 	sRB-ID		SRB-ID,
 	trCH-ID		TrCH-ID,
-	iE-Extensions	ProtocolExtensionContainer { { SRB-TrCH-MappingItem-ExtIEs} } OPTIONAL,
+	iE-Extensions	IE-Extensions OPTIONAL,
 	...
 }
 
-
-SRB-TrCH-MappingItem-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 SRVCC-HO-Indication ::= ENUMERATED {
 	ps-and-cs,
@@ -2287,11 +1900,7 @@ SRVCC-HO-Indication ::= ENUMERATED {
 
 SRVCC-Information ::= SEQUENCE {
 	nonce		BIT STRING (SIZE (128)),
-	iE-Extensions	ProtocolExtensionContainer { { SRVCC-Information-ExtIEs} } OPTIONAL,
-	...
-}
-
-SRVCC-Information-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions OPTIONAL,
 	...
 }
 
@@ -2310,13 +1919,8 @@ TAC ::= OCTET STRING (SIZE (2))
 TAI ::= SEQUENCE {
 	pLMNidentity	PLMNidentity,
 	tAC		TAC,
-	iE-Extensions	ProtocolExtensionContainer { {TAI-ExtIEs} } OPTIONAL
+	iE-Extensions	IE-Extensions OPTIONAL
 }
-
-TAI-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
-
 
 Target-ToSource-TransparentContainer ::= OCTET STRING
 -- This IE is a transparent container, the IE shall be encoded not as an OCTET STRING but according to the type specifications of the target system.
@@ -2341,38 +1945,23 @@ TargetID ::= CHOICE {
 TargetENB-ID ::= SEQUENCE {
 	pLMNidentity	PLMNidentity,
 	eNB-ID		ENB-ID,
-	iE-Extensions	ProtocolExtensionContainer { {TargetENB-ID-ExtIEs} } OPTIONAL,
+	iE-Extensions	IE-Extensions	OPTIONAL,
 	selectedTAI	TAI,
 	...
 }
-
-TargetENB-ID-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
-
 
 TargetRNC-ID ::= SEQUENCE {
 	lAI		LAI,
 	rAC		RAC 		OPTIONAL,
 	rNC-ID		RNC-ID,
-	iE-Extensions	ProtocolExtensionContainer { {TargetRNC-ID-ExtIEs} } OPTIONAL
-}
-
-TargetRNC-ID-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 7 to indicate extended RNC-ID --
-	{ ID id-ExtendedRNC-ID				CRITICALITY reject	EXTENSION ExtendedRNC-ID		PRESENCE optional	},
-	...
+	iE-Extensions	IE-Extensions	OPTIONAL
 }
 
 TargetRNC-ToSourceRNC-TransparentContainer ::= SEQUENCE {
 	rRC-Container	RRC-Container,
 	d-RNTI		D-RNTI 		OPTIONAL
 	-- May be included to allow the triggering of the Relocation Detect procedure from the Iur Interface --,
-	iE-Extensions	ProtocolExtensionContainer { {TargetRNC-ToSourceRNC-TransparentContainer-ExtIEs} } OPTIONAL,
-	...
-}
-
-TargetRNC-ToSourceRNC-TransparentContainer-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions	OPTIONAL,
 	...
 }
 
@@ -2395,11 +1984,7 @@ TimingDifferenceULDL	::= OCTET STRING (SIZE(1))
 TMGI ::= SEQUENCE {
 	pLMNidentity	PLMNidentity,
 	serviceID	OCTET STRING (SIZE (3)),
-	iE-Extensions	ProtocolExtensionContainer { {TMGI-ExtIEs} } OPTIONAL
-}
-
-TMGI-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions	IE-Extensions	OPTIONAL
 }
 
 TMSI ::= OCTET STRING (SIZE (4))
@@ -2415,34 +2000,22 @@ TraceInformation	::= SEQUENCE {
 	traceReference			TraceReference,
 	ue-identity			UE-ID,
 	tracePropagationParameters	TracePropagationParameters OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { { TraceInformation-ExtIEs } } OPTIONAL,
+	iE-Extensions			IE-Extensions		OPTIONAL,
 	...
-}
-
-TraceInformation-ExtIEs	RANAP-PROTOCOL-EXTENSION ::= {
-...
 }
 
 TracePropagationParameters ::= SEQUENCE {
 	traceRecordingSessionReference	TraceRecordingSessionReference,
 	traceDepth			TraceDepth,
 	listOfInterfacesToTrace		ListOfInterfacesToTrace		OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { { TracePropagationParameters-ExtIEs} } OPTIONAL,
-	...
-}
-
-TracePropagationParameters-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions		OPTIONAL,
 	...
 }
 
 TraceRecordingSessionInformation	::= SEQUENCE {
 	traceReference			TraceReference,
 	traceRecordingSessionReference	TraceRecordingSessionReference,
-	iE-Extensions			ProtocolExtensionContainer { { TraceRecordingSessionInformation-ExtIEs} } OPTIONAL,
-	...
-}
-
-TraceRecordingSessionInformation-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions		OPTIONAL,
 	...
 }
 
@@ -2474,15 +2047,7 @@ TrCH-ID ::= SEQUENCE {
 	dCH-ID		DCH-ID		OPTIONAL,
 	dSCH-ID		DSCH-ID		OPTIONAL,
 	uSCH-ID		USCH-ID		OPTIONAL,
-	iE-Extensions	ProtocolExtensionContainer { { TrCH-ID-ExtIEs} } OPTIONAL,
-	...
-}
-
-TrCH-ID-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
--- Extension for Release 5 to enable transfer of HS-DSCH-MAC-d-Flow-ID onto Iur transport channel ID --
-	{ID id-hS-DSCH-MAC-d-Flow-ID	CRITICALITY ignore	EXTENSION HS-DSCH-MAC-d-Flow-ID	PRESENCE optional}|
--- Extension for Release 6 to enable transfer of E-DCH-MAC-d-Flow-ID onto Iur transport channel ID --
-	{ID id-E-DCH-MAC-d-Flow-ID	CRITICALITY ignore	EXTENSION E-DCH-MAC-d-Flow-ID 	PRESENCE optional},
+	iE-Extensions	IE-Extensions	OPTIONAL,
 	...
 }
 
@@ -2494,14 +2059,9 @@ TriggerID				::= OCTET STRING (SIZE (3..22))
 TunnelInformation ::= SEQUENCE {
 	transportLayerAddress	TransportLayerAddress,
 	uDP-Port-Number		Port-Number				OPTIONAL,
-	iE-Extensions		ProtocolExtensionContainer { {Tunnel-Information-ExtIEs} } OPTIONAL,
+	iE-Extensions		IE-Extensions				OPTIONAL,
 	...
 }
-
-Tunnel-Information-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
-
 
 TypeOfError ::= ENUMERATED {
 	not-understood,
@@ -2538,11 +2098,7 @@ UE-ID ::= CHOICE {
 UESBI-Iu ::= SEQUENCE {
 	uESBI-IuA	UESBI-IuA	OPTIONAL,
 	uESBI-IuB	UESBI-IuB	OPTIONAL,
-	iE-Extensions	ProtocolExtensionContainer { {UESBI-Iu-ExtIEs} } OPTIONAL,
-	...
-}
-
-UESBI-Iu-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions	OPTIONAL,
 	...
 }
 
@@ -2562,13 +2118,7 @@ UPInformation		::=		SEQUENCE {
 	pdu14FrameSeqNoDL	PDUType14FrameSequenceNumber,
 	dataPDUType		DataPDUType,
 	upinitialisationFrame	UPInitialisationFrame,
-	iE-Extensions		ProtocolExtensionContainer { { UPInformation-ExtIEs } }		OPTIONAL,
-	...
-}
-
-UPInformation-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	{ID id-TimingDifferenceULDL	CRITICALITY ignore	EXTENSION TimingDifferenceULDL		PRESENCE optional},
-
+	iE-Extensions		IE-Extensions	OPTIONAL,
 	...
 }
 
@@ -2587,11 +2137,7 @@ UserPlaneMode ::= ENUMERATED {
 UTRAN-CellID ::= SEQUENCE {
 	pLMNidentity	PLMNidentity,
 	cellID		TargetCellId,
-	iE-Extensions	ProtocolExtensionContainer { { UTRAN-CellID-ExtIEs} } OPTIONAL
-}
-
-UTRAN-CellID-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions	IE-Extensions	OPTIONAL
 }
 
 
@@ -2607,34 +2153,21 @@ VelocityEstimate ::= CHOICE {
 
 HorizontalVelocity	::= SEQUENCE {
 	horizontalSpeedAndBearing	HorizontalSpeedAndBearing,
-	iE-Extensions			ProtocolExtensionContainer { { HorizontalVelocity-ExtIEs} } OPTIONAL,
-	...
-}
-
-HorizontalVelocity-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions	OPTIONAL,
 	...
 }
 
 HorizontalWithVerticalVelocity ::= SEQUENCE {
 	horizontalSpeedAndBearing	HorizontalSpeedAndBearing,
 	veritcalVelocity		VerticalVelocity,
-	iE-Extensions			ProtocolExtensionContainer { { HorizontalWithVerticalVelocity-ExtIEs} } OPTIONAL,
+	iE-Extensions			IE-Extensions	OPTIONAL,
 	...
 }
-
-HorizontalWithVerticalVelocity-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
-	...
-}
-
 
 HorizontalVelocityWithUncertainty ::= SEQUENCE {
 	horizontalSpeedAndBearing	HorizontalSpeedAndBearing,
 	uncertaintySpeed		INTEGER (0..255),
-	iE-Extensions			ProtocolExtensionContainer { { HorizontalVelocityWithUncertainty-ExtIEs} } OPTIONAL,
-	...
-}
-
-HorizontalVelocityWithUncertainty-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions	OPTIONAL,
 	...
 }
 
@@ -2643,11 +2176,7 @@ HorizontalWithVerticalVelocityAndUncertainty ::= SEQUENCE {
 	veritcalVelocity		VerticalVelocity,
 	horizontalUncertaintySpeed	INTEGER (0..255),
 	verticalUncertaintySpeed	INTEGER (0..255),
-	iE-Extensions			ProtocolExtensionContainer { { HorizontalWithVerticalVelocityAndUncertainty-ExtIEs} } OPTIONAL,
-	...
-}
-
-HorizontalWithVerticalVelocityAndUncertainty-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions	OPTIONAL,
 	...
 }
 

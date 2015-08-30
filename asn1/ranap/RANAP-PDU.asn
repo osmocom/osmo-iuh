@@ -1,0 +1,58 @@
+RANAP-PDU {
+itu-t (0) identified-organization (4) etsi (0) mobileDomain (0) 
+umts-Access (20) modules (3) ranap(0) version1 (1) ranap-PDU (255) }
+
+DEFINITIONS AUTOMATIC TAGS ::=
+
+BEGIN
+
+IMPORTS
+    Criticality,
+    ProcedureCode,
+    ProtocolIE-ID
+
+FROM RANAP-CommonDataTypes
+
+    maxProtocolIEs
+
+FROM RANAP-Constants;
+
+RANAP-PDU ::= CHOICE {
+    initiatingMessage       InitiatingMessage,
+    successfulOutcome       SuccessfulOutcome,
+    unsuccessfulOutcome     UnsuccessfulOutcome,
+    outcome     	    Outcome,
+    ...
+}
+
+InitiatingMessage ::= SEQUENCE {
+    procedureCode   ProcedureCode,
+    criticality     Criticality,
+    value           ANY
+}
+
+SuccessfulOutcome ::= SEQUENCE {
+    procedureCode   ProcedureCode,
+    criticality     Criticality,
+    value           ANY
+}
+
+UnsuccessfulOutcome ::= SEQUENCE {
+    procedureCode   ProcedureCode,
+    criticality     Criticality,
+    value           ANY
+}
+
+Outcome ::= SEQUENCE {
+    procedureCode   ProcedureCode,
+    criticality     Criticality,
+    value           ANY
+}
+
+IE ::= SEQUENCE {
+    id ProtocolIE-ID,
+    criticality Criticality,
+    value ANY
+}
+
+END
