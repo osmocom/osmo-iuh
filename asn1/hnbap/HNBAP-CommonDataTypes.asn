@@ -37,10 +37,65 @@ PrivateIE-ID	::= CHOICE {
 }
 
 
-ProcedureCode		::= INTEGER (0..255)
+ProcedureCode		::= INTEGER {
+	id-HNBRegister(1),
+	id-HNBDe-Register(2),
+	id-UERegister(3),
+	id-UEDe-Register(4),
+	id-ErrorIndication(5),
+	id-privateMessage(6),
+	id-CSGMembershipUpdate(7),
+	id-TNLUpdate(9),
+	id-HNBConfigTransfer(10),
+	id-RelocationComplete(11),
+	id-U-RNTIQuery(14)
+} (0..255)
 
 
-ProtocolIE-ID		::= INTEGER (0..maxProtocolIEs)
+ProtocolIE-ID		::= INTEGER {
+	id-Cause(1),
+	id-CriticalityDiagnostics(2),
+	id-HNB-Identity(3),
+	id-Context-ID(4),
+	id-UE-Identity(5),
+	id-LAC(6),
+	id-RAC(7),
+	id-HNB-Location-Information(8),
+	id-PLMNidentity(9),
+	id-SAC(10),
+	id-CellIdentity(11),
+	id-Registration-Cause(12),
+	id-UE-Capabilities(13),
+	id-RNC-ID(14),
+	id-CSG-ID(15),
+	id-BackoffTimer(16),
+	id-HNB-Internet-Information(17),
+	id-HNB-Cell-Access-Mode(18),
+	id-MuxPortNumber(19),
+	id-Service-Area-For-Broadcast(20),
+	id-CSGMembershipStatus(21),
+	id-RABList(22),
+	id-HNBConfigInfo(23),
+	id-AccessResult(25),
+	id-Update-cause(26),
+	id-NeighbourInfoList(27),
+	id-NeighbourInfoRequestList(28),
+	id-Iurh-Signalling-TNL-Address(29),
+	id-PSC(30),
+	id-HNB-Cell-Identifier(31),
+	id-Tunnel-Information(41),
+	id-CELL-FACHMobilitySupport(42),
+	id-S-RNTIPrefix(43),
+	id-URAIdentity(44),
+	id-NeighbourIdentity(45),
+	id-HNBCapacity(46),
+	id-NeighbourCellIdentityList(47),
+	id-AdditionalNeighbourInfoList(48),
+	id-U-RNTI(49),
+	id-UnknownU-RNTIIndication(50),
+	id-HNB-GWResponse(51),
+	id-URAIdentityList(52)
+} (0..maxProtocolIEs)
 
 TriggeringMessage	::= ENUMERATED { initiating-message, successful-outcome, unsuccessful-outcome }
 
