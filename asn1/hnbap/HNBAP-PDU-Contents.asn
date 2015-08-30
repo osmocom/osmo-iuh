@@ -164,17 +164,17 @@ HNBRegisterRequestExtensions HNBAP-PROTOCOL-EXTENSION ::= {
 -- **************************************************************
 
 HNBRegisterAccept ::= SEQUENCE {
-	protocolIEs		ProtocolIE-Container		{ {HNBRegisterResponseIEs} },
-	protocolExtensions	ProtocolExtensionContainer	{ {HNBRegisterResponseExtensions} }	OPTIONAL,
+	protocolIEs		ProtocolIE-Container		{ {HNBRegisterAcceptIEs} },
+	protocolExtensions	ProtocolExtensionContainer	{ {HNBRegisterAcceptExtensions} }	OPTIONAL,
 	...
 }
 
-HNBRegisterResponseIEs HNBAP-PROTOCOL-IES ::= {
+HNBRegisterAcceptIEs HNBAP-PROTOCOL-IES ::= {
 	{ ID id-RNC-ID		CRITICALITY reject	TYPE RNC-ID		PRESENCE mandatory },
 	...
 }
 
-HNBRegisterResponseExtensions HNBAP-PROTOCOL-EXTENSION ::= {
+HNBRegisterAcceptExtensions HNBAP-PROTOCOL-EXTENSION ::= {
 -- Extension for Release 9 to support CS Multiplexing --
 	{ ID id-MuxPortNumber			CRITICALITY ignore	EXTENSION MuxPortNumber		PRESENCE optional}|
 	{ ID id-Iurh-Signalling-TNL-Address	CRITICALITY ignore	EXTENSION IP-Address		PRESENCE optional}|
