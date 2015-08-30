@@ -26,16 +26,17 @@ IMPORTS
 	
 FROM HNBAP-Constants
 
+	IE
+FROM HNBAP-PDU
+
+	maxProtocolExtensions,
 	Criticality,
 	ProcedureCode,
 	ProtocolIE-ID,
 	TriggeringMessage
-FROM HNBAP-CommonDataTypes
+FROM HNBAP-CommonDataTypes;
 
-	ProtocolExtensionContainer{},
-	HNBAP-PROTOCOL-EXTENSION
-FROM HNBAP-Containers;
-
+IE-Extensions ::= SEQUENCE (SIZE (1..maxProtocolExtensions)) OF IE
 
 --A
 Access-stratum-release-indicator ::=	ENUMERATED {r99,
@@ -122,7 +123,7 @@ CriticalityDiagnostics ::= SEQUENCE {
 	triggeringMessage		TriggeringMessage		OPTIONAL,
 	procedureCriticality		Criticality			OPTIONAL,
 	iEsCriticalityDiagnostics	CriticalityDiagnostics-IE-List	OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { {CriticalityDiagnostics-ExtIEs} } 	OPTIONAL,
+	iE-Extensions			IE-Extensions			OPTIONAL,
 	...
 }
 
@@ -131,17 +132,9 @@ CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF
 		iECriticality		Criticality,
 		iE-ID			ProtocolIE-ID,
 		typeOfError		TypeOfError,
-		iE-Extensions		ProtocolExtensionContainer { {CriticalityDiagnostics-IE-List-ExtIEs} }	OPTIONAL,
+		iE-Extensions		IE-Extensions			OPTIONAL,
 		...
 	}
-
-CriticalityDiagnostics-IE-List-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
-	...
-}
-
-CriticalityDiagnostics-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
-	...
-}
 
 CSG-ID			::=	BIT STRING (SIZE (27))
 
@@ -161,11 +154,7 @@ CGI ::= SEQUENCE {
 	pLMNidentity	PLMNidentity,
 	lAC		LAC,
 	cI		CI,
-	iE-Extensions	ProtocolExtensionContainer { {CGI-ExtIEs} } OPTIONAL
-}
-
-CGI-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions	IE-Extensions			OPTIONAL
 }
 
 CI	::= OCTET STRING (SIZE (2))
@@ -183,11 +172,7 @@ ESN		::=	BIT STRING (SIZE(32))
 GeographicalLocation ::= SEQUENCE {
 	geographicalCoordinates		GeographicalCoordinates,
 	altitudeAndDirection		AltitudeAndDirection,
-	iE-Extensions			ProtocolExtensionContainer { { GeographicLocation-ExtIEs} } OPTIONAL,
-	...
-}
-
-GeographicLocation-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions			OPTIONAL,
 	...
 }
 
@@ -195,11 +180,7 @@ GeographicalCoordinates ::= SEQUENCE {
 	latitudeSign			ENUMERATED {north, south},
 	latitude			INTEGER (0..8388607),
 	longitude			INTEGER (-8388608..8388607),
-	iE-Extensions			ProtocolExtensionContainer { {GeographicalCoordinates-ExtIEs} }	OPTIONAL,
-	...
-}
-
-GeographicalCoordinates-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions			OPTIONAL,
 	...
 }
 
@@ -219,11 +200,7 @@ HNB-Cell-Access-Mode::= ENUMERATED {
 HNB-Cell-Identifier	::= 	SEQUENCE	{
 	pLMNidentity	PLMNidentity,
 	cellIdentity	CellIdentity,
-	iE-Extensions	ProtocolExtensionContainer { { HNB-Cell-Identifier-ExtIEs } }	OPTIONAL,
-	...
-}
-
-HNB-Cell-Identifier-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions			OPTIONAL,
 	...
 }
 
@@ -242,11 +219,7 @@ HNB-RNL-Identity	::= 	CHOICE	{
 HNBConfigInfo	::= SEQUENCE {
 	hnb-RNL-Identity		HNB-RNL-Identity,
 	configurationInformation	ConfigurationInformation,
-	iE-Extensions			ProtocolExtensionContainer { { HNBConfigInfo-ExtIEs } }	OPTIONAL,
-	...
-}
-
-HNBConfigInfo-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions			IE-Extensions			OPTIONAL,
 	...
 }
 
@@ -261,51 +234,28 @@ HNBConfigurationInformationProvided ::= SEQUENCE {
 	cSG-ID				CSG-ID	OPTIONAL,
 	hNB-Cell-Access-Mode		HNB-Cell-Access-Mode,
 	iurh-Signalling-TNL-AddressList	Iurh-Signalling-TNL-AddressList,
-	iE-Extensions		ProtocolExtensionContainer { { HNBConfigurationInformationProvided-ExtIEs } }	OPTIONAL,
-	...
-}
-
-HNBConfigurationInformationProvided-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
-	{ ID id-S-RNTIPrefix	CRITICALITY ignore	EXTENSION S-RNTIPrefix		PRESENCE optional }|
-	{ ID id-URAIdentityList	CRITICALITY ignore	EXTENSION URAIdentityList	PRESENCE optional },
+	iE-Extensions			IE-Extensions			OPTIONAL,
 	...
 }
 
 HNBConfigurationInformationMissing ::= SEQUENCE {
 	cause		Cause,
-	iE-Extensions	ProtocolExtensionContainer { { HNBConfigurationInformationMissing-ExtIEs } }	OPTIONAL,
-	...
-}
-
-HNBConfigurationInformationMissing-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions			OPTIONAL,
 	...
 }
 
 HNB-Location-Information ::= SEQUENCE {
 	macroCoverageInfo	MacroCoverageInformation OPTIONAL,
 	geographicalCoordinates	GeographicalLocation	 OPTIONAL,
-	iE-Extensions		ProtocolExtensionContainer { { HNB-Location-Information-ExtIEs } } OPTIONAL,
+	iE-Extensions		IE-Extensions		 OPTIONAL,
 	...
 }
-
-HNB-Location-Information-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
--- Extension for release-8 to support IP address for location verification --
-{ID id-HNB-Internet-Information	CRITICALITY reject	EXTENSION IP-Address	PRESENCE optional	},
-	...
-}
-
-
 
 HNB-Identity	::=		SEQUENCE {
 	hNB-Identity-Info	HNB-Identity-Info,
-	iE-Extensions		ProtocolExtensionContainer { { HNB-Identity-ExtIEs } }	OPTIONAL,
+	iE-Extensions		IE-Extensions		 OPTIONAL,
 	...
 }
-
-HNB-Identity-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
-	...
-}
-
 
 HNB-Identity-Info ::= OCTET STRING (SIZE (1..255))
 
@@ -328,11 +278,7 @@ IP-Address	::= SEQUENCE {
 		ipv6info	Ipv6Address,
 		...
 	},
-	iE-Extensions	ProtocolExtensionContainer { { IP-Address-ExtIEs } }	OPTIONAL,
-	...
-}
-
-IP-Address-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions		 OPTIONAL,
 	...
 }
 
@@ -358,11 +304,7 @@ LAI ::= SEQUENCE {
 
 MacroCoverageInformation ::= SEQUENCE {
 	cellIdentity	MacroCellID,
-	iE-Extensions	ProtocolExtensionContainer { { MacroCoverageInformation-ExtIEs } } OPTIONAL,
-	...
-}
-
-MacroCoverageInformation-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions	IE-Extensions		 OPTIONAL,
 	...
 }
 
@@ -392,11 +334,7 @@ NeighbourInfoRequestList	::= SEQUENCE (SIZE(1..maxnoofNeighbours)) OF	NeighbourI
 
 NeighbourInfoRequestItem ::= SEQUENCE {
 	hnb-RNL-Identity	HNB-RNL-Identity,
-	iE-Extensions		ProtocolExtensionContainer { { NeighbourInfoRequestItem-ExtIEs } } OPTIONAL,
-	...
-}
-
-NeighbourInfoRequestItem-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions		 OPTIONAL,
 	...
 }
 
@@ -427,12 +365,8 @@ RABListItem	::= SEQUENCE {
 	old-transport-Info	TransportInfo,
 	new-transport-Info	TransportInfo,
 	cn-domain-indicator	CN-DomainIndicator,
-	iE-Extensions		ProtocolExtensionContainer { { RABListItem-ExtIEs } }		OPTIONAL,
+	iE-Extensions		IE-Extensions		 OPTIONAL,
 ...
-}
-
-RABListItem-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
-	...
 }
 
 RAC	::= OCTET STRING(SIZE(1))
@@ -474,12 +408,8 @@ TransportInfo	::= SEQUENCE {
 					bindingID	BindingID,
 					...
 				},
-	iE-Extensions		ProtocolExtensionContainer { { TransportInfo-ExtIEs } }	OPTIONAL,
+	iE-Extensions		IE-Extensions		 OPTIONAL,
 ...
-}
-
-TransportInfo-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
-	...
 }
 
 TransportLayerAddress	::= BIT STRING(SIZE(1..160,...))
@@ -487,11 +417,7 @@ TransportLayerAddress	::= BIT STRING(SIZE(1..160,...))
 Tunnel-Information ::= SEQUENCE {
 	iP-Address		IP-Address,
 	uDP-Port-Number		UDP-Port-Number	OPTIONAL,
-	iE-Extensions		ProtocolExtensionContainer { { Tunnel-Information-ExtIEs } }		OPTIONAL,
-	...
-}
-
-Tunnel-Information-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
+	iE-Extensions		IE-Extensions		 OPTIONAL,
 	...
 }
 
@@ -507,12 +433,8 @@ UDP-Port-Number ::= OCTET STRING(SIZE(2))
 UE-Capabilities ::= SEQUENCE {
 	access-stratum-release-indicator	Access-stratum-release-indicator,
 	csg-capability				CSG-Capability,
-	iE-Extensions		ProtocolExtensionContainer { { UE-Capabilities-ExtIEs } }		OPTIONAL,
+	iE-Extensions				IE-Extensions		 OPTIONAL,
 ...
-}
-
-UE-Capabilities-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
-	...
 }
 
 UTRANCellID ::= SEQUENCE {
@@ -520,11 +442,7 @@ UTRANCellID ::= SEQUENCE {
 	rAC		RAC,
 	pLMNidentity	PLMNidentity,
 	uTRANcellID	CellIdentity,
-	iE-Extensions	ProtocolExtensionContainer { {UTRANCellID-ExtIEs} } OPTIONAL
-}
-
-UTRANCellID-ExtIEs HNBAP-PROTOCOL-EXTENSION ::= {
-	...
+	iE-Extensions	IE-Extensions		 OPTIONAL
 }
 
 
