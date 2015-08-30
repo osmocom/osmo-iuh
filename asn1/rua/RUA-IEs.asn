@@ -16,16 +16,17 @@ IMPORTS
 	maxNrOfErrors
 FROM RUA-Constants
 
+	maxProtocolExtensions,
 	Criticality,
 	ProcedureCode,
 	ProtocolIE-ID,
 	TriggeringMessage
 FROM RUA-CommonDataTypes
 
-	ProtocolExtensionContainer{},
-	RUA-PROTOCOL-EXTENSION
-FROM RUA-Containers;
+	IE
+FROM RUA-PDU;
 
+IE-Extensions ::= SEQUENCE (SIZE (1..maxProtocolExtensions)) OF IE
 
 CN-DomainIndicator ::= ENUMERATED { 
 	cs-domain, 
@@ -160,7 +161,7 @@ CriticalityDiagnostics ::= SEQUENCE {
 	triggeringMessage		TriggeringMessage	OPTIONAL,
 	procedureCriticality		Criticality	OPTIONAL,
 	iEsCriticalityDiagnostics	CriticalityDiagnostics-IE-List	OPTIONAL,
-	iE-Extensions			ProtocolExtensionContainer { {CriticalityDiagnostics-ExtIEs} } 	OPTIONAL,
+	iE-Extensions			IE-Extensions	OPTIONAL,
 	...
 }
 
@@ -169,18 +170,9 @@ CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF
 		iECriticality			Criticality,
 		iE-ID				ProtocolIE-ID,
 		typeOfError			TypeOfError,
-		iE-Extensions			ProtocolExtensionContainer { {CriticalityDiagnostics-IE-List-ExtIEs} }	OPTIONAL,
+		iE-Extensions			IE-Extensions	OPTIONAL,
 		...
 	}
-
-CriticalityDiagnostics-IE-List-ExtIEs RUA-PROTOCOL-EXTENSION ::= {
-	...
-}
-
-CriticalityDiagnostics-ExtIEs RUA-PROTOCOL-EXTENSION ::= {
-	...
-}
-
 
 TypeOfError ::= ENUMERATED {
 	not-understood,
