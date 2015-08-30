@@ -1,7 +1,7 @@
 /* Automatically generated file - do not edit */
 
 #include "asn1defs.h"
-#include "out.h"
+#include "hnbap.h"
 
 const ASN1CType asn1_type_Criticality[] = {
   (ASN1_CTYPE_ENUMERATED << ASN1_CTYPE_SHIFT) | 0x4000000 | 0xa,
