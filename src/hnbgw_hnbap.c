@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#include "asn1helpers.h"
+
 #include "hnbap.h"
 #include "hnbgw.h"
 #include "hnbap_const.h"
@@ -43,30 +45,6 @@ static void *find_ie(const struct ProtocolIE_Container_1 *cont, ProtocolIE_ID id
 	return NULL;
 }
 
-static inline uint16_t asn1str_to_u16(ASN1String *as)
-{
-	if (as->len < 2)
-		return 0;
-	else
-		return *(uint16_t *)as->buf;
-}
-
-static inline uint8_t asn1str_to_u8(ASN1String *as)
-{
-	if (as->len < 1)
-		return 0;
-	else
-		return *(uint8_t *)as->buf;
-}
-
-static inline uint8_t asn1bitstr_to_u32(ASN1BitString *as)
-{
-	if (as->len < 25)
-		return 0;
-	else
-		return *(uint32_t *)as->buf;
-}
-
 static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, struct HNBRegisterRequest *req)
 {
 	HNB_Identity *identity =
@@ -86,7 +64,7 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, struct HNBRegister
 		return -1;
 
 	/* copy all identity parameters from the message to ctx */
-	strncpy(ctx->identity_info, (const char *) identity->hNB_Identity_Info.buf,
+	asn1_strncpy(ctx->identity_info, &identity->hNB_Identity_Info,
 		sizeof(ctx->identity_info));
 	ctx->id.lac = asn1str_to_u16(lac);
 	ctx->id.sac = asn1str_to_u16(sac);

@@ -5,7 +5,7 @@ LDFLAGS=`pkg-config --libs libosmocore libosmovty libosmogsm` -lsctp -L$(LIBFFAS
 
 all: hnbgw
 
-hnbgw: hnbgw.o hnbgw_hnbap.o hnbap.o
+hnbgw: hnbgw.o hnbgw_hnbap.o hnbap.o asn1helpers.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 %.o: %.c
