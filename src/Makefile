@@ -14,6 +14,9 @@ all: hnbgw
 hnbap_encoder.c: $(ASN1_DIR)/HNBAP-PDU-Contents.asn
 	$(ASN1TOSTRUCT) -f $<
 
+asn1c/libosmo-asn1-hnbap.a:
+	$(MAKE) -C asn1c
+
 hnbgw: asn1helpers.o hnbap_common.o hnbap_encoder.o hnbap_decoder.o hnbgw.o hnbgw_hnbap.o asn1c/libosmo-asn1-hnbap.a
 	$(CC) $(LDFLAGS) -o $@ $^
 
