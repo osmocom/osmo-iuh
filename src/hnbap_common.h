@@ -129,6 +129,10 @@
 # error "You are compiling with the wrong version of ASN1C"
 #endif
 
+#include <osmocom/core/logging.h>
+
+#define HNBAP_DEBUG(x, args ...) DEBUGP(0, x, ## args)
+
 extern int asn1_xer_print;
 
 struct msgb *hnbap_generate_successful_outcome(
