@@ -45,7 +45,7 @@ ssize_t s1ap_generate_initiating_message(uint8_t ** buffer,
 }
 #endif
 
-struct msgb *hnbap_generate_successfull_outcome(
+struct msgb *hnbap_generate_successful_outcome(
 					   e_ProcedureCode procedureCode,
 					   Criticality_t criticality,
 					   asn_TYPE_descriptor_t * td,
@@ -75,7 +75,7 @@ struct msgb *hnbap_generate_successfull_outcome(
 }
 
 #if 0
-ssize_t s1ap_generate_unsuccessfull_outcome(uint8_t ** buffer,
+ssize_t s1ap_generate_unsuccessful_outcome(uint8_t ** buffer,
 					    uint32_t * length,
 					    e_ProcedureCode procedureCode,
 					    Criticality_t criticality,

@@ -131,7 +131,7 @@
 
 extern int asn1_xer_print;
 
-struct msgb *hnbap_generate_successfull_outcome(
+struct msgb *hnbap_generate_successful_outcome(
 					   e_ProcedureCode procedureCode,
 					   Criticality_t criticality,
 					   asn_TYPE_descriptor_t * td,
