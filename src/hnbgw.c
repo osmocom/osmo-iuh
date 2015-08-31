@@ -24,6 +24,7 @@
 #include "hnbgw_hnbap.h"
 
 static void *tall_hnb_ctx;
+void *talloc_asn1_ctx;
 
 struct hnb_gw g_hnb_gw = {
 	.config = {
@@ -132,6 +133,7 @@ int main(int argc, char **argv)
 	int rc;
 
 	tall_hnb_ctx = talloc_named_const(NULL, 0, "hnb_context");
+	talloc_asn1_ctx = talloc_named_const(NULL, 0, "asn1_context");
 
 	g_hnb_gw.listen_fd.cb = listen_fd_cb;
 	g_hnb_gw.listen_fd.when = BSC_FD_READ;

@@ -4,8 +4,8 @@ ASN1_FILES=HNBAP-CommonDataTypes.asn
 ASN1TOSTRUCT:=$(ASN1_ROOT)/utils/asn1tostruct.py
 #ASN1_SRCS:=$(patsubst 
 
-CFLAGS=-g -Wall `pkg-config --cflags libosmocore libosmovty libosmogsm` -Iasn1c/
-LDFLAGS=`pkg-config --libs libosmocore libosmovty libosmogsm` -lsctp
+CFLAGS=-g -Wall `pkg-config --cflags libosmocore libosmovty libosmogsm libasn1c` -Iasn1c/
+LDFLAGS=`pkg-config --libs libosmocore libosmovty libosmogsm libasn1c` -lsctp
 
 all: hnbgw
 
