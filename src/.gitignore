@@ -1,4 +1,13 @@
 hnbap_decoder.c
 hnbap_encoder.c
 hnbap_ies_defs.h
+
+rua_decoder.c
+rua_encoder.c
+rua_ies_defs.h
+
+ranap_decoder.c
+ranap_encoder.c
+ranap_ies_defs.h
+
 hnbgw
