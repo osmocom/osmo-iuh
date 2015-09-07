@@ -85,7 +85,7 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 {
 	struct hnb_context *ctx = fd->data;
 	struct sctp_sndrcvinfo sinfo = {
-		.sinfo_ppid = msgb_ppid(msg),
+		.sinfo_ppid = htonl(msgb_ppid(msg)),
 		.sinfo_stream = ctx->hnbap_stream,
 	};
 	int rc;
