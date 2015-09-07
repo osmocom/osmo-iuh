@@ -2,9 +2,12 @@
 
 #include <osmocom/core/select.h>
 #include <osmocom/core/linuxlist.h>
+#include <osmocom/core/write_queue.h>
 
 #define DEBUG
 #include <osmocom/core/logging.h>
+
+#define msgb_ppid(msg)		(msg)->cb[0]
 
 enum {
 	DMAIN,
@@ -39,12 +42,17 @@ struct hnb_context {
 	struct llist_head list;
 	/*! HNB-GW we are part of */
 	struct hnb_gw *gw;
-	/*! SCTP socket for Iuh to this specific HNB */
-	struct osmo_fd socket;
+	/*! SCTP socket + write queue for Iuh to this specific HNB */
+	struct osmo_wqueue wqueue;
 	/*! copied from HNB-Identity-Info IE */
 	char identity_info[256];
 	/*! copied from Cell Identity IE */
 	struct umts_cell_id id;
+
+	/*! SCTP stream ID for HNBAP */
+	uint16_t hnbap_stream;
+	/*! SCTP stream ID for RUA */
+	uint16_t rua_stream;
 };
 
 struct ue_context {

@@ -16,6 +16,7 @@
 #include <osmocom/core/logging.h>
 #include <osmocom/core/socket.h>
 #include <osmocom/core/msgb.h>
+#include <osmocom/core/write_queue.h>
 
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
@@ -32,12 +33,12 @@ struct hnb_gw g_hnb_gw = {
 	},
 };
 
-static int hnb_socket_cb(struct osmo_fd *fd, unsigned int what)
+static int hnb_read_cb(struct osmo_fd *fd)
 {
 	struct hnb_context *hnb = fd->data;
 	struct sctp_sndrcvinfo sinfo;
 	struct msgb *msg = msgb_alloc(IUH_MSGB_SIZE, "Iuh rx");
-	int flags;
+	int flags = 0;
 	int rc;
 
 	if (!msg)
@@ -56,9 +57,11 @@ static int hnb_socket_cb(struct osmo_fd *fd, unsigned int what)
 
 	switch (sinfo.sinfo_ppid) {
 	case IUH_PPI_HNBAP:
+		hnb->hnbap_stream = sinfo.sinfo_stream;
 		rc = hnbgw_hnbap_rx(hnb, msg);
 		break;
 	case IUH_PPI_RUA:
+		hnb->rua_stream = sinfo.sinfo_stream;
 		//rc = hnbgw_rua_rx(hnb, msg);
 		break;
 	case IUH_PPI_SABP:
@@ -74,6 +77,22 @@ static int hnb_socket_cb(struct osmo_fd *fd, unsigned int what)
 		rc = 0;
 		break;
 	}
+
+	return rc;
+}
+
+static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
+{
+	struct hnb_context *ctx = fd->data;
+	struct sctp_sndrcvinfo sinfo = {
+		.sinfo_ppid = msgb_ppid(msg),
+		.sinfo_stream = ctx->hnbap_stream,
+	};
+	int rc;
+
+	rc = sctp_send(fd->fd, msgb_data(msg), msgb_length(msg),
+			&sinfo, 0);
+	msgb_free(msg);
 
 	return rc;
 }
@@ -99,11 +118,13 @@ static int listen_fd_cb(struct osmo_fd *fd, unsigned int what)
 		return -ENOMEM;
 
 	ctx->gw = gw;
-	ctx->socket.data = ctx;
-	ctx->socket.fd = new_fd;
-	ctx->socket.when = BSC_FD_READ;
-	ctx->socket.cb = hnb_socket_cb;
-	osmo_fd_register(&ctx->socket);
+	osmo_wqueue_init(&ctx->wqueue, 16);
+	ctx->wqueue.bfd.data = ctx;
+	ctx->wqueue.bfd.fd = new_fd;
+	ctx->wqueue.bfd.when = BSC_FD_READ;
+	ctx->wqueue.read_cb = hnb_read_cb;
+	ctx->wqueue.write_cb = hnb_write_cb;
+	osmo_fd_register(&ctx->wqueue.bfd);
 
 	llist_add_tail(&ctx->list, &gw->hnb_list);
 
