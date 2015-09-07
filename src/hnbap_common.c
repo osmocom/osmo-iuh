@@ -70,7 +70,7 @@ struct msgb *hnbap_generate_successful_outcome(
 	}
 
 	rval = aper_encode_to_buffer(&asn_DEF_HNBAP_PDU, &pdu,
-				     msg->data, msgb_length(msg));
+				     msg->data, msgb_tailroom(msg));
 	if (rval.encoded < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
 		msgb_free(msg);
