@@ -52,6 +52,8 @@ static int hnb_socket_cb(struct osmo_fd *fd, unsigned int what)
 	} else
 		msgb_put(msg, rc);
 
+	sinfo.sinfo_ppid = ntohl(sinfo.sinfo_ppid);
+
 	switch (sinfo.sinfo_ppid) {
 	case IUH_PPI_HNBAP:
 		rc = hnbgw_hnbap_rx(hnb, msg);
@@ -128,6 +130,19 @@ static struct vty_app_info vty_info = {
 
 static int daemonize = 0;
 
+static int sctp_sock_init(int fd)
+{
+	struct sctp_event_subscribe event;
+	int rc;
+
+	/* subscribe for all events */
+	memset((uint8_t *)&event, 1, sizeof(event));
+	rc = setsockopt(fd, IPPROTO_SCTP, SCTP_EVENTS,
+			&event, sizeof(event));
+
+	return rc;
+}
+
 int main(int argc, char **argv)
 {
 	int rc;
@@ -159,6 +174,7 @@ int main(int argc, char **argv)
 		perror("Error binding Iuh port");
 		exit(1);
 	}
+	sctp_sock_init(g_hnb_gw.listen_fd.fd);
 
 	if (daemonize) {
 		rc = osmo_daemonize();
