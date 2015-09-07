@@ -84,6 +84,7 @@ static int hnb_read_cb(struct osmo_fd *fd)
 		break;
 	}
 
+	msgb_free(msg);
 	return rc;
 }
 
