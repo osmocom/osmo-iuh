@@ -138,6 +138,7 @@ int main(int argc, char **argv)
 	g_hnb_gw.listen_fd.cb = listen_fd_cb;
 	g_hnb_gw.listen_fd.when = BSC_FD_READ;
 	g_hnb_gw.listen_fd.data = &g_hnb_gw;
+	INIT_LLIST_HEAD(&g_hnb_gw.hnb_list);
 
 	rc = osmo_init_logging(&hnbgw_log_info);
 	if (rc < 0)
