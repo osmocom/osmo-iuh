@@ -53,6 +53,12 @@ static int hnb_read_cb(struct osmo_fd *fd)
 	} else
 		msgb_put(msg, rc);
 
+	if (flags & MSG_NOTIFICATION) {
+		LOGP(DMAIN, LOGL_INFO, "Ignoring SCTP notification\n");
+		msgb_free(msg);
+		return 0;
+	}
+
 	sinfo.sinfo_ppid = ntohl(sinfo.sinfo_ppid);
 
 	switch (sinfo.sinfo_ppid) {
