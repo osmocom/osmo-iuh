@@ -31,6 +31,7 @@ static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
 	};
 
 	/* encode the Information Elements */
+	memset(&accept_out, 0, sizeof(accept_out));
 	rc = hnbap_encode_hnbregisteraccepties(&accept_out,  &accept);
 	if (rc < 0) {
 		return rc;
@@ -54,8 +55,10 @@ static int hnbgw_tx_ue_register_acc(struct ue_context *ue)
 	int rc;
 
 	/* FIXME accept.uE_Identity; */
+	memset(&accept, 0, sizeof(accept));
 	asn1_u32_to_bitstring(&accept.context_ID, &ue->context_id);
 
+	memset(&accept_out, 0, sizeof(accept_out));
 	rc = hnbap_encode_ueregisteraccepties(&accept_out, &accept);
 	if (rc < 0) {
 		return rc;
@@ -179,6 +182,7 @@ int hnbgw_hnbap_rx(struct hnb_context *hnb, struct msgb *msg)
 
 	/* decode and handle to _hnbgw_hnbap_rx() */
 
+	memset(pdu, 0, sizeof(*pdu));
 	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
 			      msg->data, msgb_length(msg), 0, 0);
 	if (dec_ret.code != RC_OK) {
