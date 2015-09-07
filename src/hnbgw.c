@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 	}
 
 	rc = osmo_sock_init_ofd(&g_hnb_gw.listen_fd, AF_INET, SOCK_STREAM,
-			   IPPROTO_SCTP, "127.0.0.1",
+			   IPPROTO_SCTP, NULL,
 			   g_hnb_gw.config.iuh_listen_port, OSMO_SOCK_F_BIND);
 	if (rc < 0) {
 		perror("Error binding Iuh port");
