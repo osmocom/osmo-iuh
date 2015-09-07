@@ -92,8 +92,7 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 
 	rc = sctp_send(fd->fd, msgb_data(msg), msgb_length(msg),
 			&sinfo, 0);
-	msgb_free(msg);
-
+	/* we don't need to msgb_free(), write_queue does this for us */
 	return rc;
 }
 
