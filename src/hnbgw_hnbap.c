@@ -16,6 +16,9 @@
 
 static int hnbgw_hnbap_tx(struct hnb_context *ctx, struct msgb *msg)
 {
+	if (!msg)
+		return -EINVAL;
+
 	msgb_ppid(msg) = IUH_PPI_HNBAP;
 	return osmo_wqueue_enqueue(&ctx->wqueue, msg);
 }
