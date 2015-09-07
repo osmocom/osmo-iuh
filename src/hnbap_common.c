@@ -4,6 +4,7 @@
 
 #include "HNBAP-PDU.h"
 #include "hnbap_common.h"
+#include "hnbgw.h"
 
 int asn_debug = 0;
 int asn1_xer_print = 0;
@@ -55,16 +56,23 @@ struct msgb *hnbap_generate_successful_outcome(
 	HNBAP_PDU_t pdu;
 	struct msgb *msg = hnbap_msgb_alloc();
 	asn_enc_rval_t rval;
+	int rc;
 
 	memset(&pdu, 0, sizeof(HNBAP_PDU_t));
 	pdu.present = HNBAP_PDU_PR_successfulOutcome;
 	pdu.choice.successfulOutcome.procedureCode = procedureCode;
 	pdu.choice.successfulOutcome.criticality = criticality;
-	ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
+	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		msgb_free(msg);
+		return NULL;
+	}
 
 	rval = aper_encode_to_buffer(&asn_DEF_HNBAP_PDU, &pdu,
 				     msg->data, msgb_length(msg));
 	if (rval.encoded < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
 		msgb_free(msg);
 		return NULL;
 	}
