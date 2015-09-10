@@ -20,6 +20,145 @@ static int hnbgw_rua_tx(struct hnb_context *ctx, struct msgb *msg)
 	return osmo_wqueue_enqueue(&ctx->wqueue, msg);
 }
 
+static const struct value_string rua_cause_radio_vals[] = {
+	{ RUA_CauseRadioNetwork_normal,		 "normal" },
+	{ RUA_CauseRadioNetwork_connect_failed,	 "connect failed" },
+	{ RUA_CauseRadioNetwork_network_release, "network release" },
+	{ RUA_CauseRadioNetwork_unspecified,	 "unspecified" },
+	{ 0, NULL }
+};
+
+static const struct value_string rua_cause_transp_vals[] = {
+	{ RUA_CauseTransport_transport_resource_unavailable, "resource unavailable" },
+	{ RUA_CauseTransport_unspecified, "unspecified" },
+	{ 0, NULL }
+};
+
+static const struct value_string rua_cause_prot_vals[] = {
+	{ RUA_CauseProtocol_transfer_syntax_error, "syntax error" },
+	{ RUA_CauseProtocol_abstract_syntax_error_reject,
+		"abstract syntax error; reject" },
+	{ RUA_CauseProtocol_abstract_syntax_error_ignore_and_notify,
+		"abstract syntax error; ignore and notify" },
+	{ RUA_CauseProtocol_message_not_compatible_with_receiver_state,
+		"message not compatible with receiver state" },
+	{ RUA_CauseProtocol_semantic_error, "semantic error" },
+	{ RUA_CauseProtocol_unspecified, "unspecified" },
+	{ RUA_CauseProtocol_abstract_syntax_error_falsely_constructed_message,
+		"falsely constructed message" },
+	{ 0, NULL }
+};
+
+static const struct value_string rua_cause_misc_vals[] = {
+	{ RUA_CauseMisc_processing_overload,	"processing overload" },
+	{ RUA_CauseMisc_hardware_failure,	"hardware failure" },
+	{ RUA_CauseMisc_o_and_m_intervention,	"OAM intervention" },
+	{ RUA_CauseMisc_unspecified, 		"unspecified" },
+	{ 0, NULL }
+};
+
+static char *rua_cause_str(RUA_Cause_t *cause)
+{
+	static char buf[32];
+
+	switch (cause->present) {
+	case RUA_Cause_PR_radioNetwork:
+		snprintf(buf, sizeof(buf), "radio(%s)",
+			 get_value_string(rua_cause_radio_vals,
+					 cause->choice.radioNetwork));
+		break;
+	case RUA_Cause_PR_transport:
+		snprintf(buf, sizeof(buf), "transport(%s)",
+			get_value_string(rua_cause_transp_vals,
+					cause->choice.transport));
+		break;
+	case RUA_Cause_PR_protocol:
+		snprintf(buf, sizeof(buf), "protocol(%s)",
+			get_value_string(rua_cause_prot_vals,
+					cause->choice.protocol));
+		break;
+	case RUA_Cause_PR_misc:
+		snprintf(buf, sizeof(buf), "misc(%s)",
+			get_value_string(rua_cause_misc_vals,
+					cause->choice.misc));
+		break;
+	}
+	return buf;
+}
+
+
+static int rua_rx_init_connect(struct hnb_context *hnb, ANY_t *in)
+{
+	RUA_ConnectIEs_t ies;
+	uint32_t context_id;
+	int rc;
+
+	rc = rua_decode_connecties(&ies, in);
+	if (rc < 0)
+		return rc;
+
+	context_id = asn1bitstr_to_u32(&ies.context_ID);
+
+	DEBUGP(DMAIN, "Connect.req(ctx=0x%x, %s)\n", context_id,
+		ies.establishment_Cause == RUA_Establishment_Cause_emergency_call
+		? "emergency" : "normal");
+}
+
+static int rua_rx_init_disconnect(struct hnb_context *hnb, ANY_t *in)
+{
+	RUA_DisconnectIEs_t ies;
+	uint32_t context_id;
+	int rc;
+
+	rc = rua_decode_disconnecties(&ies, in);
+	if (rc < 0)
+		return rc;
+
+	context_id = asn1bitstr_to_u32(&ies.context_ID);
+
+	DEBUGP(DMAIN, "Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
+		rua_cause_str(&ies.cause));
+}
+
+static int rua_rx_init_dt(struct hnb_context *hnb, ANY_t *in)
+{
+	RUA_DirectTransferIEs_t ies;
+	uint32_t context_id;
+	int rc;
+
+	rc = rua_decode_directtransferies(&ies, in);
+	if (rc < 0)
+		return rc;
+
+	context_id = asn1bitstr_to_u32(&ies.context_ID);
+
+	DEBUGP(DMAIN, "Data.req(ctx=0x%x)\n", context_id);
+
+}
+
+static int rua_rx_init_udt(struct hnb_context *hnb, ANY_t *in)
+{
+	RUA_ConnectionlessTransferIEs_t ies;
+	int rc;
+
+	rc = rua_decode_connectionlesstransferies(&ies, in);
+	if (rc < 0)
+		return rc;
+
+	DEBUGP(DMAIN, "UData.req()\n");
+
+}
+
+static int rua_rx_init_err_ind(struct hnb_context *hnb, ANY_t *in)
+{
+	RUA_ErrorIndicationIEs_t ies;
+	int rc;
+
+	rc = rua_decode_errorindicationies(&ies, in);
+	if (rc < 0)
+		return rc;
+
+}
 
 static int rua_rx_initiating_msg(struct hnb_context *hnb, RUA_InitiatingMessage_t *imsg)
 {
@@ -27,18 +166,24 @@ static int rua_rx_initiating_msg(struct hnb_context *hnb, RUA_InitiatingMessage_
 
 	switch (imsg->procedureCode) {
 	case RUA_ProcedureCode_id_Connect:
+		rc = rua_rx_init_connect(hnb, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_DirectTransfer:
+		rc = rua_rx_init_dt(hnb, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_Disconnect:
+		rc = rua_rx_init_disconnect(hnb, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_ConnectionlessTransfer:
+		rc = rua_rx_init_udt(hnb, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_ErrorIndication:
+		rc = rua_rx_init_err_ind(hnb, &imsg->value);
+		break;
 	case RUA_ProcedureCode_id_privateMessage:
 		break;
 	default:
-		break;
+		return -1;
 	}
 }
 
