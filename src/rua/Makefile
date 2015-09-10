@@ -78,7 +78,7 @@ libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 
 # Remove the lines below to convert it into a pure .am file
 CFLAGS += -I. `pkg-config --cflags libasn1c`
-OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
+OBJS=${ASN_MODULE_SOURCES:.c=.o}
 
 all: libosmo-asn1-rua.a
 
@@ -95,8 +95,13 @@ clean:
 	rm -f libosmo-asn1-rua.a
 	rm -f $(OBJS)
 
+clean-srcs:
+	@rm -f *.c *.h Makefile.am.sample
+
 regen: regenerate-from-asn1-source
 
-regenerate-from-asn1-source:
+regenerate-from-asn1-source: clean clean-srcs
 	ASN1C_PREFIX="RUA_" asn1c -gen-PER ../../asn1/rua/RUA-CommonDataTypes.asn ../../asn1/rua/RUA-Constants.asn ../../asn1/rua/RUA-IEs.asn ../../asn1/rua/RUA-PDU.asn
+	# remove the local copy of the runtime code
+	@rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
 
