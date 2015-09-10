@@ -2,7 +2,10 @@
 
 #include <osmocom/core/msgb.h>
 
-#include "ranap_common.h"
+//#include "ranap_common.h"
+#include "ranap/RANAP_RANAP-PDU.h"
+#include "ranap/RANAP_ProtocolIE-ID.h"
+#include "ranap/RANAP_IE.h"
 #include "hnbgw.h"
 
 extern int asn1_xer_print;

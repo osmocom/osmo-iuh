@@ -11,7 +11,7 @@ LDFLAGS:=$(PKG_LDFLAGS) -lsctp
 
 HNBAP_OBJS=hnbap_encoder.o hnbap_decoder.o hnbap_common.o
 RUA_OBJS=rua_encoder.o rua_decoder.o rua_common.o
-RANAP_OBJS=#ranap_encoder.o ranap_decoder.o
+RANAP_OBJS=ranap_common.o #ranap_encoder.o ranap_decoder.o
 
 LIBS=hnbap/libosmo-asn1-hnbap.a rua/libosmo-asn1-rua.a ranap/libosmo-asn1-ranap.a
 
@@ -38,7 +38,7 @@ rua/libosmo-asn1-rua.a:
 ranap/libosmo-asn1-ranap.a:
 	$(MAKE) -C ranap
 
-hnbgw: asn1helpers.o hnbgw.o hnbgw_hnbap.o hnbgw_rua.o $(HNBAP_OBJS) $(RUA_OBJS) $(RANAP_OBJS) $(LIBS)
+hnbgw: asn1helpers.o hnbgw.o hnbgw_hnbap.o hnbgw_rua.o hnbgw_ranap.o $(HNBAP_OBJS) $(RUA_OBJS) $(RANAP_OBJS) $(LIBS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 %.o: %.c

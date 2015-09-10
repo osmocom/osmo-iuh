@@ -8,6 +8,7 @@
 #include "asn1helpers.h"
 
 #include "hnbgw.h"
+#include "hnbgw_ranap.h"
 #include "rua_common.h"
 #include "rua_ies_defs.h"
 
@@ -87,7 +88,7 @@ static char *rua_cause_str(RUA_Cause_t *cause)
 }
 
 
-static int rua_rx_init_connect(struct hnb_context *hnb, ANY_t *in)
+static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 {
 	RUA_ConnectIEs_t ies;
 	uint32_t context_id;
@@ -102,9 +103,10 @@ static int rua_rx_init_connect(struct hnb_context *hnb, ANY_t *in)
 	DEBUGP(DMAIN, "Connect.req(ctx=0x%x, %s)\n", context_id,
 		ies.establishment_Cause == RUA_Establishment_Cause_emergency_call
 		? "emergency" : "normal");
+	/* FIXME */
 }
 
-static int rua_rx_init_disconnect(struct hnb_context *hnb, ANY_t *in)
+static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 {
 	RUA_DisconnectIEs_t ies;
 	uint32_t context_id;
@@ -118,9 +120,10 @@ static int rua_rx_init_disconnect(struct hnb_context *hnb, ANY_t *in)
 
 	DEBUGP(DMAIN, "Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
 		rua_cause_str(&ies.cause));
+	/* FIXME */
 }
 
-static int rua_rx_init_dt(struct hnb_context *hnb, ANY_t *in)
+static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 {
 	RUA_DirectTransferIEs_t ies;
 	uint32_t context_id;
@@ -133,10 +136,11 @@ static int rua_rx_init_dt(struct hnb_context *hnb, ANY_t *in)
 	context_id = asn1bitstr_to_u32(&ies.context_ID);
 
 	DEBUGP(DMAIN, "Data.req(ctx=0x%x)\n", context_id);
+	/* FIXME */
 
 }
 
-static int rua_rx_init_udt(struct hnb_context *hnb, ANY_t *in)
+static int rua_rx_init_udt(struct msgb *msg, ANY_t *in)
 {
 	RUA_ConnectionlessTransferIEs_t ies;
 	int rc;
@@ -147,9 +151,15 @@ static int rua_rx_init_udt(struct hnb_context *hnb, ANY_t *in)
 
 	DEBUGP(DMAIN, "UData.req()\n");
 
+	/* FIXME: pass on to RANAP */
+	rc = hnbgw_ranap_rx(msg, ies.ranaP_Message.buf, ies.ranaP_Message.size);
+	/* FIXME: what to do with the asn1c-allocated memory */
+
+	return rc;
 }
 
-static int rua_rx_init_err_ind(struct hnb_context *hnb, ANY_t *in)
+
+static int rua_rx_init_err_ind(struct msgb *msg, ANY_t *in)
 {
 	RUA_ErrorIndicationIEs_t ies;
 	int rc;
@@ -160,25 +170,25 @@ static int rua_rx_init_err_ind(struct hnb_context *hnb, ANY_t *in)
 
 }
 
-static int rua_rx_initiating_msg(struct hnb_context *hnb, RUA_InitiatingMessage_t *imsg)
+static int rua_rx_initiating_msg(struct msgb *msg, RUA_InitiatingMessage_t *imsg)
 {
 	int rc;
 
 	switch (imsg->procedureCode) {
 	case RUA_ProcedureCode_id_Connect:
-		rc = rua_rx_init_connect(hnb, &imsg->value);
+		rc = rua_rx_init_connect(msg, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_DirectTransfer:
-		rc = rua_rx_init_dt(hnb, &imsg->value);
+		rc = rua_rx_init_dt(msg, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_Disconnect:
-		rc = rua_rx_init_disconnect(hnb, &imsg->value);
+		rc = rua_rx_init_disconnect(msg, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_ConnectionlessTransfer:
-		rc = rua_rx_init_udt(hnb, &imsg->value);
+		rc = rua_rx_init_udt(msg, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_ErrorIndication:
-		rc = rua_rx_init_err_ind(hnb, &imsg->value);
+		rc = rua_rx_init_err_ind(msg, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_privateMessage:
 		break;
@@ -187,18 +197,18 @@ static int rua_rx_initiating_msg(struct hnb_context *hnb, RUA_InitiatingMessage_
 	}
 }
 
-static int rua_rx_successful_outcome_msg(struct hnb_context *hnb, RUA_SuccessfulOutcome_t *msg)
+static int rua_rx_successful_outcome_msg(struct msgb *msg, RUA_SuccessfulOutcome_t *in)
 {
 
 }
 
-static int rua_rx_unsuccessful_outcome_msg(struct hnb_context *hnb, RUA_UnsuccessfulOutcome_t *msg)
+static int rua_rx_unsuccessful_outcome_msg(struct msgb *msg, RUA_UnsuccessfulOutcome_t *in)
 {
 
 }
 
 
-static int _hnbgw_rua_rx(struct hnb_context *hnb, RUA_RUA_PDU_t *pdu)
+static int _hnbgw_rua_rx(struct msgb *msg, RUA_RUA_PDU_t *pdu)
 {
 	int rc;
 
@@ -206,13 +216,13 @@ static int _hnbgw_rua_rx(struct hnb_context *hnb, RUA_RUA_PDU_t *pdu)
 	 * that's not possible */
 	switch (pdu->present) {
 	case RUA_RUA_PDU_PR_initiatingMessage:
-		rc = rua_rx_initiating_msg(hnb, &pdu->choice.initiatingMessage);
+		rc = rua_rx_initiating_msg(msg, &pdu->choice.initiatingMessage);
 		break;
 	case RUA_RUA_PDU_PR_successfulOutcome:
-		rc = rua_rx_successful_outcome_msg(hnb, &pdu->choice.successfulOutcome);
+		rc = rua_rx_successful_outcome_msg(msg, &pdu->choice.successfulOutcome);
 		break;
 	case RUA_RUA_PDU_PR_unsuccessfulOutcome:
-		rc = rua_rx_unsuccessful_outcome_msg(hnb, &pdu->choice.unsuccessfulOutcome);
+		rc = rua_rx_unsuccessful_outcome_msg(msg, &pdu->choice.unsuccessfulOutcome);
 		break;
 	default:
 		return -1;
@@ -235,7 +245,7 @@ int hnbgw_rua_rx(struct hnb_context *hnb, struct msgb *msg)
 		return rc;
 	}
 
-	rc = _hnbgw_rua_rx(hnb, pdu);
+	rc = _hnbgw_rua_rx(msg, pdu);
 
 	return rc;
 }

@@ -539,6 +539,6 @@ struct msgb *ranap_generate_successful_outcome(
 					   asn_TYPE_descriptor_t * td,
 					   void *sptr);
 
-RANAP_IE_t *rua_new_ie(RANAP_ProtocolIE_ID_t id, RANAP_Criticality_t criticality,
-			asn_TYPE_descriptor_t *type, void *sptr);
+RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id, RANAP_Criticality_t criticality,
+			 asn_TYPE_descriptor_t *type, void *sptr);
 

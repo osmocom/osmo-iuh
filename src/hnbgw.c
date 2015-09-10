@@ -45,6 +45,10 @@ static int hnb_read_cb(struct osmo_fd *fd)
 	if (!msg)
 		return -ENOMEM;
 
+	/* we store a reference to the HomeNodeB in the msg->dest for the
+	 * benefit of varoius downstream processing functions */
+	msg->dst = hnb;
+
 	rc = sctp_recvmsg(fd->fd, msgb_data(msg), msgb_tailroom(msg),
 			  NULL, NULL, &sinfo, &flags);
 	if (rc < 0) {
