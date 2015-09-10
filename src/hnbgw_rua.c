@@ -21,72 +21,34 @@ static int hnbgw_rua_tx(struct hnb_context *ctx, struct msgb *msg)
 	return osmo_wqueue_enqueue(&ctx->wqueue, msg);
 }
 
-static const struct value_string rua_cause_radio_vals[] = {
-	{ RUA_CauseRadioNetwork_normal,		 "normal" },
-	{ RUA_CauseRadioNetwork_connect_failed,	 "connect failed" },
-	{ RUA_CauseRadioNetwork_network_release, "network release" },
-	{ RUA_CauseRadioNetwork_unspecified,	 "unspecified" },
-	{ 0, NULL }
-};
-
-static const struct value_string rua_cause_transp_vals[] = {
-	{ RUA_CauseTransport_transport_resource_unavailable, "resource unavailable" },
-	{ RUA_CauseTransport_unspecified, "unspecified" },
-	{ 0, NULL }
-};
-
-static const struct value_string rua_cause_prot_vals[] = {
-	{ RUA_CauseProtocol_transfer_syntax_error, "syntax error" },
-	{ RUA_CauseProtocol_abstract_syntax_error_reject,
-		"abstract syntax error; reject" },
-	{ RUA_CauseProtocol_abstract_syntax_error_ignore_and_notify,
-		"abstract syntax error; ignore and notify" },
-	{ RUA_CauseProtocol_message_not_compatible_with_receiver_state,
-		"message not compatible with receiver state" },
-	{ RUA_CauseProtocol_semantic_error, "semantic error" },
-	{ RUA_CauseProtocol_unspecified, "unspecified" },
-	{ RUA_CauseProtocol_abstract_syntax_error_falsely_constructed_message,
-		"falsely constructed message" },
-	{ 0, NULL }
-};
-
-static const struct value_string rua_cause_misc_vals[] = {
-	{ RUA_CauseMisc_processing_overload,	"processing overload" },
-	{ RUA_CauseMisc_hardware_failure,	"hardware failure" },
-	{ RUA_CauseMisc_o_and_m_intervention,	"OAM intervention" },
-	{ RUA_CauseMisc_unspecified, 		"unspecified" },
-	{ 0, NULL }
-};
-
-static char *rua_cause_str(RUA_Cause_t *cause)
+int rua_tx_udt(struct msgb *inmsg)
 {
-	static char buf[32];
+	RUA_ConnectionlessTransfer_t out;
+	RUA_ConnectionlessTransferIEs_t ies;
+	struct msgb *msg;
+	int rc;
 
-	switch (cause->present) {
-	case RUA_Cause_PR_radioNetwork:
-		snprintf(buf, sizeof(buf), "radio(%s)",
-			 get_value_string(rua_cause_radio_vals,
-					 cause->choice.radioNetwork));
-		break;
-	case RUA_Cause_PR_transport:
-		snprintf(buf, sizeof(buf), "transport(%s)",
-			get_value_string(rua_cause_transp_vals,
-					cause->choice.transport));
-		break;
-	case RUA_Cause_PR_protocol:
-		snprintf(buf, sizeof(buf), "protocol(%s)",
-			get_value_string(rua_cause_prot_vals,
-					cause->choice.protocol));
-		break;
-	case RUA_Cause_PR_misc:
-		snprintf(buf, sizeof(buf), "misc(%s)",
-			get_value_string(rua_cause_misc_vals,
-					cause->choice.misc));
-		break;
-	}
-	return buf;
+	memset(&ies, 0, sizeof(ies));
+	ies.ranaP_Message.buf = inmsg->data;
+	ies.ranaP_Message.size = msgb_length(inmsg);
+
+	/* FIXME: msgb_free(msg)? ownership not yet clear */
+
+	memset(&out, 0, sizeof(out));
+	rc = rua_encode_connectionlesstransferies(&out, &ies);
+	if (rc < 0)
+		return rc;
+
+	msg = rua_generate_initiating_message(RUA_ProcedureCode_id_ConnectionlessTransfer,
+					      RUA_Criticality_reject,
+					      &asn_DEF_RUA_ConnectionlessTransfer,
+					      &out);
+	msg->dst = inmsg->dst;
+
+	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+
+	return hnbgw_rua_tx(msg->dst, msg);
 }
-
 
 static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 {

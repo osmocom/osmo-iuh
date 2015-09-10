@@ -8,6 +8,7 @@
 #include "asn1helpers.h"
 
 #include "hnbgw.h"
+#include "hnbgw_rua.h"
 //#include "ranap_common.h"
 
 #include "ranap/RANAP_RANAP-PDU.h"
@@ -177,16 +178,37 @@ int ranap_encode_resetacknowledgeies(
  * END auto-generated copy+pasted
  ***********************************************************************/
 
-#if 0
+static int ranap_tx_reset_ack(struct hnb_context *hnb,
+				RANAP_CN_DomainIndicator_t domain)
 {
-	RANAP_ResetAcknowledgeIEs_s ies;
+	RANAP_ResetAcknowledge_t out;
+	RANAP_ResetAcknowledgeIEs_t ies;
+	struct msgb *msg;
+	int rc;
 
 	memset(&ies, 0, sizeof(ies));
-	ies.cN_DomainIndicator = RANAP_CN_DomainIndicator_cs_domain;
+	ies.cN_DomainIndicator = domain;
 
-	rc = ranap_encoderesetacknowledgeise(&ies, FIXME);
+	memset(&out, 0, sizeof(out));
+	rc = ranap_encode_resetacknowledgeies(&out, &ies);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "error encoding reset ack IEs: %d\n", rc);
+		return rc;
+	}
+
+	msg = ranap_generate_successful_outcome(RANAP_ProcedureCode_id_Reset,
+						RANAP_Criticality_reject,
+						&asn_DEF_RANAP_ResetAcknowledge,
+						&out);
+	if (!msg)
+		return -1;
+
+	msg->dst = hnb;
+
+	rc = rua_tx_udt(msg);
+
+	return rc;
 }
-#endif
 
 static int ranap_rx_init_reset(struct hnb_context *hnb, ANY_t *in)
 {
@@ -198,6 +220,8 @@ static int ranap_rx_init_reset(struct hnb_context *hnb, ANY_t *in)
 		return rc;
 
 	DEBUGP(DMAIN, "RESET.req\n");
+
+	ranap_tx_reset_ack(hnb, ies.cN_DomainIndicator);
 
 	return 0;
 }

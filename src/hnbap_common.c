@@ -77,7 +77,7 @@ struct msgb *hnbap_generate_successful_outcome(
 		return NULL;
 	}
 
-	msgb_put(msg, rval.encoded);
+	msgb_put(msg, rval.encoded/8);
 
 	return msg;
 }

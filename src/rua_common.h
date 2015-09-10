@@ -48,6 +48,11 @@
 
 extern int asn1_xer_print;
 
+struct msgb *rua_generate_initiating_message(
+					e_RUA_ProcedureCode procedureCode,
+					RUA_Criticality_t criticality,
+					asn_TYPE_descriptor_t * td, void *sptr);
+
 struct msgb *rua_generate_successful_outcome(
 					   e_RUA_ProcedureCode procedureCode,
 					   RUA_Criticality_t criticality,
@@ -57,3 +62,4 @@ struct msgb *rua_generate_successful_outcome(
 RUA_IE_t *rua_new_ie(RUA_ProtocolIE_ID_t id, RUA_Criticality_t criticality,
 		     asn_TYPE_descriptor_t *type, void *sptr);
 
+char *rua_cause_str(RUA_Cause_t *cause);
