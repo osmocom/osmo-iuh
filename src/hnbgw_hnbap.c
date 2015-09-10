@@ -1,5 +1,6 @@
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/gsm/gsm48.h>
 
 #include <unistd.h>
 #include <errno.h>
@@ -23,6 +24,51 @@ static int hnbgw_hnbap_tx(struct hnb_context *ctx, struct msgb *msg)
 	return osmo_wqueue_enqueue(&ctx->wqueue, msg);
 }
 
+int decode_iu_bcd(char *out, size_t out_len, const uint8_t *in, size_t in_len)
+{
+	const uint8_t *ch;
+	char *outch = out;
+
+	for (ch = in; ch < in + in_len; ch++) {
+		char c = osmo_bcd2char(*ch & 0xF);
+		*outch++ = c;
+		if (outch + 1 >= out + out_len)
+			break;
+		c = osmo_bcd2char(*ch >> 4);
+		/* skip padding nibble at end */
+		if (c == 'F')
+			break;
+		*outch++ = c;
+	}
+	*outch++ = '\0';
+	return outch - out;
+}
+
+int encode_iu_imsi(uint8_t *out, size_t out_len,
+		   const char *in)
+{
+	unsigned int len = strlen(in);
+	uint8_t odd = (len & 0x01) == 1;
+	unsigned int off = 0;
+	unsigned int i;
+
+	len /= 2;
+	if (odd)
+		len++;
+
+	for (i = 0; i < len; i++) {
+		uint8_t lower, upper;
+
+		lower = osmo_char2bcd(in[++off]) & 0x0f;
+		if (!odd && off + 1 == len)
+			upper = 0x0f;
+		else
+			upper = osmo_char2bcd(in[++off]) & 0x0f;
+
+		out[i] = (upper << 4) | lower;
+	}
+	return i;
+}
 
 static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
 {
@@ -57,10 +103,15 @@ static int hnbgw_tx_ue_register_acc(struct ue_context *ue)
 	UERegisterAccept_t accept_out;
 	UERegisterAcceptIEs_t accept;
 	struct msgb *msg;
+	uint8_t encoded_imsi[10];
+	size_t encoded_imsi_len;
 	int rc;
 
-	/* FIXME accept.uE_Identity; */
+	encoded_imsi_len = encode_iu_imsi(encoded_imsi, sizeof(encoded_imsi), ue->imsi);
+
 	memset(&accept, 0, sizeof(accept));
+	accept.uE_Identity.present = UE_Identity_PR_iMSI;
+	OCTET_STRING_fromBuf(&accept.uE_Identity.choice.iMSI, (const char *)encoded_imsi, encoded_imsi_len);
 	asn1_u32_to_bitstring(&accept.context_ID, &ue->context_id);
 
 	memset(&accept_out, 0, sizeof(accept_out));
@@ -105,19 +156,37 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 {
 	UERegisterRequestIEs_t ies;
 	struct ue_context *ue;
+	char imsi[16];
 	int rc;
 
 	rc = hnbap_decode_ueregisterrequesties(&ies, in);
 	if (rc < 0)
 		return rc;
 
-	/* FIXME: convert UE identity into a more palatable format */
-	ue = ue_context_by_imsi("123");
-	if (!ue)
-		ue = ue_context_alloc(ctx, "123");
+	switch (ies.uE_Identity.present) {
+	case UE_Identity_PR_iMSI:
+		decode_iu_bcd(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSI.buf,
+			      ies.uE_Identity.choice.iMSI.size);
+		break;
+	case UE_Identity_PR_iMSIDS41:
+		decode_iu_bcd(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSIDS41.buf,
+			      ies.uE_Identity.choice.iMSIDS41.size);
+		break;
+	case UE_Identity_PR_iMSIESN:
+		decode_iu_bcd(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSIESN.iMSIDS41.buf,
+			      ies.uE_Identity.choice.iMSIESN.iMSIDS41.size);
+		break;
+	default:
+		DEBUGP(DMAIN, "UE-REGISTER-REQ without IMSI?!?\n");
+		return -1;
+	}
 
-	DEBUGP(DMAIN, "UE-REGSITER-REQ ID_type=%d cause=%ld\n",
-		ies.uE_Identity.present, ies.registration_Cause);
+	DEBUGP(DMAIN, "UE-REGSITER-REQ ID_type=%d imsi=%s cause=%ld\n",
+		ies.uE_Identity.present, imsi, ies.registration_Cause);
+
+	ue = ue_context_by_imsi(imsi);
+	if (!ue)
+		ue = ue_context_alloc(ctx, imsi);
 
 	/* Send UERegisterAccept */
 	return hnbgw_tx_ue_register_acc(ue);

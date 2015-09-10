@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/sctp.h>
+//#include <arpa/inet.h>
 
 #include <osmocom/core/application.h>
 #include <osmocom/core/talloc.h>
@@ -245,6 +246,7 @@ int main(int argc, char **argv)
 	g_hnb_gw.listen_fd.cb = listen_fd_cb;
 	g_hnb_gw.listen_fd.when = BSC_FD_READ;
 	g_hnb_gw.listen_fd.data = &g_hnb_gw;
+	g_hnb_gw.next_ue_ctx_id = 23;
 	INIT_LLIST_HEAD(&g_hnb_gw.hnb_list);
 	INIT_LLIST_HEAD(&g_hnb_gw.ue_list);
 
