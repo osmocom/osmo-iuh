@@ -23,6 +23,7 @@ static int hnbgw_hnbap_tx(struct hnb_context *ctx, struct msgb *msg)
 	return osmo_wqueue_enqueue(&ctx->wqueue, msg);
 }
 
+
 static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
 {
 	HNBRegisterAccept_t accept_out;
@@ -110,10 +111,13 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
+	/* FIXME: convert UE identity into a more palatable format */
+	ue = ue_context_by_imsi("123");
+	if (!ue)
+		ue = ue_context_alloc(ctx, "123");
+
 	DEBUGP(DMAIN, "UE-REGSITER-REQ ID_type=%d cause=%ld\n",
 		ies.uE_Identity.present, ies.registration_Cause);
-
-	/* FIXME: convert UE identity into a more palatable format */
 
 	/* Send UERegisterAccept */
 	return hnbgw_tx_ue_register_acc(ue);

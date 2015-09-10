@@ -26,6 +26,7 @@
 #include "hnbgw_rua.h"
 
 static void *tall_hnb_ctx;
+static void *tall_ue_ctx;
 void *talloc_asn1_ctx;
 
 struct hnb_gw g_hnb_gw = {
@@ -33,6 +34,64 @@ struct hnb_gw g_hnb_gw = {
 		.iuh_listen_port = IUH_DEFAULT_SCTP_PORT,
 	},
 };
+
+struct ue_context *ue_context_by_id(uint32_t id)
+{
+	struct ue_context *ue;
+
+	llist_for_each_entry(ue, &g_hnb_gw.ue_list, list) {
+		if (ue->context_id == id)
+			return ue;
+	}
+	return NULL;
+
+}
+
+struct ue_context *ue_context_by_imsi(const char *imsi)
+{
+	struct ue_context *ue;
+
+	llist_for_each_entry(ue, &g_hnb_gw.ue_list, list) {
+		if (!strcmp(ue->imsi, imsi))
+			return ue;
+	}
+	return NULL;
+}
+
+static uint32_t get_next_ue_ctx_id(void)
+{
+	uint32_t id;
+
+	do {
+		id = g_hnb_gw.next_ue_ctx_id++;
+	} while (ue_context_by_id(id));
+
+	return id;
+}
+
+struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi)
+{
+	struct ue_context *ue;
+
+	ue = talloc_zero(tall_hnb_ctx, struct ue_context);
+	if (!ue)
+		return NULL;
+
+	ue->hnb = hnb;
+	strncpy(ue->imsi, imsi, sizeof(ue->imsi));
+	ue->context_id = get_next_ue_ctx_id();
+	llist_add_tail(&g_hnb_gw.ue_list, &ue->list);
+
+	return ue;
+}
+
+void ue_context_free(struct ue_context *ue)
+{
+	llist_del(&ue->list);
+	talloc_free(ue);
+}
+
+
 
 static int hnb_read_cb(struct osmo_fd *fd)
 {
@@ -180,12 +239,14 @@ int main(int argc, char **argv)
 	int rc;
 
 	tall_hnb_ctx = talloc_named_const(NULL, 0, "hnb_context");
+	tall_ue_ctx = talloc_named_const(NULL, 0, "ue_context");
 	talloc_asn1_ctx = talloc_named_const(NULL, 0, "asn1_context");
 
 	g_hnb_gw.listen_fd.cb = listen_fd_cb;
 	g_hnb_gw.listen_fd.when = BSC_FD_READ;
 	g_hnb_gw.listen_fd.data = &g_hnb_gw;
 	INIT_LLIST_HEAD(&g_hnb_gw.hnb_list);
+	INIT_LLIST_HEAD(&g_hnb_gw.ue_list);
 
 	rc = osmo_init_logging(&hnbgw_log_info);
 	if (rc < 0)

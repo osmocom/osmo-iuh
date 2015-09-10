@@ -60,6 +60,7 @@ struct ue_context {
 	struct llist_head list;
 	/*! Unique Context ID for this UE */
 	uint32_t context_id;
+	char imsi[16+1];
 	/*! UE is serviced via this HNB */
 	struct hnb_context *hnb;
 };
@@ -76,6 +77,13 @@ struct hnb_gw {
 	/*! SCTP listen socket for incoming connections */
 	struct osmo_fd listen_fd;
 	struct llist_head hnb_list;
+	struct llist_head ue_list;
+	uint32_t next_ue_ctx_id;
 };
 
 extern struct hnb_gw g_hnb_gw;
+
+struct ue_context *ue_context_by_id(uint32_t id);
+struct ue_context *ue_context_by_imsi(const char *imsi);
+struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi);
+void ue_context_free(struct ue_context *ue);
