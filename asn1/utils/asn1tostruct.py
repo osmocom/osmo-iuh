@@ -5,7 +5,7 @@ import datetime
 import getopt
 import getpass
 
-version = "0.5"
+version = "0.5osmo1"
 
 lines = ""
 iesDefs = {}
@@ -75,10 +75,11 @@ def usage():
     print "-d        Enable script debug"
     print "-f [file] Input file to parse"
     print "-o [dir]  Output files to given directory"
+    print "-p [pfx]  Prefix all types with given prefix"
     print "-h        Print this help and return"
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "df:ho:", ["debug", "file", "help", "outdir"])
+    opts, args = getopt.getopt(sys.argv[1:], "df:ho:p:", ["debug", "file", "help", "outdir", "prefix"])
 except getopt.GetoptError as err:
     # print help information and exit:
     usage()
@@ -93,6 +94,8 @@ for o, a in opts:
         outdir = a
         if outdir.rfind('/') != len(outdir):
             outdir += '/'
+    if o in ("-p", "--prefix"):
+        prefix = a
     if o in ("-h", "--help"):
         usage()
         sys.exit(2)
@@ -149,9 +152,9 @@ for key in iesDefs:
         if j == key:
             break
 
-    f.write("typedef struct %sIEs_s {\n" % (re.sub('-', '_', i)))
-    f.write("    A_SEQUENCE_OF(struct %s_s) %s;\n" % (re.sub('IEs', '', re.sub('-', '_', ieofielist[i])), lowerFirstCamelWord(re.sub('IEs', '', re.sub('-', '_', ieofielist[i])))))
-    f.write("} %sIEs_t;\n\n" % (re.sub('-', '_', i)))
+    f.write("typedef struct %sIEs_s {\n" % (prefix + re.sub('-', '_', i)))
+    f.write("    A_SEQUENCE_OF(struct %s_s) %s;\n" % (prefix + re.sub('IEs', '', re.sub('-', '_', ieofielist[i])), lowerFirstCamelWord(re.sub('IEs', '', re.sub('-', '_', ieofielist[i])))))
+    f.write("} %sIEs_t;\n\n" % (prefix + re.sub('-', '_', i)))
 
 for key in iesDefs:
     keyupperunderscore = re.sub('-', '_', key.upper())
@@ -165,17 +168,17 @@ for key in iesDefs:
     for ie in iesDefs[key]["ies"]:
         ieupperunderscore = re.sub('-', '_', ie[2].upper())
         if ie[3] == "optional" or ie[3] == "conditional":
-            f.write("#define {0:<{pad}} {1}\n".format("%s_%s_PRESENT" % (keyupperunderscore, ieupperunderscore), "(1 << %d)" % shift,
+            f.write("#define {0:<{pad}} {1}\n".format("%s_%s%s_PRESENT" % (keyupperunderscore, prefix, ieupperunderscore), "(1 << %d)" % shift,
             pad=iesDefs[key]["length"] + len(keyupperunderscore) + 9))
             shift += 1
     if (shift > 0):
         f.write("\n")
 
-    f.write("typedef struct %s_s {\n" % (re.sub('-', '_', key)))
+    f.write("typedef struct %s_s {\n" % (prefix + re.sub('-', '_', key)))
     if (shift > 0):
         f.write("    {0:<{pad}} {1};\n".format("uint16_t", "presenceMask", pad=iesDefs[key]["length"] + 2))
     for ie in iesDefs[key]["ies"]:
-        ieunderscore = re.sub('-', '_', ie[2])
+        ieunderscore = prefix + re.sub('-', '_', ie[2])
         iename = re.sub('id-', '', ie[0])
         ienameunderscore = lowerFirstCamelWord(re.sub('-', '_', iename))
         if ie[2] in ieofielist:
@@ -188,7 +191,7 @@ for key in iesDefs:
             f.write(" ///< Conditional field")
         f.write("\n")
 
-    f.write("} %s_t;\n\n" % (re.sub('-', '_', key)))
+    f.write("} %s_t;\n\n" % (prefix + re.sub('-', '_', key)))
 
 f.write("typedef struct %s_message_s {\n" % (fileprefix))
 f.write("    uint8_t procedureCode;\n")
@@ -203,7 +206,7 @@ for message in messageList:
         continue
     if len(iesDefs[message]["ies"]) == 0:
         continue
-    f.write("        %s_t %s;\n" % (re.sub('-', '_', message), lowerFirstCamelWord(re.sub('-', '_', message))))
+    f.write("        %s_t %s;\n" % (prefix + re.sub('-', '_', message), lowerFirstCamelWord(re.sub('-', '_', message))))
 f.write("    } msg;\n")
 f.write("} %s_message;\n\n" % (fileprefix))
 
@@ -212,7 +215,7 @@ for key in iesDefs:
         continue
     structName = re.sub('ies', '', key)
     asn1cStruct = re.sub('-', '_', re.sub('IEs', '', re.sub('-IEs', '', key)))
-    asn1cStruct = re.sub('Item', 'List', asn1cStruct)
+    asn1cStruct = prefix + re.sub('Item', 'List', asn1cStruct)
     keylowerunderscore = re.sub('-', '_', key.lower())
     firstlower = re.sub('Item', 'List', re.sub('enb', 'eNB', lowerFirstCamelWord(asn1cStruct)))
     f.write("/** \\brief Decode function for %s ies.\n" % (key))
@@ -223,7 +226,7 @@ for key in iesDefs:
     f.write("int %s_decode_%s(\n" % (fileprefix, keylowerunderscore))
 
     if len(iesDefs[key]["ies"]) != 0:
-        f.write("    %s_t *%s,\n" % (re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
+        f.write("    %s_t *%s,\n" % (prefix + re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
     f.write("    ANY_t *any_p);\n\n")
 
     if len(iesDefs[key]["ies"]) == 0:
@@ -235,13 +238,13 @@ for key in iesDefs:
     f.write(" **/\n")
     f.write("int %s_encode_%s(\n" % (fileprefix, re.sub('-', '_', structName.lower())))
     f.write("    %s_t *%s,\n" % (asn1cStruct, firstlower))
-    f.write("    %s_t *%s);\n\n" % (re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
+    f.write("    %s_t *%s);\n\n" % (prefix + re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
 
 for key in iesDefs:
     if key not in ieofielist.values():
         continue
     asn1cStruct = re.sub('-', '_', re.sub('IEs', '', key))
-    asn1cStruct = re.sub('Item', 'List', asn1cStruct)
+    asn1cStruct = prefix + re.sub('Item', 'List', asn1cStruct)
     firstlower = re.sub('Item', 'List', re.sub('enb', 'eNB', lowerFirstCamelWord(asn1cStruct)))
     f.write("/** \\brief Encode function for %s ies.\n" % (key))
     f.write(" *  \\param %s Pointer to the ASN1 structure.\n" % (firstlower))
@@ -268,13 +271,13 @@ for key in iesDefs:
         continue
     structName = re.sub('ies', '', key)
     asn1cStruct = re.sub('-', '_', re.sub('IEs', '', key))
-    asn1cStruct = re.sub('Item', 'List', asn1cStruct)
     ielistname = re.sub('UE', 'ue', asn1cStruct)
     ielistnamefirstlower = ielistname[:1].lower() + ielistname[1:]
     asn1cStructfirstlower = asn1cStruct[:1].lower() + asn1cStruct[1:]
     keyName = re.sub('-', '_', key)
     keyupperunderscore = keyName.upper()
     firstlower = re.sub('Item', 'List', re.sub('enb', 'eNB', lowerFirstCamelWord(asn1cStruct)))
+    asn1cStruct = prefix + re.sub('Item', 'List', asn1cStruct)
 
     iesaccess = ""
     if key not in ieofielist.values():
@@ -282,7 +285,7 @@ for key in iesDefs:
 
     f.write("int %s_decode_%s(\n" % (fileprefix, re.sub('-', '_', structName.lower())))
     if len(iesDefs[key]["ies"]) != 0:
-        f.write("    %s_t *%s,\n" % (re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
+        f.write("    %s_t *%s,\n" % (prefix + re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
     f.write("    ANY_t *any_p) {\n\n")
 
     f.write("    %s_t  %s;\n    %s_t *%s_p = &%s;\n" % (asn1cStruct, asn1cStructfirstlower, asn1cStruct, asn1cStructfirstlower, asn1cStructfirstlower))
@@ -294,24 +297,24 @@ for key in iesDefs:
     if len(iesDefs[key]["ies"]) != 0:
         f.write("    assert(%s != NULL);\n\n" % (lowerFirstCamelWord(re.sub('-', '_', key))))
 
-    f.write("    %s_DEBUG(\"Decoding message %s (%%s:%%d)\\n\", __FILE__, __LINE__);\n\n" % (fileprefix.upper(), re.sub('-', '_', keyName)))
+    f.write("    %s_DEBUG(\"Decoding message %s (%%s:%%d)\\n\", __FILE__, __LINE__);\n\n" % (fileprefix.upper(), prefix + re.sub('-', '_', keyName)))
     f.write("    ANY_to_type_aper(any_p, &asn_DEF_%s, (void**)&%s_p);\n\n" % (asn1cStruct, asn1cStructfirstlower))
     f.write("    for (i = 0; i < %s_p->%slist.count; i++) {\n" % (asn1cStructfirstlower, iesaccess))
-    f.write("        IE_t *ie_p;\n")
+    f.write("        %sIE_t *ie_p;\n" % (prefix))
     f.write("        ie_p = %s_p->%slist.array[i];\n" % (asn1cStructfirstlower, iesaccess))
     f.write("        switch(ie_p->id) {\n")
     for ie in iesDefs[key]["ies"]:
         iename = re.sub('id-', '', ie[0])
         ienameunderscore = lowerFirstCamelWord(re.sub('-', '_', iename))
         ienameunderscorefirstlower = lowerFirstCamelWord(ienameunderscore)
-        ietypesubst = re.sub('-', '', ie[2])
-        ietypeunderscore = re.sub('-', '_', ie[2])
-        ieupperunderscore = re.sub('-', '_', ie[2]).upper()
+        ietypesubst = prefix + re.sub('-', '', ie[2])
+        ietypeunderscore = prefix + re.sub('-', '_', ie[2])
+        ieupperunderscore = prefix + re.sub('-', '_', ie[2]).upper()
         if ie[3] == "optional":
             f.write("            /* Optional field */\n")
         elif ie[3] == "conditional":
             f.write("            /* Conditional field */\n")
-        f.write("            case ProtocolIE_ID_%s:\n" % (re.sub('-', '_', ie[0])))
+        f.write("            case %sProtocolIE_ID_%s:\n" % (prefix, re.sub('-', '_', ie[0])))
         f.write("            {\n")
         f.write("                %s_t  %s;\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst)))
         f.write("                %s_t *%s_p = &%s;\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst), lowerFirstCamelWord(ietypesubst)))
@@ -346,19 +349,19 @@ for key in iesDefs:
     keyname = re.sub('IEs', '', re.sub('Item', 'List', key))
 
     f.write("int %s_decode_%s(\n" % (fileprefix, re.sub('-', '_', keyname).lower()))
-    f.write("    %sIEs_t *%sIEs,\n" % (re.sub('-', '_', keyname), lowerFirstCamelWord(re.sub('-', '_', keyname))))
-    f.write("    %s_t *%s) {\n\n" % (re.sub('-', '_', keyname), lowerFirstCamelWord(re.sub('-', '_', keyname))))
+    f.write("    %sIEs_t *%sIEs,\n" % (prefix + re.sub('-', '_', keyname), lowerFirstCamelWord(re.sub('-', '_', keyname))))
+    f.write("    %s_t *%s) {\n\n" % (prefix + re.sub('-', '_', keyname), lowerFirstCamelWord(re.sub('-', '_', keyname))))
     f.write("    int i, decoded = 0;\n")
     f.write("    int tempDecoded = 0;\n\n")
     f.write("    for (i = 0; i < %s->list.count; i++) {\n" % (lowerFirstCamelWord(re.sub('-', '_', keyname))))
-    f.write("        IE_t *ie_p = %s->list.array[i];\n" % (lowerFirstCamelWord(re.sub('-', '_', keyname))))
+    f.write("        %sIE_t *ie_p = %s->list.array[i];\n" % (prefix, lowerFirstCamelWord(re.sub('-', '_', keyname))))
     f.write("        switch (ie_p->id) {\n")
     for ie in iesDefs[key]["ies"]:
         iename = re.sub('id-', '', ie[0])
         ienameunderscore = lowerFirstCamelWord(re.sub('-', '_', iename))
         f.write("            case ProtocolIE_ID_%s:\n" % (re.sub('-', '_', ie[0])))
         f.write("            {\n")
-        f.write("                %s_t *%s_p;\n" % (re.sub('-', '_', ie[2]), lowerFirstCamelWord(re.sub('-', '', ie[2]))))
+        f.write("                %s_t *%s_p;\n" % (prefix + re.sub('-', '_', ie[2]), lowerFirstCamelWord(re.sub('-', '', ie[2]))))
         f.write("                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_%s, (void**)&%s_p);\n" % (re.sub('-', '_', ie[2]), lowerFirstCamelWord(re.sub('-', '', ie[2]))))
         f.write("                if (tempDecoded < 0) {\n")
         f.write("                    %s_DEBUG(\"Decoding of IE %s for message %s failed\\n\");\n" % (fileprefix.upper(), ienameunderscore, re.sub('-', '_', keyname)))
@@ -390,9 +393,9 @@ for key in iesDefs:
 
     structName = re.sub('ies', '', key)
     asn1cStruct = re.sub('-', '_', re.sub('IEs', '', key))
-    asn1cStruct = re.sub('Item', 'List', asn1cStruct)
-    asn1cStructfirstlower = asn1cStruct[:1].lower() + asn1cStruct[1:]
     firstwordlower = re.sub('Item', 'List', re.sub('enb', 'eNB', lowerFirstCamelWord(asn1cStruct)))
+    asn1cStruct = prefix + re.sub('Item', 'List', asn1cStruct)
+    asn1cStructfirstlower = asn1cStruct[:1].lower() + asn1cStruct[1:]
 
     iesaccess = ""
     if key not in ieofielist.values():
@@ -406,16 +409,16 @@ for key in iesDefs:
 
     f.write("int %s_encode_%s(\n" % (fileprefix, re.sub('-', '_', structName.lower())))
     f.write("    %s_t *%s,\n" % (asn1cStruct, firstwordlower))
-    f.write("    %s_t *%s) {\n\n" % (re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
+    f.write("    %s_t *%s) {\n\n" % (prefix + re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
 
-    f.write("    IE_t *ie;\n\n")
+    f.write("    %sIE_t *ie;\n\n" % (prefix))
 
     for ie in iesDefs[key]["ies"]:
         iename = re.sub('-', '_', re.sub('id-', '', ie[0]))
-        ienameunderscore = re.sub('-', '_', iename)
+        ienameunderscore = prefix + re.sub('-', '_', iename)
         ienamefirstwordlower = lowerFirstCamelWord(iename)
-        ieupperunderscore = re.sub('-', '_', ie[2]).upper()
-        ietypeunderscore = re.sub('-', '_', ie[2])
+        ieupperunderscore = prefix + re.sub('-', '_', ie[2]).upper()
+        ietypeunderscore = prefix + re.sub('-', '_', ie[2])
         if ie[3] != "mandatory":
             if ie[3] == "optional":
                 f.write("    /* Optional field */\n")
@@ -423,8 +426,8 @@ for key in iesDefs:
                 f.write("    /* Conditional field */\n")
             f.write("    if ((%s->presenceMask & %s_%s_PRESENT)\n" % (lowerFirstCamelWord(re.sub('-', '_', key)), keyupperunderscore, ieupperunderscore))
             f.write("        == %s_%s_PRESENT) {\n" % (keyupperunderscore, ieupperunderscore))
-            f.write("        if ((ie = %s_new_ie(ProtocolIE_ID_%s,\n" % (fileprefix, re.sub('-', '_', ie[0])))
-            f.write("                              Criticality_%s,\n" % (ie[1]))
+            f.write("        if ((ie = %s_new_ie(%sProtocolIE_ID_%s,\n" % (fileprefix, prefix, re.sub('-', '_', ie[0])))
+            f.write("                              %sCriticality_%s,\n" % (prefix, ie[1]))
             f.write("                              &asn_DEF_%s,\n" % (ietypeunderscore))
             f.write("                              &%s->%s)) == NULL) {\n" % (lowerFirstCamelWord(re.sub('-', '_', key)), ienamefirstwordlower))
             f.write("            return -1;\n")
@@ -433,12 +436,12 @@ for key in iesDefs:
             f.write("    }\n\n")
         else:
             if ie[2] in ieofielist.keys():
-                f.write("    %s_t %s;\n\n" % (ietypeunderscore, ienamefirstwordlower))
+                f.write("    %s_t %s;\n\n" % (prefix + ietypeunderscore, ienamefirstwordlower))
                 f.write("    memset(&%s, 0, sizeof(%s_t));\n" % (ienamefirstwordlower, ietypeunderscore))
                 f.write("\n")
                 f.write("    if (%s_encode_%s(&%s, &%s->%s) < 0) return -1;\n" % (fileprefix, ietypeunderscore.lower(), ienamefirstwordlower, lowerFirstCamelWord(re.sub('-', '_', key)), ienamefirstwordlower))
-            f.write("    if ((ie = %s_new_ie(ProtocolIE_ID_%s,\n" % (fileprefix, re.sub('-', '_', ie[0])))
-            f.write("                          Criticality_%s,\n" % (ie[1]))
+            f.write("    if ((ie = %s_new_ie(%sProtocolIE_ID_%s,\n" % (fileprefix, prefix, re.sub('-', '_', ie[0])))
+            f.write("                          %sCriticality_%s,\n" % (prefix, ie[1]))
             f.write("                          &asn_DEF_%s,\n" % (ietypeunderscore))
             if ie[2] in ieofielist.keys():
                 f.write("                          &%s)) == NULL) {\n" % (ienamefirstwordlower))
@@ -458,7 +461,7 @@ for (key, value) in iesDefs.items():
     ie = value["ies"][0]
     ietypeunderscore = re.sub('-', '_', ie[2])
     asn1cStruct = re.sub('-', '_', re.sub('IEs', '', re.sub('-IEs', '', key)))
-    asn1cStruct = re.sub('Item', 'List', asn1cStruct)
+    asn1cStruct = prefix + re.sub('Item', 'List', asn1cStruct)
     firstwordlower = re.sub('Item', 'List', re.sub('enb', 'eNB', lowerFirstCamelWord(asn1cStruct)))
 
     for (i, j) in ieofielist.items():
@@ -466,10 +469,10 @@ for (key, value) in iesDefs.items():
             break
     f.write("int %s_encode_%s(\n" % (fileprefix, re.sub('-', '_', i).lower()))
     f.write("    %s_t *%s,\n" % (asn1cStruct, firstwordlower))
-    f.write("    %sIEs_t *%sIEs) {\n\n" % (re.sub('-', '_', i), lowerFirstCamelWord(re.sub('-', '_', i))))
+    f.write("    %sIEs_t *%sIEs) {\n\n" % (prefix + re.sub('-', '_', i), lowerFirstCamelWord(re.sub('-', '_', i))))
     f.write("    int i;\n")
 
-    f.write("    IE_t *ie;\n\n")
+    f.write("    %sIE_t *ie;\n\n" % (prefix))
 
     f.write("    for (i = 0; i < %sIEs->%s.count; i++) {\n" % (firstwordlower, re.sub('IEs', '', lowerFirstCamelWord(re.sub('-', '_', key)))))
     f.write("        if ((ie = %s_new_ie(ProtocolIE_ID_%s,\n" % (fileprefix, re.sub('-', '_', ie[0])))
