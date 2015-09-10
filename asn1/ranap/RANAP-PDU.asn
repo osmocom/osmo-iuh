@@ -467,4 +467,125 @@ IE ::= SEQUENCE {
     value ANY
 }
 
+DataVolumeReportList ::= SEQUENCE {
+	dataVolumeReportListe-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-ReleasedList-IuRelComp ::= SEQUENCE {
+	rabReleasedListIuRelComp-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-RelocationReleaseList ::= SEQUENCE {
+	rabRelocationReleaseList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-DataForwardingList ::= SEQUENCE {
+	rabDataForwardingList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-SetupList-RelocReq ::= SEQUENCE {
+	rabSetupListRelocReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-SetupList-RelocReqAck ::= SEQUENCE {
+	rabSetupListRelocReqAck-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-FailedList ::= SEQUENCE {
+	rabFailedList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-DataForwardingList-SRNS-CtxReq ::= SEQUENCE {
+	rabDataForwardingListSRNSCtxReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-ContextList ::= SEQUENCE {
+	rabContextList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-ContextFailedtoTransferList ::= SEQUENCE {
+	rabContextFailedtoTransferList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-DataVolumeReportRequestList ::= SEQUENCE {
+	rabDataVolumeReportRequestList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-FailedtoReportList ::= SEQUENCE {
+	rabFailedtoReportList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-SetupList-EnhancedRelocCompleteReq ::= SEQUENCE {
+	rabSetupListEnhancedRElocCompleteReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-SetupList-EnhancedRelocCompleteRes ::= SEQUENCE {
+	rabSetupListEnhancedRelocCompleteRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-ToBeReleasedList-EnhancedRelocCompleteRes ::= SEQUENCE {
+	rabToBeReleasedListEnhancedRelocCompleteRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-SetupOrModifiedList ::= SEQUENCE {
+	rabSetupOrModifiedList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-ReleasedList ::= SEQUENCE {
+	rabReleaesdList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-QueuedList ::= SEQUENCE {
+	rabQueuedList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+GERAN-Iumode-RAB-FailedList-RABAssgntResponse ::= SEQUENCE {
+	foo-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-ContextList-RANAP-RelocInf ::= SEQUENCE {
+	rabContextListRANAPRelocInf-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-SetupList-EnhRelocInfoReq ::= SEQUENCE {
+	rabSetupListEnhRelocInfoReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-SetupList-EnhRelocInfoRes ::= SEQUENCE {
+	rabSetupListEnhRelocInfoRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-FailedList-EnhRelocInfoRes ::= SEQUENCE {
+	rabFailedListEnhRelocInfoRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+RAB-ModifyList ::= SEQUENCE {
+	rabModifyList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
+
 END

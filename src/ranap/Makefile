@@ -494,7 +494,27 @@ ASN_MODULE_SOURCES=	\
 	RANAP_SRVCC-CSKeysResponse.c	\
 	RANAP_UeRadioCapabilityMatchRequest.c	\
 	RANAP_UeRadioCapabilityMatchResponse.c	\
-	RANAP_IE.c
+	RANAP_IE.c	\
+	RANAP_DataVolumeReportList.c	\
+	RANAP_RAB-ReleasedList-IuRelComp.c	\
+	RANAP_RAB-RelocationReleaseList.c	\
+	RANAP_RAB-DataForwardingList.c	\
+	RANAP_RAB-SetupList-RelocReq.c	\
+	RANAP_RAB-SetupList-RelocReqAck.c	\
+	RANAP_RAB-FailedList.c	\
+	RANAP_RAB-DataForwardingList-SRNS-CtxReq.c	\
+	RANAP_RAB-ContextList.c	\
+	RANAP_RAB-ContextFailedtoTransferList.c	\
+	RANAP_RAB-DataVolumeReportRequestList.c	\
+	RANAP_RAB-FailedtoReportList.c	\
+	RANAP_RAB-SetupList-EnhancedRelocCompleteReq.c	\
+	RANAP_RAB-SetupList-EnhancedRelocCompleteRes.c	\
+	RANAP_RAB-ToBeReleasedList-EnhancedRelocCompleteRes.c	\
+	RANAP_RAB-SetupOrModifiedList.c	\
+	RANAP_RAB-ReleasedList.c	\
+	RANAP_RAB-QueuedList.c	\
+	RANAP_GERAN-Iumode-RAB-FailedList-RABAssgntResponse.c	\
+	RANAP_RAB-ContextList-RANAP-RelocInf.c
 
 ASN_MODULE_HEADERS=	\
 	RANAP_Criticality.h	\
@@ -992,7 +1012,31 @@ ASN_MODULE_HEADERS=	\
 	RANAP_SRVCC-CSKeysResponse.h	\
 	RANAP_UeRadioCapabilityMatchRequest.h	\
 	RANAP_UeRadioCapabilityMatchResponse.h	\
-	RANAP_IE.h
+	RANAP_IE.h	\
+	RANAP_DataVolumeReportList.h	\
+	RANAP_RAB-ReleasedList-IuRelComp.h	\
+	RANAP_RAB-RelocationReleaseList.h	\
+	RANAP_RAB-DataForwardingList.h	\
+	RANAP_RAB-SetupList-RelocReq.h	\
+	RANAP_RAB-SetupList-RelocReqAck.h	\
+	RANAP_RAB-FailedList.h	\
+	RANAP_RAB-DataForwardingList-SRNS-CtxReq.h	\
+	RANAP_RAB-ContextList.h	\
+	RANAP_RAB-ContextFailedtoTransferList.h	\
+	RANAP_RAB-DataVolumeReportRequestList.h	\
+	RANAP_RAB-FailedtoReportList.h	\
+	RANAP_RAB-SetupList-EnhancedRelocCompleteReq.h	\
+	RANAP_RAB-SetupList-EnhancedRelocCompleteRes.h	\
+	RANAP_RAB-ToBeReleasedList-EnhancedRelocCompleteRes.h	\
+	RANAP_RAB-SetupOrModifiedList.h	\
+	RANAP_RAB-ReleasedList.h	\
+	RANAP_RAB-QueuedList.h	\
+	RANAP_GERAN-Iumode-RAB-FailedList-RABAssgntResponse.h	\
+	RANAP_RAB-ContextList-RANAP-RelocInf.h	\
+	RANAP_RAB-SetupList-EnhRelocInfoReq.h	\
+	RANAP_RAB-SetupList-EnhRelocInfoRes.h	\
+	RANAP_RAB-FailedList-EnhRelocInfoRes.h	\
+	RANAP_RAB-ModifyList.h
 
 
 lib_LTLIBRARIES=libosmo-asn1-ranap.la
