@@ -9,9 +9,9 @@ PKG_LDFLAGS:=$(shell pkg-config --libs libosmocore libosmovty libosmogsm libasn1
 CFLAGS:=-g -Wall $(PKG_INCLUDES) -Ihnbap/
 LDFLAGS:=$(PKG_LDFLAGS) -lsctp
 
-HNBAP_OBJS=hnbap_encoder.o hnbap_decoder.o
+HNBAP_OBJS=hnbap_encoder.o hnbap_decoder.o hnbap_common.o
+RUA_OBJS=rua_encoder.o rua_decoder.o rua_common.o
 RANAP_OBJS=#ranap_encoder.o ranap_decoder.o
-RUA_OBJS=#rua_encoder.o rua_decoder.o
 
 LIBS=hnbap/libosmo-asn1-hnbap.a rua/libosmo-asn1-rua.a ranap/libosmo-asn1-ranap.a
 
@@ -23,19 +23,15 @@ hnbap_encoder.c: $(ASN1_ROOT)/hnbap/HNBAP-PDU-Contents.asn
 
 .PHONY: rua_encoder.c
 rua_encoder.c: $(ASN1_ROOT)/rua/RUA-PDU-Contents.asn
-	$(ASN1TOSTRUCT) -f $<
+	$(ASN1TOSTRUCT) -p RUA_ -f $<
 
 .PHONY: ranap_encoder.c
 ranap_encoder.c: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn
-	$(ASN1TOSTRUCT) -f $<
+	$(ASN1TOSTRUCT) -p RANAP_ -f $<
 
 .PHONY: ranap_common.h
 ranap_common.h:
 	for f in ranap/*.h; do echo "#include \"$f\""; done > ranap_common.h
-
-.PHONY: rua_common.h
-rua_common.h:
-	for f in ranap/*.h; do echo "#include \"$f\""; done > rua_common.h
 
 hnbap/libosmo-asn1-hnbap.a:
 	$(MAKE) -C hnbap
@@ -46,7 +42,7 @@ rua/libosmo-asn1-rua.a:
 ranap/libosmo-asn1-ranap.a:
 	$(MAKE) -C ranap
 
-hnbgw: asn1helpers.o hnbap_common.o hnbgw.o hnbgw_hnbap.o $(HNBAP_OBJS) $(RUA_OBJS) $(RANAP_OBJS) $(LIBS)
+hnbgw: asn1helpers.o hnbgw.o hnbgw_hnbap.o $(HNBAP_OBJS) $(RUA_OBJS) $(RANAP_OBJS) $(LIBS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 %.o: %.c
