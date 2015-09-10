@@ -42,7 +42,7 @@ rua/libosmo-asn1-rua.a:
 ranap/libosmo-asn1-ranap.a:
 	$(MAKE) -C ranap
 
-hnbgw: asn1helpers.o hnbgw.o hnbgw_hnbap.o $(HNBAP_OBJS) $(RUA_OBJS) $(RANAP_OBJS) $(LIBS)
+hnbgw: asn1helpers.o hnbgw.o hnbgw_hnbap.o hnbgw_rua.o $(HNBAP_OBJS) $(RUA_OBJS) $(RANAP_OBJS) $(LIBS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 %.o: %.c

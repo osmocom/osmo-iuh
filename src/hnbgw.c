@@ -23,6 +23,7 @@
 
 #include "hnbgw.h"
 #include "hnbgw_hnbap.h"
+#include "hnbgw_rua.h"
 
 static void *tall_hnb_ctx;
 void *talloc_asn1_ctx;
@@ -68,7 +69,7 @@ static int hnb_read_cb(struct osmo_fd *fd)
 		break;
 	case IUH_PPI_RUA:
 		hnb->rua_stream = sinfo.sinfo_stream;
-		//rc = hnbgw_rua_rx(hnb, msg);
+		rc = hnbgw_rua_rx(hnb, msg);
 		break;
 	case IUH_PPI_SABP:
 	case IUH_PPI_RNA:

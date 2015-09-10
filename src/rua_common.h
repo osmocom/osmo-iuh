@@ -1,3 +1,5 @@
+#pragma once
+
 #include <asn_application.h>
 
 #include "rua/RUA_Ansi-41-IDNNS.h"
