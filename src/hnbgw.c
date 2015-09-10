@@ -80,7 +80,7 @@ struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi)
 	ue->hnb = hnb;
 	strncpy(ue->imsi, imsi, sizeof(ue->imsi));
 	ue->context_id = get_next_ue_ctx_id();
-	llist_add_tail(&g_hnb_gw.ue_list, &ue->list);
+	llist_add_tail(&ue->list, &g_hnb_gw.ue_list);
 
 	return ue;
 }
