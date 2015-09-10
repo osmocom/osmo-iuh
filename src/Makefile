@@ -29,10 +29,6 @@ rua_encoder.c: $(ASN1_ROOT)/rua/RUA-PDU-Contents.asn
 ranap_encoder.c: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn
 	$(ASN1TOSTRUCT) -p RANAP_ -f $<
 
-.PHONY: ranap_common.h
-ranap_common.h:
-	for f in ranap/*.h; do echo "#include \"$f\""; done > ranap_common.h
-
 hnbap/libosmo-asn1-hnbap.a:
 	$(MAKE) -C hnbap
 
