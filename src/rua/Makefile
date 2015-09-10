@@ -77,7 +77,8 @@ lib_LTLIBRARIES=libosmo-asn1-rua.la
 libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
 
 # Remove the lines below to convert it into a pure .am file
-CFLAGS += -I. `pkg-config --cflags libasn1c`
+PKG_INCLUDES:=$(shell pkg-config --cflags libasn1c)
+CFLAGS += -I. $(PKG_INCLUDES)
 OBJS=${ASN_MODULE_SOURCES:.c=.o}
 
 all: libosmo-asn1-rua.a

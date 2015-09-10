@@ -2,13 +2,18 @@ ASN1_ROOT=../asn1/
 ASN1_FILES=HNBAP-CommonDataTypes.asn
 
 ASN1TOSTRUCT:=$(ASN1_ROOT)/utils/asn1tostruct.py
-#ASN1_SRCS:=$(patsubst 
 
-CFLAGS=-g -Wall `pkg-config --cflags libosmocore libosmovty libosmogsm libasn1c` -Iasn1c/
-LDFLAGS=`pkg-config --libs libosmocore libosmovty libosmogsm libasn1c` -lsctp
+PKG_INCLUDES:=$(shell pkg-config --cflags libosmocore libosmovty libosmogsm libasn1c)
+PKG_LDFLAGS:=$(shell pkg-config --libs libosmocore libosmovty libosmogsm libasn1c)
 
-RANAP_OBJS=ranap/libosmo-asn1-ranap.a #ranap_encoder.o ranap_decoder.o
-RUA_OBJS=rua/libosmo-asn1-rua.a #rua_encoder.o rua_decoder.o
+CFLAGS:=-g -Wall $(PKG_INCLUDES) -Ihnbap/
+LDFLAGS:=$(PKG_LDFLAGS) -lsctp
+
+HNBAP_OBJS=hnbap_encoder.o hnbap_decoder.o
+RANAP_OBJS=#ranap_encoder.o ranap_decoder.o
+RUA_OBJS=#rua_encoder.o rua_decoder.o
+
+LIBS=hnbap/libosmo-asn1-hnbap.a rua/libosmo-asn1-rua.a ranap/libosmo-asn1-ranap.a
 
 all: hnbgw
 
@@ -32,8 +37,8 @@ ranap_common.h:
 rua_common.h:
 	for f in ranap/*.h; do echo "#include \"$f\""; done > rua_common.h
 
-asn1c/libosmo-asn1-hnbap.a:
-	$(MAKE) -C asn1c
+hnbap/libosmo-asn1-hnbap.a:
+	$(MAKE) -C hnbap
 
 rua/libosmo-asn1-rua.a:
 	$(MAKE) -C rua
@@ -41,11 +46,16 @@ rua/libosmo-asn1-rua.a:
 ranap/libosmo-asn1-ranap.a:
 	$(MAKE) -C ranap
 
-hnbgw: asn1helpers.o hnbap_common.o hnbap_encoder.o hnbap_decoder.o hnbgw.o hnbgw_hnbap.o asn1c/libosmo-asn1-hnbap.a $(RUA_OBJS) $(RANAP_OBJS)
+hnbgw: asn1helpers.o hnbap_common.o hnbgw.o hnbgw_hnbap.o $(HNBAP_OBJS) $(RUA_OBJS) $(RANAP_OBJS) $(LIBS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 clean:
-	@rm -f hmbgw *.o
+	@rm -f hnbgw *.o
+
+mrproper: clean
+	$(MAKE) -C hnbap clean
+	$(MAKE) -C rua clean
+	$(MAKE) -C ranap clean
