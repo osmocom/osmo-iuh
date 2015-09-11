@@ -192,6 +192,21 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 	return hnbgw_tx_ue_register_acc(ue);
 }
 
+static int hnbgw_rx_err_ind(struct hnb_context *hnb, ANY_t *in)
+{
+	ErrorIndicationIEs_t ies;
+	int rc;
+
+	rc = hnbap_decode_hnbregisterrequesties(&ies, in);
+	if (rc < 0)
+		return rc;
+
+	LOGP(DMAIN, LOGL_NOTICE, "HNBAP ERROR.ind, cause: %s\n",
+		hnbap_cause_str(&ies.cause));
+
+	return 0;
+}
+
 static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, InitiatingMessage_t *imsg)
 {
 	int rc;
@@ -208,13 +223,19 @@ static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, InitiatingMessage_t 
 	case ProcedureCode_id_UEDe_Register:	/* 8.5 */
 		break;
 	case ProcedureCode_id_ErrorIndication:	/* 8.6 */
+		rc = hnbgw_rx_err_ind(hnb, &imsg->value);
+		break;
 	case ProcedureCode_id_TNLUpdate:	/* 8.9 */
 	case ProcedureCode_id_HNBConfigTransfer:	/* 8.10 */
 	case ProcedureCode_id_RelocationComplete:	/* 8.11 */
 	case ProcedureCode_id_U_RNTIQuery:	/* 8.12 */
 	case ProcedureCode_id_privateMessage:
+		LOGP(DMAIN, LOGL_NOTICE, "Unimplemented HNBAP Procedure %u\n",
+			imsg->procedureCode);
 		break;
 	default:
+		LOGP(DMAIN, LOGL_NOTICE, "Unknown HNBAP Procedure %u\n",
+			imsg->procedureCode);
 		break;
 	}
 }
@@ -247,6 +268,8 @@ static int _hnbgw_hnbap_rx(struct hnb_context *hnb, HNBAP_PDU_t *pdu)
 		rc = hnbgw_rx_unsuccessful_outcome_msg(hnb, &pdu->choice.unsuccessfulOutcome);
 		break;
 	default:
+		LOGP(DMAIN, LOGL_NOTICE, "Unknown HNBAP Presence %u\n",
+			pdu->present);
 		return -1;
 	}
 }

@@ -144,3 +144,4 @@ struct msgb *hnbap_generate_successful_outcome(
 IE_t *hnbap_new_ie(ProtocolIE_ID_t id, Criticality_t criticality,
 		  asn_TYPE_descriptor_t *type, void *sptr);
 
+char *hnbap_cause_str(Cause_t *cause);
