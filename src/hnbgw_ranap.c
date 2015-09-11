@@ -20,7 +20,6 @@
 #include "ranap/RANAP_GlobalRNC-ID.h"
 #include "ranap/RANAP_CriticalityDiagnostics.h"
 
-
 /***********************************************************************
  * BEGIN auto-generated copy+pasted
  ***********************************************************************/
@@ -173,6 +172,135 @@ int ranap_encode_resetacknowledgeies(
 
     return 0;
 }
+
+#include "ranap/RANAP_InitialUE-Message.h"
+#include "ranap/RANAP_CN-DomainIndicator.h"
+#include "ranap/RANAP_LAI.h"
+#include "ranap/RANAP_SAI.h"
+#include "ranap/RANAP_NAS-PDU.h"
+#include "ranap/RANAP_IuSignallingConnectionIdentifier.h"
+#include "ranap/RANAP_GlobalCN-ID.h"
+
+typedef struct RANAP_InitialUE_MessageIEs_s {
+    RANAP_CN_DomainIndicator_t         cN_DomainIndicator;
+    RANAP_LAI_t                        lai;
+    RANAP_SAI_t                        sai;
+    RANAP_NAS_PDU_t                    nas_pdu;
+    RANAP_IuSignallingConnectionIdentifier_t iuSigConId;
+    RANAP_GlobalRNC_ID_t               globalRNC_ID;
+} RANAP_InitialUE_MessageIEs_t;
+
+int ranap_decode_initialue_messageies(
+    RANAP_InitialUE_MessageIEs_t *initialUE_MessageIEs,
+    ANY_t *any_p) {
+
+    RANAP_InitialUE_Message_t  initialUE_Message;
+    RANAP_InitialUE_Message_t *initialUE_Message_p = &initialUE_Message;
+    int i, decoded = 0;
+    int tempDecoded = 0;
+    assert(any_p != NULL);
+    assert(initialUE_MessageIEs != NULL);
+
+    RANAP_DEBUG("Decoding message RANAP_InitialUE_MessageIEs (%s:%d)\n", __FILE__, __LINE__);
+
+    ANY_to_type_aper(any_p, &asn_DEF_RANAP_InitialUE_Message, (void**)&initialUE_Message_p);
+
+    for (i = 0; i < initialUE_Message_p->initialUE_Message_ies.list.count; i++) {
+        RANAP_IE_t *ie_p;
+        ie_p = initialUE_Message_p->initialUE_Message_ies.list.array[i];
+        switch(ie_p->id) {
+            case RANAP_ProtocolIE_ID_id_CN_DomainIndicator:
+            {
+                RANAP_CN_DomainIndicator_t  ranaP_CNDomainIndicator;
+                RANAP_CN_DomainIndicator_t *ranaP_CNDomainIndicator_p = &ranaP_CNDomainIndicator;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_CN_DomainIndicator, (void**)&ranaP_CNDomainIndicator_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE cN_DomainIndicator failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_CN_DomainIndicator, ranaP_CNDomainIndicator_p);
+                memcpy(&initialUE_MessageIEs->cN_DomainIndicator, ranaP_CNDomainIndicator_p, sizeof(RANAP_CN_DomainIndicator_t));
+            } break;
+            case RANAP_ProtocolIE_ID_id_LAI:
+            {
+                RANAP_LAI_t  ranap_lai;
+                RANAP_LAI_t *ranap_lai_p = &ranap_lai;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_LAI, (void**)&ranap_lai_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE lai failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_LAI, ranap_lai_p);
+                memcpy(&initialUE_MessageIEs->lai, ranap_lai_p, sizeof(RANAP_LAI_t));
+            } break;
+            case RANAP_ProtocolIE_ID_id_SAI:
+            {
+                RANAP_SAI_t  ranap_sai;
+                RANAP_SAI_t *ranap_sai_p = &ranap_sai;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_SAI, (void**)&ranap_sai_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE sai failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_SAI, ranap_sai_p);
+                memcpy(&initialUE_MessageIEs->sai, ranap_sai_p, sizeof(RANAP_SAI_t));
+            } break;
+            case RANAP_ProtocolIE_ID_id_NAS_PDU:
+            {
+                RANAP_NAS_PDU_t  ranap_naspdu;
+                RANAP_NAS_PDU_t *ranap_naspdu_p = &ranap_naspdu;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_NAS_PDU, (void**)&ranap_naspdu_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE nas_pdu failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_NAS_PDU, ranap_naspdu_p);
+                memcpy(&initialUE_MessageIEs->nas_pdu, ranap_naspdu_p, sizeof(RANAP_NAS_PDU_t));
+            } break;
+            case RANAP_ProtocolIE_ID_id_IuSigConId:
+            {
+                RANAP_IuSignallingConnectionIdentifier_t  ranaP_IuSignallingConnectionIdentifier;
+                RANAP_IuSignallingConnectionIdentifier_t *ranaP_IuSignallingConnectionIdentifier_p = &ranaP_IuSignallingConnectionIdentifier;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_IuSignallingConnectionIdentifier, (void**)&ranaP_IuSignallingConnectionIdentifier_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE iuSigConId failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_IuSignallingConnectionIdentifier, ranaP_IuSignallingConnectionIdentifier_p);
+                memcpy(&initialUE_MessageIEs->iuSigConId, ranaP_IuSignallingConnectionIdentifier_p, sizeof(RANAP_IuSignallingConnectionIdentifier_t));
+            } break;
+            case RANAP_ProtocolIE_ID_id_GlobalRNC_ID:
+            {
+                RANAP_GlobalRNC_ID_t  ranaP_GlobalRNCID;
+                RANAP_GlobalRNC_ID_t *ranaP_GlobalRNCID_p = &ranaP_GlobalRNCID;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_GlobalRNC_ID, (void**)&ranaP_GlobalRNCID_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE globalRNC_ID failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_GlobalRNC_ID, ranaP_GlobalRNCID_p);
+                memcpy(&initialUE_MessageIEs->globalRNC_ID, ranaP_GlobalRNCID_p, sizeof(RANAP_GlobalRNC_ID_t));
+            } break;
+            default:
+                RANAP_DEBUG("Unknown protocol IE id (%d) for message initialue_messageies\n", (int)ie_p->id);
+                return -1;
+        }
+    }
+    return decoded;
+}
+
 
 /***********************************************************************
  * END auto-generated copy+pasted
