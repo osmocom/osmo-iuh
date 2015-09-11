@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "asn1helpers.h"
+#include "iu_helpers.h"
 
 #include "hnbgw.h"
 #include "hnbap_common.h"
@@ -61,11 +62,13 @@ static int hnbgw_tx_ue_register_acc(struct ue_context *ue)
 	size_t encoded_imsi_len;
 	int rc;
 
-	encoded_imsi_len = encode_iu_imsi(encoded_imsi, sizeof(encoded_imsi), ue->imsi);
+	encoded_imsi_len = encode_iu_imsi(encoded_imsi,
+					  sizeof(encoded_imsi), ue->imsi);
 
 	memset(&accept, 0, sizeof(accept));
 	accept.uE_Identity.present = UE_Identity_PR_iMSI;
-	OCTET_STRING_fromBuf(&accept.uE_Identity.choice.iMSI, (const char *)encoded_imsi, encoded_imsi_len);
+	OCTET_STRING_fromBuf(&accept.uE_Identity.choice.iMSI,
+			     (const char *)encoded_imsi, encoded_imsi_len);
 	asn1_u32_to_bitstring(&accept.context_ID, &ue->context_id);
 
 	memset(&accept_out, 0, sizeof(accept_out));
@@ -131,7 +134,7 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 			      ies.uE_Identity.choice.iMSIESN.iMSIDS41.size);
 		break;
 	default:
-		DEBUGP(DMAIN, "UE-REGISTER-REQ without IMSI?!?\n");
+		LOGP(DMAIN, LOGL_NOTICE, "UE-REGISTER-REQ without IMSI?!?\n");
 		return -1;
 	}
 
@@ -151,7 +154,7 @@ static int hnbgw_rx_err_ind(struct hnb_context *hnb, ANY_t *in)
 	ErrorIndicationIEs_t ies;
 	int rc;
 
-	rc = hnbap_decode_hnbregisterrequesties(&ies, in);
+	rc = hnbap_decode_errorindicationies(&ies, in);
 	if (rc < 0)
 		return rc;
 
@@ -184,11 +187,11 @@ static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, InitiatingMessage_t 
 	case ProcedureCode_id_RelocationComplete:	/* 8.11 */
 	case ProcedureCode_id_U_RNTIQuery:	/* 8.12 */
 	case ProcedureCode_id_privateMessage:
-		LOGP(DMAIN, LOGL_NOTICE, "Unimplemented HNBAP Procedure %u\n",
+		LOGP(DMAIN, LOGL_NOTICE, "Unimplemented HNBAP Procedure %ld\n",
 			imsg->procedureCode);
 		break;
 	default:
-		LOGP(DMAIN, LOGL_NOTICE, "Unknown HNBAP Procedure %u\n",
+		LOGP(DMAIN, LOGL_NOTICE, "Unknown HNBAP Procedure %ld\n",
 			imsg->procedureCode);
 		break;
 	}

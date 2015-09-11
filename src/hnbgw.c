@@ -8,8 +8,9 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 #include <netinet/sctp.h>
-//#include <arpa/inet.h>
+#include <arpa/inet.h>
 
 #include <osmocom/core/application.h>
 #include <osmocom/core/talloc.h>
