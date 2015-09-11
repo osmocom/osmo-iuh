@@ -25,22 +25,23 @@ int decode_iu_bcd(char *out, size_t out_len, const uint8_t *in, size_t in_len)
 int encode_iu_imsi(uint8_t *out, size_t out_len, const char *in)
 {
 	unsigned int len = strlen(in);
+	unsigned int octlen;
 	uint8_t odd = (len & 0x01) == 1;
 	unsigned int off = 0;
 	unsigned int i;
 
-	len /= 2;
+	octlen = len/2;
 	if (odd)
-		len++;
+		octlen++;
 
-	for (i = 0; i < len; i++) {
+	for (i = 0; i < octlen; i++) {
 		uint8_t lower, upper;
 
-		lower = osmo_char2bcd(in[++off]) & 0x0f;
-		if (!odd && off + 1 == len)
+		lower = osmo_char2bcd(in[off++]) & 0x0f;
+		if (odd && off == len)
 			upper = 0x0f;
 		else
-			upper = osmo_char2bcd(in[++off]) & 0x0f;
+			upper = osmo_char2bcd(in[off++]) & 0x0f;
 
 		out[i] = (upper << 4) | lower;
 	}
