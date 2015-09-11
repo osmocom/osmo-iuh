@@ -302,6 +302,196 @@ int ranap_decode_initialue_messageies(
     return decoded;
 }
 
+#include "ranap/RANAP_DirectTransfer.h"
+#include "ranap/RANAP_SAPI.h"
+#include "ranap/RANAP_RAC.h"
+
+#define DIRECTTRANSFERIES_RANAP_LAI_PRESENT (1 << 0)
+#define DIRECTTRANSFERIES_RANAP_RAC_PRESENT (1 << 1)
+#define DIRECTTRANSFERIES_RANAP_SAI_PRESENT (1 << 2)
+#define DIRECTTRANSFERIES_RANAP_SAPI_PRESENT (1 << 3)
+
+typedef struct RANAP_DirectTransferIEs_s {
+    uint16_t  presenceMask;
+    RANAP_NAS_PDU_t nas_pdu;
+    RANAP_LAI_t lai; ///< Optional field
+    RANAP_RAC_t rac; ///< Optional field
+    RANAP_SAI_t sai; ///< Optional field
+    RANAP_SAPI_t sapi; ///< Optional field
+} RANAP_DirectTransferIEs_t;
+
+int ranap_decode_directtransferies(
+    RANAP_DirectTransferIEs_t *directTransferIEs,
+    ANY_t *any_p) {
+
+    RANAP_DirectTransfer_t  directTransfer;
+    RANAP_DirectTransfer_t *directTransfer_p = &directTransfer;
+    int i, decoded = 0;
+    int tempDecoded = 0;
+    assert(any_p != NULL);
+    assert(directTransferIEs != NULL);
+
+    RANAP_DEBUG("Decoding message RANAP_DirectTransferIEs (%s:%d)\n", __FILE__, __LINE__);
+
+    ANY_to_type_aper(any_p, &asn_DEF_RANAP_DirectTransfer, (void**)&directTransfer_p);
+
+    for (i = 0; i < directTransfer_p->directTransfer_ies.list.count; i++) {
+        RANAP_IE_t *ie_p;
+        ie_p = directTransfer_p->directTransfer_ies.list.array[i];
+        switch(ie_p->id) {
+            case RANAP_ProtocolIE_ID_id_NAS_PDU:
+            {
+                RANAP_NAS_PDU_t  ranap_naspdu;
+                RANAP_NAS_PDU_t *ranap_naspdu_p = &ranap_naspdu;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_NAS_PDU, (void**)&ranap_naspdu_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE nas_pdu failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_NAS_PDU, ranap_naspdu_p);
+                memcpy(&directTransferIEs->nas_pdu, ranap_naspdu_p, sizeof(RANAP_NAS_PDU_t));
+            } break;
+            /* Optional field */
+            case RANAP_ProtocolIE_ID_id_LAI:
+            {
+                RANAP_LAI_t  ranap_lai;
+                RANAP_LAI_t *ranap_lai_p = &ranap_lai;
+                directTransferIEs->presenceMask |= DIRECTTRANSFERIES_RANAP_LAI_PRESENT;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_LAI, (void**)&ranap_lai_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE lai failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_LAI, ranap_lai_p);
+                memcpy(&directTransferIEs->lai, ranap_lai_p, sizeof(RANAP_LAI_t));
+            } break;
+            /* Optional field */
+            case RANAP_ProtocolIE_ID_id_RAC:
+            {
+                RANAP_RAC_t  ranap_rac;
+                RANAP_RAC_t *ranap_rac_p = &ranap_rac;
+                directTransferIEs->presenceMask |= DIRECTTRANSFERIES_RANAP_RAC_PRESENT;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_RAC, (void**)&ranap_rac_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE rac failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_RAC, ranap_rac_p);
+                memcpy(&directTransferIEs->rac, ranap_rac_p, sizeof(RANAP_RAC_t));
+            } break;
+            /* Optional field */
+            case RANAP_ProtocolIE_ID_id_SAI:
+            {
+                RANAP_SAI_t  ranap_sai;
+                RANAP_SAI_t *ranap_sai_p = &ranap_sai;
+                directTransferIEs->presenceMask |= DIRECTTRANSFERIES_RANAP_SAI_PRESENT;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_SAI, (void**)&ranap_sai_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE sai failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_SAI, ranap_sai_p);
+                memcpy(&directTransferIEs->sai, ranap_sai_p, sizeof(RANAP_SAI_t));
+            } break;
+            /* Optional field */
+            case RANAP_ProtocolIE_ID_id_SAPI:
+            {
+                RANAP_SAPI_t  ranap_sapi;
+                RANAP_SAPI_t *ranap_sapi_p = &ranap_sapi;
+                directTransferIEs->presenceMask |= DIRECTTRANSFERIES_RANAP_SAPI_PRESENT;
+                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_RANAP_SAPI, (void**)&ranap_sapi_p);
+                if (tempDecoded < 0) {
+                    RANAP_DEBUG("Decoding of IE sapi failed\n");
+                    return -1;
+                }
+                decoded += tempDecoded;
+                if (asn1_xer_print)
+                    xer_fprint(stdout, &asn_DEF_RANAP_SAPI, ranap_sapi_p);
+                memcpy(&directTransferIEs->sapi, ranap_sapi_p, sizeof(RANAP_SAPI_t));
+            } break;
+            default:
+                RANAP_DEBUG("Unknown protocol IE id (%d) for message directtransferies\n", (int)ie_p->id);
+                return -1;
+        }
+    }
+    return decoded;
+}
+
+int ranap_encode_directtransferies(
+    RANAP_DirectTransfer_t *directTransfer,
+    RANAP_DirectTransferIEs_t *directTransferIEs) {
+
+    RANAP_IE_t *ie;
+
+    if ((ie = ranap_new_ie(RANAP_ProtocolIE_ID_id_NAS_PDU,
+                          RANAP_Criticality_ignore,
+                          &asn_DEF_RANAP_NAS_PDU,
+                          &directTransferIEs->nas_pdu)) == NULL) {
+        return -1;
+    }
+    ASN_SEQUENCE_ADD(&directTransfer->directTransfer_ies.list, ie);
+
+    /* Optional field */
+    if ((directTransferIEs->presenceMask & DIRECTTRANSFERIES_RANAP_LAI_PRESENT)
+        == DIRECTTRANSFERIES_RANAP_LAI_PRESENT) {
+        if ((ie = ranap_new_ie(RANAP_ProtocolIE_ID_id_LAI,
+                              RANAP_Criticality_ignore,
+                              &asn_DEF_RANAP_LAI,
+                              &directTransferIEs->lai)) == NULL) {
+            return -1;
+        }
+        ASN_SEQUENCE_ADD(&directTransfer->directTransfer_ies.list, ie);
+    }
+
+    /* Optional field */
+    if ((directTransferIEs->presenceMask & DIRECTTRANSFERIES_RANAP_RAC_PRESENT)
+        == DIRECTTRANSFERIES_RANAP_RAC_PRESENT) {
+        if ((ie = ranap_new_ie(RANAP_ProtocolIE_ID_id_RAC,
+                              RANAP_Criticality_ignore,
+                              &asn_DEF_RANAP_RAC,
+                              &directTransferIEs->rac)) == NULL) {
+            return -1;
+        }
+        ASN_SEQUENCE_ADD(&directTransfer->directTransfer_ies.list, ie);
+    }
+
+    /* Optional field */
+    if ((directTransferIEs->presenceMask & DIRECTTRANSFERIES_RANAP_SAI_PRESENT)
+        == DIRECTTRANSFERIES_RANAP_SAI_PRESENT) {
+        if ((ie = ranap_new_ie(RANAP_ProtocolIE_ID_id_SAI,
+                              RANAP_Criticality_ignore,
+                              &asn_DEF_RANAP_SAI,
+                              &directTransferIEs->sai)) == NULL) {
+            return -1;
+        }
+        ASN_SEQUENCE_ADD(&directTransfer->directTransfer_ies.list, ie);
+    }
+
+    /* Optional field */
+    if ((directTransferIEs->presenceMask & DIRECTTRANSFERIES_RANAP_SAPI_PRESENT)
+        == DIRECTTRANSFERIES_RANAP_SAPI_PRESENT) {
+        if ((ie = ranap_new_ie(RANAP_ProtocolIE_ID_id_SAPI,
+                              RANAP_Criticality_ignore,
+                              &asn_DEF_RANAP_SAPI,
+                              &directTransferIEs->sapi)) == NULL) {
+            return -1;
+        }
+        ASN_SEQUENCE_ADD(&directTransfer->directTransfer_ies.list, ie);
+    }
+
+    return 0;
+}
+
+
+
 
 /***********************************************************************
  * END auto-generated copy+pasted
@@ -402,6 +592,32 @@ static int ranap_rx_init_ue_msg(struct hnb_context *hnb, ANY_t *in)
 	return 0;
 }
 
+static int ranap_rx_dt(struct hnb_context *hnb, ANY_t *in)
+{
+	RANAP_DirectTransferIEs_t ies;
+	int sapi = 0;
+	int rc;
+
+	rc = ranap_decode_directtransferies(&ies, in);
+	if (rc < 0)
+		return rc;
+
+	if (ies.presenceMask & DIRECTTRANSFERIES_RANAP_SAPI_PRESENT)
+		sapi = ies.sapi;
+
+	if (ies.presenceMask & DIRECTTRANSFERIES_RANAP_LAI_PRESENT) {
+		/* FIXME: Update LAI associated with UE */
+	}
+
+	if (ies.presenceMask & DIRECTTRANSFERIES_RANAP_RAC_PRESENT) {
+		/* FIXME: Update RAC associated with UE */
+	}
+
+	DEBUGP(DMAIN, "DirectTransfer: %s\n",
+		osmo_hexdump(ies.nas_pdu.buf, ies.nas_pdu.size));
+	/* FIXME: hand NAS PDU into MSC */
+}
+
 static int ranap_rx_initiating_msg(struct hnb_context *hnb, RANAP_InitiatingMessage_t *imsg)
 {
 	int rc;
@@ -412,6 +628,9 @@ static int ranap_rx_initiating_msg(struct hnb_context *hnb, RANAP_InitiatingMess
 		break;
 	case RANAP_ProcedureCode_id_InitialUE_Message:
 		rc = ranap_rx_init_ue_msg(hnb, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_DirectTransfer:
+		rc = ranap_rx_dt(hnb, &imsg->value);
 		break;
 	}
 }
