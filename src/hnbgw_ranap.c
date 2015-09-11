@@ -1,5 +1,6 @@
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/gsm/gsm48.h>
 
 #include <unistd.h>
 #include <errno.h>
@@ -349,7 +350,54 @@ static int ranap_rx_init_reset(struct hnb_context *hnb, ANY_t *in)
 
 	DEBUGP(DMAIN, "RESET.req\n");
 
+	/* FIXME: Actually we have to wait for some guard time? */
+	/* FIXME: Reset all resources related to this HNB/RNC */
 	ranap_tx_reset_ack(hnb, ies.cN_DomainIndicator);
+
+	return 0;
+}
+
+int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai)
+{
+	uint8_t *ptr = lai->pLMNidentity.buf;
+
+	/* TS 25.413 9.2.3.55 */
+	if (lai->pLMNidentity.size != 3)
+		return -1;
+
+	ra_id->mcc = (ptr[0] & 0xF) * 100 +
+		     (ptr[0] >> 4) * 10 +
+		     (ptr[1] & 0xF);
+	ra_id->mnc = (ptr[2] & 0xF) +
+		     (ptr[2] >> 4) * 10;
+	if ((ptr[1] >> 4) != 0xF)
+		ra_id->mnc += (ptr[1] >> 4) * 100;
+
+	ra_id->lac = asn1str_to_u16(&lai->lAC);
+
+	/* TS 25.413 9.2.3.6 */
+	if (ra_id->lac == 0 || ra_id->lac == 0xfffe)
+		return -1;
+
+	return 0;
+}
+
+static int ranap_rx_init_ue_msg(struct hnb_context *hnb, ANY_t *in)
+{
+	RANAP_InitialUE_MessageIEs_t ies;
+	struct gprs_ra_id ra_id;
+	int rc;
+
+	rc = ranap_decode_initialue_messageies(&ies, in);
+	if (rc < 0)
+		return rc;
+
+	/* location area ID of the serving cell */
+	ranap_parse_lai(&ra_id, &ies.lai);
+
+	DEBUGP(DMAIN, "%u-%u-%u: InitialUE: %s\n", ra_id.mcc, ra_id.mnc,
+		ra_id.lac, osmo_hexdump(ies.nas_pdu.buf, ies.nas_pdu.size));
+	/* FIXME: hand NAS PDU into MSC */
 
 	return 0;
 }
@@ -361,6 +409,9 @@ static int ranap_rx_initiating_msg(struct hnb_context *hnb, RANAP_InitiatingMess
 	switch (imsg->procedureCode) {
 	case RANAP_ProcedureCode_id_Reset:
 		rc = ranap_rx_init_reset(hnb, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_InitialUE_Message:
+		rc = ranap_rx_init_ue_msg(hnb, &imsg->value);
 		break;
 	}
 }
