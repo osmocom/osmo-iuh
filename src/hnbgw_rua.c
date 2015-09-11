@@ -50,6 +50,36 @@ int rua_tx_udt(struct msgb *inmsg)
 	return hnbgw_rua_tx(msg->dst, msg);
 }
 
+int rua_tx_dt(struct msgb *inmsg)
+{
+	RUA_DirectTransfer_t out;
+	RUA_DirectTransferIEs_t ies;
+	struct msgb *msg;
+	int rc;
+
+	memset(&ies, 0, sizeof(ies));
+	ies.ranaP_Message.buf = inmsg->data;
+	ies.ranaP_Message.size = msgb_length(inmsg);
+
+	/* FIXME: msgb_free(msg)? ownership not yet clear */
+
+	memset(&out, 0, sizeof(out));
+	rc = rua_encode_directtransferies(&out, &ies);
+	if (rc < 0)
+		return rc;
+
+	msg = rua_generate_initiating_message(RUA_ProcedureCode_id_DirectTransfer,
+					      RUA_Criticality_reject,
+					      &asn_DEF_RUA_DirectTransfer,
+					      &out);
+	msg->dst = inmsg->dst;
+
+	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+
+	return hnbgw_rua_tx(msg->dst, msg);
+}
+
+
 static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 {
 	RUA_ConnectIEs_t ies;
@@ -65,7 +95,10 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 	DEBUGP(DMAIN, "Connect.req(ctx=0x%x, %s)\n", context_id,
 		ies.establishment_Cause == RUA_Establishment_Cause_emergency_call
 		? "emergency" : "normal");
-	/* FIXME */
+	/* FIXME: route to CS (MSC) or PS (SGSN) domain */
+	rc = hnbgw_ranap_rx(msg, ies.ranaP_Message.buf, ies.ranaP_Message.size);
+
+	return rc;
 }
 
 static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
@@ -82,7 +115,12 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 
 	DEBUGP(DMAIN, "Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
 		rua_cause_str(&ies.cause));
+	if (ies.presenceMask & DISCONNECTIES_RUA_RANAP_MESSAGE_PRESENT)
+		rc = hnbgw_ranap_rx(msg, ies.ranaP_Message.buf,
+				    ies.ranaP_Message.size);
+
 	/* FIXME */
+	return rc;
 }
 
 static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
@@ -99,6 +137,9 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 
 	DEBUGP(DMAIN, "Data.req(ctx=0x%x)\n", context_id);
 	/* FIXME */
+	rc = hnbgw_ranap_rx(msg, ies.ranaP_Message.buf, ies.ranaP_Message.size);
+
+	return rc;
 
 }
 
