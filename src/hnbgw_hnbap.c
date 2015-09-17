@@ -70,6 +70,7 @@ static int hnbgw_tx_ue_register_acc(struct ue_context *ue)
 	OCTET_STRING_fromBuf(&accept.uE_Identity.choice.iMSI,
 			     (const char *)encoded_imsi, encoded_imsi_len);
 	asn1_u32_to_bitstring(&accept.context_ID, &ue->context_id);
+	accept.context_ID.size = 3;	/* 24bit field */
 
 	memset(&accept_out, 0, sizeof(accept_out));
 	rc = hnbap_encode_ueregisteraccepties(&accept_out, &accept);
