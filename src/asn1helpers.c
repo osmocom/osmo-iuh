@@ -31,6 +31,13 @@ void asn1_u32_to_bitstring(BIT_STRING_t *bitstr, uint32_t *in)
 	bitstr->bits_unused = 0;
 }
 
+void asn1_u24_to_bitstring(BIT_STRING_t *bitstr, uint32_t *in)
+{
+	bitstr->buf = (uint8_t *) in;
+	bitstr->size = 24/8;
+	bitstr->bits_unused = 0;
+}
+
 
 int asn1_strncpy(char *out, const OCTET_STRING_t *in, size_t n)
 {
