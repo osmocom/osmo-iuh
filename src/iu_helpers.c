@@ -1,8 +1,29 @@
+/* Iu interface specific helper functions */
+
+/* (C) 2015 by Harald Welte <laforge@gnumonks.org>
+ * All Rights Reserved
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 #include <stdint.h>
 #include <string.h>
 
 #include <osmocom/core/utils.h>
 
+/* decode a BCD-string as used inside ASN.1 encoded Iu interface protocols */
 int decode_iu_bcd(char *out, size_t out_len, const uint8_t *in, size_t in_len)
 {
 	const uint8_t *ch;
@@ -23,6 +44,7 @@ int decode_iu_bcd(char *out, size_t out_len, const uint8_t *in, size_t in_len)
 	return outch - out;
 }
 
+/* decode an IMSI as used inside ASN.1 encoded Iu interface protocols */
 int encode_iu_imsi(uint8_t *out, size_t out_len, const char *in)
 {
 	unsigned int len = strlen(in);
