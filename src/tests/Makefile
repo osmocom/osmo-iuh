@@ -5,5 +5,5 @@ PKG_LDFLAGS:=$(shell pkg-config --libs libosmocore libosmovty libosmogsm libasn1
 CFLAGS:=-g -Wall $(PKG_INCLUDES) -I..
 LDFLAGS:=$(PKG_LDFLAGS)
 
-test-helpers: ../iu_helpers.o test-helpers.c
+test-helpers: ../iu_helpers.o ../asn1helpers.o test-helpers.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^

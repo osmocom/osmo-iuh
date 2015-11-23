@@ -33,11 +33,13 @@ void *talloc_asn1_ctx;
 const uint8_t imsi_encoded[] = { 0x10, 0x32, 0x54, 0x76, 0xF8 };
 const char imsi_decoded[] = "012345678";
 
-int main(int argc, char **argv)
+void test_iu_helpers(void)
 {
 	char outstr[32];
 	uint8_t outbuf[16];
 	int rc;
+
+	printf("Testing Iu helper functions\n");
 
 	printf("pre-encoded: %s\n", osmo_hexdump_nospc(imsi_encoded,
 						sizeof(imsi_encoded)));
@@ -51,6 +53,35 @@ int main(int argc, char **argv)
 	ASSERT(rc >= 0);
 	printf("re-encoded: %s\n", osmo_hexdump_nospc(outbuf, rc));
 	ASSERT(!memcmp(outbuf, imsi_encoded, sizeof(imsi_encoded)));
+}
+
+uint32_t val1 = 0xdeadbeef;
+
+void test_asn1_helpers(void)
+{
+	BIT_STRING_t enc;
+	uint32_t res;
+
+	printf("Testing asn.1 helper functions\n");
+
+	printf("Encoding 0x%x to asn.1 bitstring\n", val1);
+	asn1_u32_to_bitstring(&enc, &val1);
+
+	ASSERT(enc.buf == (uint8_t *) &val1);
+	ASSERT(enc.size == sizeof(uint32_t));
+	ASSERT(enc.bits_unused == 0);
+
+	res = asn1bitstr_to_u32(&enc);
+
+	printf("Decoding back to uint32_t: 0x%x\n", res);
+	ASSERT(res == val1);
+
+}
+
+int main(int argc, char **argv)
+{
+	test_iu_helpers();
+	test_asn1_helpers();
 
 	return 0;
 }
