@@ -62,6 +62,11 @@ const OCTET_STRING_t text1 = {
 	.size = 16,
 };
 
+const OCTET_STRING_t text2 = {
+	.buf = "01234567890123456789012345678901234567890",
+	.size = 40,
+};
+
 void test_asn1_helpers(void)
 {
 	int rc;
@@ -90,6 +95,10 @@ void test_asn1_helpers(void)
 
 	ASSERT(rc == 16);
 	ASSERT(!strcmp(text, (char *)text1.buf));
+
+	rc = asn1_strncpy(text, &text2, sizeof(text));
+	printf("Decoding large string from asn1: %s\n", text);
+	ASSERT(rc == 31);
 
 }
 
