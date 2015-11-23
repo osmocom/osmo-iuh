@@ -41,13 +41,13 @@ void asn1_u24_to_bitstring(BIT_STRING_t *bitstr, uint32_t *in)
 
 int asn1_strncpy(char *out, const OCTET_STRING_t *in, size_t n)
 {
-	size_t cpylen = n;
+	size_t cpylen = n-1;
 
 	if (in->size < cpylen)
 		cpylen = in->size;
 
 	strncpy(out, (char *)in->buf, cpylen);
-	out[n-1] = '\0';
+	out[cpylen] = '\0';
 
 	return cpylen;
 }
