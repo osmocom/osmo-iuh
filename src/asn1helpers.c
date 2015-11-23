@@ -67,13 +67,11 @@ uint8_t asn1str_to_u8(const OCTET_STRING_t *in)
 uint32_t asn1bitstr_to_u32(const BIT_STRING_t *in)
 {
 	uint32_t ret = 0;
-	int i;
 
-	for (i = 0; i < 4; i++) {
-		if (in->size < i)
-			break;
-		ret <<= 8;
-		ret |= in->buf[i];
-	}
+	if (in->size < 4)
+		return 0;
+
+	ret = *(uint32_t *)in->buf;
+
 	return ret;
 }
