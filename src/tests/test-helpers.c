@@ -57,10 +57,18 @@ void test_iu_helpers(void)
 
 uint32_t val1 = 0xdeadbeef;
 
+const OCTET_STRING_t text1 = {
+	.buf = "0123456789012345",
+	.size = 16,
+};
+
 void test_asn1_helpers(void)
 {
+	int rc;
+
 	BIT_STRING_t enc;
 	uint32_t res;
+	char text[32];
 
 	printf("Testing asn.1 helper functions\n");
 
@@ -75,6 +83,13 @@ void test_asn1_helpers(void)
 
 	printf("Decoding back to uint32_t: 0x%x\n", res);
 	ASSERT(res == val1);
+
+
+	rc = asn1_strncpy(text, &text1, sizeof(text));
+	printf("Decoding string from asn.1: %s\n", text);
+
+	ASSERT(rc == 16);
+	ASSERT(!strcmp(text, (char *)text1.buf));
 
 }
 
