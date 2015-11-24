@@ -54,6 +54,7 @@ void test_asn1_decoding(void)
 
 	HNBAP_PDU_t _pdu, *pdu = &_pdu;
 	InitiatingMessage_t *im;
+	SuccessfulOutcome_t *so;
 	UERegisterRequestIEs_t ies;
 
 	char imsi[16];
@@ -80,7 +81,28 @@ void test_asn1_decoding(void)
 	decode_iu_bcd(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSI.buf,
 			ies.uE_Identity.choice.iMSI.size);
 
-	printf("HNBAP UE Register from IMSI %s\n", imsi);
+	printf("HNBAP UE Register request from IMSI %s\n", imsi);
+
+	memset(pdu, 0, sizeof(*pdu));
+	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
+			hnbap_ue_reg_acc, sizeof(hnbap_ue_reg_acc), 0, 0);
+
+
+	ASSERT(dec_ret.code == RC_OK);
+	ASSERT(pdu->present == HNBAP_PDU_PR_successfulOutcome);
+
+	so = &pdu->choice.successfulOutcome;
+	ASSERT(so->procedureCode == ProcedureCode_id_UERegister);
+
+	rc = hnbap_decode_ueregisteraccepties(&ies, &so->value);
+	ASSERT(rc >= 0);
+
+	ASSERT(ies.uE_Identity.present == UE_Identity_PR_iMSI);
+	decode_iu_bcd(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSI.buf,
+			ies.uE_Identity.choice.iMSI.size);
+
+	printf("HNBAP UE Register accept to IMSI %s\n", imsi);
+
 }
 
 
