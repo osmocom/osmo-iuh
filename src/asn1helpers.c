@@ -55,7 +55,7 @@ int asn1_strncpy(char *out, const OCTET_STRING_t *in, size_t n)
 uint16_t asn1str_to_u16(const OCTET_STRING_t *in)
 {
 	OSMO_ASSERT(in && in->size >= sizeof(uint16_t));
-	return *(uint16_t *)in->buf;
+	return ntohs(*(uint16_t *)in->buf);
 }
 
 uint8_t asn1str_to_u8(const OCTET_STRING_t *in)
@@ -66,12 +66,14 @@ uint8_t asn1str_to_u8(const OCTET_STRING_t *in)
 
 uint32_t asn1bitstr_to_u32(const BIT_STRING_t *in)
 {
-	uint32_t ret = 0;
+	OSMO_ASSERT(in && in->size >= sizeof(uint32_t) && in->bits_unused == 0);
 
-	if (in->size < 4)
-		return 0;
+	return ntohl(*(uint32_t *)in->buf);
+}
 
-	ret = *(uint32_t *)in->buf;
+uint32_t asn1bitstr_to_u24(const BIT_STRING_t *in)
+{
+	OSMO_ASSERT(in && in->size >= 3 && in->bits_unused == 0);
 
-	return ret;
+	return *(uint32_t *)in->buf;
 }
