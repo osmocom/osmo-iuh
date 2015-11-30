@@ -55,7 +55,7 @@ void test_iu_helpers(void)
 	ASSERT(!memcmp(outbuf, imsi_encoded, sizeof(imsi_encoded)));
 }
 
-uint32_t val1 = 0xdeadbeef;
+const uint32_t val1 = 0xdeadbeef;
 
 const OCTET_STRING_t text1 = {
 	.buf = "0123456789012345",
@@ -72,15 +72,14 @@ void test_asn1_helpers(void)
 	int rc;
 
 	BIT_STRING_t enc;
-	uint32_t res;
+	uint32_t res, tmpval;
 	char text[32];
 
 	printf("Testing asn.1 helper functions\n");
 
 	printf("Encoding 0x%x to asn.1 bitstring\n", val1);
-	asn1_u32_to_bitstring(&enc, &val1);
+	asn1_u32_to_bitstring(&enc, &tmpval, val1);
 
-	ASSERT(enc.buf == (uint8_t *) &val1);
 	ASSERT(enc.size == sizeof(uint32_t));
 	ASSERT(enc.bits_unused == 0);
 
@@ -89,6 +88,11 @@ void test_asn1_helpers(void)
 	printf("Decoding back to uint32_t: 0x%x\n", res);
 	ASSERT(res == val1);
 
+	printf("Encoding %s to 24-bit asn.1 bitstring\n", osmo_hexdump_nospc(&val1, 3));
+	asn1_u24_to_bitstring(&enc, &tmpval, val1);
+
+	ASSERT(enc.size == 24/8);
+	ASSERT(enc.bits_unused == 0);
 
 	rc = asn1_strncpy(text, &text1, sizeof(text));
 	printf("Decoding string from asn.1: %s\n", text);
