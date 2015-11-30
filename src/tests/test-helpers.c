@@ -71,6 +71,7 @@ void test_asn1_helpers(void)
 {
 	int rc;
 
+	void *buffer;
 	BIT_STRING_t enc;
 	uint32_t res, tmpval;
 	char text[32];
@@ -83,6 +84,9 @@ void test_asn1_helpers(void)
 	ASSERT(enc.size == sizeof(uint32_t));
 	ASSERT(enc.bits_unused == 0);
 
+	rc = aper_encode_to_new_buffer(&asn_DEF_BIT_STRING, 0, &enc, (void **) &buffer);
+	printf("Encoded: %s\n", osmo_hexdump_nospc(buffer, rc));
+
 	res = asn1bitstr_to_u32(&enc);
 
 	printf("Decoding back to uint32_t: 0x%x\n", res);
@@ -93,6 +97,9 @@ void test_asn1_helpers(void)
 
 	ASSERT(enc.size == 24/8);
 	ASSERT(enc.bits_unused == 0);
+
+	rc = aper_encode_to_new_buffer(&asn_DEF_BIT_STRING, 0, &enc, (void **) &buffer);
+	printf("Encoded: %s\n", osmo_hexdump_nospc(buffer, rc));
 
 	rc = asn1_strncpy(text, &text1, sizeof(text));
 	printf("Decoding string from asn.1: %s\n", text);
