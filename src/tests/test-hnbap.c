@@ -110,11 +110,16 @@ void test_asn1_decoding(void)
 	lac = asn1str_to_u16(&hnb_ies.lac);
 	sac = asn1str_to_u16(&hnb_ies.sac);
 	rac = asn1str_to_u8(&hnb_ies.rac);
+	cid = asn1bitstr_to_u32(&hnb_ies.cellIdentity);
 
 	ASSERT(lac == 0x4020);
 	ASSERT(sac == 0x0001);
 	ASSERT(rac == 0x64);
+	ASSERT(cid == 0x0000000);
 
+	ASSERT(!strcmp((char *) hnb_ies.hnB_Identity.hNB_Identity_Info.buf, "10005B9-0010942050@"));
+
+	printf("HNBAP register request for HNB %s\n", (char *) hnb_ies.hnB_Identity.hNB_Identity_Info.buf);
 	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
 			hnbap_ue_reg_req, sizeof(hnbap_ue_reg_req), 0, 0);
 
