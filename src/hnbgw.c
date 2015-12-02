@@ -42,6 +42,7 @@
 
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
+#include <osmocom/vty/command.h>
 
 #include "hnbgw.h"
 #include "hnbgw_hnbap.h"
@@ -256,6 +257,47 @@ static int sctp_sock_init(int fd)
 	return rc;
 }
 
+static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
+{
+	vty_out(vty, "HNB \"%s\" MCC %u MNC %u LAC %u RAC %u SAC %u CID %u%s", hnb->identity_info,
+			hnb->id.mcc, hnb->id.mnc, hnb->id.lac, hnb->id.rac, hnb->id.sac, hnb->id.cid,
+			VTY_NEWLINE);
+	vty_out(vty, "   HNBAP ID %u RUA ID %u%s", hnb->hnbap_stream, hnb->rua_stream, VTY_NEWLINE);
+}
+
+static void vty_dump_ue_info(struct vty *vty, struct ue_context *ue)
+{
+	vty_out(vty, "UE IMSI \"%s\" context ID %u%s", ue->imsi, ue->context_id, VTY_NEWLINE);
+}
+
+DEFUN(show_hnb, show_hnb_cmd, "show hnb all", SHOW_STR "Display information about a HNB")
+{
+	struct hnb_context *hnb;
+
+	llist_for_each_entry(hnb, &g_hnb_gw.hnb_list, list) {
+		vty_dump_hnb_info(vty, hnb);
+	}
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(show_ue, show_ue_cmd, "show ue all", SHOW_STR "Display information about a UE")
+{
+	struct ue_context *ue;
+
+	llist_for_each_entry(ue, &g_hnb_gw.ue_list, list) {
+		vty_dump_ue_info(vty, ue);
+	}
+
+	return CMD_SUCCESS;
+}
+
+static void hnbgw_vty_init(void)
+{
+	install_element_ve(&show_hnb_cmd);
+	install_element_ve(&show_ue_cmd);
+}
+
 int main(int argc, char **argv)
 {
 	int rc;
@@ -276,6 +318,7 @@ int main(int argc, char **argv)
 		exit(1);
 
 	vty_init(&vty_info);
+	hnbgw_vty_init();
 
 	rc = telnet_init(NULL, &g_hnb_gw, 2323);
 	if (rc < 0) {
