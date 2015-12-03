@@ -123,6 +123,25 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 	return rc;
 }
 
+#include "pdus.h"
+
+static void hnb_send_register_req(struct hnb_test *hnb_test)
+{
+	struct msgb *msg;
+	int rc;
+
+	msg = msgb_alloc(1024, "HNBAP Tx");
+
+	memcpy(msgb_data(msg), hnbap_reg_req, sizeof(hnbap_reg_req));
+
+	msgb_put(msg, sizeof(hnbap_reg_req));
+
+	msgb_ppid(msg) = IUH_PPI_HNBAP;
+
+	osmo_wqueue_enqueue(&hnb_test->wqueue, msg);
+}
+
+
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
 		.name = "DMAIN", .loglevel = LOGL_DEBUG, .enabled = 1,
@@ -167,6 +186,8 @@ int main(int argc, const char *argv)
 		exit(1);
 	}
 //	sctp_sock_init(g_hnb_test.conn_fd);
+
+	hnb_send_register_req(&g_hnb_test);
 
 	while (1) {
 		rc = osmo_select_main(0);
