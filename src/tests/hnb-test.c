@@ -45,6 +45,8 @@
 #include <osmocom/vty/logging.h>
 
 #include "hnb-test.h"
+#include "hnbap_common.h"
+#include "hnbap_ies_defs.h"
 
 static void *tall_hnb_ctx;
 void *talloc_asn1_ctx;
@@ -127,14 +129,48 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 
 static void hnb_send_register_req(struct hnb_test *hnb_test)
 {
+	HNBRegisterRequest_t request_out;
 	struct msgb *msg;
 	int rc;
+	uint16_t lac, sac;
+	uint8_t rac;
+	uint32_t cid;
+	uint8_t plmn[] = {0x09, 0xf1, 0x99};
+	char identity[50] = "ATestHNB@";
 
-	msg = msgb_alloc(1024, "HNBAP Tx");
+	HNBRegisterRequestIEs_t request;
+	memset(&request, 0, sizeof(request));
 
-	memcpy(msgb_data(msg), hnbap_reg_req, sizeof(hnbap_reg_req));
+	lac = 0xc0fe;
+	sac = 0xabab;
+	rac = 0x42;
+	cid = 0xadce00;
 
-	msgb_put(msg, sizeof(hnbap_reg_req));
+	asn1_u16_to_str(&request.lac, &lac, lac);
+	asn1_u16_to_str(&request.sac, &sac, sac);
+	asn1_u8_to_str(&request.rac, &rac, rac);
+	asn1_u32_to_bitstring(&request.cellIdentity, &cid, cid);
+	request.cellIdentity.bits_unused = 4;
+
+	request.hnB_Identity.hNB_Identity_Info.buf = identity;
+	request.hnB_Identity.hNB_Identity_Info.size = strlen(identity);
+
+	request.plmNidentity.buf = plmn;
+	request.plmNidentity.size = 3;
+
+
+
+	memset(&request_out, 0, sizeof(request_out));
+	rc = hnbap_encode_hnbregisterrequesties(&request_out, &request);
+	if (rc < 0) {
+		printf("Could not encode HNB register request IEs\n");
+	}
+
+	msg = hnbap_generate_initiating_message(ProcedureCode_id_HNBRegister,
+						Criticality_reject,
+						&asn_DEF_HNBRegisterRequest,
+						&request_out);
+
 
 	msgb_ppid(msg) = IUH_PPI_HNBAP;
 
