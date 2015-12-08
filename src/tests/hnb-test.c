@@ -144,13 +144,12 @@ static void hnb_send_register_req(struct hnb_test *hnb_test)
 	lac = 0xc0fe;
 	sac = 0xabab;
 	rac = 0x42;
-	cid = 0xadce00;
+	cid = 0xadceaab;
 
 	asn1_u16_to_str(&request.lac, &lac, lac);
 	asn1_u16_to_str(&request.sac, &sac, sac);
 	asn1_u8_to_str(&request.rac, &rac, rac);
-	asn1_u32_to_bitstring(&request.cellIdentity, &cid, cid);
-	request.cellIdentity.bits_unused = 4;
+	asn1_u28_to_bitstring(&request.cellIdentity, &cid, cid);
 
 	request.hnB_Identity.hNB_Identity_Info.buf = identity;
 	request.hnB_Identity.hNB_Identity_Info.size = strlen(identity);

@@ -120,7 +120,7 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 	ctx->id.lac = asn1str_to_u16(&ies.lac);
 	ctx->id.sac = asn1str_to_u16(&ies.sac);
 	ctx->id.rac = asn1str_to_u8(&ies.rac);
-	ctx->id.cid = asn1bitstr_to_u32(&ies.cellIdentity);
+	ctx->id.cid = asn1bitstr_to_u28(&ies.cellIdentity);
 	//ctx->id.mcc FIXME
 	//ctx->id.mnc FIXME
 

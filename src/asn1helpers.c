@@ -33,6 +33,14 @@ void asn1_u32_to_bitstring(BIT_STRING_t *bitstr, uint32_t *buf, uint32_t in)
 	bitstr->bits_unused = 0;
 }
 
+void asn1_u28_to_bitstring(BIT_STRING_t *bitstr, uint32_t *buf, uint32_t in)
+{
+	*buf = htonl(in<<4);
+	bitstr->buf = (uint8_t *) buf;
+	bitstr->size = sizeof(uint32_t);
+	bitstr->bits_unused = 4;
+}
+
 void asn1_u24_to_bitstring(BIT_STRING_t *bitstr, uint32_t *buf, uint32_t in)
 {
 	*buf = htonl(in);
@@ -85,6 +93,13 @@ uint32_t asn1bitstr_to_u32(const BIT_STRING_t *in)
 	OSMO_ASSERT(in && in->size == sizeof(uint32_t));
 
 	return ntohl(*(uint32_t *)in->buf);
+}
+
+uint32_t asn1bitstr_to_u28(const BIT_STRING_t *in)
+{
+	OSMO_ASSERT(in && in->size == sizeof(uint32_t) && in->bits_unused == 4);
+
+	return ntohl(*(uint32_t *)in->buf) >> 4;
 }
 
 uint32_t asn1bitstr_to_u24(const BIT_STRING_t *in)
