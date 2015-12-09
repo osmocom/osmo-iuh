@@ -43,7 +43,7 @@ void asn1_u28_to_bitstring(BIT_STRING_t *bitstr, uint32_t *buf, uint32_t in)
 
 void asn1_u24_to_bitstring(BIT_STRING_t *bitstr, uint32_t *buf, uint32_t in)
 {
-	*buf = htonl(in);
+	*buf = htonl(in<<8);
 	bitstr->buf = (uint8_t *) buf;
 	bitstr->size = 24/8;
 	bitstr->bits_unused = 0;
@@ -106,5 +106,5 @@ uint32_t asn1bitstr_to_u24(const BIT_STRING_t *in)
 {
 	OSMO_ASSERT(in && in->size == 3);
 
-	return *(uint32_t *)in->buf;
+	return ntohl(*(uint32_t *)in->buf) >> 8;
 }
