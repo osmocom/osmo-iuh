@@ -106,6 +106,32 @@ int hnb_test_rx_hnb_register_acc(struct hnb_test *hnb, ANY_t *in)
 	return hnb_test_ue_register_tx(hnb);
 }
 
+int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
+{
+	int rc;
+	uint32_t ctx_id;
+	UERegisterAcceptIEs_t accept;
+	char imsi[16];
+
+	rc = hnbap_decode_ueregisteraccepties(&accept, in);
+	if (rc < 0) {
+		return rc;
+	}
+
+	if (accept.uE_Identity.present != UE_Identity_PR_iMSI) {
+		printf("Wrong type in UE register accept\n");
+		return -1;
+	}
+
+	ctx_id = asn1bitstr_to_u24(&accept.context_ID);
+
+	decode_iu_bcd(imsi, sizeof(imsi), accept.uE_Identity.choice.iMSI.buf,
+			accept.uE_Identity.choice.iMSI.size);
+	printf("UE Register accept for IMSI %s, context %u\n", imsi, ctx_id);
+
+	return 0;
+}
+
 int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 {
 	HNBAP_PDU_t _pdu, *pdu = &_pdu;
@@ -130,6 +156,7 @@ int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 		rc = hnb_test_rx_hnb_register_acc(hnb, &pdu->choice.successfulOutcome.value);
 		break;
 	case ProcedureCode_id_UERegister:
+		rc = hnb_test_rx_ue_register_acc(hnb, &pdu->choice.successfulOutcome.value);
 		break;
 	default:
 		break;
