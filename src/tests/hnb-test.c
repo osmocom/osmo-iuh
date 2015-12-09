@@ -195,6 +195,19 @@ static struct vty_app_info vty_info = {
 	.version	= "0",
 };
 
+static int sctp_sock_init(int fd)
+{
+	struct sctp_event_subscribe event;
+	int rc;
+
+	/* subscribe for all events */
+	memset((uint8_t *)&event, 1, sizeof(event));
+	rc = setsockopt(fd, IPPROTO_SCTP, SCTP_EVENTS,
+			&event, sizeof(event));
+
+	return rc;
+}
+
 int main(int argc, const char *argv)
 {
 	int rc;
@@ -220,7 +233,7 @@ int main(int argc, const char *argv)
 		perror("Error connecting to Iuh port");
 		exit(1);
 	}
-//	sctp_sock_init(g_hnb_test.conn_fd);
+	sctp_sock_init(g_hnb_test.wqueue.bfd.fd);
 
 	hnb_send_register_req(&g_hnb_test);
 
