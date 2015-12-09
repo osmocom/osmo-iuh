@@ -57,7 +57,38 @@ struct hnb_test g_hnb_test = {
 
 int hnb_test_ue_register_tx(struct hnb_test *hnb_test)
 {
-	return 0;
+	struct msgb *msg;
+	int rc, imsi_len;
+
+	char imsi_buf[16];
+	char *imsi_str = "262019876543210";
+
+	UERegisterRequest_t request_out;
+	UERegisterRequestIEs_t request;
+	memset(&request, 0, sizeof(request));
+
+	request.uE_Identity.present = UE_Identity_PR_iMSI;
+
+	imsi_len = encode_iu_imsi(imsi_buf, sizeof(imsi_buf), imsi_str);
+	request.uE_Identity.choice.iMSI.buf = imsi_buf;
+	request.uE_Identity.choice.iMSI.size = imsi_len;
+
+	request.registration_Cause = Registration_Cause_normal;
+	request.uE_Capabilities.access_stratum_release_indicator = Access_stratum_release_indicator_rel_6;
+	request.uE_Capabilities.csg_capability = CSG_Capability_not_csg_capable;
+
+	memset(&request_out, 0, sizeof(request_out));
+	rc = hnbap_encode_ueregisterrequesties(&request_out, &request);
+
+	msg = hnbap_generate_initiating_message(ProcedureCode_id_UERegister,
+						Criticality_reject,
+						&asn_DEF_UERegisterRequest,
+						&request_out);
+
+
+	msgb_ppid(msg) = IUH_PPI_HNBAP;
+
+	return osmo_wqueue_enqueue(&hnb_test->wqueue, msg);
 }
 
 int hnb_test_rx_hnb_register_acc(struct hnb_test *hnb, ANY_t *in)
