@@ -59,6 +59,8 @@ struct hnb_test {
 	uint16_t hnbap_stream;
 	/*! SCTP stream ID for RUA */
 	uint16_t rua_stream;
+
+	uint16_t rnc_id;
 };
 
 extern struct hnb_test g_hnb_test;

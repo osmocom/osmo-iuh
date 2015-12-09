@@ -55,6 +55,58 @@ struct hnb_test g_hnb_test = {
 	.gw_port = IUH_DEFAULT_SCTP_PORT,
 };
 
+int hnb_test_ue_register_tx(struct hnb_test *hnb_test)
+{
+	return 0;
+}
+
+int hnb_test_rx_hnb_register_acc(struct hnb_test *hnb, ANY_t *in)
+{
+	int rc;
+	HNBRegisterAcceptIEs_t accept;
+
+	rc = hnbap_decode_hnbregisteraccepties(&accept, in);
+	if (rc < 0) {
+	}
+
+	hnb->rnc_id = accept.rnc_id;
+	printf("HNB Register accept with RNC ID %u\n", hnb->rnc_id);
+
+	return hnb_test_ue_register_tx(hnb);
+}
+
+int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
+{
+	HNBAP_PDU_t _pdu, *pdu = &_pdu;
+	asn_dec_rval_t dec_ret;
+	int rc;
+
+	memset(pdu, 0, sizeof(*pdu));
+	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
+			      msg->data, msgb_length(msg), 0, 0);
+	if (dec_ret.code != RC_OK) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ASN.1 decode\n");
+		return rc;
+	}
+
+	if (pdu->present != HNBAP_PDU_PR_successfulOutcome) {
+		printf("Unexpected HNBAP message received\n");
+	}
+
+	switch (pdu->choice.successfulOutcome.procedureCode) {
+	case ProcedureCode_id_HNBRegister:
+		/* Get HNB id and send UE Register request */
+		rc = hnb_test_rx_hnb_register_acc(hnb, &pdu->choice.successfulOutcome.value);
+		break;
+	case ProcedureCode_id_UERegister:
+		break;
+	default:
+		break;
+	}
+
+	return rc;
+}
+
 static int hnb_read_cb(struct osmo_fd *fd)
 {
 	struct hnb_test *hnb_test = fd->data;
@@ -86,7 +138,7 @@ static int hnb_read_cb(struct osmo_fd *fd)
 	switch (sinfo.sinfo_ppid) {
 	case IUH_PPI_HNBAP:
 		printf("HNBAP mesage received\n");
-//		rc = hnbgw_hnbap_rx(hnb, msg);
+		rc = hnb_test_hnbap_rx(hnb_test, msg);
 		break;
 	case IUH_PPI_RUA:
 		printf("RUA mesage received\n");
