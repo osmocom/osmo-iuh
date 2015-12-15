@@ -1,4 +1,4 @@
-ASN_MODULE_SOURCES=	\
+ASN_MODULE_FILES=	\
 	Criticality.c	\
 	Presence.c	\
 	PrivateIE-ID.c	\
@@ -115,7 +115,7 @@ ASN_MODULE_SOURCES=	\
 	PrivateMessage.c	\
 	IE.c
 
-ASN_MODULE_HEADERS=	\
+ASN_MODULE_INC=	\
 	Criticality.h	\
 	Presence.h	\
 	PrivateIE-ID.h	\
@@ -232,32 +232,9 @@ ASN_MODULE_HEADERS=	\
 	PrivateMessage.h	\
 	IE.h
 
-lib_LTLIBRARIES=libsomething.la
-libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
+AM_CFLAGS = $(ASN1C_CFLAGS) -I.
 
-# This file may be used as an input for make(3)
-# Remove the lines below to convert it into a pure .am file
-PKG_INCLUDES:=$(shell pkg-config --cflags libasn1c)
-CFLAGS += -I. $(PKG_INCLUDES)
-OBJS=${ASN_MODULE_SOURCES:.c=.o}
-
-all: libosmo-asn1-hnbap.a
-
-libosmo-asn1-hnbap.a: ${OBJS}
-	$(AR) r $@ $^
-
-.SUFFIXES:
-.SUFFIXES: .c .o
-
-.c.o:
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-clean:
-	rm -f libosmo-asn1-hnbap.a
-	rm -f $(OBJS)
-
-regen: regenerate-from-asn1-source
-
-regenerate-from-asn1-source:
-	asn1c -gen-PER -fnative-types ../../asn1/hnbap/HNBAP-CommonDataTypes.asn ../../asn1/hnbap/HNBAP-Constants.asn ../../asn1/hnbap/HNBAP-IEs.asn ../../asn1/hnbap/HNBAP-PDU.asn
-
+noinst_LIBRARIES=libosmo-asn1-hnbap.a
+libosmo_asn1_hnbap_a_SOURCES=$(ASN_MODULE_FILES)
+include_HEADERS = $(ASN_MODULE_INC)
+libosmo_asn1_hnbap_a_LIBADD=$(ASN1C_LDADD)

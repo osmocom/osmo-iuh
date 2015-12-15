@@ -1,4 +1,4 @@
-ASN_MODULE_SOURCES=	\
+ASN_MODULE_FILES=	\
 	RUA_Criticality.c	\
 	RUA_Presence.c	\
 	RUA_ProcedureCode.c	\
@@ -35,7 +35,7 @@ ASN_MODULE_SOURCES=	\
 	RUA_PrivateMessage.c	\
 	RUA_IE.c
 
-ASN_MODULE_HEADERS=	\
+ASN_MODULE_INC=	\
 	RUA_Criticality.h	\
 	RUA_Presence.h	\
 	RUA_ProcedureCode.h	\
@@ -72,37 +72,10 @@ ASN_MODULE_HEADERS=	\
 	RUA_PrivateMessage.h	\
 	RUA_IE.h
 
+AM_CFLAGS = $(ASN1C_CFLAGS) -I.
 
-lib_LTLIBRARIES=libosmo-asn1-rua.la
-libsomething_la_SOURCES=$(ASN_MODULE_SOURCES) $(ASN_MODULE_HEADERS)
-
-# Remove the lines below to convert it into a pure .am file
-PKG_INCLUDES:=$(shell pkg-config --cflags libasn1c)
-CFLAGS += -I. $(PKG_INCLUDES)
-OBJS=${ASN_MODULE_SOURCES:.c=.o}
-
-all: libosmo-asn1-rua.a
-
-libosmo-asn1-rua.a: ${OBJS}
-	$(AR) r $@ $^
-
-.SUFFIXES:
-.SUFFIXES: .c .o
-
-.c.o:
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-clean:
-	rm -f libosmo-asn1-rua.a
-	rm -f $(OBJS)
-
-clean-srcs:
-	@rm -f *.c *.h Makefile.am.sample
-
-regen: regenerate-from-asn1-source
-
-regenerate-from-asn1-source: clean clean-srcs
-	ASN1C_PREFIX="RUA_" asn1c -gen-PER ../../asn1/rua/RUA-CommonDataTypes.asn ../../asn1/rua/RUA-Constants.asn ../../asn1/rua/RUA-IEs.asn ../../asn1/rua/RUA-PDU.asn
-	# remove the local copy of the runtime code
-	@rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
+noinst_LIBRARIES=libosmo-asn1-rua.a
+libosmo_asn1_rua_a_SOURCES=$(ASN_MODULE_FILES)
+include_HEADERS=$(ASN_MODULES_INC)
+libosmo_asn1_rua_a_LIBADD=$(ASN1C_LDADD)
 

@@ -1,4 +1,4 @@
-ASN_MODULE_SOURCES=	\
+ASN_MODULE_FILES=	\
 	RANAP_Criticality.c	\
 	RANAP_Presence.c	\
 	RANAP_PrivateIE-ID.c	\
@@ -516,7 +516,7 @@ ASN_MODULE_SOURCES=	\
 	RANAP_GERAN-Iumode-RAB-FailedList-RABAssgntResponse.c	\
 	RANAP_RAB-ContextList-RANAP-RelocInf.c
 
-ASN_MODULE_HEADERS=	\
+ASN_MODULE_INC=	\
 	RANAP_Criticality.h	\
 	RANAP_Presence.h	\
 	RANAP_PrivateIE-ID.h	\
@@ -1038,39 +1038,9 @@ ASN_MODULE_HEADERS=	\
 	RANAP_RAB-FailedList-EnhRelocInfoRes.h	\
 	RANAP_RAB-ModifyList.h
 
+AM_CFLAGS = $(ASN1C_CFLAGS) -I.
 
-lib_LTLIBRARIES=libosmo-asn1-ranap.la
-libsomething_la_SOURCES=$(ASN_MODULE_SOURCES)
-
-# Remove the lines below to convert it into a pure .am file
-PKG_INCLUDES:=$(shell pkg-config --cflags libasn1c)
-CFLAGS += -I. $(PKG_INCLUDES)
-OBJS=${ASN_MODULE_SOURCES:.c=.o} ${ASN_CONVERTER_SOURCES:.c=.o}
-
-all: libosmo-asn1-ranap.a
-
-libosmo-asn1-ranap.a: ${OBJS}
-	$(AR) r $@ $^
-
-.SUFFIXES:
-.SUFFIXES: .c .o
-
-.c.o:
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-clean:
-	rm -f libosmo-asn1-ranap.a
-	rm -f $(OBJS)
-
-clean-srcs:
-	@rm -f *.c *.h Makefile.am.sample
-
-regen: regenerate-from-asn1-source
-
-regenerate-from-asn1-source: clean clean-srcs
-	ASN1C_PREFIX="RANAP_" asn1c -gen-PER ../../asn1/ranap/RANAP-CommonDataTypes.asn ../../asn1/ranap/RANAP-Constants.asn ../../asn1/ranap/RANAP-IEs.asn ../../asn1/ranap/RANAP-PDU.asn
-	# remove the local copy of the runtime code
-	@rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* NULL.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
-	# some fixups in erroneous code that asn1c generates
-	sed -i '6i#include <constr_CHOICE.h>' RANAP_ChosenEncryptionAlgorithm.h RANAP_ChosenIntegrityProtectionAlgorithm.h RANAP_IMSI.h RANAP_PLMNidentity.h
-	sed -i 's/Member/MemberA/' RANAP_LA-LIST.[ch] RANAP_SDU-Parameters.[ch] RANAP_RABParametersList.[ch]
+noinst_LIBRARIES=libosmo-asn1-ranap.a
+libosmo_asn1_ranap_a_SOURCES=$(ASN_MODULE_FILES)
+include_HEADERS=$(ASN_MODULE_INC)
+libosmo_asn1_ranap_a_LIBADD=$(ASN1C_LDADD)
