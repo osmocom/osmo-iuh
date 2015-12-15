@@ -170,6 +170,29 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 	return hnbgw_tx_ue_register_acc(ue);
 }
 
+static int hnbgw_rx_ue_deregister(struct hnb_context *ctx, ANY_t *in)
+{
+	UEDe_RegisterIEs_t ies;
+	struct ue_context *ue;
+	int rc;
+	uint32_t ctxid;
+
+	rc = hnbap_decode_uede_registeries(&ies, in);
+	if (rc < 0)
+		return rc;
+
+	ctxid = asn1bitstr_to_u24(&ies.context_ID);
+
+	DEBUGP(DMAIN, "UE-DE-REGSITER context=%ld cause=%ld\n",
+		ctxid, ies.cause);
+
+	ue = ue_context_by_id(ctxid);
+	if (ue)
+		ue_context_free(ue);
+
+	return 0;
+}
+
 static int hnbgw_rx_err_ind(struct hnb_context *hnb, ANY_t *in)
 {
 	ErrorIndicationIEs_t ies;
@@ -199,6 +222,7 @@ static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, InitiatingMessage_t 
 		rc = hnbgw_rx_ue_register_req(hnb, &imsg->value);
 		break;
 	case ProcedureCode_id_UEDe_Register:	/* 8.5 */
+		rc = hnbgw_rx_ue_deregister(hnb, &imsg->value);
 		break;
 	case ProcedureCode_id_ErrorIndication:	/* 8.6 */
 		rc = hnbgw_rx_err_ind(hnb, &imsg->value);
