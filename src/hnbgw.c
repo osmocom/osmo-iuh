@@ -141,7 +141,7 @@ static int hnb_read_cb(struct osmo_fd *fd)
 		msgb_put(msg, rc);
 
 	if (flags & MSG_NOTIFICATION) {
-		LOGP(DMAIN, LOGL_INFO, "Ignoring SCTP notification\n");
+		LOGP(DMAIN, LOGL_DEBUG, "Ignoring SCTP notification\n");
 		msgb_free(msg);
 		return 0;
 	}
@@ -226,7 +226,7 @@ static int listen_fd_cb(struct osmo_fd *fd, unsigned int what)
 
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
-		.name = "DMAIN", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.name = "DMAIN", .loglevel = LOGL_INFO, .enabled = 1,
 		.color = "",
 		.description = "Main program",
 	},
