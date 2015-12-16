@@ -117,7 +117,7 @@ static struct msgb *hnbap_msgb_alloc(void)
 
 static struct msgb *_hnbap_gen_msg(HNBAP_PDU_t *pdu)
 {
-	struct msgb *msg = ranap_msgb_alloc();
+	struct msgb *msg = hnbap_msgb_alloc();
 	asn_enc_rval_t rval;
 
 	if (!msg)
