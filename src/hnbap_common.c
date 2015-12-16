@@ -115,6 +115,27 @@ static struct msgb *hnbap_msgb_alloc(void)
 	return msgb_alloc(1024, "HNBAP Tx");
 }
 
+static struct msgb *_hnbap_gen_msg(HNBAP_PDU_t *pdu)
+{
+	struct msgb *msg = ranap_msgb_alloc();
+	asn_enc_rval_t rval;
+
+	if (!msg)
+		return NULL;
+
+	rval = aper_encode_to_buffer(&asn_DEF_HNBAP_PDU, pdu,
+				       msg->data, msgb_tailroom(msg));
+	if (rval.encoded < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error encoding type: %s\n",
+				rval.failed_type->name);
+
+	}
+
+	msgb_put(msg, rval.encoded/8);
+
+	return msg;
+}
+
 struct msgb *hnbap_generate_initiating_message(
 					 e_ProcedureCode procedureCode,
 					 Criticality_t criticality,
@@ -122,8 +143,6 @@ struct msgb *hnbap_generate_initiating_message(
 {
 
 	HNBAP_PDU_t pdu;
-	struct msgb *msg = hnbap_msgb_alloc();
-	asn_enc_rval_t rval;
 	int rc;
 
 	memset(&pdu, 0, sizeof(HNBAP_PDU_t));
@@ -134,20 +153,10 @@ struct msgb *hnbap_generate_initiating_message(
 	rc = ANY_fromType_aper(&pdu.choice.initiatingMessage.value, td, sptr);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
-		msgb_free(msg);
 		return NULL;
 	}
 
-	rval = aper_encode_to_buffer(&asn_DEF_HNBAP_PDU, &pdu,
-				     msg->data, msgb_tailroom(msg));
-	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
-		msgb_free(msg);
-		return NULL;
-	}
-
-	msgb_put(msg, rval.encoded/8);
-	return msg;
+	return _hnbap_gen_msg(&pdu);
 }
 
 struct msgb *hnbap_generate_successful_outcome(
@@ -158,32 +167,20 @@ struct msgb *hnbap_generate_successful_outcome(
 {
 
 	HNBAP_PDU_t pdu;
-	struct msgb *msg = hnbap_msgb_alloc();
-	asn_enc_rval_t rval;
 	int rc;
 
 	memset(&pdu, 0, sizeof(HNBAP_PDU_t));
+
 	pdu.present = HNBAP_PDU_PR_successfulOutcome;
 	pdu.choice.successfulOutcome.procedureCode = procedureCode;
 	pdu.choice.successfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
-		msgb_free(msg);
 		return NULL;
 	}
 
-	rval = aper_encode_to_buffer(&asn_DEF_HNBAP_PDU, &pdu,
-				     msg->data, msgb_tailroom(msg));
-	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
-		msgb_free(msg);
-		return NULL;
-	}
-
-	msgb_put(msg, rval.encoded/8);
-
-	return msg;
+	return _hnbap_gen_msg(&pdu);
 }
 
 struct msgb *hnbap_generate_unsuccessful_outcome(
@@ -194,32 +191,20 @@ struct msgb *hnbap_generate_unsuccessful_outcome(
 {
 
 	HNBAP_PDU_t pdu;
-	struct msgb *msg = hnbap_msgb_alloc();
-	asn_enc_rval_t rval;
 	int rc;
 
 	memset(&pdu, 0, sizeof(HNBAP_PDU_t));
+
 	pdu.present = HNBAP_PDU_PR_unsuccessfulOutcome;
 	pdu.choice.unsuccessfulOutcome.procedureCode = procedureCode;
 	pdu.choice.unsuccessfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.unsuccessfulOutcome.value, td, sptr);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
-		msgb_free(msg);
 		return NULL;
 	}
 
-	rval = aper_encode_to_buffer(&asn_DEF_HNBAP_PDU, &pdu,
-				     msg->data, msgb_tailroom(msg));
-	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
-		msgb_free(msg);
-		return NULL;
-	}
-
-	msgb_put(msg, rval.encoded/8);
-
-	return msg;
+	return _hnbap_gen_msg(&pdu);
 }
 
 IE_t *hnbap_new_ie(ProtocolIE_ID_t id,

@@ -100,33 +100,48 @@ static struct msgb *rua_msgb_alloc(void)
 	return msgb_alloc(1024, "RUA Tx");
 }
 
+static struct msgb *_rua_gen_msg(RUA_RUA_PDU_t *pdu)
+{
+	struct msgb *msg = rua_msgb_alloc();
+	asn_enc_rval_t rval;
+
+	if (!msg)
+		return NULL;
+
+	rval = aper_encode_to_buffer(&asn_DEF_RUA_RUA_PDU, pdu,
+				       msg->data, msgb_tailroom(msg));
+	if (rval.encoded < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error encoding type: %s\n",
+				rval.failed_type->name);
+
+	}
+
+	msgb_put(msg, rval.encoded/8);
+
+	return msg;
+}
+
+
 struct msgb *rua_generate_initiating_message(
 					e_RUA_ProcedureCode procedureCode,
 					RUA_Criticality_t criticality,
 					asn_TYPE_descriptor_t * td, void *sptr)
 {
 	RUA_RUA_PDU_t pdu;
-	struct msgb *msg = rua_msgb_alloc();
-	asn_enc_rval_t rval;
-	ssize_t encoded;
+	int rc;
 
 	memset(&pdu, 0, sizeof(pdu));
+
 	pdu.present = RUA_RUA_PDU_PR_initiatingMessage;
 	pdu.choice.initiatingMessage.procedureCode = procedureCode;
 	pdu.choice.initiatingMessage.criticality = criticality;
-	ANY_fromType_aper(&pdu.choice.initiatingMessage.value, td, sptr);
-
-	rval = aper_encode_to_buffer(&asn_DEF_RUA_RUA_PDU, &pdu,
-				     msg->data, msgb_tailroom(msg));
-	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
-		msgb_free(msg);
+	rc = ANY_fromType_aper(&pdu.choice.initiatingMessage.value, td, sptr);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
-	msgb_put(msg, rval.encoded/8);
-
-	return msg;
+	return _rua_gen_msg(&pdu);
 }
 
 struct msgb *rua_generate_successful_outcome(
@@ -135,34 +150,21 @@ struct msgb *rua_generate_successful_outcome(
 					   asn_TYPE_descriptor_t * td,
 					   void *sptr)
 {
-
 	RUA_RUA_PDU_t pdu;
-	struct msgb *msg = rua_msgb_alloc();
-	asn_enc_rval_t rval;
 	int rc;
 
 	memset(&pdu, 0, sizeof(pdu));
+
 	pdu.present = RUA_RUA_PDU_PR_successfulOutcome;
 	pdu.choice.successfulOutcome.procedureCode = procedureCode;
 	pdu.choice.successfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
-		msgb_free(msg);
 		return NULL;
 	}
 
-	rval = aper_encode_to_buffer(&asn_DEF_RUA_RUA_PDU, &pdu,
-				     msg->data, msgb_tailroom(msg));
-	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
-		msgb_free(msg);
-		return NULL;
-	}
-
-	msgb_put(msg, rval.encoded/8);
-
-	return msg;
+	return _rua_gen_msg(&pdu);
 }
 
 struct msgb *rua_generate_unsuccessful_outcome(
@@ -171,34 +173,21 @@ struct msgb *rua_generate_unsuccessful_outcome(
 					   asn_TYPE_descriptor_t * td,
 					   void *sptr)
 {
-
 	RUA_RUA_PDU_t pdu;
-	struct msgb *msg = rua_msgb_alloc();
-	asn_enc_rval_t rval;
 	int rc;
 
 	memset(&pdu, 0, sizeof(pdu));
+
 	pdu.present = RUA_RUA_PDU_PR_unsuccessfulOutcome;
 	pdu.choice.unsuccessfulOutcome.procedureCode = procedureCode;
 	pdu.choice.unsuccessfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.unsuccessfulOutcome.value, td, sptr);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
-		msgb_free(msg);
 		return NULL;
 	}
 
-	rval = aper_encode_to_buffer(&asn_DEF_RUA_RUA_PDU, &pdu,
-				     msg->data, msgb_tailroom(msg));
-	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
-		msgb_free(msg);
-		return NULL;
-	}
-
-	msgb_put(msg, rval.encoded/8);
-
-	return msg;
+	return _rua_gen_msg(&pdu);
 }
 
 RUA_IE_t *rua_new_ie(RUA_ProtocolIE_ID_t id,

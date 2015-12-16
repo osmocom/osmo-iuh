@@ -35,28 +35,15 @@ static struct msgb *ranap_msgb_alloc(void)
 	return msgb_alloc(1024, "RANAP Tx");
 }
 
-struct msgb *ranap_generate_initiating_message(e_RANAP_ProcedureCode procedureCode,
-					  RANAP_Criticality_t criticality,
-					  asn_TYPE_descriptor_t *td, void *sptr)
+static struct msgb *_ranap_gen_msg(RANAP_RANAP_PDU_t *pdu)
 {
-	RANAP_RANAP_PDU_t pdu;
 	struct msgb *msg = ranap_msgb_alloc();
 	asn_enc_rval_t rval;
-	int rc;
 
-	memset(&pdu, 0, sizeof(pdu));
-
-	pdu.present = RANAP_RANAP_PDU_PR_initiatingMessage;
-	pdu.choice.initiatingMessage.procedureCode = procedureCode;
-	pdu.choice.initiatingMessage.criticality = criticality;
-	rc = ANY_fromType_aper(&pdu.choice.initiatingMessage.value, td, sptr);
-	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
-		msgb_free(msg);
+	if (!msg)
 		return NULL;
-	}
 
-	rval = aper_encode_to_buffer(&asn_DEF_RANAP_RANAP_PDU, &pdu,
+	rval = aper_encode_to_buffer(&asn_DEF_RANAP_RANAP_PDU, pdu,
 				       msg->data, msgb_tailroom(msg));
 	if (rval.encoded < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error encoding type: %s\n",
@@ -69,40 +56,48 @@ struct msgb *ranap_generate_initiating_message(e_RANAP_ProcedureCode procedureCo
 	return msg;
 }
 
+struct msgb *ranap_generate_initiating_message(e_RANAP_ProcedureCode procedureCode,
+					  RANAP_Criticality_t criticality,
+					  asn_TYPE_descriptor_t *td, void *sptr)
+{
+	RANAP_RANAP_PDU_t pdu;
+	int rc;
+
+	memset(&pdu, 0, sizeof(pdu));
+
+	pdu.present = RANAP_RANAP_PDU_PR_initiatingMessage;
+	pdu.choice.initiatingMessage.procedureCode = procedureCode;
+	pdu.choice.initiatingMessage.criticality = criticality;
+	rc = ANY_fromType_aper(&pdu.choice.initiatingMessage.value, td, sptr);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		return NULL;
+	}
+
+	return _ranap_gen_msg(&pdu);
+}
+
 struct msgb *ranap_generate_successful_outcome(
 					   e_RANAP_ProcedureCode procedureCode,
 					   RANAP_Criticality_t criticality,
 					   asn_TYPE_descriptor_t * td,
 					   void *sptr)
 {
-
 	RANAP_RANAP_PDU_t pdu;
-	struct msgb *msg = ranap_msgb_alloc();
-	asn_enc_rval_t rval;
 	int rc;
 
 	memset(&pdu, 0, sizeof(pdu));
+
 	pdu.present = RANAP_RANAP_PDU_PR_successfulOutcome;
 	pdu.choice.successfulOutcome.procedureCode = procedureCode;
 	pdu.choice.successfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
-		msgb_free(msg);
 		return NULL;
 	}
 
-	rval = aper_encode_to_buffer(&asn_DEF_RANAP_RANAP_PDU, &pdu,
-				     msg->data, msgb_tailroom(msg));
-	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
-		msgb_free(msg);
-		return NULL;
-	}
-
-	msgb_put(msg, rval.encoded/8);
-
-	return msg;
+	return _ranap_gen_msg(&pdu);
 }
 
 struct msgb *ranap_generate_unsuccessful_outcome(
@@ -112,8 +107,6 @@ struct msgb *ranap_generate_unsuccessful_outcome(
 					void *sptr)
 {
 	RANAP_RANAP_PDU_t pdu;
-	struct msgb *msg = ranap_msgb_alloc();
-	asn_enc_rval_t rval;
 	int rc;
 
 	memset(&pdu, 0, sizeof(pdu));
@@ -124,21 +117,10 @@ struct msgb *ranap_generate_unsuccessful_outcome(
 	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
-		msgb_free(msg);
 		return NULL;
 	}
 
-	rval = aper_encode_to_buffer(&asn_DEF_RANAP_RANAP_PDU, &pdu,
-				     msg->data, msgb_tailroom(msg));
-	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
-		msgb_free(msg);
-		return NULL;
-	}
-
-	msgb_put(msg, rval.encoded/8);
-
-	return msg;
+	return _ranap_gen_msg(&pdu);
 }
 
 RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id,
