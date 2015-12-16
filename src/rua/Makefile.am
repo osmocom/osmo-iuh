@@ -1,4 +1,4 @@
-ASN_MODULE_FILES=	\
+ASN_MODULE_SOURCES=	\
 	RUA_Criticality.c	\
 	RUA_Presence.c	\
 	RUA_ProcedureCode.c	\
@@ -75,7 +75,7 @@ ASN_MODULE_INC=	\
 AM_CFLAGS = $(ASN1C_CFLAGS) -I.
 
 noinst_LIBRARIES=libosmo-asn1-rua.a
-libosmo_asn1_rua_a_SOURCES=$(ASN_MODULE_FILES)
+libosmo_asn1_rua_a_SOURCES=$(ASN_MODULE_SOURCES)
 include_HEADERS=$(ASN_MODULES_INC)
 libosmo_asn1_rua_a_LIBADD=$(ASN1C_LDADD)
 

@@ -1,4 +1,4 @@
-ASN_MODULE_FILES=	\
+ASN_MODULE_SRC=	\
 	RANAP_Criticality.c	\
 	RANAP_Presence.c	\
 	RANAP_PrivateIE-ID.c	\
@@ -1041,6 +1041,6 @@ ASN_MODULE_INC=	\
 AM_CFLAGS = $(ASN1C_CFLAGS) -I.
 
 noinst_LIBRARIES=libosmo-asn1-ranap.a
-libosmo_asn1_ranap_a_SOURCES=$(ASN_MODULE_FILES)
+libosmo_asn1_ranap_a_SOURCES=$(ASN_MODULE_SRC)
 include_HEADERS=$(ASN_MODULE_INC)
 libosmo_asn1_ranap_a_LIBADD=$(ASN1C_LDADD)

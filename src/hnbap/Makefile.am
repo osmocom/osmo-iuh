@@ -1,4 +1,4 @@
-ASN_MODULE_FILES=	\
+ASN_MODULE_SOURCES=	\
 	Criticality.c	\
 	Presence.c	\
 	PrivateIE-ID.c	\
@@ -235,6 +235,6 @@ ASN_MODULE_INC=	\
 AM_CFLAGS = $(ASN1C_CFLAGS) -I.
 
 noinst_LIBRARIES=libosmo-asn1-hnbap.a
-libosmo_asn1_hnbap_a_SOURCES=$(ASN_MODULE_FILES)
+libosmo_asn1_hnbap_a_SOURCES=$(ASN_MODULE_SOURCES)
 include_HEADERS = $(ASN_MODULE_INC)
 libosmo_asn1_hnbap_a_LIBADD=$(ASN1C_LDADD)
