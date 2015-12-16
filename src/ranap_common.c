@@ -112,9 +112,9 @@ struct msgb *ranap_generate_unsuccessful_outcome(
 	memset(&pdu, 0, sizeof(pdu));
 
 	pdu.present = RANAP_RANAP_PDU_PR_unsuccessfulOutcome;
-	pdu.choice.successfulOutcome.procedureCode = procedureCode;
-	pdu.choice.successfulOutcome.criticality = criticality;
-	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
+	pdu.choice.unsuccessfulOutcome.procedureCode = procedureCode;
+	pdu.choice.unsuccessfulOutcome.criticality = criticality;
+	rc = ANY_fromType_aper(&pdu.choice.unsuccessfulOutcome.value, td, sptr);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
@@ -122,6 +122,30 @@ struct msgb *ranap_generate_unsuccessful_outcome(
 
 	return _ranap_gen_msg(&pdu);
 }
+
+struct msgb *ranap_generate_outcome(
+				e_RANAP_ProcedureCode procedureCode,
+				RANAP_Criticality_t criticality,
+				asn_TYPE_descriptor_t * td,
+				void *sptr)
+{
+	RANAP_RANAP_PDU_t pdu;
+	int rc;
+
+	memset(&pdu, 0, sizeof(pdu));
+
+	pdu.present = RANAP_RANAP_PDU_PR_outcome;
+	pdu.choice.outcome.procedureCode = procedureCode;
+	pdu.choice.outcome.criticality = criticality;
+	rc = ANY_fromType_aper(&pdu.choice.outcome.value, td, sptr);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		return NULL;
+	}
+
+	return _ranap_gen_msg(&pdu);
+}
+
 
 RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id,
 			 RANAP_Criticality_t criticality,
