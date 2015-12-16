@@ -494,6 +494,8 @@ ASN_MODULE_SRC=	\
 	RANAP_SRVCC-CSKeysResponse.c	\
 	RANAP_UeRadioCapabilityMatchRequest.c	\
 	RANAP_UeRadioCapabilityMatchResponse.c	\
+	RANAP_ProtocolExtensionContainer.c	\
+	RANAP_ProtocolExtensionField.c	\
 	RANAP_IE.c	\
 	RANAP_DataVolumeReportList.c	\
 	RANAP_RAB-ReleasedList-IuRelComp.c	\
@@ -514,7 +516,49 @@ ASN_MODULE_SRC=	\
 	RANAP_RAB-ReleasedList.c	\
 	RANAP_RAB-QueuedList.c	\
 	RANAP_GERAN-Iumode-RAB-FailedList-RABAssgntResponse.c	\
-	RANAP_RAB-ContextList-RANAP-RelocInf.c
+	RANAP_RAB-ContextList-RANAP-RelocInf.c	\
+	RANAP_RAB-SetupList-EnhRelocInfoReq.c	\
+	RANAP_RAB-SetupList-EnhRelocInfoRes.c	\
+	RANAP_RAB-FailedList-EnhRelocInfoRes.c	\
+	RANAP_RAB-ModifyList.c	\
+	RANAP_RAB-DataVolumeReportList.c	\
+	RANAP_RAB-DataVolumeReportItem.c	\
+	RANAP_RAB-ReleasedItem-IuRelComp.c	\
+	RANAP_RAB-RelocationReleaseItem.c	\
+	RANAP_RAB-DataForwardingItem.c	\
+	RANAP_RAB-SetupItem-RelocReq.c	\
+	RANAP_UserPlaneInformation.c	\
+	RANAP_RAB-SetupItem-RelocReqAck.c	\
+	RANAP_RAB-FailedItem.c	\
+	RANAP_RAB-ContextItem.c	\
+	RANAP_RABs-ContextFailedtoTransferItem.c	\
+	RANAP_RABs-failed-to-reportItem.c	\
+	RANAP_ResetResourceItem.c	\
+	RANAP_ResetResourceAckItem.c	\
+	RANAP_RAB-ReleaseItem.c	\
+	RANAP_RAB-SetupItem-EnhancedRelocCompleteReq.c	\
+	RANAP_RAB-SetupItem-EnhancedRelocCompleteRes.c	\
+	RANAP_RAB-ToBeReleasedItem-EnhancedRelocCompleteRes.c	\
+	RANAP_RAB-SetupOrModifyItemFirst.c	\
+	RANAP_TransportLayerInformation.c	\
+	RANAP_RAB-SetupOrModifyItemSecond.c	\
+	RANAP_RAB-SetupOrModifiedItem.c	\
+	RANAP_RAB-ReleasedItem.c	\
+	RANAP_DataVolumeList.c	\
+	RANAP_RAB-QueuedItem.c	\
+	RANAP_RAB-ReleaseFailedList.c	\
+	RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-Item.c	\
+	RANAP_DirectTransferInformationItem-RANAP-RelocInf.c	\
+	RANAP_RAB-ContextItem-RANAP-RelocInf.c	\
+	RANAP_RAB-SetupItem-EnhRelocInfoReq.c	\
+	RANAP_TNLInformationEnhRelInfoReq.c	\
+	RANAP_RAB-SetupItem-EnhRelocInfoRes.c	\
+	RANAP_RAB-FailedItem-EnhRelocInfoRes.c	\
+	RANAP_TNLInformationEnhRelInfoRes.c	\
+	RANAP_RAB-ModifyItem.c	\
+	RANAP_MBMSSynchronisationInformation.c	\
+	RANAP_LeftMBMSBearerService-IEs.c	\
+	RANAP_UnsuccessfulLinking-IEs.c
 
 ASN_MODULE_INC=	\
 	RANAP_Criticality.h	\
@@ -1012,6 +1056,8 @@ ASN_MODULE_INC=	\
 	RANAP_SRVCC-CSKeysResponse.h	\
 	RANAP_UeRadioCapabilityMatchRequest.h	\
 	RANAP_UeRadioCapabilityMatchResponse.h	\
+	RANAP_ProtocolExtensionContainer.h	\
+	RANAP_ProtocolExtensionField.h	\
 	RANAP_IE.h	\
 	RANAP_DataVolumeReportList.h	\
 	RANAP_RAB-ReleasedList-IuRelComp.h	\
@@ -1036,7 +1082,45 @@ ASN_MODULE_INC=	\
 	RANAP_RAB-SetupList-EnhRelocInfoReq.h	\
 	RANAP_RAB-SetupList-EnhRelocInfoRes.h	\
 	RANAP_RAB-FailedList-EnhRelocInfoRes.h	\
-	RANAP_RAB-ModifyList.h
+	RANAP_RAB-ModifyList.h	\
+	RANAP_RAB-DataVolumeReportList.h	\
+	RANAP_RAB-DataVolumeReportItem.h	\
+	RANAP_RAB-ReleasedItem-IuRelComp.h	\
+	RANAP_RAB-RelocationReleaseItem.h	\
+	RANAP_RAB-DataForwardingItem.h	\
+	RANAP_RAB-SetupItem-RelocReq.h	\
+	RANAP_UserPlaneInformation.h	\
+	RANAP_RAB-SetupItem-RelocReqAck.h	\
+	RANAP_RAB-FailedItem.h	\
+	RANAP_RAB-ContextItem.h	\
+	RANAP_RABs-ContextFailedtoTransferItem.h	\
+	RANAP_RABs-failed-to-reportItem.h	\
+	RANAP_ResetResourceItem.h	\
+	RANAP_ResetResourceAckItem.h	\
+	RANAP_RAB-ReleaseItem.h	\
+	RANAP_RAB-SetupItem-EnhancedRelocCompleteReq.h	\
+	RANAP_RAB-SetupItem-EnhancedRelocCompleteRes.h	\
+	RANAP_RAB-ToBeReleasedItem-EnhancedRelocCompleteRes.h	\
+	RANAP_RAB-SetupOrModifyItemFirst.h	\
+	RANAP_TransportLayerInformation.h	\
+	RANAP_RAB-SetupOrModifyItemSecond.h	\
+	RANAP_RAB-SetupOrModifiedItem.h	\
+	RANAP_RAB-ReleasedItem.h	\
+	RANAP_DataVolumeList.h	\
+	RANAP_RAB-QueuedItem.h	\
+	RANAP_RAB-ReleaseFailedList.h	\
+	RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-Item.h	\
+	RANAP_DirectTransferInformationItem-RANAP-RelocInf.h	\
+	RANAP_RAB-ContextItem-RANAP-RelocInf.h	\
+	RANAP_RAB-SetupItem-EnhRelocInfoReq.h	\
+	RANAP_TNLInformationEnhRelInfoReq.h	\
+	RANAP_RAB-SetupItem-EnhRelocInfoRes.h	\
+	RANAP_RAB-FailedItem-EnhRelocInfoRes.h	\
+	RANAP_TNLInformationEnhRelInfoRes.h	\
+	RANAP_RAB-ModifyItem.h	\
+	RANAP_MBMSSynchronisationInformation.h	\
+	RANAP_LeftMBMSBearerService-IEs.h	\
+	RANAP_UnsuccessfulLinking-IEs.h
 
 AM_CFLAGS = $(ASN1C_CFLAGS) -I.
 

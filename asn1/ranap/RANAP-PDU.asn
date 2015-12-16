@@ -13,7 +13,42 @@ IMPORTS
 
 FROM RANAP-CommonDataTypes
 
-    maxProtocolIEs
+    Alt-RAB-Parameters,
+    Ass-RAB-Parameters,
+    Cause,
+    CN-DomainIndicator,
+    DataVolumeReference,
+    DataVolumeReportingIndication,
+    DL-GTP-PDU-SequenceNumber,
+    DL-N-PDU-SequenceNumber,
+    GERAN-Classmark,
+    GTP-TEI,
+    IPMulticastAddress,
+    IuSignallingConnectionIdentifier,
+    IuTransportAssociation,
+    MBMSHCIndicator,
+    NAS-PDU,
+    NAS-SynchronisationIndicator,
+    PDP-TypeInformation,
+    RAB-ID,
+    RAB-Parameters,
+    Requested-RAB-Parameter-Values,
+    SAPI,
+    Service-Handover,
+    TMGI,
+    TransportLayerAddress,
+    UL-GTP-PDU-SequenceNumber,
+    UL-N-PDU-SequenceNumber,
+    UnsuccessfullyTransmittedDataVolume,
+    UP-ModeVersions,
+    UserPlaneMode
+
+FROM RANAP-IEs
+
+    maxnoofMulticastServicesPerUE,
+    maxNrOfVol,
+    maxProtocolIEs,
+    maxProtocolExtensions
 
 FROM RANAP-Constants;
 
@@ -460,6 +495,13 @@ UeRadioCapabilityMatchResponse ::= SEQUENCE {
     ...
 }
 
+ProtocolExtensionContainer ::= SEQUENCE (SIZE (1..maxProtocolExtensions)) OF ProtocolExtensionField
+
+ProtocolExtensionField ::= SEQUENCE {
+    id ProtocolIE-ID,
+    criticality Criticality,
+    value ANY
+}
 
 IE ::= SEQUENCE {
     id ProtocolIE-ID,
@@ -586,6 +628,326 @@ RAB-ModifyList ::= SEQUENCE {
 	rabModifyList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
+
+RAB-DataVolumeReportList ::= SEQUENCE {
+	rabDataVolumeReportList-ies SEQUENCE (SIZE(0..maxProtocolIEs))
+OF IE,
+	...
+}
+
+RAB-DataVolumeReportItem ::= SEQUENCE {
+	rAB-ID					RAB-ID,
+	dl-UnsuccessfullyTransmittedDataVolume	DataVolumeList		OPTIONAL
+	-- This IE shall always be present although its presence is optional --,
+	iE-Extensions ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-ReleasedItem-IuRelComp	::= SEQUENCE {
+		rAB-ID				RAB-ID,
+		dL-GTP-PDU-SequenceNumber	DL-GTP-PDU-SequenceNumber 	OPTIONAL,
+		uL-GTP-PDU-SequenceNumber	UL-GTP-PDU-SequenceNumber 	OPTIONAL,
+		iE-Extensions			ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-RelocationReleaseItem ::= SEQUENCE {
+	rAB-ID						RAB-ID,
+	iE-Extensions					ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-DataForwardingItem ::= SEQUENCE {
+	rAB-ID						RAB-ID,
+	transportLayerAddress				TransportLayerAddress,
+	iuTransportAssociation				IuTransportAssociation,
+	iE-Extensions					ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-SetupItem-RelocReq ::= SEQUENCE {
+	rAB-ID				RAB-ID,
+	nAS-SynchronisationIndicator	NAS-SynchronisationIndicator	OPTIONAL,
+	rAB-Parameters			RAB-Parameters,
+	dataVolumeReportingIndication	DataVolumeReportingIndication 	OPTIONAL
+	-- This IE shall be present if the CN domain indicator IE is set to "PS domain" --,
+	pDP-TypeInformation		PDP-TypeInformation		OPTIONAL
+	-- This IE shall be present if the CN domain indicator IE is set to "PS domain" --,
+	userPlaneInformation		UserPlaneInformation,
+	transportLayerAddress		TransportLayerAddress,
+	iuTransportAssociation		IuTransportAssociation,
+	service-Handover		Service-Handover		OPTIONAL,
+	iE-Extensions			ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+UserPlaneInformation ::= SEQUENCE {
+	userPlaneMode		UserPlaneMode,
+	uP-ModeVersions		UP-ModeVersions,
+	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-SetupItem-RelocReqAck ::= SEQUENCE {
+	rAB-ID			RAB-ID,
+	transportLayerAddress	TransportLayerAddress	OPTIONAL,
+	iuTransportAssociation	IuTransportAssociation	OPTIONAL,
+	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-FailedItem ::= SEQUENCE {
+	rAB-ID		RAB-ID,
+	cause		Cause,
+	iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-ContextItem ::= SEQUENCE {
+	rAB-ID				RAB-ID,
+	dl-GTP-PDU-SequenceNumber	DL-GTP-PDU-SequenceNumber 	OPTIONAL,
+	ul-GTP-PDU-SequenceNumber	UL-GTP-PDU-SequenceNumber 	OPTIONAL,
+	dl-N-PDU-SequenceNumber		DL-N-PDU-SequenceNumber 	OPTIONAL,
+	ul-N-PDU-SequenceNumber		UL-N-PDU-SequenceNumber 	OPTIONAL,
+	iE-Extensions			ProtocolExtensionContainer	OPTIONAL,
+	...
+}
+
+RABs-ContextFailedtoTransferItem::= SEQUENCE {
+	rAB-ID		RAB-ID,
+	cause		Cause,
+	iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RABs-failed-to-reportItem::= SEQUENCE {
+	rAB-ID		RAB-ID,
+	cause		Cause,
+	iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+ResetResourceItem ::= SEQUENCE {
+	iuSigConId		IuSignallingConnectionIdentifier,
+	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+ResetResourceAckItem ::= SEQUENCE {
+	iuSigConId		IuSignallingConnectionIdentifier,
+	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-ReleaseItem ::= SEQUENCE {
+	rAB-ID		RAB-ID,
+	cause		Cause,
+	iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-SetupItem-EnhancedRelocCompleteReq ::= SEQUENCE {
+	rAB-ID				RAB-ID,
+	transportLayerAddressReq1	TransportLayerAddress	OPTIONAL,
+	iuTransportAssociationReq1	IuTransportAssociation	OPTIONAL,
+	ass-RAB-Parameters		Ass-RAB-Parameters OPTIONAL,
+	iE-Extensions			ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-SetupItem-EnhancedRelocCompleteRes ::= SEQUENCE {
+	rAB-ID				RAB-ID,
+	rAB-Parameters			RAB-Parameters	OPTIONAL,
+	userPlaneInformation		UserPlaneInformation,
+	transportLayerAddressRes1	TransportLayerAddress	OPTIONAL,
+	iuTransportAssociationRes1	IuTransportAssociation	OPTIONAL,
+	rab2beReleasedList		RAB-ToBeReleasedList-EnhancedRelocCompleteRes OPTIONAL,
+	iE-Extensions			ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-ToBeReleasedItem-EnhancedRelocCompleteRes ::= SEQUENCE {
+	rAB-ID		RAB-ID,
+	cause		Cause,
+	iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-SetupOrModifyItemFirst ::= SEQUENCE {
+	rAB-ID				RAB-ID,
+	nAS-SynchronisationIndicator	NAS-SynchronisationIndicator	OPTIONAL,
+	rAB-Parameters			RAB-Parameters			OPTIONAL,
+	userPlaneInformation		UserPlaneInformation		OPTIONAL,
+	transportLayerInformation	TransportLayerInformation	OPTIONAL,
+	service-Handover		Service-Handover		OPTIONAL,
+	iE-Extensions			ProtocolExtensionContainer	OPTIONAL,
+	...
+}
+
+TransportLayerInformation ::= SEQUENCE {
+	transportLayerAddress	TransportLayerAddress,
+	iuTransportAssociation	IuTransportAssociation,
+	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-SetupOrModifyItemSecond ::= SEQUENCE {
+	pDP-TypeInformation				PDP-TypeInformation 		OPTIONAL,
+	dataVolumeReportingIndication			DataVolumeReportingIndication 	OPTIONAL,
+	dl-GTP-PDU-SequenceNumber			DL-GTP-PDU-SequenceNumber 	OPTIONAL,
+	ul-GTP-PDU-SequenceNumber			UL-GTP-PDU-SequenceNumber 	OPTIONAL,
+	dl-N-PDU-SequenceNumber				DL-N-PDU-SequenceNumber 	OPTIONAL,
+	ul-N-PDU-SequenceNumber				UL-N-PDU-SequenceNumber		OPTIONAL,
+	iE-Extensions					ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-SetupOrModifiedItem ::= SEQUENCE {
+	rAB-ID			RAB-ID,
+	transportLayerAddress	TransportLayerAddress	OPTIONAL,
+	iuTransportAssociation	IuTransportAssociation	OPTIONAL,
+	dl-dataVolumes		DataVolumeList		OPTIONAL,
+	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-ReleasedItem ::= SEQUENCE {
+	rAB-ID				RAB-ID,
+	dl-dataVolumes			DataVolumeList		OPTIONAL,
+	dL-GTP-PDU-SequenceNumber	DL-GTP-PDU-SequenceNumber			OPTIONAL,
+	uL-GTP-PDU-SequenceNumber	UL-GTP-PDU-SequenceNumber			OPTIONAL,
+	iE-Extensions			ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+DataVolumeList ::= SEQUENCE (SIZE (1..maxNrOfVol)) OF
+	SEQUENCE {
+		dl-UnsuccessfullyTransmittedDataVolume	UnsuccessfullyTransmittedDataVolume,
+		dataVolumeReference			DataVolumeReference	OPTIONAL,
+		iE-Extensions				ProtocolExtensionContainer OPTIONAL,
+		...
+	}
+
+RAB-QueuedItem ::= SEQUENCE {
+	rAB-ID		RAB-ID,
+	iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-ReleaseFailedList ::= RAB-FailedList
+
+GERAN-Iumode-RAB-Failed-RABAssgntResponse-Item ::= SEQUENCE {
+	rAB-ID		RAB-ID,
+	cause		Cause,
+	gERAN-Classmark	GERAN-Classmark		OPTIONAL,
+	iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+DirectTransferInformationItem-RANAP-RelocInf ::= SEQUENCE {
+	nAS-PDU			NAS-PDU,
+	sAPI			SAPI,
+	cN-DomainIndicator	CN-DomainIndicator,
+	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RAB-ContextItem-RANAP-RelocInf ::= SEQUENCE {
+	rAB-ID				RAB-ID,
+	dl-GTP-PDU-SequenceNumber	DL-GTP-PDU-SequenceNumber 	OPTIONAL,
+	ul-GTP-PDU-SequenceNumber	UL-GTP-PDU-SequenceNumber 	OPTIONAL,
+	dl-N-PDU-SequenceNumber		DL-N-PDU-SequenceNumber		OPTIONAL,
+	ul-N-PDU-SequenceNumber		UL-N-PDU-SequenceNumber		OPTIONAL,
+	iE-Extensions			ProtocolExtensionContainer	OPTIONAL,
+	...
+}
+
+RAB-SetupItem-EnhRelocInfoReq ::= SEQUENCE {
+	rAB-ID				RAB-ID,
+	cN-DomainIndicator		CN-DomainIndicator,
+	rAB-Parameters			RAB-Parameters,
+	dataVolumeReportingIndication	DataVolumeReportingIndication 	OPTIONAL
+	-- This IE shall be present if the CN domain indicator IE is set to "PS domain" --,
+	pDP-TypeInformation		PDP-TypeInformation		OPTIONAL
+	-- This IE shall be present if the CN domain indicator IE is set to "PS domain" --,
+	userPlaneInformation		UserPlaneInformation,
+	dataForwardingInformation	TNLInformationEnhRelInfoReq	OPTIONAL,
+	sourceSideIuULTNLInfo		TNLInformationEnhRelInfoReq	OPTIONAL,
+	
+	service-Handover		Service-Handover		OPTIONAL,
+	alt-RAB-Parameters		Alt-RAB-Parameters		OPTIONAL,
+	iE-Extensions			ProtocolExtensionContainer	OPTIONAL,
+	...
+}
+
+TNLInformationEnhRelInfoReq ::=SEQUENCE{
+	transportLayerAddress	TransportLayerAddress,
+	iuTransportAssociation	IuTransportAssociation,
+	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+
+RAB-SetupItem-EnhRelocInfoRes ::= SEQUENCE {
+	cN-DomainIndicator		CN-DomainIndicator,
+	rAB-ID				RAB-ID,
+	dataForwardingInformation	TNLInformationEnhRelInfoRes	OPTIONAL,
+	ass-RAB-Parameters		Ass-RAB-Parameters		OPTIONAL,
+	iE-Extensions			ProtocolExtensionContainer	OPTIONAL,
+	...
+}
+
+RAB-FailedItem-EnhRelocInfoRes ::= SEQUENCE {
+	cN-DomainIndicator	CN-DomainIndicator,
+	rAB-ID			RAB-ID,
+	cause			Cause,
+	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+TNLInformationEnhRelInfoRes ::=SEQUENCE{
+	dl-forwardingTransportLayerAddress	TransportLayerAddress,
+	dl-forwardingTransportAssociation	IuTransportAssociation,
+	iE-Extensions 				ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+
+-- **************************************************************
+--
+-- RAB MODIFICATION REQUEST ELEMENTARY PROCEDURE
+--
+-- **************************************************************
+
+RAB-ModifyItem ::= SEQUENCE {
+	rAB-ID				RAB-ID,
+	requested-RAB-Parameter-Values	Requested-RAB-Parameter-Values,
+	iE-Extensions			ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+MBMSSynchronisationInformation ::= SEQUENCE {
+	mBMSHCIndicator		MBMSHCIndicator,
+	iPMulticastAddress	IPMulticastAddress,
+	gTPDLTEID		GTP-TEI,
+	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+LeftMBMSBearerService-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF
+	SEQUENCE {
+		tMGI		TMGI,
+		iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+		...
+	}
+
+UnsuccessfulLinking-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF
+	SEQUENCE {
+		tMGI		TMGI,
+		cause		Cause,
+		iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+		...
+	}
 
 
 END
