@@ -22,10 +22,7 @@
 
 #include <osmocom/core/msgb.h>
 
-//#include "ranap_common.h"
-#include "ranap/RANAP_RANAP-PDU.h"
-#include "ranap/RANAP_ProtocolIE-ID.h"
-#include "ranap/RANAP_IE.h"
+#include "ranap_common.h"
 #include "hnbgw.h"
 
 extern int asn1_xer_print;
@@ -164,6 +161,37 @@ RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id,
 	buff->criticality = criticality;
 
 	ANY_fromType_aper(&buff->value, type, sptr);
+
+	if (asn1_xer_print)
+		if (xer_fprint(stdout, &asn_DEF_RANAP_IE, buff) < 0) {
+			free(buff);
+			return NULL;
+		}
+
+	return buff;
+}
+
+RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
+				RANAP_Criticality_t criticality1,
+				asn_TYPE_descriptor_t *type1, void *sptr1,
+				RANAP_Criticality_t criticality2,
+				asn_TYPE_descriptor_t *type2, void *sptr2)
+{
+
+	RANAP_ProtocolIE_FieldPair_t *buff;
+
+	if ((buff = malloc(sizeof(*buff))) == NULL) {
+		// Possible error on malloc
+		return NULL;
+	}
+	memset((void *)buff, 0, sizeof(*buff));
+
+	buff->id = id;
+	buff->firstCriticality = criticality1;
+	buff->secondCriticality = criticality2;
+
+	ANY_fromType_aper(&buff->firstValue, type1, sptr1);
+	ANY_fromType_aper(&buff->secondValue, type2, sptr2);
 
 	if (asn1_xer_print)
 		if (xer_fprint(stdout, &asn_DEF_RANAP_IE, buff) < 0) {

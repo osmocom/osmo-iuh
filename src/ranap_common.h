@@ -616,3 +616,8 @@ struct msgb *ranap_generate_outcome(
 RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id, RANAP_Criticality_t criticality,
 			 asn_TYPE_descriptor_t *type, void *sptr);
 
+RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
+				RANAP_Criticality_t criticality1,
+				asn_TYPE_descriptor_t *type1, void *sptr1,
+				RANAP_Criticality_t criticality2,
+				asn_TYPE_descriptor_t *type2, void *sptr2);
