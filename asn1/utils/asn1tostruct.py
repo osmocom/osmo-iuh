@@ -270,7 +270,7 @@ for key in iesDefs:
     if key in ieofielist.values():
         continue
     structName = re.sub('ies', '', key)
-    asn1cStruct = re.sub('-', '_', re.sub('IEs', '', key))
+    asn1cStruct = re.sub('-', '_', re.sub('IEs', '', re.sub('-IEs', '', key)))
     ielistname = re.sub('UE', 'ue', asn1cStruct)
     ielistnamefirstlower = ielistname[:1].lower() + ielistname[1:]
     asn1cStructfirstlower = asn1cStruct[:1].lower() + asn1cStruct[1:]
@@ -392,7 +392,7 @@ for key in iesDefs:
         continue
 
     structName = re.sub('ies', '', key)
-    asn1cStruct = re.sub('-', '_', re.sub('IEs', '', key))
+    asn1cStruct = re.sub('-', '_', re.sub('IEs', '', re.sub('-IEs', '', key)))
     firstwordlower = re.sub('Item', 'List', re.sub('enb', 'eNB', lowerFirstCamelWord(asn1cStruct)))
     asn1cStruct = prefix + re.sub('Item', 'List', asn1cStruct)
     asn1cStructfirstlower = asn1cStruct[:1].lower() + asn1cStruct[1:]
