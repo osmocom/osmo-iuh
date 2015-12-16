@@ -165,36 +165,41 @@ struct msgb *rua_generate_successful_outcome(
 	return msg;
 }
 
-#if 0
-ssize_t rua_generate_unsuccessful_outcome(uint8_t ** buffer,
-					  uint32_t * length,
-					  e_RUA_ProcedureCode procedureCode,
-					  RUA_Criticality_t criticality,
-					  asn_TYPE_descriptor_t * td,
-					  void *sptr)
+struct msgb *rua_generate_unsuccessful_outcome(
+					   e_RUA_ProcedureCode procedureCode,
+					   RUA_Criticality_t criticality,
+					   asn_TYPE_descriptor_t * td,
+					   void *sptr)
 {
 
 	RUA_RUA_PDU_t pdu;
-	ssize_t encoded;
+	struct msgb *msg = rua_msgb_alloc();
+	asn_enc_rval_t rval;
+	int rc;
 
 	memset(&pdu, 0, sizeof(pdu));
-
 	pdu.present = RUA_RUA_PDU_PR_unsuccessfulOutcome;
-	pdu.choice.successfulOutcome.procedureCode = procedureCode;
-	pdu.choice.successfulOutcome.criticality = criticality;
-	ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
-
-	if ((encoded =
-	     aper_encode_to_new_buffer(&asn_DEF_RUA_RUA_PDU, 0, &pdu,
-				       (void **)buffer)) < 0) {
-		return -1;
+	pdu.choice.unsuccessfulOutcome.procedureCode = procedureCode;
+	pdu.choice.unsuccessfulOutcome.criticality = criticality;
+	rc = ANY_fromType_aper(&pdu.choice.unsuccessfulOutcome.value, td, sptr);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		msgb_free(msg);
+		return NULL;
 	}
 
-	*length = encoded;
+	rval = aper_encode_to_buffer(&asn_DEF_RUA_RUA_PDU, &pdu,
+				     msg->data, msgb_tailroom(msg));
+	if (rval.encoded < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error encoding type %s\n", rval.failed_type->name);
+		msgb_free(msg);
+		return NULL;
+	}
 
-	return encoded;
+	msgb_put(msg, rval.encoded/8);
+
+	return msg;
 }
-#endif
 
 RUA_IE_t *rua_new_ie(RUA_ProtocolIE_ID_t id,
 		     RUA_Criticality_t criticality,

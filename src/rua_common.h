@@ -59,6 +59,12 @@ struct msgb *rua_generate_successful_outcome(
 					   asn_TYPE_descriptor_t * td,
 					   void *sptr);
 
+struct msgb *rua_generate_unsuccessful_outcome(
+					   e_RUA_ProcedureCode procedureCode,
+					   RUA_Criticality_t criticality,
+					   asn_TYPE_descriptor_t * td,
+					   void *sptr);
+
 RUA_IE_t *rua_new_ie(RUA_ProtocolIE_ID_t id, RUA_Criticality_t criticality,
 		     asn_TYPE_descriptor_t *type, void *sptr);
 

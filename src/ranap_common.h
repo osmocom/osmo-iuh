@@ -591,11 +591,21 @@
 
 extern int asn1_xer_print;
 
+struct msgb *ranap_generate_initiating_message(e_RANAP_ProcedureCode procedureCode,
+					  RANAP_Criticality_t criticality,
+					  asn_TYPE_descriptor_t *td, void *sptr);
+
 struct msgb *ranap_generate_successful_outcome(
 					   e_RANAP_ProcedureCode procedureCode,
 					   RANAP_Criticality_t criticality,
 					   asn_TYPE_descriptor_t * td,
 					   void *sptr);
+
+struct msgb *ranap_generate_unsuccessful_outcome(
+					e_RANAP_ProcedureCode procedureCode,
+					RANAP_Criticality_t criticality,
+					asn_TYPE_descriptor_t * td,
+					void *sptr);
 
 RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id, RANAP_Criticality_t criticality,
 			 asn_TYPE_descriptor_t *type, void *sptr);

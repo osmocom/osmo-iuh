@@ -146,6 +146,12 @@ struct msgb *hnbap_generate_successful_outcome(
 					   asn_TYPE_descriptor_t * td,
 					   void *sptr);
 
+struct msgb *hnbap_generate_unsuccessful_outcome(
+					   e_ProcedureCode procedureCode,
+					   Criticality_t criticality,
+					   asn_TYPE_descriptor_t * td,
+					   void *sptr);
+
 IE_t *hnbap_new_ie(ProtocolIE_ID_t id, Criticality_t criticality,
 		  asn_TYPE_descriptor_t *type, void *sptr);
 
