@@ -3,3 +3,15 @@
 *.so
 *~
 .*
+autom4te.cache
+aclocal.m4
+config.log
+config.status
+configure
+compile
+depcomp
+install-sh
+missing
+Makefile.in
+Makefile
+Makefile.am.sample
