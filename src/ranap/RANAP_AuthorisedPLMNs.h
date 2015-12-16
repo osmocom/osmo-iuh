@@ -24,7 +24,7 @@ extern "C" {
 
 /* RANAP_AuthorisedPLMNs */
 typedef struct RANAP_AuthorisedPLMNs {
-	A_SEQUENCE_OF(struct MemberA {
+	A_SEQUENCE_OF(struct MemberC {
 		RANAP_PLMNidentity_t	 pLMNidentity;
 		RANAP_AuthorisedSNAs_t	*authorisedSNAsList	/* OPTIONAL */;
 		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;

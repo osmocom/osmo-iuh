@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_RAB-QueuedList */
 typedef struct RANAP_RAB_QueuedList {
-	struct rabQueuedList_ies {
+	struct raB_QueuedList_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rabQueuedList_ies;
+	} raB_QueuedList_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

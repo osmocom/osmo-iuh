@@ -997,7 +997,7 @@ SRNS-ContextResponse ::= SEQUENCE {
 
 SRNS-ContextResponseIEs RANAP-PROTOCOL-IES ::= {
 	{ ID id-RAB-ContextList			CRITICALITY ignore	TYPE RAB-ContextList			PRESENCE optional	} |
-	{ ID id-RAB-ContextFailedtoTransferList	CRITICALITY ignore	TYPE RAB-ContextFailedtoTransferList	PRESENCE optional	}|
+	{ ID id-RAB-ContextFailedtoTransferList	CRITICALITY ignore	TYPE RABs-ContextFailedtoTransferList	PRESENCE optional	}|
 	{ ID id-CriticalityDiagnostics		CRITICALITY ignore	TYPE CriticalityDiagnostics		PRESENCE optional	},
 	...
 }
@@ -1022,8 +1022,8 @@ RAB-ContextItem ::= SEQUENCE {
 RAB-ContextItem-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
 	...
 }
-
-RAB-ContextFailedtoTransferList ::= RAB-IE-ContainerList { {RABs-ContextFailedtoTransferItemIEs} }
+s
+RABs-ContextFailedtoTransferList ::= RAB-IE-ContainerList { {RABs-ContextFailedtoTransferItemIEs} }
 
 RABs-ContextFailedtoTransferItemIEs RANAP-PROTOCOL-IES ::= {
 	{ ID id-RAB-ContextFailedtoTransferItem		CRITICALITY ignore	TYPE RABs-ContextFailedtoTransferItem			PRESENCE mandatory	},
@@ -1178,7 +1178,7 @@ DataVolumeReport ::= SEQUENCE {
 
 DataVolumeReportIEs RANAP-PROTOCOL-IES ::= {
 	{ ID id-RAB-DataVolumeReportList	CRITICALITY ignore	TYPE RAB-DataVolumeReportList	PRESENCE optional	} |
-	{ ID id-RAB-FailedtoReportList		CRITICALITY ignore	TYPE RAB-FailedtoReportList	PRESENCE optional	} |
+	{ ID id-RAB-FailedtoReportList		CRITICALITY ignore	TYPE RABs-failed-to-reportList	PRESENCE optional	} |
 	{ ID id-CriticalityDiagnostics		CRITICALITY ignore	TYPE CriticalityDiagnostics	PRESENCE optional	},
 	...
 }
@@ -1187,7 +1187,7 @@ DataVolumeReportExtensions RANAP-PROTOCOL-EXTENSION ::= {
 	...
 }
 
-RAB-FailedtoReportList 	::= RAB-IE-ContainerList { {RABs-failed-to-reportItemIEs} }
+RABs-failed-to-reportList 	::= RAB-IE-ContainerList { {RABs-failed-to-reportItemIEs} }
 
 RABs-failed-to-reportItemIEs RANAP-PROTOCOL-IES ::= {
 	{ ID id-RAB-FailedtoReportItem		CRITICALITY ignore	TYPE RABs-failed-to-reportItem			PRESENCE mandatory	},

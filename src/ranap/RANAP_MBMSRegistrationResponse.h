@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_MBMSRegistrationResponse */
 typedef struct RANAP_MBMSRegistrationResponse {
-	struct mBMSRegistrationResponse_ies {
+	struct mbmsRegistrationResponse_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} mBMSRegistrationResponse_ies;
+	} mbmsRegistrationResponse_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

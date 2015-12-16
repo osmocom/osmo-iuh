@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_MBMSSessionStopResponse */
 typedef struct RANAP_MBMSSessionStopResponse {
-	struct mBMSSessionStopResponse_ies {
+	struct mbmsSessionStopResponse_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} mBMSSessionStopResponse_ies;
+	} mbmsSessionStopResponse_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

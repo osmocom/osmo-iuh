@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_MBMSUELinkingResponse */
 typedef struct RANAP_MBMSUELinkingResponse {
-	struct mBMSUELinkingResponse_ies {
+	struct mbmsueLinkingResponse_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} mBMSUELinkingResponse_ies;
+	} mbmsueLinkingResponse_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

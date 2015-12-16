@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_RAB-RelocationReleaseList */
 typedef struct RANAP_RAB_RelocationReleaseList {
-	struct rabRelocationReleaseList_ies {
+	struct raB_RelocationReleaseList_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rabRelocationReleaseList_ies;
+	} raB_RelocationReleaseList_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

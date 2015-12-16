@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_UESpecificInformationIndication */
 typedef struct RANAP_UESpecificInformationIndication {
-	struct uESpecificInformationIndication_ies {
+	struct ueSpecificInformationIndication_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} uESpecificInformationIndication_ies;
+	} ueSpecificInformationIndication_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

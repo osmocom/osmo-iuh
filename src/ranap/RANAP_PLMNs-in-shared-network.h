@@ -24,7 +24,7 @@ extern "C" {
 
 /* RANAP_PLMNs-in-shared-network */
 typedef struct RANAP_PLMNs_in_shared_network {
-	A_SEQUENCE_OF(struct Member {
+	A_SEQUENCE_OF(struct MemberM {
 		RANAP_PLMNidentity_t	 pLMNidentity;
 		RANAP_LA_LIST_t	 lA_LIST;
 		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;

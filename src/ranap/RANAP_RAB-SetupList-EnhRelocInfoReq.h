@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_RAB-SetupList-EnhRelocInfoReq */
 typedef struct RANAP_RAB_SetupList_EnhRelocInfoReq {
-	struct rabSetupListEnhRelocInfoReq_ies {
+	struct raB_SetupList_EnhRelocInfoReq_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rabSetupListEnhRelocInfoReq_ies;
+	} raB_SetupList_EnhRelocInfoReq_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

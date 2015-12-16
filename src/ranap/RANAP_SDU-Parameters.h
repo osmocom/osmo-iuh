@@ -26,7 +26,7 @@ extern "C" {
 
 /* RANAP_SDU-Parameters */
 typedef struct RANAP_SDU_Parameters {
-	A_SEQUENCE_OF(struct MemberA {
+	A_SEQUENCE_OF(struct MemberI {
 		RANAP_SDU_ErrorRatio_t	*sDU_ErrorRatio	/* OPTIONAL */;
 		RANAP_ResidualBitErrorRatio_t	 residualBitErrorRatio;
 		RANAP_DeliveryOfErroneousSDU_t	 deliveryOfErroneousSDU;

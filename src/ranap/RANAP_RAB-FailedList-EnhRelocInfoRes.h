@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_RAB-FailedList-EnhRelocInfoRes */
 typedef struct RANAP_RAB_FailedList_EnhRelocInfoRes {
-	struct rabFailedListEnhRelocInfoRes_ies {
+	struct raB_FailedList_EnhRelocInfoRes_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rabFailedListEnhRelocInfoRes_ies;
+	} raB_FailedList_EnhRelocInfoRes_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

@@ -26,7 +26,7 @@ extern "C" {
 
 /* RANAP_RABParametersList */
 typedef struct RANAP_RABParametersList {
-	A_SEQUENCE_OF(struct MemberA {
+	A_SEQUENCE_OF(struct MemberB {
 		RANAP_RAB_ID_t	 rab_Id;
 		RANAP_CN_DomainIndicator_t	 cn_domain;
 		RANAP_RABDataVolumeReport_t	*rabDataVolumeReport	/* OPTIONAL */;

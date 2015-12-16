@@ -23,7 +23,7 @@ extern "C" {
 
 /* RANAP_LeftMBMSBearerService-IEs */
 typedef struct RANAP_LeftMBMSBearerService_IEs {
-	A_SEQUENCE_OF(struct Member {
+	A_SEQUENCE_OF(struct MemberK {
 		RANAP_TMGI_t	 tMGI;
 		RANAP_ProtocolExtensionContainer_t	*iE_Extensions	/* OPTIONAL */;
 		/*

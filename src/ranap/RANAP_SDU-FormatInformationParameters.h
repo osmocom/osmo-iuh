@@ -24,7 +24,7 @@ extern "C" {
 
 /* RANAP_SDU-FormatInformationParameters */
 typedef struct RANAP_SDU_FormatInformationParameters {
-	A_SEQUENCE_OF(struct Member {
+	A_SEQUENCE_OF(struct MemberE {
 		RANAP_SubflowSDU_Size_t	*subflowSDU_Size	/* OPTIONAL */;
 		RANAP_RAB_SubflowCombinationBitRate_t	*rAB_SubflowCombinationBitRate	/* OPTIONAL */;
 		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;

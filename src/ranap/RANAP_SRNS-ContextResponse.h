@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_SRNS-ContextResponse */
 typedef struct RANAP_SRNS_ContextResponse {
-	struct sRNS_ContextResponse_ies {
+	struct srnS_ContextResponse_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} sRNS_ContextResponse_ies;
+	} srnS_ContextResponse_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

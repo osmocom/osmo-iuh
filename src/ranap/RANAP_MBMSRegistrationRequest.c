@@ -7,7 +7,7 @@
 #include "RANAP_MBMSRegistrationRequest.h"
 
 static int
-memb_mBMSRegistrationRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_mbmsRegistrationRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	size_t size;
 	
@@ -32,17 +32,17 @@ memb_mBMSRegistrationRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, const v
 	}
 }
 
-static asn_per_constraints_t asn_PER_type_mBMSRegistrationRequest_ies_constr_2 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_type_mbmsRegistrationRequest_ies_constr_2 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_CONSTRAINED,	 16,  16,  0l,  65535l }	/* (SIZE(0..65535)) */,
 	0, 0	/* No PER value map */
 };
-static asn_per_constraints_t asn_PER_memb_mBMSRegistrationRequest_ies_constr_2 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_mbmsRegistrationRequest_ies_constr_2 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_CONSTRAINED,	 16,  16,  0l,  65535l }	/* (SIZE(0..65535)) */,
 	0, 0	/* No PER value map */
 };
-static asn_TYPE_member_t asn_MBR_mBMSRegistrationRequest_ies_2[] = {
+static asn_TYPE_member_t asn_MBR_mbmsRegistrationRequest_ies_2[] = {
 	{ ATF_POINTER, 0, 0,
 		-1 /* Ambiguous tag (CHOICE?) */,
 		0,
@@ -53,19 +53,19 @@ static asn_TYPE_member_t asn_MBR_mBMSRegistrationRequest_ies_2[] = {
 		""
 		},
 };
-static const ber_tlv_tag_t asn_DEF_mBMSRegistrationRequest_ies_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_mbmsRegistrationRequest_ies_tags_2[] = {
 	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_mBMSRegistrationRequest_ies_specs_2 = {
-	sizeof(struct mBMSRegistrationRequest_ies),
-	offsetof(struct mBMSRegistrationRequest_ies, _asn_ctx),
+static asn_SET_OF_specifics_t asn_SPC_mbmsRegistrationRequest_ies_specs_2 = {
+	sizeof(struct mbmsRegistrationRequest_ies),
+	offsetof(struct mbmsRegistrationRequest_ies, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_mBMSRegistrationRequest_ies_2 = {
-	"mBMSRegistrationRequest-ies",
-	"mBMSRegistrationRequest-ies",
+asn_TYPE_descriptor_t asn_DEF_mbmsRegistrationRequest_ies_2 = {
+	"mbmsRegistrationRequest-ies",
+	"mbmsRegistrationRequest-ies",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
@@ -78,34 +78,34 @@ asn_TYPE_descriptor_t asn_DEF_mBMSRegistrationRequest_ies_2 = {
 	SEQUENCE_OF_decode_aper,
 	SEQUENCE_OF_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_mBMSRegistrationRequest_ies_tags_2,
-	sizeof(asn_DEF_mBMSRegistrationRequest_ies_tags_2)
-		/sizeof(asn_DEF_mBMSRegistrationRequest_ies_tags_2[0]) - 1, /* 1 */
-	asn_DEF_mBMSRegistrationRequest_ies_tags_2,	/* Same as above */
-	sizeof(asn_DEF_mBMSRegistrationRequest_ies_tags_2)
-		/sizeof(asn_DEF_mBMSRegistrationRequest_ies_tags_2[0]), /* 2 */
-	&asn_PER_type_mBMSRegistrationRequest_ies_constr_2,
-	asn_MBR_mBMSRegistrationRequest_ies_2,
+	asn_DEF_mbmsRegistrationRequest_ies_tags_2,
+	sizeof(asn_DEF_mbmsRegistrationRequest_ies_tags_2)
+		/sizeof(asn_DEF_mbmsRegistrationRequest_ies_tags_2[0]) - 1, /* 1 */
+	asn_DEF_mbmsRegistrationRequest_ies_tags_2,	/* Same as above */
+	sizeof(asn_DEF_mbmsRegistrationRequest_ies_tags_2)
+		/sizeof(asn_DEF_mbmsRegistrationRequest_ies_tags_2[0]), /* 2 */
+	&asn_PER_type_mbmsRegistrationRequest_ies_constr_2,
+	asn_MBR_mbmsRegistrationRequest_ies_2,
 	1,	/* Single element */
-	&asn_SPC_mBMSRegistrationRequest_ies_specs_2	/* Additional specs */
+	&asn_SPC_mbmsRegistrationRequest_ies_specs_2	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_RANAP_MBMSRegistrationRequest_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_MBMSRegistrationRequest, mBMSRegistrationRequest_ies),
+	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_MBMSRegistrationRequest, mbmsRegistrationRequest_ies),
 		(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		0,
-		&asn_DEF_mBMSRegistrationRequest_ies_2,
-		memb_mBMSRegistrationRequest_ies_constraint_1,
-		&asn_PER_memb_mBMSRegistrationRequest_ies_constr_2,
+		&asn_DEF_mbmsRegistrationRequest_ies_2,
+		memb_mbmsRegistrationRequest_ies_constraint_1,
+		&asn_PER_memb_mbmsRegistrationRequest_ies_constr_2,
 		0,
-		"mBMSRegistrationRequest-ies"
+		"mbmsRegistrationRequest-ies"
 		},
 };
 static const ber_tlv_tag_t asn_DEF_RANAP_MBMSRegistrationRequest_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static const asn_TYPE_tag2member_t asn_MAP_RANAP_MBMSRegistrationRequest_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* mBMSRegistrationRequest-ies */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* mbmsRegistrationRequest-ies */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_RANAP_MBMSRegistrationRequest_specs_1 = {
 	sizeof(struct RANAP_MBMSRegistrationRequest),

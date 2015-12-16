@@ -24,7 +24,7 @@ extern "C" {
 
 /* RANAP_UnsuccessfulLinking-IEs */
 typedef struct RANAP_UnsuccessfulLinking_IEs {
-	A_SEQUENCE_OF(struct Member {
+	A_SEQUENCE_OF(struct MemberD {
 		RANAP_TMGI_t	 tMGI;
 		RANAP_Cause_t	 cause;
 		RANAP_ProtocolExtensionContainer_t	*iE_Extensions	/* OPTIONAL */;

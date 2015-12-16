@@ -4,8 +4,8 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#ifndef	_RANAP_RAB_FailedtoReportList_H_
-#define	_RANAP_RAB_FailedtoReportList_H_
+#ifndef	_RANAP_RABs_failed_to_reportList_H_
+#define	_RANAP_RABs_failed_to_reportList_H_
 
 
 #include <asn_application.h>
@@ -20,14 +20,14 @@
 extern "C" {
 #endif
 
-/* RANAP_RAB-FailedtoReportList */
-typedef struct RANAP_RAB_FailedtoReportList {
-	struct rabFailedtoReportList_ies {
+/* RANAP_RABs-failed-to-reportList */
+typedef struct RANAP_RABs_failed_to_reportList {
+	struct raBs_failed_to_reportList_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rabFailedtoReportList_ies;
+	} raBs_failed_to_reportList_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
@@ -35,14 +35,14 @@ typedef struct RANAP_RAB_FailedtoReportList {
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} RANAP_RAB_FailedtoReportList_t;
+} RANAP_RABs_failed_to_reportList_t;
 
 /* Implementation */
-extern asn_TYPE_descriptor_t asn_DEF_RANAP_RAB_FailedtoReportList;
+extern asn_TYPE_descriptor_t asn_DEF_RANAP_RABs_failed_to_reportList;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif	/* _RANAP_RAB_FailedtoReportList_H_ */
+#endif	/* _RANAP_RABs_failed_to_reportList_H_ */
 #include <asn_internal.h>

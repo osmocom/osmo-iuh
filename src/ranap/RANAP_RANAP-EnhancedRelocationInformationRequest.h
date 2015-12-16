@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_RANAP-EnhancedRelocationInformationRequest */
 typedef struct RANAP_RANAP_EnhancedRelocationInformationRequest {
-	struct rANAP_EnhancedRelocationInformationRequest_ies {
+	struct ranaP_EnhancedRelocationInformationRequest_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rANAP_EnhancedRelocationInformationRequest_ies;
+	} ranaP_EnhancedRelocationInformationRequest_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

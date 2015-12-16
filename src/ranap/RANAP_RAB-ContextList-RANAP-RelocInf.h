@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_RAB-ContextList-RANAP-RelocInf */
 typedef struct RANAP_RAB_ContextList_RANAP_RelocInf {
-	struct rabContextListRANAPRelocInf_ies {
+	struct raB_ContextList_RANAP_RelocInf_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rabContextListRANAPRelocInf_ies;
+	} raB_ContextList_RANAP_RelocInf_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

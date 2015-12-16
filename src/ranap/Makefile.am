@@ -423,15 +423,18 @@ ASN_MODULE_SRC=	\
 	RANAP_RelocationCancel.c	\
 	RANAP_RelocationCancelAcknowledge.c	\
 	RANAP_SRNS-ContextRequest.c	\
+	RANAP_RAB-DataForwardingList-SRNS-CtxReq.c	\
+	RANAP_DataVolumeReportRequest.c	\
 	RANAP_SRNS-ContextResponse.c	\
 	RANAP_SecurityModeCommand.c	\
 	RANAP_SecurityModeComplete.c	\
 	RANAP_SecurityModeReject.c	\
-	RANAP_DataVolumeReportRequest.c	\
 	RANAP_DataVolumeReport.c	\
 	RANAP_Reset.c	\
 	RANAP_ResetAcknowledge.c	\
 	RANAP_RAB-ReleaseRequest.c	\
+	RANAP_RedirectionIndication.c	\
+	RANAP_RAB-ReleaseList.c	\
 	RANAP_Iu-ReleaseRequest.c	\
 	RANAP_RelocationDetect.c	\
 	RANAP_RelocationComplete.c	\
@@ -448,6 +451,7 @@ ASN_MODULE_SRC=	\
 	RANAP_SRNS-DataForwardCommand.c	\
 	RANAP_ForwardSRNS-Context.c	\
 	RANAP_RAB-AssignmentRequest.c	\
+	RANAP_RAB-SetupOrModifyList.c	\
 	RANAP_RAB-AssignmentResponse.c	\
 	RANAP_PrivateMessage.c	\
 	RANAP_ResetResource.c	\
@@ -497,6 +501,14 @@ ASN_MODULE_SRC=	\
 	RANAP_ProtocolExtensionContainer.c	\
 	RANAP_ProtocolExtensionField.c	\
 	RANAP_IE.c	\
+	RANAP_ProtocolIE-Container.c	\
+	RANAP_ProtocolIE-FieldPair.c	\
+	RANAP_ProtocolIE-ContainerPair.c	\
+	RANAP_RAB-IE-ContainerList.c	\
+	RANAP_RAB-IE-ContainerPairList.c	\
+	RANAP_ProtocolError-IE-ContainerList.c	\
+	RANAP_IuSigConId-IE-ContainerList.c	\
+	RANAP_DirectTransfer-IE-ContainerList.c	\
 	RANAP_DataVolumeReportList.c	\
 	RANAP_RAB-ReleasedList-IuRelComp.c	\
 	RANAP_RAB-RelocationReleaseList.c	\
@@ -504,18 +516,17 @@ ASN_MODULE_SRC=	\
 	RANAP_RAB-SetupList-RelocReq.c	\
 	RANAP_RAB-SetupList-RelocReqAck.c	\
 	RANAP_RAB-FailedList.c	\
-	RANAP_RAB-DataForwardingList-SRNS-CtxReq.c	\
 	RANAP_RAB-ContextList.c	\
-	RANAP_RAB-ContextFailedtoTransferList.c	\
+	RANAP_RABs-ContextFailedtoTransferList.c	\
 	RANAP_RAB-DataVolumeReportRequestList.c	\
-	RANAP_RAB-FailedtoReportList.c	\
+	RANAP_RAB-DataVolumeReportRequestItem.c	\
+	RANAP_RABs-failed-to-reportList.c	\
 	RANAP_RAB-SetupList-EnhancedRelocCompleteReq.c	\
 	RANAP_RAB-SetupList-EnhancedRelocCompleteRes.c	\
 	RANAP_RAB-ToBeReleasedList-EnhancedRelocCompleteRes.c	\
 	RANAP_RAB-SetupOrModifiedList.c	\
 	RANAP_RAB-ReleasedList.c	\
 	RANAP_RAB-QueuedList.c	\
-	RANAP_GERAN-Iumode-RAB-FailedList-RABAssgntResponse.c	\
 	RANAP_RAB-ContextList-RANAP-RelocInf.c	\
 	RANAP_RAB-SetupList-EnhRelocInfoReq.c	\
 	RANAP_RAB-SetupList-EnhRelocInfoRes.c	\
@@ -526,14 +537,19 @@ ASN_MODULE_SRC=	\
 	RANAP_RAB-ReleasedItem-IuRelComp.c	\
 	RANAP_RAB-RelocationReleaseItem.c	\
 	RANAP_RAB-DataForwardingItem.c	\
+	RANAP_RAB-DataForwardingItem-SRNS-CtxReq.c	\
 	RANAP_RAB-SetupItem-RelocReq.c	\
 	RANAP_UserPlaneInformation.c	\
+	RANAP_CNMBMSLinkingInformation.c	\
+	RANAP_JoinedMBMSBearerService-IEs.c	\
 	RANAP_RAB-SetupItem-RelocReqAck.c	\
 	RANAP_RAB-FailedItem.c	\
 	RANAP_RAB-ContextItem.c	\
 	RANAP_RABs-ContextFailedtoTransferItem.c	\
 	RANAP_RABs-failed-to-reportItem.c	\
+	RANAP_ResetResourceList.c	\
 	RANAP_ResetResourceItem.c	\
+	RANAP_ResetResourceAckList.c	\
 	RANAP_ResetResourceAckItem.c	\
 	RANAP_RAB-ReleaseItem.c	\
 	RANAP_RAB-SetupItem-EnhancedRelocCompleteReq.c	\
@@ -547,6 +563,7 @@ ASN_MODULE_SRC=	\
 	RANAP_DataVolumeList.c	\
 	RANAP_RAB-QueuedItem.c	\
 	RANAP_RAB-ReleaseFailedList.c	\
+	RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-List.c	\
 	RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-Item.c	\
 	RANAP_DirectTransferInformationItem-RANAP-RelocInf.c	\
 	RANAP_RAB-ContextItem-RANAP-RelocInf.c	\
@@ -985,15 +1002,18 @@ ASN_MODULE_INC=	\
 	RANAP_RelocationCancel.h	\
 	RANAP_RelocationCancelAcknowledge.h	\
 	RANAP_SRNS-ContextRequest.h	\
+	RANAP_RAB-DataForwardingList-SRNS-CtxReq.h	\
+	RANAP_DataVolumeReportRequest.h	\
 	RANAP_SRNS-ContextResponse.h	\
 	RANAP_SecurityModeCommand.h	\
 	RANAP_SecurityModeComplete.h	\
 	RANAP_SecurityModeReject.h	\
-	RANAP_DataVolumeReportRequest.h	\
 	RANAP_DataVolumeReport.h	\
 	RANAP_Reset.h	\
 	RANAP_ResetAcknowledge.h	\
 	RANAP_RAB-ReleaseRequest.h	\
+	RANAP_RedirectionIndication.h	\
+	RANAP_RAB-ReleaseList.h	\
 	RANAP_Iu-ReleaseRequest.h	\
 	RANAP_RelocationDetect.h	\
 	RANAP_RelocationComplete.h	\
@@ -1010,6 +1030,7 @@ ASN_MODULE_INC=	\
 	RANAP_SRNS-DataForwardCommand.h	\
 	RANAP_ForwardSRNS-Context.h	\
 	RANAP_RAB-AssignmentRequest.h	\
+	RANAP_RAB-SetupOrModifyList.h	\
 	RANAP_RAB-AssignmentResponse.h	\
 	RANAP_PrivateMessage.h	\
 	RANAP_ResetResource.h	\
@@ -1059,6 +1080,14 @@ ASN_MODULE_INC=	\
 	RANAP_ProtocolExtensionContainer.h	\
 	RANAP_ProtocolExtensionField.h	\
 	RANAP_IE.h	\
+	RANAP_ProtocolIE-Container.h	\
+	RANAP_ProtocolIE-FieldPair.h	\
+	RANAP_ProtocolIE-ContainerPair.h	\
+	RANAP_RAB-IE-ContainerList.h	\
+	RANAP_RAB-IE-ContainerPairList.h	\
+	RANAP_ProtocolError-IE-ContainerList.h	\
+	RANAP_IuSigConId-IE-ContainerList.h	\
+	RANAP_DirectTransfer-IE-ContainerList.h	\
 	RANAP_DataVolumeReportList.h	\
 	RANAP_RAB-ReleasedList-IuRelComp.h	\
 	RANAP_RAB-RelocationReleaseList.h	\
@@ -1066,18 +1095,17 @@ ASN_MODULE_INC=	\
 	RANAP_RAB-SetupList-RelocReq.h	\
 	RANAP_RAB-SetupList-RelocReqAck.h	\
 	RANAP_RAB-FailedList.h	\
-	RANAP_RAB-DataForwardingList-SRNS-CtxReq.h	\
 	RANAP_RAB-ContextList.h	\
-	RANAP_RAB-ContextFailedtoTransferList.h	\
+	RANAP_RABs-ContextFailedtoTransferList.h	\
 	RANAP_RAB-DataVolumeReportRequestList.h	\
-	RANAP_RAB-FailedtoReportList.h	\
+	RANAP_RAB-DataVolumeReportRequestItem.h	\
+	RANAP_RABs-failed-to-reportList.h	\
 	RANAP_RAB-SetupList-EnhancedRelocCompleteReq.h	\
 	RANAP_RAB-SetupList-EnhancedRelocCompleteRes.h	\
 	RANAP_RAB-ToBeReleasedList-EnhancedRelocCompleteRes.h	\
 	RANAP_RAB-SetupOrModifiedList.h	\
 	RANAP_RAB-ReleasedList.h	\
 	RANAP_RAB-QueuedList.h	\
-	RANAP_GERAN-Iumode-RAB-FailedList-RABAssgntResponse.h	\
 	RANAP_RAB-ContextList-RANAP-RelocInf.h	\
 	RANAP_RAB-SetupList-EnhRelocInfoReq.h	\
 	RANAP_RAB-SetupList-EnhRelocInfoRes.h	\
@@ -1088,14 +1116,19 @@ ASN_MODULE_INC=	\
 	RANAP_RAB-ReleasedItem-IuRelComp.h	\
 	RANAP_RAB-RelocationReleaseItem.h	\
 	RANAP_RAB-DataForwardingItem.h	\
+	RANAP_RAB-DataForwardingItem-SRNS-CtxReq.h	\
 	RANAP_RAB-SetupItem-RelocReq.h	\
 	RANAP_UserPlaneInformation.h	\
+	RANAP_CNMBMSLinkingInformation.h	\
+	RANAP_JoinedMBMSBearerService-IEs.h	\
 	RANAP_RAB-SetupItem-RelocReqAck.h	\
 	RANAP_RAB-FailedItem.h	\
 	RANAP_RAB-ContextItem.h	\
 	RANAP_RABs-ContextFailedtoTransferItem.h	\
 	RANAP_RABs-failed-to-reportItem.h	\
+	RANAP_ResetResourceList.h	\
 	RANAP_ResetResourceItem.h	\
+	RANAP_ResetResourceAckList.h	\
 	RANAP_ResetResourceAckItem.h	\
 	RANAP_RAB-ReleaseItem.h	\
 	RANAP_RAB-SetupItem-EnhancedRelocCompleteReq.h	\
@@ -1109,6 +1142,7 @@ ASN_MODULE_INC=	\
 	RANAP_DataVolumeList.h	\
 	RANAP_RAB-QueuedItem.h	\
 	RANAP_RAB-ReleaseFailedList.h	\
+	RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-List.h	\
 	RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-Item.h	\
 	RANAP_DirectTransferInformationItem-RANAP-RelocInf.h	\
 	RANAP_RAB-ContextItem-RANAP-RelocInf.h	\
@@ -1135,5 +1169,19 @@ regenerate-from-asn1-source:
 	ASN1C_PREFIX="RANAP_" asn1c -gen-PER ../../asn1/ranap/RANAP-CommonDataTypes.asn ../../asn1/ranap/RANAP-Constants.asn ../../asn1/ranap/RANAP-IEs.asn ../../asn1/ranap/RANAP-PDU.asn
 	@rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* NULL.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
 # 	some fixups in erroneous code that asn1c generates
-	sed -i '6i#include <constr_CHOICE.h>' RANAP_ChosenEncryptionAlgorithm.h RANAP_ChosenIntegrityProtectionAlgorithm.h RANAP_IMSI.h RANAP_PLMNidentity.h RANAP_RAB-ReleaseFailedList.c
-	sed -i 's/Member/MemberA/' RANAP_LA-LIST.[ch] RANAP_SDU-Parameters.[ch] RANAP_RABParametersList.[ch] RANAP_AuthorisedPLMNs.[ch]
+	sed -i '6i#include <constr_CHOICE.h>' RANAP_ChosenEncryptionAlgorithm.h RANAP_ChosenIntegrityProtectionAlgorithm.h RANAP_IMSI.h RANAP_PLMNidentity.h RANAP_RAB-ReleaseFailedList.c RANAP_RAB-ReleaseList.c RANAP_RAB-SetupOrModifyList.c RANAP_ResetResourceList.c RANAP_ResetResourceAckList.c
+	sed -i 's/Member/MemberA/' RANAP_LA-LIST.[ch]
+	sed -i 's/Member/MemberB/' RANAP_RABParametersList.[ch]
+	sed -i 's/Member/MemberC/' RANAP_AuthorisedPLMNs.[ch]
+	sed -i 's/Member/MemberD/' RANAP_UnsuccessfulLinking-IEs.[ch]
+	sed -i 's/Member/MemberE/' RANAP_SDU-FormatInformationParameters.[ch]
+	sed -i 's/Member/MemberF/' RANAP_JoinedMBMSBearerService-IEs.[ch]
+	sed -i 's/Member/MemberG/' RANAP_CriticalityDiagnostics-IE-List.[ch]
+	sed -i 's/Member/MemberH/' RANAP_DataVolumeList.[ch]
+	sed -i 's/Member/MemberI/' RANAP_SDU-Parameters.[ch]
+	sed -i 's/Member/MemberJ/' RANAP_EUTRANFrequencies.[ch]
+	sed -i 's/Member/MemberK/' RANAP_LeftMBMSBearerService-IEs.[ch]
+	sed -i 's/Member/MemberL/' RANAP_MessageStructure.[ch]
+	sed -i 's/Member/MemberM/' RANAP_PLMNs-in-shared-network.[ch]
+	sed -i 's/Member/MemberN/' RANAP_RABDataVolumeReport.[ch]
+

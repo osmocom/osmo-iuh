@@ -4,8 +4,8 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#ifndef	_RANAP_GERAN_Iumode_RAB_FailedList_RABAssgntResponse_H_
-#define	_RANAP_GERAN_Iumode_RAB_FailedList_RABAssgntResponse_H_
+#ifndef	_RANAP_RedirectionIndication_H_
+#define	_RANAP_RedirectionIndication_H_
 
 
 #include <asn_application.h>
@@ -20,14 +20,14 @@
 extern "C" {
 #endif
 
-/* RANAP_GERAN-Iumode-RAB-FailedList-RABAssgntResponse */
-typedef struct RANAP_GERAN_Iumode_RAB_FailedList_RABAssgntResponse {
-	struct foo_ies {
+/* RANAP_RedirectionIndication */
+typedef struct RANAP_RedirectionIndication {
+	struct redirectionIndication_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} foo_ies;
+	} redirectionIndication_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
@@ -35,14 +35,14 @@ typedef struct RANAP_GERAN_Iumode_RAB_FailedList_RABAssgntResponse {
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} RANAP_GERAN_Iumode_RAB_FailedList_RABAssgntResponse_t;
+} RANAP_RedirectionIndication_t;
 
 /* Implementation */
-extern asn_TYPE_descriptor_t asn_DEF_RANAP_GERAN_Iumode_RAB_FailedList_RABAssgntResponse;
+extern asn_TYPE_descriptor_t asn_DEF_RANAP_RedirectionIndication;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif	/* _RANAP_GERAN_Iumode_RAB_FailedList_RABAssgntResponse_H_ */
+#endif	/* _RANAP_RedirectionIndication_H_ */
 #include <asn_internal.h>

@@ -7,7 +7,7 @@
 #include "RANAP_MBMSUELinkingResponse.h"
 
 static int
-memb_mBMSUELinkingResponse_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_mbmsueLinkingResponse_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	size_t size;
 	
@@ -32,17 +32,17 @@ memb_mBMSUELinkingResponse_ies_constraint_1(asn_TYPE_descriptor_t *td, const voi
 	}
 }
 
-static asn_per_constraints_t asn_PER_type_mBMSUELinkingResponse_ies_constr_2 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_type_mbmsueLinkingResponse_ies_constr_2 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_CONSTRAINED,	 16,  16,  0l,  65535l }	/* (SIZE(0..65535)) */,
 	0, 0	/* No PER value map */
 };
-static asn_per_constraints_t asn_PER_memb_mBMSUELinkingResponse_ies_constr_2 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_mbmsueLinkingResponse_ies_constr_2 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_CONSTRAINED,	 16,  16,  0l,  65535l }	/* (SIZE(0..65535)) */,
 	0, 0	/* No PER value map */
 };
-static asn_TYPE_member_t asn_MBR_mBMSUELinkingResponse_ies_2[] = {
+static asn_TYPE_member_t asn_MBR_mbmsueLinkingResponse_ies_2[] = {
 	{ ATF_POINTER, 0, 0,
 		-1 /* Ambiguous tag (CHOICE?) */,
 		0,
@@ -53,19 +53,19 @@ static asn_TYPE_member_t asn_MBR_mBMSUELinkingResponse_ies_2[] = {
 		""
 		},
 };
-static const ber_tlv_tag_t asn_DEF_mBMSUELinkingResponse_ies_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_mbmsueLinkingResponse_ies_tags_2[] = {
 	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_mBMSUELinkingResponse_ies_specs_2 = {
-	sizeof(struct mBMSUELinkingResponse_ies),
-	offsetof(struct mBMSUELinkingResponse_ies, _asn_ctx),
+static asn_SET_OF_specifics_t asn_SPC_mbmsueLinkingResponse_ies_specs_2 = {
+	sizeof(struct mbmsueLinkingResponse_ies),
+	offsetof(struct mbmsueLinkingResponse_ies, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_mBMSUELinkingResponse_ies_2 = {
-	"mBMSUELinkingResponse-ies",
-	"mBMSUELinkingResponse-ies",
+asn_TYPE_descriptor_t asn_DEF_mbmsueLinkingResponse_ies_2 = {
+	"mbmsueLinkingResponse-ies",
+	"mbmsueLinkingResponse-ies",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
@@ -78,34 +78,34 @@ asn_TYPE_descriptor_t asn_DEF_mBMSUELinkingResponse_ies_2 = {
 	SEQUENCE_OF_decode_aper,
 	SEQUENCE_OF_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_mBMSUELinkingResponse_ies_tags_2,
-	sizeof(asn_DEF_mBMSUELinkingResponse_ies_tags_2)
-		/sizeof(asn_DEF_mBMSUELinkingResponse_ies_tags_2[0]) - 1, /* 1 */
-	asn_DEF_mBMSUELinkingResponse_ies_tags_2,	/* Same as above */
-	sizeof(asn_DEF_mBMSUELinkingResponse_ies_tags_2)
-		/sizeof(asn_DEF_mBMSUELinkingResponse_ies_tags_2[0]), /* 2 */
-	&asn_PER_type_mBMSUELinkingResponse_ies_constr_2,
-	asn_MBR_mBMSUELinkingResponse_ies_2,
+	asn_DEF_mbmsueLinkingResponse_ies_tags_2,
+	sizeof(asn_DEF_mbmsueLinkingResponse_ies_tags_2)
+		/sizeof(asn_DEF_mbmsueLinkingResponse_ies_tags_2[0]) - 1, /* 1 */
+	asn_DEF_mbmsueLinkingResponse_ies_tags_2,	/* Same as above */
+	sizeof(asn_DEF_mbmsueLinkingResponse_ies_tags_2)
+		/sizeof(asn_DEF_mbmsueLinkingResponse_ies_tags_2[0]), /* 2 */
+	&asn_PER_type_mbmsueLinkingResponse_ies_constr_2,
+	asn_MBR_mbmsueLinkingResponse_ies_2,
 	1,	/* Single element */
-	&asn_SPC_mBMSUELinkingResponse_ies_specs_2	/* Additional specs */
+	&asn_SPC_mbmsueLinkingResponse_ies_specs_2	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_RANAP_MBMSUELinkingResponse_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_MBMSUELinkingResponse, mBMSUELinkingResponse_ies),
+	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_MBMSUELinkingResponse, mbmsueLinkingResponse_ies),
 		(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		0,
-		&asn_DEF_mBMSUELinkingResponse_ies_2,
-		memb_mBMSUELinkingResponse_ies_constraint_1,
-		&asn_PER_memb_mBMSUELinkingResponse_ies_constr_2,
+		&asn_DEF_mbmsueLinkingResponse_ies_2,
+		memb_mbmsueLinkingResponse_ies_constraint_1,
+		&asn_PER_memb_mbmsueLinkingResponse_ies_constr_2,
 		0,
-		"mBMSUELinkingResponse-ies"
+		"mbmsueLinkingResponse-ies"
 		},
 };
 static const ber_tlv_tag_t asn_DEF_RANAP_MBMSUELinkingResponse_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static const asn_TYPE_tag2member_t asn_MAP_RANAP_MBMSUELinkingResponse_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* mBMSUELinkingResponse-ies */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* mbmsueLinkingResponse-ies */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_RANAP_MBMSUELinkingResponse_specs_1 = {
 	sizeof(struct RANAP_MBMSUELinkingResponse),

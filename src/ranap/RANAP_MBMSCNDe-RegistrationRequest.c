@@ -7,7 +7,7 @@
 #include "RANAP_MBMSCNDe-RegistrationRequest.h"
 
 static int
-memb_mBMSCNDe_RegistrationRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_mbmscnDe_RegistrationRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	size_t size;
 	
@@ -32,17 +32,17 @@ memb_mBMSCNDe_RegistrationRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, co
 	}
 }
 
-static asn_per_constraints_t asn_PER_type_mBMSCNDe_RegistrationRequest_ies_constr_2 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_type_mbmscnDe_RegistrationRequest_ies_constr_2 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_CONSTRAINED,	 16,  16,  0l,  65535l }	/* (SIZE(0..65535)) */,
 	0, 0	/* No PER value map */
 };
-static asn_per_constraints_t asn_PER_memb_mBMSCNDe_RegistrationRequest_ies_constr_2 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_mbmscnDe_RegistrationRequest_ies_constr_2 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_CONSTRAINED,	 16,  16,  0l,  65535l }	/* (SIZE(0..65535)) */,
 	0, 0	/* No PER value map */
 };
-static asn_TYPE_member_t asn_MBR_mBMSCNDe_RegistrationRequest_ies_2[] = {
+static asn_TYPE_member_t asn_MBR_mbmscnDe_RegistrationRequest_ies_2[] = {
 	{ ATF_POINTER, 0, 0,
 		-1 /* Ambiguous tag (CHOICE?) */,
 		0,
@@ -53,19 +53,19 @@ static asn_TYPE_member_t asn_MBR_mBMSCNDe_RegistrationRequest_ies_2[] = {
 		""
 		},
 };
-static const ber_tlv_tag_t asn_DEF_mBMSCNDe_RegistrationRequest_ies_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_mbmscnDe_RegistrationRequest_ies_tags_2[] = {
 	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_mBMSCNDe_RegistrationRequest_ies_specs_2 = {
-	sizeof(struct mBMSCNDe_RegistrationRequest_ies),
-	offsetof(struct mBMSCNDe_RegistrationRequest_ies, _asn_ctx),
+static asn_SET_OF_specifics_t asn_SPC_mbmscnDe_RegistrationRequest_ies_specs_2 = {
+	sizeof(struct mbmscnDe_RegistrationRequest_ies),
+	offsetof(struct mbmscnDe_RegistrationRequest_ies, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_mBMSCNDe_RegistrationRequest_ies_2 = {
-	"mBMSCNDe-RegistrationRequest-ies",
-	"mBMSCNDe-RegistrationRequest-ies",
+asn_TYPE_descriptor_t asn_DEF_mbmscnDe_RegistrationRequest_ies_2 = {
+	"mbmscnDe-RegistrationRequest-ies",
+	"mbmscnDe-RegistrationRequest-ies",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
@@ -78,34 +78,34 @@ asn_TYPE_descriptor_t asn_DEF_mBMSCNDe_RegistrationRequest_ies_2 = {
 	SEQUENCE_OF_decode_aper,
 	SEQUENCE_OF_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_mBMSCNDe_RegistrationRequest_ies_tags_2,
-	sizeof(asn_DEF_mBMSCNDe_RegistrationRequest_ies_tags_2)
-		/sizeof(asn_DEF_mBMSCNDe_RegistrationRequest_ies_tags_2[0]) - 1, /* 1 */
-	asn_DEF_mBMSCNDe_RegistrationRequest_ies_tags_2,	/* Same as above */
-	sizeof(asn_DEF_mBMSCNDe_RegistrationRequest_ies_tags_2)
-		/sizeof(asn_DEF_mBMSCNDe_RegistrationRequest_ies_tags_2[0]), /* 2 */
-	&asn_PER_type_mBMSCNDe_RegistrationRequest_ies_constr_2,
-	asn_MBR_mBMSCNDe_RegistrationRequest_ies_2,
+	asn_DEF_mbmscnDe_RegistrationRequest_ies_tags_2,
+	sizeof(asn_DEF_mbmscnDe_RegistrationRequest_ies_tags_2)
+		/sizeof(asn_DEF_mbmscnDe_RegistrationRequest_ies_tags_2[0]) - 1, /* 1 */
+	asn_DEF_mbmscnDe_RegistrationRequest_ies_tags_2,	/* Same as above */
+	sizeof(asn_DEF_mbmscnDe_RegistrationRequest_ies_tags_2)
+		/sizeof(asn_DEF_mbmscnDe_RegistrationRequest_ies_tags_2[0]), /* 2 */
+	&asn_PER_type_mbmscnDe_RegistrationRequest_ies_constr_2,
+	asn_MBR_mbmscnDe_RegistrationRequest_ies_2,
 	1,	/* Single element */
-	&asn_SPC_mBMSCNDe_RegistrationRequest_ies_specs_2	/* Additional specs */
+	&asn_SPC_mbmscnDe_RegistrationRequest_ies_specs_2	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_RANAP_MBMSCNDe_RegistrationRequest_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_MBMSCNDe_RegistrationRequest, mBMSCNDe_RegistrationRequest_ies),
+	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_MBMSCNDe_RegistrationRequest, mbmscnDe_RegistrationRequest_ies),
 		(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		0,
-		&asn_DEF_mBMSCNDe_RegistrationRequest_ies_2,
-		memb_mBMSCNDe_RegistrationRequest_ies_constraint_1,
-		&asn_PER_memb_mBMSCNDe_RegistrationRequest_ies_constr_2,
+		&asn_DEF_mbmscnDe_RegistrationRequest_ies_2,
+		memb_mbmscnDe_RegistrationRequest_ies_constraint_1,
+		&asn_PER_memb_mbmscnDe_RegistrationRequest_ies_constr_2,
 		0,
-		"mBMSCNDe-RegistrationRequest-ies"
+		"mbmscnDe-RegistrationRequest-ies"
 		},
 };
 static const ber_tlv_tag_t asn_DEF_RANAP_MBMSCNDe_RegistrationRequest_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static const asn_TYPE_tag2member_t asn_MAP_RANAP_MBMSCNDe_RegistrationRequest_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* mBMSCNDe-RegistrationRequest-ies */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* mbmscnDe-RegistrationRequest-ies */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_RANAP_MBMSCNDe_RegistrationRequest_specs_1 = {
 	sizeof(struct RANAP_MBMSCNDe_RegistrationRequest),

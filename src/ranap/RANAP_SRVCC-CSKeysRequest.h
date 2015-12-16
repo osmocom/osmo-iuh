@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_SRVCC-CSKeysRequest */
 typedef struct RANAP_SRVCC_CSKeysRequest {
-	struct sRVCC_CSKeysRequest_ies {
+	struct srvcC_CSKeysRequest_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} sRVCC_CSKeysRequest_ies;
+	} srvcC_CSKeysRequest_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

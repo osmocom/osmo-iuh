@@ -24,7 +24,7 @@ extern "C" {
 
 /* RANAP_RABDataVolumeReport */
 typedef struct RANAP_RABDataVolumeReport {
-	A_SEQUENCE_OF(struct Member {
+	A_SEQUENCE_OF(struct MemberN {
 		RANAP_UnsuccessfullyTransmittedDataVolume_t	 dl_UnsuccessfullyTransmittedDataVolume;
 		RANAP_DataVolumeReference_t	*dataVolumeReference	/* OPTIONAL */;
 		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;

@@ -24,7 +24,7 @@ extern "C" {
 
 /* RANAP_EUTRANFrequencies */
 typedef struct RANAP_EUTRANFrequencies {
-	A_SEQUENCE_OF(struct Member {
+	A_SEQUENCE_OF(struct MemberJ {
 		long	 earfcn;
 		RANAP_MeasBand_t	*measBand	/* OPTIONAL */;
 		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;

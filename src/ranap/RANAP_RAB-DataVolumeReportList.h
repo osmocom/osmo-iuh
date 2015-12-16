@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_RAB-DataVolumeReportList */
 typedef struct RANAP_RAB_DataVolumeReportList {
-	struct rabDataVolumeReportList_ies {
+	struct raB_DataVolumeReportList_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rabDataVolumeReportList_ies;
+	} raB_DataVolumeReportList_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

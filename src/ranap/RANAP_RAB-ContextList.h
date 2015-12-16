@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_RAB-ContextList */
 typedef struct RANAP_RAB_ContextList {
-	struct rabContextList_ies {
+	struct raB_ContextList_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rabContextList_ies;
+	} raB_ContextList_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

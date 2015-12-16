@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_MBMSSessionStartFailure */
 typedef struct RANAP_MBMSSessionStartFailure {
-	struct mBMSSessionStartFailure_ies {
+	struct mbmsSessionStartFailure_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} mBMSSessionStartFailure_ies;
+	} mbmsSessionStartFailure_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

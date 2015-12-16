@@ -7,7 +7,7 @@
 #include "RANAP_MBMSUELinkingRequest.h"
 
 static int
-memb_mBMSUELinkingRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_mbmsueLinkingRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	size_t size;
 	
@@ -32,17 +32,17 @@ memb_mBMSUELinkingRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, const void
 	}
 }
 
-static asn_per_constraints_t asn_PER_type_mBMSUELinkingRequest_ies_constr_2 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_type_mbmsueLinkingRequest_ies_constr_2 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_CONSTRAINED,	 16,  16,  0l,  65535l }	/* (SIZE(0..65535)) */,
 	0, 0	/* No PER value map */
 };
-static asn_per_constraints_t asn_PER_memb_mBMSUELinkingRequest_ies_constr_2 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_mbmsueLinkingRequest_ies_constr_2 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_CONSTRAINED,	 16,  16,  0l,  65535l }	/* (SIZE(0..65535)) */,
 	0, 0	/* No PER value map */
 };
-static asn_TYPE_member_t asn_MBR_mBMSUELinkingRequest_ies_2[] = {
+static asn_TYPE_member_t asn_MBR_mbmsueLinkingRequest_ies_2[] = {
 	{ ATF_POINTER, 0, 0,
 		-1 /* Ambiguous tag (CHOICE?) */,
 		0,
@@ -53,19 +53,19 @@ static asn_TYPE_member_t asn_MBR_mBMSUELinkingRequest_ies_2[] = {
 		""
 		},
 };
-static const ber_tlv_tag_t asn_DEF_mBMSUELinkingRequest_ies_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_mbmsueLinkingRequest_ies_tags_2[] = {
 	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_mBMSUELinkingRequest_ies_specs_2 = {
-	sizeof(struct mBMSUELinkingRequest_ies),
-	offsetof(struct mBMSUELinkingRequest_ies, _asn_ctx),
+static asn_SET_OF_specifics_t asn_SPC_mbmsueLinkingRequest_ies_specs_2 = {
+	sizeof(struct mbmsueLinkingRequest_ies),
+	offsetof(struct mbmsueLinkingRequest_ies, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_mBMSUELinkingRequest_ies_2 = {
-	"mBMSUELinkingRequest-ies",
-	"mBMSUELinkingRequest-ies",
+asn_TYPE_descriptor_t asn_DEF_mbmsueLinkingRequest_ies_2 = {
+	"mbmsueLinkingRequest-ies",
+	"mbmsueLinkingRequest-ies",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
@@ -78,34 +78,34 @@ asn_TYPE_descriptor_t asn_DEF_mBMSUELinkingRequest_ies_2 = {
 	SEQUENCE_OF_decode_aper,
 	SEQUENCE_OF_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_mBMSUELinkingRequest_ies_tags_2,
-	sizeof(asn_DEF_mBMSUELinkingRequest_ies_tags_2)
-		/sizeof(asn_DEF_mBMSUELinkingRequest_ies_tags_2[0]) - 1, /* 1 */
-	asn_DEF_mBMSUELinkingRequest_ies_tags_2,	/* Same as above */
-	sizeof(asn_DEF_mBMSUELinkingRequest_ies_tags_2)
-		/sizeof(asn_DEF_mBMSUELinkingRequest_ies_tags_2[0]), /* 2 */
-	&asn_PER_type_mBMSUELinkingRequest_ies_constr_2,
-	asn_MBR_mBMSUELinkingRequest_ies_2,
+	asn_DEF_mbmsueLinkingRequest_ies_tags_2,
+	sizeof(asn_DEF_mbmsueLinkingRequest_ies_tags_2)
+		/sizeof(asn_DEF_mbmsueLinkingRequest_ies_tags_2[0]) - 1, /* 1 */
+	asn_DEF_mbmsueLinkingRequest_ies_tags_2,	/* Same as above */
+	sizeof(asn_DEF_mbmsueLinkingRequest_ies_tags_2)
+		/sizeof(asn_DEF_mbmsueLinkingRequest_ies_tags_2[0]), /* 2 */
+	&asn_PER_type_mbmsueLinkingRequest_ies_constr_2,
+	asn_MBR_mbmsueLinkingRequest_ies_2,
 	1,	/* Single element */
-	&asn_SPC_mBMSUELinkingRequest_ies_specs_2	/* Additional specs */
+	&asn_SPC_mbmsueLinkingRequest_ies_specs_2	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_RANAP_MBMSUELinkingRequest_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_MBMSUELinkingRequest, mBMSUELinkingRequest_ies),
+	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_MBMSUELinkingRequest, mbmsueLinkingRequest_ies),
 		(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		0,
-		&asn_DEF_mBMSUELinkingRequest_ies_2,
-		memb_mBMSUELinkingRequest_ies_constraint_1,
-		&asn_PER_memb_mBMSUELinkingRequest_ies_constr_2,
+		&asn_DEF_mbmsueLinkingRequest_ies_2,
+		memb_mbmsueLinkingRequest_ies_constraint_1,
+		&asn_PER_memb_mbmsueLinkingRequest_ies_constr_2,
 		0,
-		"mBMSUELinkingRequest-ies"
+		"mbmsueLinkingRequest-ies"
 		},
 };
 static const ber_tlv_tag_t asn_DEF_RANAP_MBMSUELinkingRequest_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static const asn_TYPE_tag2member_t asn_MAP_RANAP_MBMSUELinkingRequest_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* mBMSUELinkingRequest-ies */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* mbmsueLinkingRequest-ies */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_RANAP_MBMSUELinkingRequest_specs_1 = {
 	sizeof(struct RANAP_MBMSUELinkingRequest),

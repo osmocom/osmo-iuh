@@ -25,7 +25,7 @@ extern "C" {
 
 /* RANAP_CriticalityDiagnostics-IE-List */
 typedef struct RANAP_CriticalityDiagnostics_IE_List {
-	A_SEQUENCE_OF(struct Member {
+	A_SEQUENCE_OF(struct MemberG {
 		RANAP_Criticality_t	 iECriticality;
 		RANAP_ProtocolIE_ID_t	 iE_ID;
 		RANAP_RepetitionNumber0_t	*repetitionNumber	/* OPTIONAL */;

@@ -7,7 +7,7 @@
 #include "RANAP_RAB-SetupList-EnhRelocInfoRes.h"
 
 static int
-memb_rabSetupListEnhRelocInfoRes_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
+memb_raB_SetupList_EnhRelocInfoRes_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
 	size_t size;
 	
@@ -32,17 +32,17 @@ memb_rabSetupListEnhRelocInfoRes_ies_constraint_1(asn_TYPE_descriptor_t *td, con
 	}
 }
 
-static asn_per_constraints_t asn_PER_type_rabSetupListEnhRelocInfoRes_ies_constr_2 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_type_raB_SetupList_EnhRelocInfoRes_ies_constr_2 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_CONSTRAINED,	 16,  16,  0l,  65535l }	/* (SIZE(0..65535)) */,
 	0, 0	/* No PER value map */
 };
-static asn_per_constraints_t asn_PER_memb_rabSetupListEnhRelocInfoRes_ies_constr_2 GCC_NOTUSED = {
+static asn_per_constraints_t asn_PER_memb_raB_SetupList_EnhRelocInfoRes_ies_constr_2 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
 	{ APC_CONSTRAINED,	 16,  16,  0l,  65535l }	/* (SIZE(0..65535)) */,
 	0, 0	/* No PER value map */
 };
-static asn_TYPE_member_t asn_MBR_rabSetupListEnhRelocInfoRes_ies_2[] = {
+static asn_TYPE_member_t asn_MBR_raB_SetupList_EnhRelocInfoRes_ies_2[] = {
 	{ ATF_POINTER, 0, 0,
 		-1 /* Ambiguous tag (CHOICE?) */,
 		0,
@@ -53,19 +53,19 @@ static asn_TYPE_member_t asn_MBR_rabSetupListEnhRelocInfoRes_ies_2[] = {
 		""
 		},
 };
-static const ber_tlv_tag_t asn_DEF_rabSetupListEnhRelocInfoRes_ies_tags_2[] = {
+static const ber_tlv_tag_t asn_DEF_raB_SetupList_EnhRelocInfoRes_ies_tags_2[] = {
 	(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static asn_SET_OF_specifics_t asn_SPC_rabSetupListEnhRelocInfoRes_ies_specs_2 = {
-	sizeof(struct rabSetupListEnhRelocInfoRes_ies),
-	offsetof(struct rabSetupListEnhRelocInfoRes_ies, _asn_ctx),
+static asn_SET_OF_specifics_t asn_SPC_raB_SetupList_EnhRelocInfoRes_ies_specs_2 = {
+	sizeof(struct raB_SetupList_EnhRelocInfoRes_ies),
+	offsetof(struct raB_SetupList_EnhRelocInfoRes_ies, _asn_ctx),
 	0,	/* XER encoding is XMLDelimitedItemList */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_rabSetupListEnhRelocInfoRes_ies_2 = {
-	"rabSetupListEnhRelocInfoRes-ies",
-	"rabSetupListEnhRelocInfoRes-ies",
+asn_TYPE_descriptor_t asn_DEF_raB_SetupList_EnhRelocInfoRes_ies_2 = {
+	"raB-SetupList-EnhRelocInfoRes-ies",
+	"raB-SetupList-EnhRelocInfoRes-ies",
 	SEQUENCE_OF_free,
 	SEQUENCE_OF_print,
 	SEQUENCE_OF_constraint,
@@ -78,34 +78,34 @@ asn_TYPE_descriptor_t asn_DEF_rabSetupListEnhRelocInfoRes_ies_2 = {
 	SEQUENCE_OF_decode_aper,
 	SEQUENCE_OF_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_rabSetupListEnhRelocInfoRes_ies_tags_2,
-	sizeof(asn_DEF_rabSetupListEnhRelocInfoRes_ies_tags_2)
-		/sizeof(asn_DEF_rabSetupListEnhRelocInfoRes_ies_tags_2[0]) - 1, /* 1 */
-	asn_DEF_rabSetupListEnhRelocInfoRes_ies_tags_2,	/* Same as above */
-	sizeof(asn_DEF_rabSetupListEnhRelocInfoRes_ies_tags_2)
-		/sizeof(asn_DEF_rabSetupListEnhRelocInfoRes_ies_tags_2[0]), /* 2 */
-	&asn_PER_type_rabSetupListEnhRelocInfoRes_ies_constr_2,
-	asn_MBR_rabSetupListEnhRelocInfoRes_ies_2,
+	asn_DEF_raB_SetupList_EnhRelocInfoRes_ies_tags_2,
+	sizeof(asn_DEF_raB_SetupList_EnhRelocInfoRes_ies_tags_2)
+		/sizeof(asn_DEF_raB_SetupList_EnhRelocInfoRes_ies_tags_2[0]) - 1, /* 1 */
+	asn_DEF_raB_SetupList_EnhRelocInfoRes_ies_tags_2,	/* Same as above */
+	sizeof(asn_DEF_raB_SetupList_EnhRelocInfoRes_ies_tags_2)
+		/sizeof(asn_DEF_raB_SetupList_EnhRelocInfoRes_ies_tags_2[0]), /* 2 */
+	&asn_PER_type_raB_SetupList_EnhRelocInfoRes_ies_constr_2,
+	asn_MBR_raB_SetupList_EnhRelocInfoRes_ies_2,
 	1,	/* Single element */
-	&asn_SPC_rabSetupListEnhRelocInfoRes_ies_specs_2	/* Additional specs */
+	&asn_SPC_raB_SetupList_EnhRelocInfoRes_ies_specs_2	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_RANAP_RAB_SetupList_EnhRelocInfoRes_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_RAB_SetupList_EnhRelocInfoRes, rabSetupListEnhRelocInfoRes_ies),
+	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_RAB_SetupList_EnhRelocInfoRes, raB_SetupList_EnhRelocInfoRes_ies),
 		(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		0,
-		&asn_DEF_rabSetupListEnhRelocInfoRes_ies_2,
-		memb_rabSetupListEnhRelocInfoRes_ies_constraint_1,
-		&asn_PER_memb_rabSetupListEnhRelocInfoRes_ies_constr_2,
+		&asn_DEF_raB_SetupList_EnhRelocInfoRes_ies_2,
+		memb_raB_SetupList_EnhRelocInfoRes_ies_constraint_1,
+		&asn_PER_memb_raB_SetupList_EnhRelocInfoRes_ies_constr_2,
 		0,
-		"rabSetupListEnhRelocInfoRes-ies"
+		"raB-SetupList-EnhRelocInfoRes-ies"
 		},
 };
 static const ber_tlv_tag_t asn_DEF_RANAP_RAB_SetupList_EnhRelocInfoRes_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
 static const asn_TYPE_tag2member_t asn_MAP_RANAP_RAB_SetupList_EnhRelocInfoRes_tag2el_1[] = {
-    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* rabSetupListEnhRelocInfoRes-ies */
+    { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 } /* raB-SetupList-EnhRelocInfoRes-ies */
 };
 static asn_SEQUENCE_specifics_t asn_SPC_RANAP_RAB_SetupList_EnhRelocInfoRes_specs_1 = {
 	sizeof(struct RANAP_RAB_SetupList_EnhRelocInfoRes),

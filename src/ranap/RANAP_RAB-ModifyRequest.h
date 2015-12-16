@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_RAB-ModifyRequest */
 typedef struct RANAP_RAB_ModifyRequest {
-	struct rAB_ModifyRequest_ies {
+	struct raB_ModifyRequest_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rAB_ModifyRequest_ies;
+	} raB_ModifyRequest_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

@@ -4,8 +4,8 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#ifndef	_RANAP_RAB_ContextFailedtoTransferList_H_
-#define	_RANAP_RAB_ContextFailedtoTransferList_H_
+#ifndef	_RANAP_RAB_ReleaseList_H_
+#define	_RANAP_RAB_ReleaseList_H_
 
 
 #include <asn_application.h>
@@ -20,14 +20,14 @@
 extern "C" {
 #endif
 
-/* RANAP_RAB-ContextFailedtoTransferList */
-typedef struct RANAP_RAB_ContextFailedtoTransferList {
-	struct rabContextFailedtoTransferList_ies {
+/* RANAP_RAB-ReleaseList */
+typedef struct RANAP_RAB_ReleaseList {
+	struct raB_ReleaseList_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rabContextFailedtoTransferList_ies;
+	} raB_ReleaseList_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
@@ -35,14 +35,14 @@ typedef struct RANAP_RAB_ContextFailedtoTransferList {
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} RANAP_RAB_ContextFailedtoTransferList_t;
+} RANAP_RAB_ReleaseList_t;
 
 /* Implementation */
-extern asn_TYPE_descriptor_t asn_DEF_RANAP_RAB_ContextFailedtoTransferList;
+extern asn_TYPE_descriptor_t asn_DEF_RANAP_RAB_ReleaseList;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif	/* _RANAP_RAB_ContextFailedtoTransferList_H_ */
+#endif	/* _RANAP_RAB_ReleaseList_H_ */
 #include <asn_internal.h>

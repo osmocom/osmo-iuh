@@ -11,8 +11,8 @@ static asn_per_constraints_t asn_PER_type_RANAP_PLMNs_in_shared_network_constr_1
 	{ APC_CONSTRAINED,	 5,  5,  1l,  32l }	/* (SIZE(1..32)) */,
 	0, 0	/* No PER value map */
 };
-static asn_TYPE_member_t asn_MBR_Member_2[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct Member, pLMNidentity),
+static asn_TYPE_member_t asn_MBR_MemberM_2[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct MemberM, pLMNidentity),
 		(ASN_TAG_CLASS_CONTEXT | (0 << 2)),
 		-1,	/* IMPLICIT tag at current level */
 		&asn_DEF_RANAP_PLMNidentity,
@@ -21,7 +21,7 @@ static asn_TYPE_member_t asn_MBR_Member_2[] = {
 		0,
 		"pLMNidentity"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct Member, lA_LIST),
+	{ ATF_NOFLAGS, 0, offsetof(struct MemberM, lA_LIST),
 		(ASN_TAG_CLASS_CONTEXT | (1 << 2)),
 		-1,	/* IMPLICIT tag at current level */
 		&asn_DEF_RANAP_LA_LIST,
@@ -30,7 +30,7 @@ static asn_TYPE_member_t asn_MBR_Member_2[] = {
 		0,
 		"lA-LIST"
 		},
-	{ ATF_POINTER, 1, offsetof(struct Member, iE_Extensions),
+	{ ATF_POINTER, 1, offsetof(struct MemberM, iE_Extensions),
 		(ASN_TAG_CLASS_CONTEXT | (2 << 2)),
 		-1,	/* IMPLICIT tag at current level */
 		&asn_DEF_RANAP_IE_Extensions,
@@ -40,27 +40,27 @@ static asn_TYPE_member_t asn_MBR_Member_2[] = {
 		"iE-Extensions"
 		},
 };
-static const int asn_MAP_Member_oms_2[] = { 2 };
-static const ber_tlv_tag_t asn_DEF_Member_tags_2[] = {
+static const int asn_MAP_MemberM_oms_2[] = { 2 };
+static const ber_tlv_tag_t asn_DEF_MemberM_tags_2[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static const asn_TYPE_tag2member_t asn_MAP_Member_tag2el_2[] = {
+static const asn_TYPE_tag2member_t asn_MAP_MemberM_tag2el_2[] = {
     { (ASN_TAG_CLASS_CONTEXT | (0 << 2)), 0, 0, 0 }, /* pLMNidentity */
     { (ASN_TAG_CLASS_CONTEXT | (1 << 2)), 1, 0, 0 }, /* lA-LIST */
     { (ASN_TAG_CLASS_CONTEXT | (2 << 2)), 2, 0, 0 } /* iE-Extensions */
 };
-static asn_SEQUENCE_specifics_t asn_SPC_Member_specs_2 = {
-	sizeof(struct Member),
-	offsetof(struct Member, _asn_ctx),
-	asn_MAP_Member_tag2el_2,
+static asn_SEQUENCE_specifics_t asn_SPC_MemberM_specs_2 = {
+	sizeof(struct MemberM),
+	offsetof(struct MemberM, _asn_ctx),
+	asn_MAP_MemberM_tag2el_2,
 	3,	/* Count of tags in the map */
-	asn_MAP_Member_oms_2,	/* Optional members */
+	asn_MAP_MemberM_oms_2,	/* Optional members */
 	1, 0,	/* Root/Additions */
 	2,	/* Start extensions */
 	4	/* Stop extensions */
 };
 static /* Use -fall-defs-global to expose */
-asn_TYPE_descriptor_t asn_DEF_Member_2 = {
+asn_TYPE_descriptor_t asn_DEF_MemberM_2 = {
 	"SEQUENCE",
 	"SEQUENCE",
 	SEQUENCE_free,
@@ -75,23 +75,23 @@ asn_TYPE_descriptor_t asn_DEF_Member_2 = {
 	SEQUENCE_decode_aper,
 	SEQUENCE_encode_aper,
 	0,	/* Use generic outmost tag fetcher */
-	asn_DEF_Member_tags_2,
-	sizeof(asn_DEF_Member_tags_2)
-		/sizeof(asn_DEF_Member_tags_2[0]), /* 1 */
-	asn_DEF_Member_tags_2,	/* Same as above */
-	sizeof(asn_DEF_Member_tags_2)
-		/sizeof(asn_DEF_Member_tags_2[0]), /* 1 */
+	asn_DEF_MemberM_tags_2,
+	sizeof(asn_DEF_MemberM_tags_2)
+		/sizeof(asn_DEF_MemberM_tags_2[0]), /* 1 */
+	asn_DEF_MemberM_tags_2,	/* Same as above */
+	sizeof(asn_DEF_MemberM_tags_2)
+		/sizeof(asn_DEF_MemberM_tags_2[0]), /* 1 */
 	0,	/* No PER visible constraints */
-	asn_MBR_Member_2,
+	asn_MBR_MemberM_2,
 	3,	/* Elements count */
-	&asn_SPC_Member_specs_2	/* Additional specs */
+	&asn_SPC_MemberM_specs_2	/* Additional specs */
 };
 
 static asn_TYPE_member_t asn_MBR_RANAP_PLMNs_in_shared_network_1[] = {
 	{ ATF_POINTER, 0, 0,
 		(ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		0,
-		&asn_DEF_Member_2,
+		&asn_DEF_MemberM_2,
 		0,	/* Defer constraints checking to the member type */
 		0,	/* No PER visible constraints */
 		0,

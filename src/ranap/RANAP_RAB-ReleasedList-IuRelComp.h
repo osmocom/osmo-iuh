@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_RAB-ReleasedList-IuRelComp */
 typedef struct RANAP_RAB_ReleasedList_IuRelComp {
-	struct rabReleasedListIuRelComp_ies {
+	struct raB_ReleasedList_IuRelComp_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} rabReleasedListIuRelComp_ies;
+	} raB_ReleasedList_IuRelComp_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

@@ -22,12 +22,12 @@ extern "C" {
 
 /* RANAP_MBMSRABRelease */
 typedef struct RANAP_MBMSRABRelease {
-	struct mBMSRABRelease_ies {
+	struct mbmsrabRelease_ies {
 		A_SEQUENCE_OF(RANAP_IE_t) list;
 		
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
-	} mBMSRABRelease_ies;
+	} mbmsrabRelease_ies;
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.

@@ -26,6 +26,7 @@ FROM RANAP-CommonDataTypes
     IPMulticastAddress,
     IuSignallingConnectionIdentifier,
     IuTransportAssociation,
+    MBMS-PTP-RAB-ID,
     MBMSHCIndicator,
     NAS-PDU,
     NAS-SynchronisationIndicator,
@@ -46,7 +47,10 @@ FROM RANAP-CommonDataTypes
 FROM RANAP-IEs
 
     maxnoofMulticastServicesPerUE,
+    maxNrOfIuSigConIds,
+    maxNrOfDTs,
     maxNrOfVol,
+    maxNrOfRABs,
     maxProtocolIEs,
     maxProtocolExtensions
 
@@ -136,12 +140,22 @@ RelocationCancelAcknowledge ::= SEQUENCE {
 }
 
 SRNS-ContextRequest ::= SEQUENCE {
-    sRNS-ContextRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    srnS-ContextRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RAB-DataForwardingList-SRNS-CtxReq ::= SEQUENCE {
+    raB-DataForwardingList-SRNS-CtxReq-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+DataVolumeReportRequest ::= SEQUENCE {
+    dataVolumeReportRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 SRNS-ContextResponse ::= SEQUENCE {
-    sRNS-ContextResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    srnS-ContextResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
@@ -157,11 +171,6 @@ SecurityModeComplete ::= SEQUENCE {
 
 SecurityModeReject ::= SEQUENCE {
     securityModeReject-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
-    ...
-}
-
-DataVolumeReportRequest ::= SEQUENCE {
-    dataVolumeReportRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
@@ -181,8 +190,18 @@ ResetAcknowledge ::= SEQUENCE {
 }
 
 RAB-ReleaseRequest ::= SEQUENCE {
-    rAB-ReleaseRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    raB-ReleaseRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
+}
+
+RedirectionIndication ::= SEQUENCE {
+    redirectionIndication-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ...
+}
+
+RAB-ReleaseList	::= SEQUENCE {
+	raB-ReleaseList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
 }
 
 Iu-ReleaseRequest ::= SEQUENCE {
@@ -251,7 +270,7 @@ ErrorIndication ::= SEQUENCE {
 }
 
 SRNS-DataForwardCommand ::= SEQUENCE {
-    sRNS-DataForwardCommand-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    srnS-DataForwardCommand-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
@@ -261,12 +280,14 @@ ForwardSRNS-Context ::= SEQUENCE {
 }
 
 RAB-AssignmentRequest ::= SEQUENCE {
-    rAB-AssignmentRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    raB-AssignmentRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
+RAB-SetupOrModifyList 		::= RAB-IE-ContainerPairList
+
 RAB-AssignmentResponse ::= SEQUENCE {
-    rAB-AssignmentResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    raB-AssignmentResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
@@ -286,12 +307,12 @@ ResetResourceAcknowledge ::= SEQUENCE {
 }
 
 RANAP-RelocationInformation ::= SEQUENCE {
-    rANAP-RelocationInformation-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ranaP-RelocationInformation-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 RAB-ModifyRequest ::= SEQUENCE {
-    rAB-ModifyRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    raB-ModifyRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
@@ -326,7 +347,7 @@ InformationTransferFailure ::= SEQUENCE {
 }
 
 UESpecificInformationIndication ::= SEQUENCE {
-    uESpecificInformationIndication-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ueSpecificInformationIndication-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
@@ -351,97 +372,97 @@ UplinkInformationExchangeFailure ::= SEQUENCE {
 }
 
 MBMSSessionStart ::= SEQUENCE {
-    mBMSSessionStart-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsSessionStart-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSSessionStartResponse ::= SEQUENCE {
-    mBMSSessionStartResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsSessionStartResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSSessionStartFailure ::= SEQUENCE {
-    mBMSSessionStartFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsSessionStartFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSSessionUpdate ::= SEQUENCE {
-    mBMSSessionUpdate-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsSessionUpdate-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSSessionUpdateResponse ::= SEQUENCE {
-    mBMSSessionUpdateResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsSessionUpdateResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSSessionUpdateFailure ::= SEQUENCE {
-    mBMSSessionUpdateFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsSessionUpdateFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSSessionStop ::= SEQUENCE {
-    mBMSSessionStop-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsSessionStop-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSSessionStopResponse ::= SEQUENCE {
-    mBMSSessionStopResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsSessionStopResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSUELinkingRequest ::= SEQUENCE {
-    mBMSUELinkingRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsueLinkingRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSUELinkingResponse ::= SEQUENCE {
-    mBMSUELinkingResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsueLinkingResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSRegistrationRequest ::= SEQUENCE {
-    mBMSRegistrationRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsRegistrationRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSRegistrationResponse ::= SEQUENCE {
-    mBMSRegistrationResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsRegistrationResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSRegistrationFailure ::= SEQUENCE {
-    mBMSRegistrationFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsRegistrationFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSCNDe-RegistrationRequest ::= SEQUENCE {
-    mBMSCNDe-RegistrationRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmscnDe-RegistrationRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSCNDe-RegistrationResponse ::= SEQUENCE {
-    mBMSCNDe-RegistrationResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmscnDe-RegistrationResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSRABEstablishmentIndication ::= SEQUENCE {
-    mBMSRABEstablishmentIndication-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsrabEstablishmentIndication-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSRABReleaseRequest ::= SEQUENCE {
-    mBMSRABReleaseRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsrabReleaseRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSRABRelease ::= SEQUENCE {
-    mBMSRABRelease-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsrabRelease-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 MBMSRABReleaseFailure ::= SEQUENCE {
-    mBMSRABReleaseFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    mbmsrabReleaseFailure-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
@@ -466,22 +487,22 @@ EnhancedRelocationCompleteConfirm ::= SEQUENCE {
 }
 
 RANAP-EnhancedRelocationInformationRequest ::= SEQUENCE {
-    rANAP-EnhancedRelocationInformationRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ranaP-EnhancedRelocationInformationRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 RANAP-EnhancedRelocationInformationResponse ::= SEQUENCE {
-    rANAP-EnhancedRelocationInformationResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    ranaP-EnhancedRelocationInformationResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 SRVCC-CSKeysRequest ::= SEQUENCE {
-    sRVCC-CSKeysRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    srvcC-CSKeysRequest-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
 SRVCC-CSKeysResponse ::= SEQUENCE {
-    sRVCC-CSKeysResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+    srvcC-CSKeysResponse-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
     ...
 }
 
@@ -509,128 +530,142 @@ IE ::= SEQUENCE {
     value ANY
 }
 
+ProtocolIE-Container ::= SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE
+
+ProtocolIE-FieldPair ::= SEQUENCE {
+	id			ProtocolIE-ID,
+	firstCriticality	Criticality,
+	firstValue		ANY,
+	secondCriticality	Criticality,
+	secondValue		ANY
+}
+
+ProtocolIE-ContainerPair ::= SEQUENCE (SIZE (0..maxProtocolIEs)) OF ProtocolIE-FieldPair
+
+RAB-IE-ContainerList		::= SEQUENCE (SIZE (1..maxNrOfRABs)) OF ProtocolIE-Container
+RAB-IE-ContainerPairList	::= SEQUENCE (SIZE (1..maxNrOfRABs)) OF ProtocolIE-FieldPair
+ProtocolError-IE-ContainerList	::= SEQUENCE (SIZE (1..maxNrOfRABs)) OF ProtocolIE-Container
+IuSigConId-IE-ContainerList	::= SEQUENCE (SIZE (1..maxNrOfIuSigConIds)) OF ProtocolIE-Container
+DirectTransfer-IE-ContainerList	::= SEQUENCE (SIZE (1..maxNrOfDTs)) OF ProtocolIE-Container
+
 DataVolumeReportList ::= SEQUENCE {
 	dataVolumeReportListe-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-ReleasedList-IuRelComp ::= SEQUENCE {
-	rabReleasedListIuRelComp-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
+	raB-ReleasedList-IuRelComp-ies SEQUENCE (SIZE (0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-RelocationReleaseList ::= SEQUENCE {
-	rabRelocationReleaseList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-RelocationReleaseList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-DataForwardingList ::= SEQUENCE {
-	rabDataForwardingList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-DataForwardingList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-SetupList-RelocReq ::= SEQUENCE {
-	rabSetupListRelocReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-SetupList-RelocReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-SetupList-RelocReqAck ::= SEQUENCE {
-	rabSetupListRelocReqAck-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-SetupList-RelocReqAck-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-FailedList ::= SEQUENCE {
-	rabFailedList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
-	...
-}
-
-RAB-DataForwardingList-SRNS-CtxReq ::= SEQUENCE {
-	rabDataForwardingListSRNSCtxReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-FailedList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-ContextList ::= SEQUENCE {
-	rabContextList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-ContextList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
-RAB-ContextFailedtoTransferList ::= SEQUENCE {
-	rabContextFailedtoTransferList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+RABs-ContextFailedtoTransferList ::= SEQUENCE {
+	raBs-ContextFailedtoTransferList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-DataVolumeReportRequestList ::= SEQUENCE {
-	rabDataVolumeReportRequestList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-DataVolumeReportRequestList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
-RAB-FailedtoReportList ::= SEQUENCE {
-	rabFailedtoReportList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+RAB-DataVolumeReportRequestItem ::= SEQUENCE {
+	rAB-ID		RAB-ID,
+	iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+RABs-failed-to-reportList ::= SEQUENCE {
+	raBs-failed-to-reportList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-SetupList-EnhancedRelocCompleteReq ::= SEQUENCE {
-	rabSetupListEnhancedRElocCompleteReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-SetupList-EnhancedRelocCompleteReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-SetupList-EnhancedRelocCompleteRes ::= SEQUENCE {
-	rabSetupListEnhancedRelocCompleteRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-SetupList-EnhancedRelocCompleteRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-ToBeReleasedList-EnhancedRelocCompleteRes ::= SEQUENCE {
-	rabToBeReleasedListEnhancedRelocCompleteRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-ToBeReleasedList-EnhancedRelocCompleteRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-SetupOrModifiedList ::= SEQUENCE {
-	rabSetupOrModifiedList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-SetupOrModifiedList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-ReleasedList ::= SEQUENCE {
-	rabReleaesdList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-ReleasedList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-QueuedList ::= SEQUENCE {
-	rabQueuedList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
-	...
-}
-
-GERAN-Iumode-RAB-FailedList-RABAssgntResponse ::= SEQUENCE {
-	foo-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-QueuedList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-ContextList-RANAP-RelocInf ::= SEQUENCE {
-	rabContextListRANAPRelocInf-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-ContextList-RANAP-RelocInf-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-SetupList-EnhRelocInfoReq ::= SEQUENCE {
-	rabSetupListEnhRelocInfoReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-SetupList-EnhRelocInfoReq-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-SetupList-EnhRelocInfoRes ::= SEQUENCE {
-	rabSetupListEnhRelocInfoRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-SetupList-EnhRelocInfoRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-FailedList-EnhRelocInfoRes ::= SEQUENCE {
-	rabFailedListEnhRelocInfoRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-FailedList-EnhRelocInfoRes-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-ModifyList ::= SEQUENCE {
-	rabModifyList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	raB-ModifyList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
 RAB-DataVolumeReportList ::= SEQUENCE {
-	rabDataVolumeReportList-ies SEQUENCE (SIZE(0..maxProtocolIEs))
+	raB-DataVolumeReportList-ies SEQUENCE (SIZE(0..maxProtocolIEs))
 OF IE,
 	...
 }
@@ -665,6 +700,12 @@ RAB-DataForwardingItem ::= SEQUENCE {
 	...
 }
 
+RAB-DataForwardingItem-SRNS-CtxReq ::= SEQUENCE {
+	rAB-ID		RAB-ID,
+	iE-Extensions	ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
 RAB-SetupItem-RelocReq ::= SEQUENCE {
 	rAB-ID				RAB-ID,
 	nAS-SynchronisationIndicator	NAS-SynchronisationIndicator	OPTIONAL,
@@ -687,6 +728,20 @@ UserPlaneInformation ::= SEQUENCE {
 	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
 	...
 }
+
+CNMBMSLinkingInformation ::= SEQUENCE {
+	joinedMBMSBearerService-IEs	JoinedMBMSBearerService-IEs,
+	iE-Extensions			ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+JoinedMBMSBearerService-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF
+	SEQUENCE {
+		tMGI			TMGI,
+		mBMS-PTP-RAB-ID		MBMS-PTP-RAB-ID,
+		iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+		...
+	}
 
 RAB-SetupItem-RelocReqAck ::= SEQUENCE {
 	rAB-ID			RAB-ID,
@@ -727,9 +782,19 @@ RABs-failed-to-reportItem::= SEQUENCE {
 	...
 }
 
+ResetResourceList 	::=	SEQUENCE {
+	resetResourceList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
+
 ResetResourceItem ::= SEQUENCE {
 	iuSigConId		IuSignallingConnectionIdentifier,
 	iE-Extensions		ProtocolExtensionContainer OPTIONAL,
+	...
+}
+
+ResetResourceAckList 	::=	SEQUENCE {
+	resetResourceAckList-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
 	...
 }
 
@@ -835,6 +900,11 @@ RAB-QueuedItem ::= SEQUENCE {
 }
 
 RAB-ReleaseFailedList ::= RAB-FailedList
+
+GERAN-Iumode-RAB-Failed-RABAssgntResponse-List	::= SEQUENCE {
+	geraN-Iumode-RAB-Failed-RABAssgntResponse-List-ies SEQUENCE (SIZE(0..maxProtocolIEs)) OF IE,
+	...
+}
 
 GERAN-Iumode-RAB-Failed-RABAssgntResponse-Item ::= SEQUENCE {
 	rAB-ID		RAB-ID,

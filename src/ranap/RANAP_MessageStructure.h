@@ -24,7 +24,7 @@ extern "C" {
 
 /* RANAP_MessageStructure */
 typedef struct RANAP_MessageStructure {
-	A_SEQUENCE_OF(struct Member {
+	A_SEQUENCE_OF(struct MemberL {
 		RANAP_ProtocolIE_ID_t	 iE_ID;
 		RANAP_RepetitionNumber1_t	*repetitionNumber	/* OPTIONAL */;
 		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;
