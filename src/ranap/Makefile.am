@@ -1044,3 +1044,12 @@ noinst_LIBRARIES=libosmo-asn1-ranap.a
 libosmo_asn1_ranap_a_SOURCES=$(ASN_MODULE_SRC)
 include_HEADERS=$(ASN_MODULE_INC)
 libosmo_asn1_ranap_a_LIBADD=$(ASN1C_LDADD)
+
+regen: regenerate-from-asn1-source
+
+regenerate-from-asn1-source:
+	ASN1C_PREFIX="RANAP_" asn1c -gen-PER ../../asn1/ranap/RANAP-CommonDataTypes.asn ../../asn1/ranap/RANAP-Constants.asn ../../asn1/ranap/RANAP-IEs.asn ../../asn1/ranap/RANAP-PDU.asn
+	@rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* NULL.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
+# 	some fixups in erroneous code that asn1c generates
+	sed -i '6i#include <constr_CHOICE.h>' RANAP_ChosenEncryptionAlgorithm.h RANAP_ChosenIntegrityProtectionAlgorithm.h RANAP_IMSI.h RANAP_PLMNidentity.h RANAP_RAB-ReleaseFailedList.c
+	sed -i 's/Member/MemberA/' RANAP_LA-LIST.[ch] RANAP_SDU-Parameters.[ch] RANAP_RABParametersList.[ch] RANAP_AuthorisedPLMNs.[ch]

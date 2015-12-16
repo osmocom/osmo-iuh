@@ -79,3 +79,10 @@ libosmo_asn1_rua_a_SOURCES=$(ASN_MODULE_SOURCES)
 include_HEADERS=$(ASN_MODULES_INC)
 libosmo_asn1_rua_a_LIBADD=$(ASN1C_LDADD)
 
+regen: regenerate-from-asn1-source
+
+regenerate-from-asn1-source:
+	ASN1C_PREFIX="RUA_" asn1c -gen-PER ../../asn1/rua/RUA-CommonDataTypes.asn ../../asn1/rua/RUA-Constants.asn ../../asn1/rua/RUA-IEs.asn ../../asn1/rua/RUA-PDU.asn
+#	remove the local copy of the runtime code
+	@rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
+
