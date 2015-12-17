@@ -69,6 +69,8 @@ static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
 					       &asn_DEF_HNBRegisterAccept,
 					       &accept_out);
 
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBRegisterAccept, &accept_out);
+
 	return hnbgw_hnbap_tx(ctx, msg);
 }
 
@@ -293,6 +295,8 @@ int hnbgw_hnbap_rx(struct hnb_context *hnb, struct msgb *msg)
 	}
 
 	rc = _hnbgw_hnbap_rx(hnb, pdu);
+
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_PDU, pdu);
 
 	return rc;
 }

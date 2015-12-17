@@ -141,7 +141,7 @@ struct msgb *hnbap_generate_initiating_message(
 					 Criticality_t criticality,
 					 asn_TYPE_descriptor_t * td, void *sptr)
 {
-
+	struct msgb *msg;
 	HNBAP_PDU_t pdu;
 	int rc;
 
@@ -156,7 +156,10 @@ struct msgb *hnbap_generate_initiating_message(
 		return NULL;
 	}
 
-	return _hnbap_gen_msg(&pdu);
+	msg = _hnbap_gen_msg(&pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_PDU, &pdu);
+
+	return msg;
 }
 
 struct msgb *hnbap_generate_successful_outcome(
@@ -165,7 +168,7 @@ struct msgb *hnbap_generate_successful_outcome(
 					   asn_TYPE_descriptor_t * td,
 					   void *sptr)
 {
-
+	struct msgb *msg;
 	HNBAP_PDU_t pdu;
 	int rc;
 
@@ -180,7 +183,10 @@ struct msgb *hnbap_generate_successful_outcome(
 		return NULL;
 	}
 
-	return _hnbap_gen_msg(&pdu);
+	msg = _hnbap_gen_msg(&pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_PDU, &pdu);
+
+	return msg;
 }
 
 struct msgb *hnbap_generate_unsuccessful_outcome(
@@ -189,7 +195,7 @@ struct msgb *hnbap_generate_unsuccessful_outcome(
 					   asn_TYPE_descriptor_t * td,
 					   void *sptr)
 {
-
+	struct msgb *msg;
 	HNBAP_PDU_t pdu;
 	int rc;
 
@@ -204,7 +210,10 @@ struct msgb *hnbap_generate_unsuccessful_outcome(
 		return NULL;
 	}
 
-	return _hnbap_gen_msg(&pdu);
+	msg = _hnbap_gen_msg(&pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_PDU, &pdu);
+
+	return msg;
 }
 
 IE_t *hnbap_new_ie(ProtocolIE_ID_t id,
@@ -214,7 +223,7 @@ IE_t *hnbap_new_ie(ProtocolIE_ID_t id,
 
 	IE_t *buff;
 
-	if ((buff = malloc(sizeof(IE_t))) == NULL) {
+	if ((buff = MALLOC(sizeof(IE_t))) == NULL) {
 		// Possible error on malloc
 		return NULL;
 	}
