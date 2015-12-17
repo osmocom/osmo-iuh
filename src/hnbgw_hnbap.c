@@ -257,7 +257,7 @@ static int hnbgw_rx_unsuccessful_outcome_msg(struct hnb_context *hnb, Unsuccessf
 
 static int _hnbgw_hnbap_rx(struct hnb_context *hnb, HNBAP_PDU_t *pdu)
 {
-	int rc;
+	int rc = 0;
 
 	/* it's a bit odd that we can't dispatch on procedure code, but
 	 * that's not possible */
@@ -274,8 +274,10 @@ static int _hnbgw_hnbap_rx(struct hnb_context *hnb, HNBAP_PDU_t *pdu)
 	default:
 		LOGP(DHNBAP, LOGL_NOTICE, "Unknown HNBAP Presence %u\n",
 			pdu->present);
-		return -1;
+		rc = -1;
 	}
+
+	return rc;
 }
 
 int hnbgw_hnbap_rx(struct hnb_context *hnb, struct msgb *msg)
