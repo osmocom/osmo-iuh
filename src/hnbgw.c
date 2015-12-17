@@ -308,10 +308,20 @@ DEFUN(show_ue, show_ue_cmd, "show ue all", SHOW_STR "Display information about a
 	return CMD_SUCCESS;
 }
 
+DEFUN(show_talloc, show_talloc_cmd, "show talloc", SHOW_STR "Display talloc info")
+{
+	talloc_report_full(tall_hnb_ctx, stderr);
+	talloc_report_full(tall_ue_ctx, stderr);
+	talloc_report_full(talloc_asn1_ctx, stderr);
+
+	return CMD_SUCCESS;
+}
+
 static void hnbgw_vty_init(void)
 {
 	install_element_ve(&show_hnb_cmd);
 	install_element_ve(&show_ue_cmd);
+	install_element_ve(&show_talloc_cmd);
 }
 
 int main(int argc, char **argv)
