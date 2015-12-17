@@ -186,7 +186,7 @@ static int hnb_read_cb(struct osmo_fd *fd)
 		msgb_put(msg, rc);
 
 	if (flags & MSG_NOTIFICATION) {
-		LOGP(DMAIN, LOGL_INFO, "Ignoring SCTP notification\n");
+		LOGP(DMAIN, LOGL_DEBUG, "Ignoring SCTP notification\n");
 		msgb_free(msg);
 		return 0;
 	}
@@ -289,9 +289,14 @@ static void hnb_send_register_req(struct hnb_test *hnb_test)
 
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
-		.name = "DMAIN", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.name = "DMAIN", .loglevel = LOGL_INFO, .enabled = 1,
 		.color = "",
 		.description = "Main program",
+	},
+	[DHNBAP] = {
+		.name = "DHNBAP", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.color = "",
+		.description = "Home Node B Application Part",
 	},
 };
 
