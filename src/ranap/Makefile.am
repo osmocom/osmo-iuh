@@ -317,7 +317,9 @@ ASN_MODULE_SRC=	\
 	RANAP_SignallingIndication.c	\
 	RANAP_SDU-ErrorRatio.c	\
 	RANAP_SDU-FormatInformationParameters.c	\
+	RANAP_SDU-FormatInformationParameterItem.c	\
 	RANAP_SDU-Parameters.c	\
+	RANAP_SDU-ParameterItem.c	\
 	RANAP_SNA-Access-Information.c	\
 	RANAP_SNAC.c	\
 	RANAP_Service-Handover.c	\
@@ -896,7 +898,9 @@ ASN_MODULE_INC=	\
 	RANAP_SignallingIndication.h	\
 	RANAP_SDU-ErrorRatio.h	\
 	RANAP_SDU-FormatInformationParameters.h	\
+	RANAP_SDU-FormatInformationParameterItem.h	\
 	RANAP_SDU-Parameters.h	\
+	RANAP_SDU-ParameterItem.h	\
 	RANAP_SNA-Access-Information.h	\
 	RANAP_SNAC.h	\
 	RANAP_Service-Handover.h	\
@@ -1178,7 +1182,6 @@ regenerate-from-asn1-source:
 	sed -i 's/Member/MemberF/' RANAP_JoinedMBMSBearerService-IEs.[ch]
 	sed -i 's/Member/MemberG/' RANAP_CriticalityDiagnostics-IE-List.[ch]
 	sed -i 's/Member/MemberH/' RANAP_DataVolumeList.[ch]
-	sed -i 's/Member/MemberI/' RANAP_SDU-Parameters.[ch]
 	sed -i 's/Member/MemberJ/' RANAP_EUTRANFrequencies.[ch]
 	sed -i 's/Member/MemberK/' RANAP_LeftMBMSBearerService-IEs.[ch]
 	sed -i 's/Member/MemberL/' RANAP_MessageStructure.[ch]

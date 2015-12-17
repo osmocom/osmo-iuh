@@ -1745,7 +1745,8 @@ SDU-ErrorRatio ::= SEQUENCE {
 }
 -- SDU-ErrorRatio = mantissa * 10^-exponent
 
-SDU-FormatInformationParameters ::= SEQUENCE (SIZE (1..maxRAB-SubflowCombination)) OF
+SDU-FormatInformationParameters ::= SEQUENCE (SIZE (1..maxRAB-SubflowCombination)) OF SDU-FormatInformationParameterItem
+SDU-FormatInformationParameterItem ::=
 	SEQUENCE {
 		subflowSDU-Size			SubflowSDU-Size 	OPTIONAL,
 		rAB-SubflowCombinationBitRate	RAB-SubflowCombinationBitRate 	OPTIONAL,
@@ -1753,7 +1754,8 @@ SDU-FormatInformationParameters ::= SEQUENCE (SIZE (1..maxRAB-SubflowCombination
 		...
 	}
 
-SDU-Parameters ::= SEQUENCE (SIZE (1..maxRAB-Subflows)) OF
+SDU-Parameters ::= SEQUENCE (SIZE (1..maxRAB-Subflows)) OF SDU-ParameterItem
+SDU-ParameterItem ::=
 	SEQUENCE {
 		sDU-ErrorRatio			SDU-ErrorRatio OPTIONAL
 		-- This IE shall be present if the Delivery Of Erroneous SDU IE is set to "Yes" or "No" --,

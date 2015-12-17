@@ -11,11 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
+#include "RANAP_SDU-FormatInformationParameterItem.h"
 #include <asn_SEQUENCE_OF.h>
-#include "RANAP_SubflowSDU-Size.h"
-#include "RANAP_RAB-SubflowCombinationBitRate.h"
-#include "RANAP_IE-Extensions.h"
-#include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 
 #ifdef __cplusplus
@@ -24,18 +21,7 @@ extern "C" {
 
 /* RANAP_SDU-FormatInformationParameters */
 typedef struct RANAP_SDU_FormatInformationParameters {
-	A_SEQUENCE_OF(struct MemberE {
-		RANAP_SubflowSDU_Size_t	*subflowSDU_Size	/* OPTIONAL */;
-		RANAP_RAB_SubflowCombinationBitRate_t	*rAB_SubflowCombinationBitRate	/* OPTIONAL */;
-		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;
-		/*
-		 * This type is extensible,
-		 * possible extensions are below.
-		 */
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SEQUENCE_OF(RANAP_SDU_FormatInformationParameterItem_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
