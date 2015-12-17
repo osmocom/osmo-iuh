@@ -55,6 +55,34 @@ struct hnb_test g_hnb_test = {
 	.gw_port = IUH_DEFAULT_SCTP_PORT,
 };
 
+int hnb_test_ue_de_register_tx(struct hnb_test *hnb_test)
+{
+	struct msgb *msg;
+	int rc, imsi_len;
+	uint32_t ctx_id;
+
+	UEDe_Register_t dereg;
+	UEDe_RegisterIEs_t dereg_ies;
+	memset(&dereg_ies, 0, sizeof(dereg_ies));
+
+	asn1_u24_to_bitstring(&dereg_ies.context_ID, &ctx_id, hnb_test->ctx_id);
+	dereg_ies.cause.present = Cause_PR_radioNetwork;
+	dereg_ies.cause.choice.radioNetwork = CauseRadioNetwork_connection_with_UE_lost;
+
+	memset(&dereg, 0, sizeof(dereg));
+	rc = hnbap_encode_uede_registeries(&dereg, &dereg_ies);
+
+	msg = hnbap_generate_initiating_message(ProcedureCode_id_UEDe_Register,
+						Criticality_ignore,
+						&asn_DEF_UEDe_Register,
+						&dereg);
+
+
+	msgb_ppid(msg) = IUH_PPI_HNBAP;
+
+	return osmo_wqueue_enqueue(&hnb_test->wqueue, msg);
+}
+
 int hnb_test_ue_register_tx(struct hnb_test *hnb_test)
 {
 	struct msgb *msg;
@@ -128,6 +156,10 @@ int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
 	decode_iu_bcd(imsi, sizeof(imsi), accept.uE_Identity.choice.iMSI.buf,
 			accept.uE_Identity.choice.iMSI.size);
 	printf("UE Register accept for IMSI %s, context %u\n", imsi, ctx_id);
+
+	hnb->ctx_id = ctx_id;
+
+	return hnb_test_ue_de_register_tx(hnb);
 
 	return 0;
 }

@@ -62,6 +62,8 @@ struct hnb_test {
 	uint16_t rua_stream;
 
 	uint16_t rnc_id;
+
+	uint32_t ctx_id;
 };
 
 extern struct hnb_test g_hnb_test;
