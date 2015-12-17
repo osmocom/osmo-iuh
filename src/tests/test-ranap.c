@@ -9,6 +9,13 @@
  * minimum set of RANAP messages that the core network side needs to send
  * towards the RNC */
 
+static long *new_long(long in)
+{
+	long *out = CALLOC(1, sizeof(long));
+	*out = in;
+	return out;
+}
+
 int ranap_tx_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas_len)
 {
 	RANAP_DirectTransferIEs_t ies;
@@ -26,7 +33,7 @@ int ranap_tx_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas_len)
 	else
 		ies.sapi = RANAP_SAPI_sapi_0;
 
-	ies.nas_pdu.buf = nas;
+	ies.nas_pdu.buf = (uint8_t *) nas;
 	ies.nas_pdu.size = nas_len;
 
 	rc = ranap_encode_directtransferies(&dt, &ies);
@@ -62,7 +69,7 @@ int ranap_tx_sec_mod_cmd(void)
 	for (i = 0; i < ARRAY_SIZE(ip_alg); i++) {
 		/* needs to be dynamically allocated, as
 		 * SET_OF_free() will call FREEMEM() on it */
-		RANAP_IntegrityProtectionAlgorithm_t *alg = MALLOC(*alg);
+		RANAP_IntegrityProtectionAlgorithm_t *alg = CALLOC(1, sizeof(*alg));
 		*alg = ip_alg[i];
 		ASN_SEQUENCE_ADD(&ies.integrityProtectionInformation.permittedAlgorithms, alg);
 	}
@@ -72,7 +79,7 @@ int ranap_tx_sec_mod_cmd(void)
 		for (i = 0; i < ARRAY_SIZE(ip_alg); i++) {
 			/* needs to be dynamically allocated, as
 			 * SET_OF_free() will call FREEMEM() on it */
-			RANAP_EncryptionAlgorithm_t *alg = MALLOC(*alg);
+			RANAP_EncryptionAlgorithm_t *alg = CALLOC(1, sizeof(*alg));
 			*alg = enc_alg[i];
 			ASN_SEQUENCE_ADD(&ies.encryptionInformation.permittedAlgorithms, alg);
 		}
@@ -107,7 +114,7 @@ int ranap_tx_common_id(const char *imsi)
 	} else
 		ies.permanentNAS_UE_ID.present = RANAP_PermanentNAS_UE_ID_PR_NOTHING;
 
-	rc = ranap_encode_commonidies(&out, &ies);
+	rc = ranap_encode_commonid_ies(&out, &ies);
 
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_CommonID,
 						RANAP_Criticality_ignore,
@@ -170,7 +177,7 @@ int ranap_tx_paging_cmd(const char *imsi, uint32_t *tmsi, int is_ps, uint32_t ca
 		ies.pagingCause = cause;
 	}
 
-	rc = ranap_encode_iu_pagingies(&out, &ies);
+	rc = ranap_encode_pagingies(&out, &ies);
 
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_Paging,
 						RANAP_Criticality_reject,
@@ -189,10 +196,10 @@ static RANAP_SDU_ErrorRatio_t *new_sdu_error_ratio(long mantissa, long exponent)
 }
 
 
-static RANAP_SDU_FormatInformationParameters_t *
+static RANAP_SDU_FormatInformationParameterItem_t *
 new_format_info_pars(long sdu_size)
 {
-	RANAP_SDU_FormatInformationParameters_t *fmti = CALLOC(1, sizeof(*fmti));
+	RANAP_SDU_FormatInformationParameterItem_t *fmti = CALLOC(1, sizeof(*fmti));
 	fmti->subflowSDU_Size = new_long(sdu_size);
 	return fmti;
 }
@@ -204,68 +211,62 @@ enum sdu_par_profile {
 	SDUPAR_P_DATA,
 };
 
-static RANAP_SDU_Parameters_t *new_sdu_pars(enum sdu_par_profile profile)
+/* See Chapter 5 of TS 26.102 */
+static RANAP_SDU_ParameterItem_t *new_sdu_par_item(enum sdu_par_profile profile)
 {
-	RANAP_SDU_Parameters_t *sdup = MALLOC(sizeof(*sdup));
-	RANAP_SDU_FormatInformationParameters_t *fmti;
-
-	memset(&sdup, 0, sizeof(sdup));
+	RANAP_SDU_ParameterItem_t *sdui = CALLOC(1, sizeof(*sdui));
+	RANAP_SDU_FormatInformationParameters_t *fmtip = CALLOC(1, sizeof(*fmtip));
+	RANAP_SDU_FormatInformationParameterItem_t *fmti;
 
 	switch (profile) {
 	case SDUPAR_P_VOICE0:
-		sdup->sDU_ErrorRatio = new_sdu_error_ratio(1, 5);
-		sdup->residualBitErrorRatio.mantissa = 1;
-		sdup->residualBitErrorRatio.exponent = 6;
-		sdup->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_yes;
+		sdui->sDU_ErrorRatio = new_sdu_error_ratio(1, 5);
+		sdui->residualBitErrorRatio.mantissa = 1;
+		sdui->residualBitErrorRatio.exponent = 6;
+		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_yes;
+		sdui->sDU_FormatInformationParameters = fmtip;
 		fmti = new_format_info_pars(81);
-		ASN_SEQUENCE_ADD(&sdup->sDU_FormatInformationParameters, fmti);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		fmti = new_format_info_pars(39);
-		ASN_SEQUENCE_ADD(&sdup->sDU_FormatInformationParameters, fmti);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		/* FIXME: could be 10 SDU descriptors for AMR! */
 		break;
 	case SDUPAR_P_VOICE1:
-		sdup->residualBitErrorRatio.mantissa = 1;
-		sdup->residualBitErrorRatio.exponent = 3;
-		sudp->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no_error_detection_consideration;
+		sdui->residualBitErrorRatio.mantissa = 1;
+		sdui->residualBitErrorRatio.exponent = 3;
+		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no_error_detection_consideration;
 		fmti = new_format_info_pars(103);
-		ASN_SEQUENCE_ADD(&sdup->sDU_FormatInformationParameters, fmti);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		fmti = new_format_info_pars(0);
-		ASN_SEQUENCE_ADD(&sdup->sDU_FormatInformationParameters, fmti);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		/* FIXME: could be 10 SDU descriptors for AMR! */
 		break;
 	case SDUPAR_P_VOICE2:
-		sdup->residualBitErrorRatio.mantissa = 5;
-		sdup->residualBitErrorRatio.exponent = 3;
-		sudp->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no_error_detection_consideration;
+		sdui->residualBitErrorRatio.mantissa = 5;
+		sdui->residualBitErrorRatio.exponent = 3;
+		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no_error_detection_consideration;
 		fmti = new_format_info_pars(60);
-		ASN_SEQUENCE_ADD(&sdup->sDU_FormatInformationParameters, fmti);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		fmti = new_format_info_pars(0);
-		ASN_SEQUENCE_ADD(&sdup->sDU_FormatInformationParameters, fmti);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		/* FIXME: could be 10 SDU descriptors for AMR! */
 		break;
 	case SDUPAR_P_DATA:
-		sdup->sDU_ErrorRatio = new_sdu_error_ratio(1, 4);
-		sdup->residualBitErrorRatio.mantissa = 1;
-		sdup->residualBitErrorRatio.exponent = 5;
-		sdup->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no;
+		sdui->sDU_ErrorRatio = new_sdu_error_ratio(1, 4);
+		sdui->residualBitErrorRatio.mantissa = 1;
+		sdui->residualBitErrorRatio.exponent = 5;
+		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no;
 		break;
 	}
 
-	return sdup;
-}
-
-static long *new_long(long in)
-{
-	long *out = MALLOC(sizeof(long));
-	*out = in;
-	return out;
+	return sdui;
 }
 
 static RANAP_AllocationOrRetentionPriority_t *
-new_alloc_ret_prio(RANAP_PriorityLevel_t level, bool capability, bool vulnerability,
-		   bool qeueing_allowed)
+new_alloc_ret_prio(RANAP_PriorityLevel_t level, int capability, int vulnerability,
+		   int queueing_allowed)
 {
-	RANAP_AllocationOrRetentionPriority_t *arp = MALLOC(sizeof(*arp));
+	RANAP_AllocationOrRetentionPriority_t *arp = CALLOC(1, sizeof(*arp));
 
 	arp->priorityLevel = level;
 
@@ -287,25 +288,30 @@ new_alloc_ret_prio(RANAP_PriorityLevel_t level, bool capability, bool vulnerabil
 	return arp;
 }
 
+/* See Chapter 5 of TS 26.102 */
 static RANAP_RAB_Parameters_t *new_rab_par_voice(void)
 {
 	RANAP_RAB_Parameters_t *rab = CALLOC(1, sizeof(*rab));
+	RANAP_SDU_ParameterItem_t *sdui;
 
 	rab->trafficClass = RANAP_TrafficClass_conversational;
 	rab->rAB_AsymmetryIndicator = RANAP_RAB_AsymmetryIndicator_symmetric_bidirectional;
 
 	ASN_SEQUENCE_ADD(&rab->maxBitrate, new_long(12200));
-	rab->guaranteedBitrate = MALLOC(sizeof(*rab->guaranteedBitrate));
-	ASN_SEQUENCE_ADD(&rab->guaranteedBitrate, new_long(12200));
+	rab->guaranteedBitRate = CALLOC(1, sizeof(*rab->guaranteedBitRate));
+	ASN_SEQUENCE_ADD(&rab->guaranteedBitRate, new_long(12200));
 	rab->deliveryOrder = RANAP_DeliveryOrder_delivery_order_requested;
 	rab->maxSDU_Size = 244;
 
-	sdup = new_sdu_pars(SDUPAR_P_VOICE0);
-	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdup);
-	sdup = new_sdu_pars(SDUPAR_P_VOICE1);
-	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdup);
-	sdup = new_sdu_pars(SDUPAR_P_VOICE2);
-	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdup);
+	RANAP_SDU_Parameters_t *sdup = CALLOC(1, sizeof(*sdup));
+	ASN_SEQUENCE_ADD(&sdup->list, sdui);
+
+	sdui = new_sdu_par_item(SDUPAR_P_VOICE0);
+	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdui);
+	sdui = new_sdu_par_item(SDUPAR_P_VOICE1);
+	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdui);
+	sdui = new_sdu_par_item(SDUPAR_P_VOICE2);
+	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdui);
 
 	rab->transferDelay = new_long(80);
 	rab->allocationOrRetentionPriority = new_alloc_ret_prio(RANAP_PriorityLevel_no_priority, 0, 1, 0);
@@ -318,6 +324,7 @@ static RANAP_RAB_Parameters_t *new_rab_par_voice(void)
 static RANAP_RAB_Parameters_t *new_rab_par_data(void)
 {
 	RANAP_RAB_Parameters_t *rab = CALLOC(1, sizeof(*rab));
+	RANAP_SDU_ParameterItem_t *sdui;
 
 	rab->trafficClass = RANAP_TrafficClass_background;
 	rab->rAB_AsymmetryIndicator = RANAP_RAB_AsymmetryIndicator_asymmetric_bidirectional;
@@ -327,8 +334,8 @@ static RANAP_RAB_Parameters_t *new_rab_par_data(void)
 	rab->deliveryOrder = RANAP_DeliveryOrder_delivery_order_requested;
 	rab->maxSDU_Size = 8000;
 
-	sdup = new_sdu_pars(SDUPAR_P_DATA);
-	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdup);
+	sdui = new_sdu_par_item(SDUPAR_P_DATA);
+	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdui);
 
 	rab->allocationOrRetentionPriority = new_alloc_ret_prio(RANAP_PriorityLevel_no_priority, 0, 0, 0);
 
@@ -349,7 +356,7 @@ static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint1
 
 	asn1_u32_to_bitstring(&tli->transportLayerAddress, ipbuf, htonl(ip));
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_bindingID;
-	OCTET_STRING_fromBuf(tli->iuTransportAssociation.choice.bindingID.buf,
+	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.bindingID,
 				(const char *) binding_id, sizeof(binding_id));
 
 	return tli;
@@ -364,7 +371,7 @@ static RANAP_TransportLayerInformation_t *new_transp_info_gtp(uint32_t ip, uint3
 	asn1_u32_to_bitstring(&tli->transportLayerAddress, ipbuf, htonl(ip));
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_gTP_TEI;
 	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.bindingID,
-			     (const char *) binding_buf, sizeof(binding_buf));
+			     (const char *) &binding_buf, sizeof(binding_buf));
 
 	return tli;
 }
@@ -384,24 +391,36 @@ static RANAP_UserPlaneInformation_t *new_upi(long mode, uint8_t mode_versions)
 	return upi;
 }
 
-int ranap_tx_rab_assign_voice(uint8_t rab_id)
+
+static void assign_new_ra_id(RANAP_RAB_ID_t *id, uint8_t rab_id)
+{
+	uint8_t *buf = CALLOC(1, sizeof(*buf));
+	*buf = rab_id << 3;
+
+	id->buf = buf;
+	id->size = 1;
+	id->bits_unused = 0;
+}
+
+int ranap_tx_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip, uint16_t rtp_port)
 {
 	RANAP_ProtocolIE_FieldPair_t *pair;
 	RANAP_RAB_AssignmentRequestIEs_t ies;
 	RANAP_RAB_AssignmentRequest_t out;
+	int rc;
 
 	memset(&ies, 0, sizeof(ies));
 
+	/* only assingnment is present, no release */
 	ies.presenceMask = RAB_ASSIGNMENTREQUESTIES_RANAP_RAB_SETUPORMODIFYLIST_PRESENT;
-	/* RANAP_RAB_IE_ContainerPairList_t */
 
 	RANAP_RAB_SetupOrModifyItemFirst_t first;
 
-	first.rAB_ID = rab_id;
-	first.nAS_SynchronisationIndicator = FIXME;
+	assign_new_ra_id(&first.rAB_ID, rab_id);
+	//first.nAS_SynchronisationIndicator = FIXME;
 	first.rAB_Parameters = new_rab_par_voice();
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_support_mode_for_predefined_SDU_sizes, 1); /* 2? */
-	first.transportLayerInformation = new_transp_info_rtp(ip, port);
+	first.transportLayerInformation = new_transp_info_rtp(rtp_ip, rtp_port);
 
 	RANAP_RAB_SetupOrModifyItemSecond_t second;
 	memset(&second, 0, sizeof(second));
@@ -427,13 +446,13 @@ int ranap_tx_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip, uint16_t gtp_port)
 
 	memset(&ies, 0, sizeof(ies));
 
+	/* only assingnment is present, no release */
 	ies.presenceMask = RAB_ASSIGNMENTREQUESTIES_RANAP_RAB_SETUPORMODIFYLIST_PRESENT;
-	/* RANAP_RAB_IE_ContainerPairList_t */
 
 	RANAP_RAB_SetupOrModifyItemFirst_t first;
 
-	first.rAB_ID = rab_id;
-	first.nAS_SynchronisationIndicator = FIXME;
+	assign_new_ra_id(&first.rAB_ID, rab_id);
+	//first.nAS_SynchronisationIndicator = FIXME;
 	first.rAB_Parameters = new_rab_par_data();
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_transparent_mode, 1);
 	first.transportLayerInformation = new_transp_info_rtp(gtp_ip, gtp_port);
