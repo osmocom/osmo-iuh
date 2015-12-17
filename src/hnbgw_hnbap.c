@@ -124,7 +124,7 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 	//ctx->id.mcc FIXME
 	//ctx->id.mnc FIXME
 
-	DEBUGP(DMAIN, "HNB-REGISTER-REQ from %s\n", ctx->identity_info);
+	DEBUGP(DHNBAP, "HNB-REGISTER-REQ from %s\n", ctx->identity_info);
 
 	/* Send HNBRegisterAccept */
 	return hnbgw_tx_hnb_register_acc(ctx);
@@ -155,11 +155,11 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 			      ies.uE_Identity.choice.iMSIESN.iMSIDS41.size);
 		break;
 	default:
-		LOGP(DMAIN, LOGL_NOTICE, "UE-REGISTER-REQ without IMSI?!?\n");
+		LOGP(DHNBAP, LOGL_NOTICE, "UE-REGISTER-REQ without IMSI?!?\n");
 		return -1;
 	}
 
-	DEBUGP(DMAIN, "UE-REGSITER-REQ ID_type=%d imsi=%s cause=%ld\n",
+	DEBUGP(DHNBAP, "UE-REGSITER-REQ ID_type=%d imsi=%s cause=%ld\n",
 		ies.uE_Identity.present, imsi, ies.registration_Cause);
 
 	ue = ue_context_by_imsi(imsi);
@@ -183,7 +183,7 @@ static int hnbgw_rx_ue_deregister(struct hnb_context *ctx, ANY_t *in)
 
 	ctxid = asn1bitstr_to_u24(&ies.context_ID);
 
-	DEBUGP(DMAIN, "UE-DE-REGSITER context=%ld cause=%ld\n",
+	DEBUGP(DHNBAP, "UE-DE-REGSITER context=%ld cause=%ld\n",
 		ctxid, ies.cause);
 
 	ue = ue_context_by_id(ctxid);
@@ -202,7 +202,7 @@ static int hnbgw_rx_err_ind(struct hnb_context *hnb, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	LOGP(DMAIN, LOGL_NOTICE, "HNBAP ERROR.ind, cause: %s\n",
+	LOGP(DHNBAP, LOGL_NOTICE, "HNBAP ERROR.ind, cause: %s\n",
 		hnbap_cause_str(&ies.cause));
 
 	return 0;
@@ -232,11 +232,11 @@ static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, InitiatingMessage_t 
 	case ProcedureCode_id_RelocationComplete:	/* 8.11 */
 	case ProcedureCode_id_U_RNTIQuery:	/* 8.12 */
 	case ProcedureCode_id_privateMessage:
-		LOGP(DMAIN, LOGL_NOTICE, "Unimplemented HNBAP Procedure %ld\n",
+		LOGP(DHNBAP, LOGL_NOTICE, "Unimplemented HNBAP Procedure %ld\n",
 			imsg->procedureCode);
 		break;
 	default:
-		LOGP(DMAIN, LOGL_NOTICE, "Unknown HNBAP Procedure %ld\n",
+		LOGP(DHNBAP, LOGL_NOTICE, "Unknown HNBAP Procedure %ld\n",
 			imsg->procedureCode);
 		break;
 	}
@@ -270,7 +270,7 @@ static int _hnbgw_hnbap_rx(struct hnb_context *hnb, HNBAP_PDU_t *pdu)
 		rc = hnbgw_rx_unsuccessful_outcome_msg(hnb, &pdu->choice.unsuccessfulOutcome);
 		break;
 	default:
-		LOGP(DMAIN, LOGL_NOTICE, "Unknown HNBAP Presence %u\n",
+		LOGP(DHNBAP, LOGL_NOTICE, "Unknown HNBAP Presence %u\n",
 			pdu->present);
 		return -1;
 	}
@@ -288,7 +288,7 @@ int hnbgw_hnbap_rx(struct hnb_context *hnb, struct msgb *msg)
 	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
 			      msg->data, msgb_length(msg), 0, 0);
 	if (dec_ret.code != RC_OK) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ASN.1 decode\n");
+		LOGP(DHNBAP, LOGL_ERROR, "Error in ASN.1 decode\n");
 		return rc;
 	}
 

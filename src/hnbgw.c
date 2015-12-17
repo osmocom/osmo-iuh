@@ -241,6 +241,11 @@ static const struct log_info_cat log_cat[] = {
 		.color = "",
 		.description = "Main program",
 	},
+	[DHNBAP] = {
+		.name = "DHNBAP", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.color = "",
+		.description = "Home Node B Application Part",
+	},
 };
 
 static const struct log_info hnbgw_log_info = {

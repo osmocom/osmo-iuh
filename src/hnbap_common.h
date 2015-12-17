@@ -131,7 +131,7 @@
 
 #include <osmocom/core/logging.h>
 
-#define HNBAP_DEBUG(x, args ...) DEBUGP(0, x, ## args)
+#define HNBAP_DEBUG(x, args ...) DEBUGP(1, x, ## args)
 
 extern int asn1_xer_print;
 
