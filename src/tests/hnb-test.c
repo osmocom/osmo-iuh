@@ -213,9 +213,19 @@ static int hnb_read_cb(struct osmo_fd *fd)
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error during sctp_recvmsg()\n");
 		/* FIXME: clean up after disappeared HNB */
+		close(fd->fd);
+		osmo_fd_unregister(fd);
 		return rc;
-	} else
+	} else if (rc == 0) {
+		LOGP(DMAIN, LOGL_INFO, "Connection to HNB closed\n");
+		close(fd->fd);
+		osmo_fd_unregister(fd);
+		fd->fd = -1;
+
+		return -1;
+	} else {
 		msgb_put(msg, rc);
+	}
 
 	if (flags & MSG_NOTIFICATION) {
 		LOGP(DMAIN, LOGL_DEBUG, "Ignoring SCTP notification\n");
