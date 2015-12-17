@@ -235,8 +235,6 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 	return rc;
 }
 
-#include "pdus.h"
-
 static void hnb_send_register_req(struct hnb_test *hnb_test)
 {
 	HNBRegisterRequest_t request_out;
