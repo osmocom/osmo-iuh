@@ -91,6 +91,12 @@ int hnb_test_ue_register_tx(struct hnb_test *hnb_test)
 	char imsi_buf[16];
 	char *imsi_str = "262019876543210";
 
+	if (hnb_test->ues > 0) {
+		hnb_test->ues--;
+	} else {
+		return 0;
+	}
+
 	UERegisterRequest_t request_out;
 	UERegisterRequestIEs_t request;
 	memset(&request, 0, sizeof(request));
@@ -189,6 +195,7 @@ int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 		break;
 	case ProcedureCode_id_UERegister:
 		rc = hnb_test_rx_ue_register_acc(hnb, &pdu->choice.successfulOutcome.value);
+		hnb_test_ue_register_tx(hnb);
 		break;
 	default:
 		break;
@@ -363,6 +370,28 @@ static int sctp_sock_init(int fd)
 	return rc;
 }
 
+static void handle_options(int argc, char **argv)
+{
+	while (1) {
+		int idx = 0, c;
+		static const struct option long_options[] = {
+			{ "ues", 1, 0, 'u' },
+			{ 0, 0, 0, 0 },
+		};
+
+		c = getopt_long(argc, argv, "u:", long_options, &idx);
+
+		if (c == -1)
+			break;
+
+		switch (c) {
+		case 'u':
+			g_hnb_test.ues = atoi(optarg);
+			break;
+		}
+	}
+}
+
 int main(int argc, const char *argv)
 {
 	int rc;
@@ -375,6 +404,8 @@ int main(int argc, const char *argv)
 		exit(1);
 
 	vty_init(&vty_info);
+
+	handle_options(argc, argv);
 
 	osmo_wqueue_init(&g_hnb_test.wqueue, 16);
 	g_hnb_test.wqueue.bfd.data = &g_hnb_test;

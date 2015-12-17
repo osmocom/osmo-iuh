@@ -64,6 +64,8 @@ struct hnb_test {
 	uint16_t rnc_id;
 
 	uint32_t ctx_id;
+
+	int ues;
 };
 
 extern struct hnb_test g_hnb_test;
