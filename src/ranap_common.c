@@ -164,8 +164,8 @@ RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id,
 			 RANAP_Criticality_t criticality,
 			 asn_TYPE_descriptor_t * type, void *sptr)
 {
-
 	RANAP_IE_t *buff;
+	int rc;
 
 	if ((buff = CALLOC(1, sizeof(*buff))) == NULL) {
 		// Possible error on malloc
@@ -175,7 +175,12 @@ RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id,
 	buff->id = id;
 	buff->criticality = criticality;
 
-	ANY_fromType_aper(&buff->value, type, sptr);
+	rc = ANY_fromType_aper(&buff->value, type, sptr);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		FREEMEM(buff);
+		return NULL;
+	}
 
 	if (asn1_xer_print)
 		if (xer_fprint(stdout, &asn_DEF_RANAP_IE, buff) < 0) {
@@ -192,8 +197,8 @@ RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
 				RANAP_Criticality_t criticality2,
 				asn_TYPE_descriptor_t *type2, void *sptr2)
 {
-
 	RANAP_ProtocolIE_FieldPair_t *buff;
+	int rc;
 
 	if ((buff = CALLOC(1, sizeof(*buff))) == NULL) {
 		// Possible error on malloc
@@ -204,8 +209,19 @@ RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
 	buff->firstCriticality = criticality1;
 	buff->secondCriticality = criticality2;
 
-	ANY_fromType_aper(&buff->firstValue, type1, sptr1);
-	ANY_fromType_aper(&buff->secondValue, type2, sptr2);
+	rc = ANY_fromType_aper(&buff->firstValue, type1, sptr1);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		FREEMEM(buff);
+		return NULL;
+	}
+
+	rc = ANY_fromType_aper(&buff->secondValue, type2, sptr2);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		FREEMEM(buff);
+		return NULL;
+	}
 
 	if (asn1_xer_print)
 		if (xer_fprint(stdout, &asn_DEF_RANAP_ProtocolIE_FieldPair, buff) < 0) {

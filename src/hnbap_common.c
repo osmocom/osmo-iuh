@@ -222,6 +222,7 @@ IE_t *hnbap_new_ie(ProtocolIE_ID_t id,
 {
 
 	IE_t *buff;
+	int rc;
 
 	if ((buff = CALLOC(1, sizeof(IE_t))) == NULL) {
 		// Possible error on malloc
@@ -231,7 +232,12 @@ IE_t *hnbap_new_ie(ProtocolIE_ID_t id,
 	buff->id = id;
 	buff->criticality = criticality;
 
-	ANY_fromType_aper(&buff->value, type, sptr);
+	rc = ANY_fromType_aper(&buff->value, type, sptr);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		FREEMEM(buff);
+		return NULL;
+	}
 
 	if (asn1_xer_print)
 		if (xer_fprint(stdout, &asn_DEF_IE, buff) < 0) {
