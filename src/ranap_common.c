@@ -58,6 +58,7 @@ struct msgb *ranap_generate_initiating_message(e_RANAP_ProcedureCode procedureCo
 					  asn_TYPE_descriptor_t *td, void *sptr)
 {
 	RANAP_RANAP_PDU_t pdu;
+	struct msgb *msg;
 	int rc;
 
 	memset(&pdu, 0, sizeof(pdu));
@@ -71,7 +72,10 @@ struct msgb *ranap_generate_initiating_message(e_RANAP_ProcedureCode procedureCo
 		return NULL;
 	}
 
-	return _ranap_gen_msg(&pdu);
+	msg = _ranap_gen_msg(&pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RANAP_PDU, &pdu);
+
+	return msg;
 }
 
 struct msgb *ranap_generate_successful_outcome(
@@ -81,6 +85,7 @@ struct msgb *ranap_generate_successful_outcome(
 					   void *sptr)
 {
 	RANAP_RANAP_PDU_t pdu;
+	struct msgb *msg;
 	int rc;
 
 	memset(&pdu, 0, sizeof(pdu));
@@ -94,7 +99,10 @@ struct msgb *ranap_generate_successful_outcome(
 		return NULL;
 	}
 
-	return _ranap_gen_msg(&pdu);
+	msg = _ranap_gen_msg(&pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RANAP_PDU, &pdu);
+
+	return msg;
 }
 
 struct msgb *ranap_generate_unsuccessful_outcome(
@@ -104,6 +112,7 @@ struct msgb *ranap_generate_unsuccessful_outcome(
 					void *sptr)
 {
 	RANAP_RANAP_PDU_t pdu;
+	struct msgb *msg;
 	int rc;
 
 	memset(&pdu, 0, sizeof(pdu));
@@ -117,7 +126,10 @@ struct msgb *ranap_generate_unsuccessful_outcome(
 		return NULL;
 	}
 
-	return _ranap_gen_msg(&pdu);
+	msg = _ranap_gen_msg(&pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RANAP_PDU, &pdu);
+
+	return msg;
 }
 
 struct msgb *ranap_generate_outcome(
@@ -127,6 +139,7 @@ struct msgb *ranap_generate_outcome(
 				void *sptr)
 {
 	RANAP_RANAP_PDU_t pdu;
+	struct msgb *msg;
 	int rc;
 
 	memset(&pdu, 0, sizeof(pdu));
@@ -140,7 +153,10 @@ struct msgb *ranap_generate_outcome(
 		return NULL;
 	}
 
-	return _ranap_gen_msg(&pdu);
+	msg = _ranap_gen_msg(&pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RANAP_PDU, &pdu);
+
+	return msg;
 }
 
 
