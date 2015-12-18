@@ -167,11 +167,10 @@ RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id,
 
 	RANAP_IE_t *buff;
 
-	if ((buff = malloc(sizeof(*buff))) == NULL) {
+	if ((buff = CALLOC(1, sizeof(*buff))) == NULL) {
 		// Possible error on malloc
 		return NULL;
 	}
-	memset((void *)buff, 0, sizeof(*buff));
 
 	buff->id = id;
 	buff->criticality = criticality;
@@ -196,11 +195,10 @@ RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
 
 	RANAP_ProtocolIE_FieldPair_t *buff;
 
-	if ((buff = malloc(sizeof(*buff))) == NULL) {
+	if ((buff = CALLOC(1, sizeof(*buff))) == NULL) {
 		// Possible error on malloc
 		return NULL;
 	}
-	memset((void *)buff, 0, sizeof(*buff));
 
 	buff->id = id;
 	buff->firstCriticality = criticality1;
