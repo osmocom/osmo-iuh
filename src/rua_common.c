@@ -209,7 +209,7 @@ RUA_IE_t *rua_new_ie(RUA_ProtocolIE_ID_t id,
 
 	if (asn1_xer_print)
 		if (xer_fprint(stdout, &asn_DEF_RUA_IE, buff) < 0) {
-			free(buff);
+			FREEMEM(buff);
 			return NULL;
 		}
 

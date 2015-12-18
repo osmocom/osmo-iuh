@@ -235,7 +235,7 @@ IE_t *hnbap_new_ie(ProtocolIE_ID_t id,
 
 	if (asn1_xer_print)
 		if (xer_fprint(stdout, &asn_DEF_IE, buff) < 0) {
-			free(buff);
+			FREEMEM(buff);
 			return NULL;
 		}
 

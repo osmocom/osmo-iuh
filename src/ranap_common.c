@@ -179,7 +179,7 @@ RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id,
 
 	if (asn1_xer_print)
 		if (xer_fprint(stdout, &asn_DEF_RANAP_IE, buff) < 0) {
-			free(buff);
+			FREEMEM(buff);
 			return NULL;
 		}
 
@@ -208,8 +208,8 @@ RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
 	ANY_fromType_aper(&buff->secondValue, type2, sptr2);
 
 	if (asn1_xer_print)
-		if (xer_fprint(stdout, &asn_DEF_RANAP_IE, buff) < 0) {
-			free(buff);
+		if (xer_fprint(stdout, &asn_DEF_RANAP_ProtocolIE_FieldPair, buff) < 0) {
+			FREEMEM(buff);
 			return NULL;
 		}
 
