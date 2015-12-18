@@ -19,11 +19,13 @@
  */
 
 #include <string.h>
+#include <errno.h>
 #include <arpa/inet.h>
 
 #include <osmocom/core/utils.h>
 
 #include "asn1helpers.h"
+#include "asn_internal.h"
 
 void asn1_u32_to_bitstring(BIT_STRING_t *bitstr, uint32_t *buf, uint32_t in)
 {
@@ -47,6 +49,45 @@ void asn1_u24_to_bitstring(BIT_STRING_t *bitstr, uint32_t *buf, uint32_t in)
 	bitstr->buf = (uint8_t *) buf;
 	bitstr->size = 24/8;
 	bitstr->bits_unused = 0;
+}
+
+int BIT_STRING_fromBuf(BIT_STRING_t *st, const uint8_t *str, unsigned int bit_len)
+{
+	void *buf;
+	unsigned int len = bit_len / 8;
+
+	if (bit_len % 8)
+		len++;
+
+	if (!st || (!str && len)) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	if (!str) {
+		FREEMEM(st->buf);
+		st->buf = 0;
+		st->size = 0;
+		st->bits_unused = 0;
+		return 0;
+	}
+
+	if (len < 0)
+		len = strlen(str);
+
+	buf = MALLOC(len);
+	if (!buf) {
+		errno = ENOMEM;
+		return -1;
+	}
+
+	memcpy(buf, str, len);
+	FREEMEM(st->buf);
+	st->buf = buf;
+	st->size = len;
+	st->bits_unused = (len * 8) - bit_len;
+
+	return 0;
 }
 
 void asn1_u16_to_str(OCTET_STRING_t *str, uint16_t *buf, uint16_t in)
