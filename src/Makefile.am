@@ -12,14 +12,14 @@ hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c rua_encoder.c rua_decoder.c rana
 hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOVTY_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) $(COMMON_LDADD) hnbap/libosmo-asn1-hnbap.a rua/libosmo-asn1-rua.a ranap/libosmo-asn1-ranap.a
 
 
-.PHONY: hnbap_encoder.c
+hnbap_encoder.c hnbap_decoder.c hnbap_ies_defs.h: $(ASN1_ROOT)/hnbap/HNBAP-PDU-Contents.asn
 hnbap_encoder.c : $(ASN1_ROOT)/hnbap/HNBAP-PDU-Contents.asn
 	$(ASN1TOSTRUCT) -f $<
 
-.PHONY: rua_encoder.c
+rua_encoder.c rua_decoder.c rua_ies_defs.h: $(ASN1_ROOT)/rua/RUA-PDU-Contents.asn
 rua_encoder.c : $(ASN1_ROOT)/rua/RUA-PDU-Contents.asn
 	$(ASN1TOSTRUCT) -p RUA_ -f $<
 
-.PHONY: ranap_encoder.c
+ranap_encoder.c rua_decoder.c rua_ies_defs.h : $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn
 ranap_encoder.c : $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn
 	$(ASN1TOSTRUCT) -p RANAP_ -f $<
