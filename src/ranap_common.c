@@ -219,13 +219,13 @@ RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
 	rc = ANY_fromType_aper(&buff->secondValue, type2, sptr2);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
-		FREEMEM(buff);
+		ASN_STRUCT_FREE(asn_DEF_RANAP_ProtocolIE_FieldPair, buff);
 		return NULL;
 	}
 
 	if (asn1_xer_print)
 		if (xer_fprint(stdout, &asn_DEF_RANAP_ProtocolIE_FieldPair, buff) < 0) {
-			FREEMEM(buff);
+			ASN_STRUCT_FREE(asn_DEF_RANAP_ProtocolIE_FieldPair, buff);
 			return NULL;
 		}
 
