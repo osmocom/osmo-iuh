@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 
+#include "asn_system.h"
 #include "BIT_STRING.h"
 #include "OCTET_STRING.h"
 
