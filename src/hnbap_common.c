@@ -223,11 +223,10 @@ IE_t *hnbap_new_ie(ProtocolIE_ID_t id,
 
 	IE_t *buff;
 
-	if ((buff = MALLOC(sizeof(IE_t))) == NULL) {
+	if ((buff = CALLOC(1, sizeof(IE_t))) == NULL) {
 		// Possible error on malloc
 		return NULL;
 	}
-	memset((void *)buff, 0, sizeof(IE_t));
 
 	buff->id = id;
 	buff->criticality = criticality;

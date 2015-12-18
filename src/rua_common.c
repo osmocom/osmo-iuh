@@ -197,11 +197,10 @@ RUA_IE_t *rua_new_ie(RUA_ProtocolIE_ID_t id,
 
 	RUA_IE_t *buff;
 
-	if ((buff = malloc(sizeof(*buff))) == NULL) {
+	if ((buff = CALLOC(1, sizeof(*buff))) == NULL) {
 		// Possible error on malloc
 		return NULL;
 	}
-	memset((void *)buff, 0, sizeof(*buff));
 
 	buff->id = id;
 	buff->criticality = criticality;
