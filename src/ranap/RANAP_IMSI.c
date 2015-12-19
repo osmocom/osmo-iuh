@@ -9,6 +9,8 @@
 int
 RANAP_IMSI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const OCTET_STRING_t *st = (const OCTET_STRING_t *)sptr;
+	size_t size;
 	
 	if(!sptr) {
 		_ASN_CTFAIL(app_key, td, sptr,
@@ -17,44 +19,41 @@ RANAP_IMSI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,
 		return -1;
 	}
 	
+	size = st->size;
 	
-	if(1 /* No applicable constraints whatsoever */) {
-		/* Nothing is here. See below */
+	if((size >= 3l && size <= 8l)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		_ASN_CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
 	}
-	
-	/* Replace with underlying type checker */
-	td->check_constraints = asn_DEF_RANAP_TBCD_STRING.check_constraints;
-	return td->check_constraints(td, sptr, ctfailcb, app_key);
 }
 
 /*
- * This type is implemented using RANAP_TBCD_STRING,
+ * This type is implemented using OCTET_STRING,
  * so here we adjust the DEF accordingly.
  */
 static void
 RANAP_IMSI_1_inherit_TYPE_descriptor(asn_TYPE_descriptor_t *td) {
-	td->free_struct    = asn_DEF_RANAP_TBCD_STRING.free_struct;
-	td->print_struct   = asn_DEF_RANAP_TBCD_STRING.print_struct;
-	td->check_constraints = asn_DEF_RANAP_TBCD_STRING.check_constraints;
-	td->ber_decoder    = asn_DEF_RANAP_TBCD_STRING.ber_decoder;
-	td->der_encoder    = asn_DEF_RANAP_TBCD_STRING.der_encoder;
-	td->xer_decoder    = asn_DEF_RANAP_TBCD_STRING.xer_decoder;
-	td->xer_encoder    = asn_DEF_RANAP_TBCD_STRING.xer_encoder;
-	td->uper_decoder   = asn_DEF_RANAP_TBCD_STRING.uper_decoder;
-	td->uper_encoder   = asn_DEF_RANAP_TBCD_STRING.uper_encoder;
-	td->aper_decoder   = asn_DEF_RANAP_TBCD_STRING.aper_decoder;
-	td->aper_encoder   = asn_DEF_RANAP_TBCD_STRING.aper_encoder;
-	/* The next four lines are here because of -fknown-extern-type */
-	td->tags           = asn_DEF_RANAP_TBCD_STRING.tags;
-	td->tags_count     = asn_DEF_RANAP_TBCD_STRING.tags_count;
-	td->all_tags       = asn_DEF_RANAP_TBCD_STRING.all_tags;
-	td->all_tags_count = asn_DEF_RANAP_TBCD_STRING.all_tags_count;
-	/* End of these lines */
+	td->free_struct    = asn_DEF_OCTET_STRING.free_struct;
+	td->print_struct   = asn_DEF_OCTET_STRING.print_struct;
+	td->check_constraints = asn_DEF_OCTET_STRING.check_constraints;
+	td->ber_decoder    = asn_DEF_OCTET_STRING.ber_decoder;
+	td->der_encoder    = asn_DEF_OCTET_STRING.der_encoder;
+	td->xer_decoder    = asn_DEF_OCTET_STRING.xer_decoder;
+	td->xer_encoder    = asn_DEF_OCTET_STRING.xer_encoder;
+	td->uper_decoder   = asn_DEF_OCTET_STRING.uper_decoder;
+	td->uper_encoder   = asn_DEF_OCTET_STRING.uper_encoder;
+	td->aper_decoder   = asn_DEF_OCTET_STRING.aper_decoder;
+	td->aper_encoder   = asn_DEF_OCTET_STRING.aper_encoder;
 	if(!td->per_constraints)
-		td->per_constraints = asn_DEF_RANAP_TBCD_STRING.per_constraints;
-	td->elements       = asn_DEF_RANAP_TBCD_STRING.elements;
-	td->elements_count = asn_DEF_RANAP_TBCD_STRING.elements_count;
-	td->specifics      = asn_DEF_RANAP_TBCD_STRING.specifics;
+		td->per_constraints = asn_DEF_OCTET_STRING.per_constraints;
+	td->elements       = asn_DEF_OCTET_STRING.elements;
+	td->elements_count = asn_DEF_OCTET_STRING.elements_count;
+	td->specifics      = asn_DEF_OCTET_STRING.specifics;
 }
 
 void
@@ -133,8 +132,11 @@ RANAP_IMSI_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td
 
 static asn_per_constraints_t asn_PER_type_RANAP_IMSI_constr_1 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
-	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },
+	{ APC_CONSTRAINED,	 3,  3,  3l,  8l }	/* (SIZE(3..8)) */,
 	0, 0	/* No PER value map */
+};
+static const ber_tlv_tag_t asn_DEF_RANAP_IMSI_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (4 << 2))
 };
 asn_TYPE_descriptor_t asn_DEF_RANAP_IMSI = {
 	"RANAP_IMSI",
@@ -150,11 +152,13 @@ asn_TYPE_descriptor_t asn_DEF_RANAP_IMSI = {
 	RANAP_IMSI_encode_uper,
 	RANAP_IMSI_decode_aper,
 	RANAP_IMSI_encode_aper,
-	CHOICE_outmost_tag,
-	0,	/* No effective tags (pointer) */
-	0,	/* No effective tags (count) */
-	0,	/* No tags (pointer) */
-	0,	/* No tags (count) */
+	0,	/* Use generic outmost tag fetcher */
+	asn_DEF_RANAP_IMSI_tags_1,
+	sizeof(asn_DEF_RANAP_IMSI_tags_1)
+		/sizeof(asn_DEF_RANAP_IMSI_tags_1[0]), /* 1 */
+	asn_DEF_RANAP_IMSI_tags_1,	/* Same as above */
+	sizeof(asn_DEF_RANAP_IMSI_tags_1)
+		/sizeof(asn_DEF_RANAP_IMSI_tags_1[0]), /* 1 */
 	&asn_PER_type_RANAP_IMSI_constr_1,
 	0, 0,	/* No members */
 	0	/* No specifics */

@@ -842,7 +842,7 @@ ImmediateMDT	::= SEQUENCE {
 	iE-Extensions		IE-Extensions			OPTIONAL
 }
 
-IMSI	::= TBCD-STRING (SIZE (3..8))
+IMSI	::= OCTET STRING (SIZE (3..8))
 -- Reference: 23.003
 
 IncludeVelocity		::= ENUMERATED {
