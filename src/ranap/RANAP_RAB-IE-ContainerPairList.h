@@ -11,7 +11,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_ProtocolIE-FieldPair.h"
+#include "RANAP_ProtocolIE-ContainerPair.h"
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 
@@ -21,7 +21,7 @@ extern "C" {
 
 /* RANAP_RAB-IE-ContainerPairList */
 typedef struct RANAP_RAB_IE_ContainerPairList {
-	A_SEQUENCE_OF(RANAP_ProtocolIE_FieldPair_t) list;
+	A_SEQUENCE_OF(RANAP_ProtocolIE_ContainerPair_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

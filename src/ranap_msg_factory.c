@@ -529,8 +529,10 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip, uin
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_SetupOrModifyItemFirst, &first);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_SetupOrModifyItemSecond, &second);
 
+	RANAP_ProtocolIE_ContainerPair_t *container_pair = CALLOC(1, sizeof(*container_pair));
 	/* Add the pair to the list of IEs of the RAB ass.req */
-	ASN_SEQUENCE_ADD(&ies.raB_SetupOrModifyList.list, pair);
+	ASN_SEQUENCE_ADD(container_pair, pair);
+	ASN_SEQUENCE_ADD(&ies.raB_SetupOrModifyList.list, container_pair);
 
 	/* encode the IEs into the actual assignment request:
 	 * ies -> out */
@@ -601,8 +603,11 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip, uint
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_SetupOrModifyItemFirst, &first);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_SetupOrModifyItemSecond, &second);
 
+	RANAP_ProtocolIE_ContainerPair_t *container_pair = CALLOC(1, sizeof(*container_pair));
 	/* Add the pair to the list of IEs of the RAB ass.req */
-	ASN_SEQUENCE_ADD(&ies.raB_SetupOrModifyList.list, pair);
+	ASN_SEQUENCE_ADD(container_pair, pair);
+	/* Add the pair to the list of IEs of the RAB ass.req */
+	ASN_SEQUENCE_ADD(&ies.raB_SetupOrModifyList.list, container_pair);
 
 	/* encode the IEs into the actual assignment request:
 	 * ies -> out */

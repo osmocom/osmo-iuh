@@ -543,7 +543,7 @@ ProtocolIE-FieldPair ::= SEQUENCE {
 ProtocolIE-ContainerPair ::= SEQUENCE (SIZE (0..maxProtocolIEs)) OF ProtocolIE-FieldPair
 
 RAB-IE-ContainerList		::= SEQUENCE (SIZE (1..maxNrOfRABs)) OF ProtocolIE-Container
-RAB-IE-ContainerPairList	::= SEQUENCE (SIZE (1..maxNrOfRABs)) OF ProtocolIE-FieldPair
+RAB-IE-ContainerPairList	::= SEQUENCE (SIZE (1..maxNrOfRABs)) OF ProtocolIE-ContainerPair
 ProtocolError-IE-ContainerList	::= SEQUENCE (SIZE (1..maxNrOfRABs)) OF ProtocolIE-Container
 IuSigConId-IE-ContainerList	::= SEQUENCE (SIZE (1..maxNrOfIuSigConIds)) OF ProtocolIE-Container
 DirectTransfer-IE-ContainerList	::= SEQUENCE (SIZE (1..maxNrOfDTs)) OF ProtocolIE-Container
