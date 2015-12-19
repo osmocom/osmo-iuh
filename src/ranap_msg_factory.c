@@ -441,7 +441,7 @@ static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint1
 	binding_id[1] = port & 0xff;
 	binding_id[2] = binding_id[3] = 0;
 
-	asn1_u32_to_bitstring(&tli->transportLayerAddress, ipbuf, htonl(ip));
+	asn1_u32_to_bitstring(&tli->transportLayerAddress, ipbuf, ip);
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_bindingID;
 	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.bindingID,
 				(const char *) binding_id, sizeof(binding_id));
@@ -453,9 +453,9 @@ static RANAP_TransportLayerInformation_t *new_transp_info_gtp(uint32_t ip, uint3
 {
 	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
 	uint32_t *ipbuf = CALLOC(1, sizeof(*ipbuf));
-	uint32_t binding_buf = htonl(tei);
+	uint32_t binding_buf = tei;
 
-	asn1_u32_to_bitstring(&tli->transportLayerAddress, ipbuf, htonl(ip));
+	asn1_u32_to_bitstring(&tli->transportLayerAddress, ipbuf, ip);
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_gTP_TEI;
 	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.bindingID,
 			     (const char *) &binding_buf, sizeof(binding_buf));
