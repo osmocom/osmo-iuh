@@ -482,7 +482,7 @@ static RANAP_UserPlaneInformation_t *new_upi(long mode, uint8_t mode_versions)
 static void assign_new_ra_id(RANAP_RAB_ID_t *id, uint8_t rab_id)
 {
 	uint8_t *buf = CALLOC(1, sizeof(*buf));
-	*buf = rab_id << 3;
+	*buf = rab_id;
 
 	id->buf = buf;
 	id->size = 1;
