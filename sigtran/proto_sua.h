@@ -18,10 +18,10 @@
  % along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* FIXME: Move this to libosmocore osmocom/core/gsm/protocol/sua.h */
+
 #pragma once
 #include <stdint.h>
-
-//#include <osmocom/ss7/xua.h>
 
 #define SUA_PPID	4
 #define SUA_PORT 	14001
