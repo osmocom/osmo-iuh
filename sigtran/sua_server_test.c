@@ -49,7 +49,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *link)
 	}
 
 	if (resp)
-		osmo_osmo_sua_user_link_down(link, resp);
+		osmo_sua_user_link_down(link, resp);
 
 	msgb_free(oph->msg);
 	return 0;
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 
 	user = osmo_sua_user_create(ctx, sccp_sap_up);
 
-	rc = sua_server_listen(user, "127.0.0.1", 2342);
+	rc = osmo_sua_server_listen(user, "127.0.0.1", 2342);
 	if (rc < 0) {
 		exit(1);
 	}

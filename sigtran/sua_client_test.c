@@ -20,7 +20,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *link)
 	}
 
 	if (resp)
-		osmo_osmo_sua_user_link_down(link, resp);
+		osmo_sua_user_link_down(link, resp);
 
 	msgb_free(oph->msg);
 	return 0;
@@ -39,12 +39,12 @@ int main(int argc, char **argv)
 
 	g_user = osmo_sua_user_create(ctx, sccp_sap_up);
 
-	rc = sua_client_connect(g_user, "127.0.0.1", 2342);
+	rc = osmo_sua_client_connect(g_user, "127.0.0.1", 2342);
 	if (rc < 0) {
 		exit(1);
 	}
 
-	g_link = sua_client_get_link(g_user);
+	g_link = osmo_sua_client_get_link(g_user);
 
 	int i = 8000;
 

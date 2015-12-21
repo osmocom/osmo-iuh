@@ -24,7 +24,7 @@ const struct log_info test_log_info = {
 	.num_cat = ARRAY_SIZE(log_cat),
 };
 
-int tx_unitdata(struct sua_link *link)
+int tx_unitdata(struct osmo_sua_link *link)
 {
 	struct msgb *msg = msgb_alloc(1024, "tx_unitdata");
 	struct osmo_scu_prim *prim;
@@ -40,7 +40,7 @@ int tx_unitdata(struct sua_link *link)
 	cur = msg->l2h = msgb_put(msg, 3);
 	cur[0] = 1; cur[1] = 2; cur[2] = 3;
 
-	return osmo_osmo_sua_user_link_down(link, &prim->oph);
+	return osmo_sua_user_link_down(link, &prim->oph);
 }
 
 static void sccp_make_addr_pc_ssn(struct osmo_sccp_addr *addr, uint32_t pc, uint32_t ssn)
@@ -70,10 +70,10 @@ struct osmo_prim_hdr *make_conn_req(uint32_t conn_id)
 	return &prim->oph;
 }
 
-int tx_conn_req(struct sua_link *link, uint32_t conn_id)
+int tx_conn_req(struct osmo_sua_link *link, uint32_t conn_id)
 {
 	struct osmo_prim_hdr *prim = make_conn_req(conn_id);
-	return osmo_osmo_sua_user_link_down(link, prim);
+	return osmo_sua_user_link_down(link, prim);
 }
 
 struct osmo_prim_hdr *
