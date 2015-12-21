@@ -1,4 +1,4 @@
-Osmocom Iuh expermientation code
+Osmocom Iuh experimentation code
 (C) 2015 by Harald Welte <laforge@gnumonks.org>
 
 This code is a playground for implementing something along the lines of
@@ -8,16 +8,29 @@ box'.
 
 h1. Building
 
-Just go to the 'src/' directory and type make.  As external library
-dependencies, you will need
+As external library dependencies, you will need
 * libosmocore from git://git.osmocom.org/libosmocore
 * libasn1c from git://git.osmocom.org/libasn1c
+* libsctp-dev (this is the package name in Debian)
+
+To bootstrap the build, in the root directory, run:
+
+    autoreconf --install
+
+After that, run the usual
+
+    ./configure [options]
+    make
+    [sudo] make install
 
 h1. Using
 
+Note: osmo-iuh is in active development (December 2015, January 2016) so below
+statements may outdate rapidly.
+
 there's not much to use yet.  But if you run the 'hnbgw' executable,
 it will open a listening SCTP socket and wait for incoming Iuh
-connections.  It will accept any HNB-REGITER-REQUEST, so the homeNodeB
+connections.  It will accept any HNB-REGISTER-REQUEST, so the homeNodeB
 should start to establish RUA and RANAP (which we haven't implemented
 yet).
 
