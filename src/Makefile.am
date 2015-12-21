@@ -11,6 +11,11 @@ bin_PROGRAMS = hnbgw
 hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c rua_encoder.c rua_decoder.c ranap_common.c rua_common.c hnbap_common.c iu_helpers.c asn1helpers.c hnbgw.c hnbgw_hnbap.c hnbgw_rua.c hnbgw_ranap.c ranap_decoder.c ranap_encoder.c ranap_msg_factory.c
 hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOVTY_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) $(COMMON_LDADD) hnbap/libosmo-asn1-hnbap.a rua/libosmo-asn1-rua.a ranap/libosmo-asn1-ranap.a
 
+ranap_ies_defs.h: ranap_encoder.c
+ranap_decoder.c: ranap_encoder.c
+
+rua_ies_defs.h: rua_encoder.c
+rua_decoder.c: rua_encoder.c
 
 hnbap_encoder.c hnbap_decoder.c hnbap_ies_defs.h: $(ASN1_ROOT)/hnbap/HNBAP-PDU-Contents.asn
 hnbap_encoder.c : $(ASN1_ROOT)/hnbap/HNBAP-PDU-Contents.asn
