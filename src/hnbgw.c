@@ -44,6 +44,8 @@
 #include <osmocom/vty/logging.h>
 #include <osmocom/vty/command.h>
 
+#include <osmocom/netif/stream.h>
+
 #include <osmocom/sigtran/sua.h>
 #include <osmocom/sigtran/protocol/sua.h>
 #include <osmocom/sigtran/sccp_sap.h>
@@ -197,7 +199,7 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 {
 	struct hnb_context *ctx = fd->data;
 	struct sctp_sndrcvinfo sinfo = {
-		.sinfo_ppid = htonl(msgb_ppid(msg)),
+		.sinfo_ppid = htonl(msgb_sctp_ppid(msg)),
 		.sinfo_stream = ctx->hnbap_stream,
 	};
 	int rc;

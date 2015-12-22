@@ -21,6 +21,7 @@
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/gsm/gsm48.h>
+#include <osmocom/netif/stream.h>
 
 #include <unistd.h>
 #include <errno.h>
@@ -41,7 +42,7 @@ static int hnbgw_hnbap_tx(struct hnb_context *ctx, struct msgb *msg)
 	if (!msg)
 		return -EINVAL;
 
-	msgb_ppid(msg) = IUH_PPI_HNBAP;
+	msgb_sctp_ppid(msg) = IUH_PPI_HNBAP;
 	return osmo_wqueue_enqueue(&ctx->wqueue, msg);
 }
 
