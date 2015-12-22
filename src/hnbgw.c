@@ -138,15 +138,16 @@ static int hnb_read_cb(struct osmo_fd *fd)
 		/* FIXME: clean up after disappeared HNB */
 		close(fd->fd);
 		osmo_fd_unregister(fd);
-		return rc;
+		goto out;
 	} else if (rc == 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Connection to HNB closed\n");
 		/* TODO: Remove all UEs from that connection */
 		close(fd->fd);
 		osmo_fd_unregister(fd);
 		fd->fd = -1;
+		rc = -1;
 
-		return -1;
+		goto out;
 	} else {
 		msgb_put(msg, rc);
 	}
@@ -182,6 +183,7 @@ static int hnb_read_cb(struct osmo_fd *fd)
 		break;
 	}
 
+out:
 	msgb_free(msg);
 	return rc;
 }
