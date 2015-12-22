@@ -19,5 +19,5 @@ hnbap_encoder.c hnbap_decoder.c hnbap_ies_defs.h: $(ASN1_ROOT)/hnbap/HNBAP-PDU-C
 rua_encoder.c rua_decoder.c rua_ies_defs.h: $(ASN1_ROOT)/rua/RUA-PDU-Contents.asn
 	$(ASN1TOSTRUCT) -p RUA_ -f $<
 
-ranap_encoder.c rua_decoder.c rua_ies_defs.h: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn
+ranap_encoder.c ranap_decoder.c ranap_ies_defs.h: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn
 	$(ASN1TOSTRUCT) -p RANAP_ -f $<
