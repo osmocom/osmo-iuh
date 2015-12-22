@@ -44,12 +44,17 @@
 #include <osmocom/vty/logging.h>
 #include <osmocom/vty/command.h>
 
+#include <osmocom/sigtran/sua.h>
+#include <osmocom/sigtran/protocol/sua.h>
+#include <osmocom/sigtran/sccp_sap.h>
+
 #include "hnbgw.h"
 #include "hnbgw_hnbap.h"
 #include "hnbgw_rua.h"
 
 static void *tall_hnb_ctx;
 static void *tall_ue_ctx;
+static void *tall_sua_ctx;
 void *talloc_asn1_ctx;
 
 struct hnb_gw g_hnb_gw = {
@@ -237,6 +242,20 @@ static int listen_fd_cb(struct osmo_fd *fd, unsigned int what)
 	return 0;
 }
 
+/* Entry point for primitives coming up from SCCP User SAP */
+static int sccp_sap_up(struct osmo_prim_hdr *oph, void *link)
+{
+	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) oph;
+
+	LOGP(DMAIN, LOGL_DEBUG, "sccp_sap_up(%s)\n", osmo_scu_prim_name(oph));
+
+	/* FIXME: Do something */
+
+	msgb_free(oph->msg);
+
+	return 0;
+}
+
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
 		.name = "DMAIN", .loglevel = LOGL_INFO, .enabled = 1,
@@ -247,6 +266,11 @@ static const struct log_info_cat log_cat[] = {
 		.name = "DHNBAP", .loglevel = LOGL_DEBUG, .enabled = 1,
 		.color = "",
 		.description = "Home Node B Application Part",
+	},
+	[DSUA] = {
+		.name = "DSUA", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.color = "",
+		.description = "SCCP User Adaptation",
 	},
 };
 
@@ -328,10 +352,13 @@ static void hnbgw_vty_init(void)
 
 int main(int argc, char **argv)
 {
+	struct osmo_sua_user *sua_user;
+	struct osmo_sua_link *sua_link;
 	int rc;
 
 	tall_hnb_ctx = talloc_named_const(NULL, 0, "hnb_context");
 	tall_ue_ctx = talloc_named_const(NULL, 0, "ue_context");
+	tall_sua_ctx = talloc_named_const(NULL, 0, "sua");
 	talloc_asn1_ctx = talloc_named_const(NULL, 0, "asn1_context");
 
 	g_hnb_gw.listen_fd.cb = listen_fd_cb;
@@ -351,6 +378,23 @@ int main(int argc, char **argv)
 	rc = telnet_init(NULL, &g_hnb_gw, 2323);
 	if (rc < 0) {
 		perror("Error binding VTY port");
+		exit(1);
+	}
+
+	osmo_sua_set_log_area(DSUA);
+	sua_user = osmo_sua_user_create(tall_sua_ctx, sccp_sap_up);
+	if (!sua_user) {
+		perror("Failed to init SUA");
+		exit(1);
+	}
+	rc = osmo_sua_client_connect(sua_user, "127.0.0.1", SUA_PORT);
+	if (rc < 0) {
+		perror("Failed to connect SUA");
+		exit(1);
+	}
+	sua_link = osmo_sua_client_get_link(sua_user);
+	if (!sua_link) {
+		perror("Failed to get SUA link");
 		exit(1);
 	}
 

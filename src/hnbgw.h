@@ -12,6 +12,7 @@
 enum {
 	DMAIN,
 	DHNBAP,
+	DSUA,
 };
 
 
