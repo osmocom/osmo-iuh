@@ -49,7 +49,7 @@ static int ranap_tx_reset_ack(struct hnb_context *hnb,
 	memset(&out, 0, sizeof(out));
 	rc = ranap_encode_resetacknowledgeies(&out, &ies);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "error encoding reset ack IEs: %d\n", rc);
+		LOGP(DRANAP, LOGL_ERROR, "error encoding reset ack IEs: %d\n", rc);
 		return rc;
 	}
 
@@ -76,7 +76,7 @@ static int ranap_rx_init_reset(struct hnb_context *hnb, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	DEBUGP(DMAIN, "RESET.req\n");
+	DEBUGP(DRANAP, "RESET.req\n");
 
 	/* FIXME: Actually we have to wait for some guard time? */
 	/* FIXME: Reset all resources related to this HNB/RNC */
@@ -151,7 +151,7 @@ static int ranap_rx_dt(struct hnb_context *hnb, ANY_t *in)
 		/* FIXME: Update RAC associated with UE */
 	}
 
-	DEBUGP(DMAIN, "DirectTransfer: %s\n",
+	DEBUGP(DRANAP, "DirectTransfer: %s\n",
 		osmo_hexdump(ies.nas_pdu.buf, ies.nas_pdu.size));
 	/* FIXME: hand NAS PDU into MSC */
 }
@@ -201,7 +201,7 @@ int hnbgw_ranap_rx(struct msgb *msg, uint8_t *data, size_t len)
 	dec_ret = aper_decode(NULL,&asn_DEF_RANAP_RANAP_PDU, (void **) &pdu,
 			      data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
+		LOGP(DRANAP, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
 		return rc;
 	}
 

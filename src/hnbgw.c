@@ -274,6 +274,16 @@ static const struct log_info_cat log_cat[] = {
 		.color = "",
 		.description = "SCCP User Adaptation",
 	},
+	[DRUA] = {
+		.name = "DRUA", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.color = "",
+		.description = "RANAP User Adaptation",
+	},
+	[DRANAP] = {
+		.name = "DRANAP", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.color = "",
+		.description = "RAN Application Part",
+	},
 };
 
 static const struct log_info hnbgw_log_info = {

@@ -111,7 +111,7 @@ static struct msgb *_rua_gen_msg(RUA_RUA_PDU_t *pdu)
 	rval = aper_encode_to_buffer(&asn_DEF_RUA_RUA_PDU, pdu,
 				       msg->data, msgb_tailroom(msg));
 	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type: %s\n",
+		LOGP(DRUA, LOGL_ERROR, "Error encoding type: %s\n",
 				rval.failed_type->name);
 
 	}
@@ -137,7 +137,7 @@ struct msgb *rua_generate_initiating_message(
 	pdu.choice.initiatingMessage.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.initiatingMessage.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRUA, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
@@ -160,7 +160,7 @@ struct msgb *rua_generate_successful_outcome(
 	pdu.choice.successfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRUA, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
@@ -183,7 +183,7 @@ struct msgb *rua_generate_unsuccessful_outcome(
 	pdu.choice.unsuccessfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.unsuccessfulOutcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRUA, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
@@ -208,7 +208,7 @@ RUA_IE_t *rua_new_ie(RUA_ProtocolIE_ID_t id,
 
 	rc = ANY_fromType_aper(&buff->value, type, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRUA, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		FREEMEM(buff);
 		return NULL;
 	}

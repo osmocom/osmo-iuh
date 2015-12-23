@@ -126,7 +126,7 @@ static struct msgb *_hnbap_gen_msg(HNBAP_PDU_t *pdu)
 	rval = aper_encode_to_buffer(&asn_DEF_HNBAP_PDU, pdu,
 				       msg->data, msgb_tailroom(msg));
 	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type: %s\n",
+		LOGP(DHNBAP, LOGL_ERROR, "Error encoding type: %s\n",
 				rval.failed_type->name);
 
 	}
@@ -152,7 +152,7 @@ struct msgb *hnbap_generate_initiating_message(
 	pdu.choice.initiatingMessage.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.initiatingMessage.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DHNBAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
@@ -179,7 +179,7 @@ struct msgb *hnbap_generate_successful_outcome(
 	pdu.choice.successfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DHNBAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
@@ -206,7 +206,7 @@ struct msgb *hnbap_generate_unsuccessful_outcome(
 	pdu.choice.unsuccessfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.unsuccessfulOutcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DHNBAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
@@ -234,7 +234,7 @@ IE_t *hnbap_new_ie(ProtocolIE_ID_t id,
 
 	rc = ANY_fromType_aper(&buff->value, type, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DHNBAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		FREEMEM(buff);
 		return NULL;
 	}

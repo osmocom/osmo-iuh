@@ -43,7 +43,7 @@ static struct msgb *_ranap_gen_msg(RANAP_RANAP_PDU_t *pdu)
 	rval = aper_encode_to_buffer(&asn_DEF_RANAP_RANAP_PDU, pdu,
 				       msg->data, msgb_tailroom(msg));
 	if (rval.encoded < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error encoding type: %s\n",
+		LOGP(DRANAP, LOGL_ERROR, "Error encoding type: %s\n",
 				rval.failed_type->name);
 
 	}
@@ -68,7 +68,7 @@ struct msgb *ranap_generate_initiating_message(e_RANAP_ProcedureCode procedureCo
 	pdu.choice.initiatingMessage.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.initiatingMessage.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRANAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
@@ -95,7 +95,7 @@ struct msgb *ranap_generate_successful_outcome(
 	pdu.choice.successfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRANAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
@@ -122,7 +122,7 @@ struct msgb *ranap_generate_unsuccessful_outcome(
 	pdu.choice.unsuccessfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.unsuccessfulOutcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRANAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
@@ -149,7 +149,7 @@ struct msgb *ranap_generate_outcome(
 	pdu.choice.outcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.outcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRANAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		return NULL;
 	}
 
@@ -177,7 +177,7 @@ RANAP_IE_t *ranap_new_ie(RANAP_ProtocolIE_ID_t id,
 
 	rc = ANY_fromType_aper(&buff->value, type, sptr);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRANAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		FREEMEM(buff);
 		return NULL;
 	}
@@ -211,14 +211,14 @@ RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
 
 	rc = ANY_fromType_aper(&buff->firstValue, type1, sptr1);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRANAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		FREEMEM(buff);
 		return NULL;
 	}
 
 	rc = ANY_fromType_aper(&buff->secondValue, type2, sptr2);
 	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DRANAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
 		ASN_STRUCT_FREE(asn_DEF_RANAP_ProtocolIE_FieldPair, buff);
 		return NULL;
 	}

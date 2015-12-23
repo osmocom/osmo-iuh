@@ -266,7 +266,7 @@ int hnbgw_rua_rx(struct hnb_context *hnb, struct msgb *msg)
 	dec_ret = aper_decode(NULL, &asn_DEF_RUA_RUA_PDU, (void **) &pdu,
 			      msg->data, msgb_length(msg), 0, 0);
 	if (dec_ret.code != RC_OK) {
-		LOGP(DMAIN, LOGL_ERROR, "Error in ASN.1 decode\n");
+		LOGP(DRUA, LOGL_ERROR, "Error in ASN.1 decode\n");
 		return rc;
 	}
 
