@@ -3,9 +3,12 @@
 #include <osmocom/core/select.h>
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/write_queue.h>
+#include <osmocom/core/timer.h>
+#include <osmocom/sigtran/sccp_sap.h>
 
 #define DEBUG
 #include <osmocom/core/logging.h>
+
 
 enum {
 	DMAIN,
@@ -39,6 +42,37 @@ struct umts_cell_id {
 
 struct hnb_gw;
 
+enum hnbgw_cnlink_state {
+	/* we have just been initialized or were disconnected */
+	CNLINK_S_NULL,
+	/* establishment of the SUA/SCCP link is pending */
+	CNLINK_S_EST_PEND,
+	/* establishment of the SUA/SCCP link was confirmed */
+	CNLINK_S_EST_CONF,
+	/* we have esnt the RANAP RESET and wait for the ACK */
+	CNLINK_S_EST_RST_TX_WAIT_ACK,
+	/* we have received the RANAP RESET ACK and are active */
+	CNLINK_S_EST_ACTIVE,
+};
+
+struct hnbgw_cnlink {
+	struct llist_head list;
+	enum hnbgw_cnlink_state state;
+	struct hnb_gw *gw;
+	/* are we a PS connection (1) or CS (0) */
+	int is_ps;
+	/* timer for re-transmitting the RANAP Reset */
+	struct osmo_timer_list T_RafC;
+	/* reference to the SCCP User SAP by which we communicate */
+	struct osmo_sua_link *sua_link;
+	struct osmo_sccp_addr local_addr;
+	struct osmo_sccp_addr remote_addr;
+	uint32_t next_conn_id;
+
+	/* linked list of hnbgw_context_map */
+	struct llist_head map_list;
+};
+
 struct hnb_context {
 	/*! Entry in HNB-global list of HNB */
 	struct llist_head list;
@@ -55,6 +89,9 @@ struct hnb_context {
 	uint16_t hnbap_stream;
 	/*! SCTP stream ID for RUA */
 	uint16_t rua_stream;
+
+	/* linked list of hnbgw_context_map */
+	struct llist_head map_list;
 };
 
 struct ue_context {
@@ -80,6 +117,7 @@ struct hnb_gw {
 	struct osmo_fd listen_fd;
 	struct llist_head hnb_list;
 	struct llist_head ue_list;
+	struct llist_head cn_list;
 	uint32_t next_ue_ctx_id;
 };
 
@@ -89,3 +127,6 @@ struct ue_context *ue_context_by_id(uint32_t id);
 struct ue_context *ue_context_by_imsi(const char *imsi);
 struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi);
 void ue_context_free(struct ue_context *ue);
+
+struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, int new_fd);
+void hnb_context_release(struct hnb_context *ctx);

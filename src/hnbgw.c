@@ -53,6 +53,7 @@
 #include "hnbgw.h"
 #include "hnbgw_hnbap.h"
 #include "hnbgw_rua.h"
+#include "context_map.h"
 
 static void *tall_hnb_ctx;
 static void *tall_ue_ctx;
@@ -210,6 +211,47 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 	return rc;
 }
 
+struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, int new_fd)
+{
+	struct hnb_context *ctx;
+
+	ctx = talloc_zero(tall_hnb_ctx, struct hnb_context);
+	if (!ctx)
+		return NULL;
+
+	ctx->gw = gw;
+	osmo_wqueue_init(&ctx->wqueue, 16);
+	ctx->wqueue.bfd.data = ctx;
+	ctx->wqueue.bfd.fd = new_fd;
+	ctx->wqueue.bfd.when = BSC_FD_READ;
+	ctx->wqueue.read_cb = hnb_read_cb;
+	ctx->wqueue.write_cb = hnb_write_cb;
+	osmo_fd_register(&ctx->wqueue.bfd);
+
+	llist_add_tail(&ctx->list, &gw->hnb_list);
+}
+
+void hnb_context_release(struct hnb_context *ctx)
+{
+	struct hnbgw_context_map *map, *map2;
+
+	/* remove from the list of HNB contexts */
+	llist_del(&ctx->list);
+
+	/* deactivate all context maps */
+	llist_for_each_entry_safe(map, map2, &ctx->map_list, hnb_list) {
+		/* remove it from list, as HNB context will soon be
+		 * gone.  Let's hope the seccond osmo_llist_del in the
+		 * map garbage collector wors fine? */
+		llist_del(&map->hnb_list);
+		context_map_deactivate(map);
+	}
+	/* FIXME: flush write queue items */
+	osmo_fd_unregister(&ctx->wqueue.bfd);
+
+	talloc_free(ctx);
+}
+
 /*! call-back when the listen FD has something to read */
 static int listen_fd_cb(struct osmo_fd *fd, unsigned int what)
 {
@@ -226,20 +268,9 @@ static int listen_fd_cb(struct osmo_fd *fd, unsigned int what)
 
 	LOGP(DMAIN, LOGL_INFO, "SCTP Connection accept()ed\n");
 
-	ctx = talloc_zero(tall_hnb_ctx, struct hnb_context);
+	ctx = hnb_context_alloc(gw, new_fd);
 	if (!ctx)
 		return -ENOMEM;
-
-	ctx->gw = gw;
-	osmo_wqueue_init(&ctx->wqueue, 16);
-	ctx->wqueue.bfd.data = ctx;
-	ctx->wqueue.bfd.fd = new_fd;
-	ctx->wqueue.bfd.when = BSC_FD_READ;
-	ctx->wqueue.read_cb = hnb_read_cb;
-	ctx->wqueue.write_cb = hnb_write_cb;
-	osmo_fd_register(&ctx->wqueue.bfd);
-
-	llist_add_tail(&ctx->list, &gw->hnb_list);
 
 	return 0;
 }
@@ -379,6 +410,8 @@ int main(int argc, char **argv)
 	g_hnb_gw.next_ue_ctx_id = 23;
 	INIT_LLIST_HEAD(&g_hnb_gw.hnb_list);
 	INIT_LLIST_HEAD(&g_hnb_gw.ue_list);
+
+	context_map_init(&g_hnb_gw);
 
 	rc = osmo_init_logging(&hnbgw_log_info);
 	if (rc < 0)
