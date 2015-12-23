@@ -1,4 +1,4 @@
-AM_CFLAGS = $(OSMOVTY_CFLAGS) $(OSMOCORE_CFLAGS) $(OSMOGSM_CFLAGS) $(ASN1C_CFLAGS) -g -I$(top_builddir)/src -I$(top_builddir)/src/hnbap/
+AM_CFLAGS = $(OSMOVTY_CFLAGS) $(OSMOCORE_CFLAGS) $(OSMOGSM_CFLAGS) $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) -g -I$(top_builddir)/src -I$(top_builddir)/src/hnbap/
 
 COMMON_LIBS = $(OSMOVTY_LIBS) $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) -lsctp
 

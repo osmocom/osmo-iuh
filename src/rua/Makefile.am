@@ -72,7 +72,7 @@ ASN_MODULE_INC=	\
 	RUA_PrivateMessage.h	\
 	RUA_IE.h
 
-AM_CFLAGS = $(ASN1C_CFLAGS) -I.
+AM_CFLAGS = $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS) -I.
 
 noinst_LIBRARIES=libosmo-asn1-rua.a
 libosmo_asn1_rua_a_SOURCES=$(ASN_MODULE_SOURCES)
