@@ -64,6 +64,7 @@ struct hnbgw_cnlink {
 	/* timer for re-transmitting the RANAP Reset */
 	struct osmo_timer_list T_RafC;
 	/* reference to the SCCP User SAP by which we communicate */
+	struct osmo_sua_user *sua_user;
 	struct osmo_sua_link *sua_link;
 	struct osmo_sccp_addr local_addr;
 	struct osmo_sccp_addr remote_addr;
@@ -115,16 +116,22 @@ struct hnb_gw {
 	} config;
 	/*! SCTP listen socket for incoming connections */
 	struct osmo_fd listen_fd;
+	/* list of struct hnb_context */
 	struct llist_head hnb_list;
+	/* list of struct ue_context */
 	struct llist_head ue_list;
+	/* list of struct hnbgw_cnlink */
 	struct llist_head cn_list;
+	/* next availble UE Context ID */
 	uint32_t next_ue_ctx_id;
+
+	/* currently active CN links for CS and PS */
+	struct hnbgw_cnlink *cnlink_cs;
+	struct hnbgw_cnlink *cnlink_ps;
 };
 
-extern struct hnb_gw g_hnb_gw;
-
-struct ue_context *ue_context_by_id(uint32_t id);
-struct ue_context *ue_context_by_imsi(const char *imsi);
+struct ue_context *ue_context_by_id(struct hnb_gw *gw, uint32_t id);
+struct ue_context *ue_context_by_imsi(struct hnb_gw *gw, const char *imsi);
 struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi);
 void ue_context_free(struct ue_context *ue);
 

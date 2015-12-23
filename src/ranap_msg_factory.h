@@ -1,4 +1,9 @@
-#pragma once 
+#pragma once
+
+#include <stdint.h>
+#include "ranap/RANAP_Cause.h"
+#include "ranap/RANAP_CN-DomainIndicator.h"
+#include "ranap/RANAP_GlobalRNC-ID.h"
 
 /*! \brief generate RANAP DIRECT TRANSFER message */
 struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas_len);
@@ -20,3 +25,11 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip, uin
 
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for PS (data) */
 struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip, uint32_t gtp_tei);
+
+/*! \brief generate RANAP RESET message */
+struct msgb *ranap_new_msg_reset(RANAP_CN_DomainIndicator_t domain,
+				 RANAP_Cause_t *cause);
+
+/*! \brief generate RANAP RESET ACK message */
+struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
+				     RANAP_GlobalRNC_ID_t *rnc_id);

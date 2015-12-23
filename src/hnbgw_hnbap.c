@@ -169,7 +169,7 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 	DEBUGP(DHNBAP, "UE-REGSITER-REQ ID_type=%d imsi=%s cause=%ld\n",
 		ies.uE_Identity.present, imsi, ies.registration_Cause);
 
-	ue = ue_context_by_imsi(imsi);
+	ue = ue_context_by_imsi(ctx->gw, imsi);
 	if (!ue)
 		ue = ue_context_alloc(ctx, imsi);
 
@@ -193,7 +193,7 @@ static int hnbgw_rx_ue_deregister(struct hnb_context *ctx, ANY_t *in)
 	DEBUGP(DHNBAP, "UE-DE-REGSITER context=%ld cause=%ld\n",
 		ctxid, ies.cause);
 
-	ue = ue_context_by_id(ctxid);
+	ue = ue_context_by_id(ctx->gw, ctxid);
 	if (ue)
 		ue_context_free(ue);
 

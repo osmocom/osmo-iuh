@@ -38,6 +38,78 @@ static long *new_long(long in)
 	return out;
 }
 
+/*! \brief generate RANAP RESET message */
+struct msgb *ranap_new_msg_reset(RANAP_CN_DomainIndicator_t domain,
+				 RANAP_Cause_t *cause)
+{
+	RANAP_ResetIEs_t ies;
+	RANAP_Reset_t out;
+	struct msgb *msg;
+	int rc;
+
+	memset(&ies, 0, sizeof(ies));
+	ies.cN_DomainIndicator = domain;
+	if (cause)
+		memcpy(&ies.cause, cause, sizeof(ies.cause));
+
+	memset(&out, 0, sizeof(out));
+	rc = ranap_encode_reseties(&out, &ies);
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding reset IEs: %d\n", rc);
+		return NULL;
+	}
+
+	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_Reset,
+						RANAP_Criticality_reject,
+						&asn_DEF_RANAP_Reset,
+						&out);
+
+	/* release dynamic allocations attached to dt */
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_Reset, &out);
+
+	return msg;
+}
+
+/*! \brief generate RANAP RESET ACK message */
+struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
+				     RANAP_GlobalRNC_ID_t *rnc_id)
+{
+	RANAP_ResetAcknowledgeIEs_t ies;
+	RANAP_ResetAcknowledge_t out;
+	struct msgb *msg;
+	int rc;
+
+	memset(&ies, 0, sizeof(ies));
+	ies.cN_DomainIndicator = domain;
+
+	/* The RNC shall include the globalRNC_ID in the RESET
+	 * ACKNOWLEDGE message to the CN */
+	if (rnc_id) {
+		ies.presenceMask = RESETACKNOWLEDGEIES_RANAP_GLOBALRNC_ID_PRESENT;
+		/* FIXME: Copy PLMN Identity TBCD-String */
+		ies.globalRNC_ID.rNC_ID = rnc_id->rNC_ID;
+	}
+
+	/* FIXME: Do we need criticalityDiagnostics */
+
+	memset(&out, 0, sizeof(out));
+	rc = ranap_encode_resetacknowledgeies(&out, &ies);
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding reset ack IEs: %d\n", rc);
+		return NULL;
+	}
+
+	msg = ranap_generate_successful_outcome(RANAP_ProcedureCode_id_Reset,
+						RANAP_Criticality_reject,
+						&asn_DEF_RANAP_ResetAcknowledge,
+						&out);
+
+	/* release dynamic allocations attached to dt */
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_ResetAcknowledge, &out);
+
+	return msg;
+}
+
 /*! \brief generate RANAP DIRECT TRANSFER message */
 struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas_len)
 {

@@ -23,6 +23,9 @@
 #include <osmocom/core/utils.h>
 #include <osmocom/netif/stream.h>
 
+#include <osmocom/sigtran/sccp_sap.h>
+#include <osmocom/sigtran/sua.h>
+
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
@@ -33,6 +36,7 @@
 #include "hnbgw_ranap.h"
 #include "rua_common.h"
 #include "rua_ies_defs.h"
+#include "context_map.h"
 
 static int hnbgw_rua_tx(struct hnb_context *ctx, struct msgb *msg)
 {
@@ -67,9 +71,9 @@ int rua_tx_udt(struct hnb_context *hnb, const uint8_t *data, unsigned int len)
 					      &out);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_ConnectionlessTransfer, &out);
 
-	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+	DEBUGP(DRUA, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
 
-	return hnbgw_rua_tx(msg->dst, msg);
+	return hnbgw_rua_tx(hnb, msg);
 }
 
 int rua_tx_dt(struct hnb_context *hnb, int is_ps, uint32_t context_id,
@@ -103,7 +107,7 @@ int rua_tx_dt(struct hnb_context *hnb, int is_ps, uint32_t context_id,
 					      &out);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_DirectTransfer, &out);
 
-	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+	DEBUGP(DRUA, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
 
 	return hnbgw_rua_tx(hnb, msg);
 }
@@ -143,16 +147,130 @@ int rua_tx_disc(struct hnb_context *hnb, int is_ps, uint32_t context_id,
 					      &out);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_Disconnect, &out);
 
-	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+	DEBUGP(DRUA, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
 
 	return hnbgw_rua_tx(hnb, msg);
 }
 
 
 
+/* forward a RUA message to the SCCP User API to SCCP/SUA */
+static int rua_to_scu(struct hnb_context *hnb, struct hnbgw_cnlink *cn,
+		      enum osmo_scu_prim_type type,
+		      uint32_t context_id, uint32_t cause,
+		      const uint8_t *data, unsigned int len)
+{
+	struct msgb *msg = msgb_alloc(1500, "rua_to_sua");
+	struct osmo_scu_prim *prim;
+	struct hnbgw_context_map *map;
+	int rc;
+
+	prim = (struct osmo_scu_prim *) msgb_put(msg, sizeof(*prim));
+	osmo_prim_init(&prim->oph, SCCP_SAP_USER, type, PRIM_OP_REQUEST, msg);
+
+	map = context_map_alloc_by_hnb(hnb, context_id, cn);
+
+	/* add primitive header */
+	switch (type) {
+	case OSMO_SCU_PRIM_N_CONNECT:
+		prim->u.connect.called_addr;
+		prim->u.connect.calling_addr;
+		prim->u.connect.sccp_class = 2;
+		prim->u.connect.conn_id = map->scu_conn_id;
+		break;
+	case OSMO_SCU_PRIM_N_DATA:
+		prim->u.data.conn_id = map->scu_conn_id;
+		break;
+	case OSMO_SCU_PRIM_N_DISCONNECT:
+		prim->u.disconnect.conn_id = map->scu_conn_id;
+		prim->u.disconnect.cause = cause;
+		break;
+	case OSMO_SCU_PRIM_N_UNITDATA:
+		prim->u.unitdata.called_addr;
+		prim->u.unitdata.calling_addr;
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	/* add optional data section, if needed */
+	if (data && len) {
+		msg->l2h = msgb_put(msg, len);
+		memcpy(msg->l2h, data, len);
+	}
+
+	rc = osmo_sua_user_link_down(cn->sua_link, &prim->oph);
+
+	return rc;
+}
+
+static uint32_t rua_to_scu_cause(RUA_Cause_t *in)
+{
+	/* FIXME: Implement this! */
+#if 0
+	switch (in->present) {
+	case RUA_Cause_PR_NOTHING:
+		break;
+	case RUA_Cause_PR_radioNetwork:
+		switch (in->choice.radioNetwork) {
+		case RUA_CauseRadioNetwork_normal:
+		case RUA_CauseRadioNetwork_connect_failed:
+		case RUA_CauseRadioNetwork_network_release:
+		case RUA_CauseRadioNetwork_unspecified:
+		}
+		break;
+	case RUA_Cause_PR_transport:
+		switch (in->choice.transport) {
+		case RUA_CauseTransport_transport_resource_unavailable:
+			break;
+		case RUA_CauseTransport_unspecified:
+			break;
+		}
+		break;
+	case RUA_Cause_PR_protocol:
+		switch (in->choice.protocol) {
+		case RUA_CauseProtocol_transfer_syntax_error:
+			break;
+		case RUA_CauseProtocol_abstract_syntax_error_reject:
+			break;
+		case RUA_CauseProtocol_abstract_syntax_error_ignore_and_notify:
+			break;
+		case RUA_CauseProtocol_message_not_compatible_with_receiver_state:
+			break;
+		case RUA_CauseProtocol_semantic_error:
+			break;
+		case RUA_CauseProtocol_unspecified:
+			break;
+		case RUA_CauseProtocol_abstract_syntax_error_falsely_constructed_message:
+			break;
+		}
+		break;
+	case RUA_Cause_PR_misc:
+		switch (in->choice.misc) {
+		case RUA_CauseMisc_processing_overload:
+			break;
+		case RUA_CauseMisc_hardware_failure:
+			break;
+		case RUA_CauseMisc_o_and_m_intervention:
+			break;
+		case RUA_CauseMisc_unspecified:
+			break;
+		}
+		break;
+	default:
+		break;
+	}
+#else
+	return 0;
+#endif
+
+}
+
 static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 {
 	RUA_ConnectIEs_t ies;
+	struct hnb_context *hnb = msg->dst;
+	struct hnbgw_cnlink *cn;
 	uint32_t context_id;
 	int rc;
 
@@ -162,11 +280,24 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 
 	context_id = asn1bitstr_to_u32(&ies.context_ID);
 
-	DEBUGP(DMAIN, "Connect.req(ctx=0x%x, %s)\n", context_id,
+	/* route to CS (MSC) or PS (SGSN) domain */
+	switch (ies.cN_DomainIndicator) {
+	case RUA_CN_DomainIndicator_cs_domain:
+		cn = hnb->gw->cnlink_cs;
+		break;
+	case RUA_CN_DomainIndicator_ps_domain:
+		cn = hnb->gw->cnlink_ps;
+		break;
+	}
+
+	DEBUGP(DRUA, "Connect.req(ctx=0x%x, %s)\n", context_id,
 		ies.establishment_Cause == RUA_Establishment_Cause_emergency_call
 		? "emergency" : "normal");
-	/* FIXME: route to CS (MSC) or PS (SGSN) domain */
-	rc = hnbgw_ranap_rx(msg, ies.ranaP_Message.buf, ies.ranaP_Message.size);
+
+	rc = rua_to_scu(hnb, cn, OSMO_SCU_PRIM_N_CONNECT,
+			context_id, 0, ies.ranaP_Message.buf,
+			ies.ranaP_Message.size);
+	/* FIXME: what to do with the asn1c-allocated memory */
 
 	return rc;
 }
@@ -174,7 +305,12 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 {
 	RUA_DisconnectIEs_t ies;
+	struct hnb_context *hnb = msg->dst;
+	struct hnbgw_cnlink *cn;
 	uint32_t context_id;
+	uint32_t scu_cause;
+	uint8_t *ranap_data = NULL;
+	unsigned int ranap_len = 0;
 	int rc;
 
 	rc = rua_decode_disconnecties(&ies, in);
@@ -182,20 +318,38 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 		return rc;
 
 	context_id = asn1bitstr_to_u32(&ies.context_ID);
+	scu_cause = rua_to_scu_cause(&ies.cause);
 
-	DEBUGP(DMAIN, "Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
+	DEBUGP(DRUA, "Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
 		rua_cause_str(&ies.cause));
-	if (ies.presenceMask & DISCONNECTIES_RUA_RANAP_MESSAGE_PRESENT)
-		rc = hnbgw_ranap_rx(msg, ies.ranaP_Message.buf,
-				    ies.ranaP_Message.size);
 
-	/* FIXME */
+	/* route to CS (MSC) or PS (SGSN) domain */
+	switch (ies.cN_DomainIndicator) {
+	case RUA_CN_DomainIndicator_cs_domain:
+		cn = hnb->gw->cnlink_cs;
+		break;
+	case RUA_CN_DomainIndicator_ps_domain:
+		cn = hnb->gw->cnlink_ps;
+		break;
+	}
+
+	if (ies.presenceMask & DISCONNECTIES_RUA_RANAP_MESSAGE_PRESENT) {
+		ranap_data = ies.ranaP_Message.buf;
+		ranap_len = ies.ranaP_Message.size;
+	}
+
+	rc = rua_to_scu(hnb, cn, OSMO_SCU_PRIM_N_DISCONNECT,
+			context_id, scu_cause, ranap_data, ranap_len);
+	/* FIXME: what to do with the asn1c-allocated memory */
+
 	return rc;
 }
 
 static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 {
 	RUA_DirectTransferIEs_t ies;
+	struct hnb_context *hnb = msg->dst;
+	struct hnbgw_cnlink *cn;
 	uint32_t context_id;
 	int rc;
 
@@ -205,9 +359,22 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 
 	context_id = asn1bitstr_to_u32(&ies.context_ID);
 
-	DEBUGP(DMAIN, "Data.req(ctx=0x%x)\n", context_id);
-	/* FIXME */
-	rc = hnbgw_ranap_rx(msg, ies.ranaP_Message.buf, ies.ranaP_Message.size);
+	DEBUGP(DRUA, "Data.req(ctx=0x%x)\n", context_id);
+
+	/* route to CS (MSC) or PS (SGSN) domain */
+	switch (ies.cN_DomainIndicator) {
+	case RUA_CN_DomainIndicator_cs_domain:
+		cn = hnb->gw->cnlink_cs;
+		break;
+	case RUA_CN_DomainIndicator_ps_domain:
+		cn = hnb->gw->cnlink_ps;
+		break;
+	}
+
+	rc = rua_to_scu(hnb, cn, OSMO_SCU_PRIM_N_DATA,
+			context_id, 0, ies.ranaP_Message.buf,
+			ies.ranaP_Message.size);
+	/* FIXME: what to do with the asn1c-allocated memory */
 
 	return rc;
 
@@ -216,17 +383,23 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 static int rua_rx_init_udt(struct msgb *msg, ANY_t *in)
 {
 	RUA_ConnectionlessTransferIEs_t ies;
+	RUA_CN_DomainIndicator_t domain;
 	int rc;
 
 	rc = rua_decode_connectionlesstransferies(&ies, in);
 	if (rc < 0)
 		return rc;
 
-	DEBUGP(DMAIN, "UData.req()\n");
+	DEBUGP(DRUA, "UData.req()\n");
 
-	/* FIXME: pass on to RANAP */
+	/* according tot the spec, we can primarily receive Overload,
+	 * Reset, Reset ACK, Error Indication, reset Resource, Reset
+	 * Resurce Acknowledge as connecitonless RANAP.  There are some
+	 * more messages regarding Information Transfer, Direct
+	 * Information Transfer and Uplink Information Trnansfer that we
+	 * can ignore.  In either case, it is RANAP that we need to
+	 * decode... */
 	rc = hnbgw_ranap_rx(msg, ies.ranaP_Message.buf, ies.ranaP_Message.size);
-	/* FIXME: what to do with the asn1c-allocated memory */
 
 	return rc;
 }
@@ -241,6 +414,9 @@ static int rua_rx_init_err_ind(struct msgb *msg, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
+	DEBUGP(DRUA, "UData.ErrorInd()\n");
+
+	return rc;
 }
 
 static int rua_rx_initiating_msg(struct msgb *msg, RUA_InitiatingMessage_t *imsg)
@@ -272,12 +448,12 @@ static int rua_rx_initiating_msg(struct msgb *msg, RUA_InitiatingMessage_t *imsg
 
 static int rua_rx_successful_outcome_msg(struct msgb *msg, RUA_SuccessfulOutcome_t *in)
 {
-
+	/* FIXME */
 }
 
 static int rua_rx_unsuccessful_outcome_msg(struct msgb *msg, RUA_UnsuccessfulOutcome_t *in)
 {
-
+	/* FIXME */
 }
 
 
@@ -326,5 +502,5 @@ int hnbgw_rua_rx(struct hnb_context *hnb, struct msgb *msg)
 
 int hnbgw_rua_init(void)
 {
-
+	return 0;
 }

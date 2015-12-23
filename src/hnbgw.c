@@ -53,24 +53,40 @@
 #include "hnbgw.h"
 #include "hnbgw_hnbap.h"
 #include "hnbgw_rua.h"
+#include "hnbgw_cn.h"
 #include "context_map.h"
 
 static void *tall_hnb_ctx;
-static void *tall_ue_ctx;
-static void *tall_sua_ctx;
 void *talloc_asn1_ctx;
 
-struct hnb_gw g_hnb_gw = {
-	.config = {
-		.iuh_listen_port = IUH_DEFAULT_SCTP_PORT,
-	},
-};
+static struct hnb_gw *g_hnb_gw;
 
-struct ue_context *ue_context_by_id(uint32_t id)
+static int listen_fd_cb(struct osmo_fd *fd, unsigned int what);
+
+static struct hnb_gw *hnb_gw_create(void *ctx)
+{
+	struct hnb_gw *gw = talloc_zero(ctx, struct hnb_gw);
+
+	gw->config.iuh_listen_port = IUH_DEFAULT_SCTP_PORT;
+
+	gw->listen_fd.cb = listen_fd_cb;
+	gw->listen_fd.when = BSC_FD_READ;
+	gw->listen_fd.data = gw;
+	gw->next_ue_ctx_id = 23;
+	INIT_LLIST_HEAD(&gw->hnb_list);
+	INIT_LLIST_HEAD(&gw->ue_list);
+	INIT_LLIST_HEAD(&gw->cn_list);
+
+	context_map_init(gw);
+
+	return gw;
+}
+
+struct ue_context *ue_context_by_id(struct hnb_gw *gw, uint32_t id)
 {
 	struct ue_context *ue;
 
-	llist_for_each_entry(ue, &g_hnb_gw.ue_list, list) {
+	llist_for_each_entry(ue, &gw->ue_list, list) {
 		if (ue->context_id == id)
 			return ue;
 	}
@@ -78,24 +94,24 @@ struct ue_context *ue_context_by_id(uint32_t id)
 
 }
 
-struct ue_context *ue_context_by_imsi(const char *imsi)
+struct ue_context *ue_context_by_imsi(struct hnb_gw *gw, const char *imsi)
 {
 	struct ue_context *ue;
 
-	llist_for_each_entry(ue, &g_hnb_gw.ue_list, list) {
+	llist_for_each_entry(ue, &gw->ue_list, list) {
 		if (!strcmp(ue->imsi, imsi))
 			return ue;
 	}
 	return NULL;
 }
 
-static uint32_t get_next_ue_ctx_id(void)
+static uint32_t get_next_ue_ctx_id(struct hnb_gw *gw)
 {
 	uint32_t id;
 
 	do {
-		id = g_hnb_gw.next_ue_ctx_id++;
-	} while (ue_context_by_id(id));
+		id = gw->next_ue_ctx_id++;
+	} while (ue_context_by_id(gw, id));
 
 	return id;
 }
@@ -110,8 +126,8 @@ struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi)
 
 	ue->hnb = hnb;
 	strncpy(ue->imsi, imsi, sizeof(ue->imsi));
-	ue->context_id = get_next_ue_ctx_id();
-	llist_add_tail(&ue->list, &g_hnb_gw.ue_list);
+	ue->context_id = get_next_ue_ctx_id(hnb->gw);
+	llist_add_tail(&ue->list, &hnb->gw->ue_list);
 
 	return ue;
 }
@@ -227,6 +243,7 @@ struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, int new_fd)
 	ctx->wqueue.read_cb = hnb_read_cb;
 	ctx->wqueue.write_cb = hnb_write_cb;
 	osmo_fd_register(&ctx->wqueue.bfd);
+	INIT_LLIST_HEAD(&ctx->map_list);
 
 	llist_add_tail(&ctx->list, &gw->hnb_list);
 }
@@ -359,7 +376,7 @@ DEFUN(show_hnb, show_hnb_cmd, "show hnb all", SHOW_STR "Display information abou
 {
 	struct hnb_context *hnb;
 
-	llist_for_each_entry(hnb, &g_hnb_gw.hnb_list, list) {
+	llist_for_each_entry(hnb, &g_hnb_gw->hnb_list, list) {
 		vty_dump_hnb_info(vty, hnb);
 	}
 
@@ -370,7 +387,7 @@ DEFUN(show_ue, show_ue_cmd, "show ue all", SHOW_STR "Display information about a
 {
 	struct ue_context *ue;
 
-	llist_for_each_entry(ue, &g_hnb_gw.ue_list, list) {
+	llist_for_each_entry(ue, &g_hnb_gw->ue_list, list) {
 		vty_dump_ue_info(vty, ue);
 	}
 
@@ -380,7 +397,6 @@ DEFUN(show_ue, show_ue_cmd, "show ue all", SHOW_STR "Display information about a
 DEFUN(show_talloc, show_talloc_cmd, "show talloc", SHOW_STR "Display talloc info")
 {
 	talloc_report_full(tall_hnb_ctx, stderr);
-	talloc_report_full(tall_ue_ctx, stderr);
 	talloc_report_full(talloc_asn1_ctx, stderr);
 
 	return CMD_SUCCESS;
@@ -400,18 +416,9 @@ int main(int argc, char **argv)
 	int rc;
 
 	tall_hnb_ctx = talloc_named_const(NULL, 0, "hnb_context");
-	tall_ue_ctx = talloc_named_const(NULL, 0, "ue_context");
-	tall_sua_ctx = talloc_named_const(NULL, 0, "sua");
 	talloc_asn1_ctx = talloc_named_const(NULL, 0, "asn1_context");
 
-	g_hnb_gw.listen_fd.cb = listen_fd_cb;
-	g_hnb_gw.listen_fd.when = BSC_FD_READ;
-	g_hnb_gw.listen_fd.data = &g_hnb_gw;
-	g_hnb_gw.next_ue_ctx_id = 23;
-	INIT_LLIST_HEAD(&g_hnb_gw.hnb_list);
-	INIT_LLIST_HEAD(&g_hnb_gw.ue_list);
-
-	context_map_init(&g_hnb_gw);
+	g_hnb_gw = hnb_gw_create(tall_hnb_ctx);
 
 	rc = osmo_init_logging(&hnbgw_log_info);
 	if (rc < 0)
@@ -420,37 +427,25 @@ int main(int argc, char **argv)
 	vty_init(&vty_info);
 	hnbgw_vty_init();
 
-	rc = telnet_init(NULL, &g_hnb_gw, 2323);
+	rc = telnet_init(NULL, g_hnb_gw, 2323);
 	if (rc < 0) {
 		perror("Error binding VTY port");
 		exit(1);
 	}
 
 	osmo_sua_set_log_area(DSUA);
-	sua_user = osmo_sua_user_create(tall_sua_ctx, sccp_sap_up);
-	if (!sua_user) {
-		perror("Failed to init SUA");
-		exit(1);
-	}
-	rc = osmo_sua_client_connect(sua_user, "127.0.0.1", SUA_PORT);
-	if (rc < 0) {
-		perror("Failed to connect SUA");
-		exit(1);
-	}
-	sua_link = osmo_sua_client_get_link(sua_user);
-	if (!sua_link) {
-		perror("Failed to get SUA link");
-		exit(1);
-	}
 
-	rc = osmo_sock_init_ofd(&g_hnb_gw.listen_fd, AF_INET, SOCK_STREAM,
+	g_hnb_gw->cnlink_cs = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.1", SUA_PORT);
+	g_hnb_gw->cnlink_ps = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.2", SUA_PORT);
+
+	rc = osmo_sock_init_ofd(&g_hnb_gw->listen_fd, AF_INET, SOCK_STREAM,
 			   IPPROTO_SCTP, NULL,
-			   g_hnb_gw.config.iuh_listen_port, OSMO_SOCK_F_BIND);
+			   g_hnb_gw->config.iuh_listen_port, OSMO_SOCK_F_BIND);
 	if (rc < 0) {
 		perror("Error binding Iuh port");
 		exit(1);
 	}
-	sctp_sock_init(g_hnb_gw.listen_fd.fd);
+	sctp_sock_init(g_hnb_gw->listen_fd.fd);
 
 	if (daemonize) {
 		rc = osmo_daemonize();

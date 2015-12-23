@@ -38,31 +38,16 @@
 static int ranap_tx_reset_ack(struct hnb_context *hnb,
 				RANAP_CN_DomainIndicator_t domain)
 {
-	RANAP_ResetAcknowledge_t out;
-	RANAP_ResetAcknowledgeIEs_t ies;
 	struct msgb *msg;
 	int rc;
 
-	memset(&ies, 0, sizeof(ies));
-	ies.cN_DomainIndicator = domain;
-
-	memset(&out, 0, sizeof(out));
-	rc = ranap_encode_resetacknowledgeies(&out, &ies);
-	if (rc < 0) {
-		LOGP(DRANAP, LOGL_ERROR, "error encoding reset ack IEs: %d\n", rc);
-		return rc;
-	}
-
-	msg = ranap_generate_successful_outcome(RANAP_ProcedureCode_id_Reset,
-						RANAP_Criticality_reject,
-						&asn_DEF_RANAP_ResetAcknowledge,
-						&out);
+	msg = ranap_new_msg_reset_ack(domain, NULL);
 	if (!msg)
 		return -1;
 
-	msg->dst = hnb;
+	rc = rua_tx_udt(hnb, msg->data, msgb_length(msg));
 
-	rc = rua_tx_udt(msg);
+	msgb_free(msg);
 
 	return rc;
 }
@@ -110,26 +95,6 @@ int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai)
 	return 0;
 }
 
-static int ranap_rx_init_ue_msg(struct hnb_context *hnb, ANY_t *in)
-{
-	RANAP_InitialUE_MessageIEs_t ies;
-	struct gprs_ra_id ra_id;
-	int rc;
-
-	rc = ranap_decode_initialue_messageies(&ies, in);
-	if (rc < 0)
-		return rc;
-
-	/* location area ID of the serving cell */
-	ranap_parse_lai(&ra_id, &ies.lai);
-
-	DEBUGP(DMAIN, "%u-%u-%u: InitialUE: %s\n", ra_id.mcc, ra_id.mnc,
-		ra_id.lac, osmo_hexdump(ies.nas_pdu.buf, ies.nas_pdu.size));
-	/* FIXME: hand NAS PDU into MSC */
-
-	return 0;
-}
-
 static int ranap_rx_dt(struct hnb_context *hnb, ANY_t *in)
 {
 	RANAP_DirectTransferIEs_t ies;
@@ -160,18 +125,65 @@ static int ranap_rx_initiating_msg(struct hnb_context *hnb, RANAP_InitiatingMess
 {
 	int rc;
 
+	/* according tot the spec, we can primarily receive Overload,
+	 * Reset, Reset ACK, Error Indication, reset Resource, Reset
+	 * Resurce Acknowledge as connecitonless RANAP.  There are some
+	 * more messages regarding Information Transfer, Direct
+	 * Information Transfer and Uplink Information Trnansfer that we
+	 * can ignore.  In either case, it is RANAP that we need to
+	 * decode... */
 	switch (imsg->procedureCode) {
 	case RANAP_ProcedureCode_id_Reset:
+		/* Reset request */
 		rc = ranap_rx_init_reset(hnb, &imsg->value);
 		break;
-	case RANAP_ProcedureCode_id_InitialUE_Message:
-		rc = ranap_rx_init_ue_msg(hnb, &imsg->value);
+	case RANAP_ProcedureCode_id_OverloadControl: /* Overload ind */
 		break;
-	case RANAP_ProcedureCode_id_DirectTransfer:
-		rc = ranap_rx_dt(hnb, &imsg->value);
+	case RANAP_ProcedureCode_id_ErrorIndication: /* Error ind */
+		break;
+	case RANAP_ProcedureCode_id_ResetResource: /* request */
+	case RANAP_ProcedureCode_id_InformationTransfer:
+	case RANAP_ProcedureCode_id_DirectInformationTransfer:
+	case RANAP_ProcedureCode_id_UplinkInformationExchange:
+		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
+		     "Procedure %u from HNB, ignoring\n", imsg->procedureCode);
+		break;
+	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
+		     "Procedure %u from HNB, ignoring\n", imsg->procedureCode);
 		break;
 	}
 }
+
+static int ranap_rx_successful_msg(struct hnb_context *hnb, RANAP_SuccessfulOutcome_t *imsg)
+{
+	int rc;
+
+	/* according tot the spec, we can primarily receive Overload,
+	 * Reset, Reset ACK, Error Indication, reset Resource, Reset
+	 * Resurce Acknowledge as connecitonless RANAP.  There are some
+	 * more messages regarding Information Transfer, Direct
+	 * Information Transfer and Uplink Information Trnansfer that we
+	 * can ignore.  In either case, it is RANAP that we need to
+	 * decode... */
+	switch (imsg->procedureCode) {
+	case RANAP_ProcedureCode_id_Reset: /* Reset acknowledge */
+		break;
+	case RANAP_ProcedureCode_id_ResetResource: /* response */
+	case RANAP_ProcedureCode_id_InformationTransfer:
+	case RANAP_ProcedureCode_id_DirectInformationTransfer:
+	case RANAP_ProcedureCode_id_UplinkInformationExchange:
+		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
+		     "Procedure %u from HNB, ignoring\n", imsg->procedureCode);
+		break;
+	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
+		     "Procedure %u from HNB, ignoring\n", imsg->procedureCode);
+		break;
+	}
+}
+
+
 
 static int _hnbgw_ranap_rx(struct hnb_context *hnb, RANAP_RANAP_PDU_t *pdu)
 {
@@ -182,10 +194,16 @@ static int _hnbgw_ranap_rx(struct hnb_context *hnb, RANAP_RANAP_PDU_t *pdu)
 		rc = ranap_rx_initiating_msg(hnb, &pdu->choice.initiatingMessage);
 		break;
 	case RANAP_RANAP_PDU_PR_successfulOutcome:
+		rc = ranap_rx_successful_msg(hnb, &pdu->choice.successfulOutcome);
 		break;
 	case RANAP_RANAP_PDU_PR_unsuccessfulOutcome:
+		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
+		     "unsuccessful outcome procedure %u from HNB, ignoring\n",
+		     pdu->choice.unsuccessfulOutcome.procedureCode);
 		break;
 	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
+		     "presence %u from HNB, ignoring\n", pdu->present);
 		break;
 	}
 }
