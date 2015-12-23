@@ -43,7 +43,7 @@ static int hnbgw_rua_tx(struct hnb_context *ctx, struct msgb *msg)
 	return osmo_wqueue_enqueue(&ctx->wqueue, msg);
 }
 
-int rua_tx_udt(struct msgb *inmsg)
+int rua_tx_udt(struct hnb_context *hnb, const uint8_t *data, unsigned int len)
 {
 	RUA_ConnectionlessTransfer_t out;
 	RUA_ConnectionlessTransferIEs_t ies;
@@ -51,8 +51,8 @@ int rua_tx_udt(struct msgb *inmsg)
 	int rc;
 
 	memset(&ies, 0, sizeof(ies));
-	ies.ranaP_Message.buf = inmsg->data;
-	ies.ranaP_Message.size = msgb_length(inmsg);
+	ies.ranaP_Message.buf = (uint8_t *) data;
+	ies.ranaP_Message.size = len;
 
 	/* FIXME: msgb_free(msg)? ownership not yet clear */
 
@@ -65,23 +65,30 @@ int rua_tx_udt(struct msgb *inmsg)
 					      RUA_Criticality_reject,
 					      &asn_DEF_RUA_ConnectionlessTransfer,
 					      &out);
-	msg->dst = inmsg->dst;
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_ConnectionlessTransfer, &out);
 
 	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
 
 	return hnbgw_rua_tx(msg->dst, msg);
 }
 
-int rua_tx_dt(struct msgb *inmsg)
+int rua_tx_dt(struct hnb_context *hnb, int is_ps, uint32_t context_id,
+	      const uint8_t *data, unsigned int len)
 {
 	RUA_DirectTransfer_t out;
 	RUA_DirectTransferIEs_t ies;
+	uint32_t ctxidbuf;
 	struct msgb *msg;
 	int rc;
 
 	memset(&ies, 0, sizeof(ies));
-	ies.ranaP_Message.buf = inmsg->data;
-	ies.ranaP_Message.size = msgb_length(inmsg);
+	if (is_ps)
+		ies.cN_DomainIndicator = RUA_CN_DomainIndicator_ps_domain;
+	else
+		ies.cN_DomainIndicator = RUA_CN_DomainIndicator_cs_domain;
+	asn1_u24_to_bitstring(&ies.context_ID, &ctxidbuf, context_id);
+	ies.ranaP_Message.buf = (uint8_t *) data;
+	ies.ranaP_Message.size = len;
 
 	/* FIXME: msgb_free(msg)? ownership not yet clear */
 
@@ -94,12 +101,53 @@ int rua_tx_dt(struct msgb *inmsg)
 					      RUA_Criticality_reject,
 					      &asn_DEF_RUA_DirectTransfer,
 					      &out);
-	msg->dst = inmsg->dst;
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_DirectTransfer, &out);
 
 	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
 
-	return hnbgw_rua_tx(msg->dst, msg);
+	return hnbgw_rua_tx(hnb, msg);
 }
+
+int rua_tx_disc(struct hnb_context *hnb, int is_ps, uint32_t context_id,
+	        const RUA_Cause_t *cause, const uint8_t *data, unsigned int len)
+{
+	RUA_Disconnect_t out;
+	RUA_DisconnectIEs_t ies;
+	struct msgb *msg;
+	uint32_t ctxidbuf;
+	int rc;
+
+	memset(&ies, 0, sizeof(ies));
+	if (is_ps)
+		ies.cN_DomainIndicator = RUA_CN_DomainIndicator_ps_domain;
+	else
+		ies.cN_DomainIndicator = RUA_CN_DomainIndicator_cs_domain;
+	asn1_u24_to_bitstring(&ies.context_ID, &ctxidbuf, context_id);
+	memcpy(&ies.cause, cause, sizeof(ies.cause));
+	if (data && len) {
+		ies.presenceMask |= DISCONNECTIES_RUA_RANAP_MESSAGE_PRESENT;
+		ies.ranaP_Message.buf = (uint8_t *) data;
+		ies.ranaP_Message.size = len;
+	}
+
+	/* FIXME: msgb_free(msg)? ownership not yet clear */
+
+	memset(&out, 0, sizeof(out));
+	rc = rua_encode_disconnecties(&out, &ies);
+	if (rc < 0)
+		return rc;
+
+	msg = rua_generate_initiating_message(RUA_ProcedureCode_id_Disconnect,
+					      RUA_Criticality_reject,
+					      &asn_DEF_RUA_Disconnect,
+					      &out);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_Disconnect, &out);
+
+	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+
+	return hnbgw_rua_tx(hnb, msg);
+}
+
 
 
 static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
