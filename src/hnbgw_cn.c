@@ -121,19 +121,27 @@ static int cn_ranap_rx_reset_ack(struct hnbgw_cnlink *cnlink,
 }
 
 static int cn_ranap_rx_paging_cmd(struct hnbgw_cnlink *cnlink,
-				  RANAP_InitiatingMessage_t *imsg)
+				  RANAP_InitiatingMessage_t *imsg,
+				  const uint8_t *data, unsigned int len)
 {
+	struct hnb_gw *gw;
+	struct hnb_context *hnb;
 	RANAP_PagingIEs_t ies;
-	int rc;
+	int rc = 0;
 
 	rc = ranap_decode_pagingies(&ies, &imsg->value);
 
-	/* FIXME: determine which HNBs to send this Paging command */
-	return rc;
+	/* FIXME: determine which HNBs to send this Paging command,
+	 * rather than broadcasting to all HNBs */
+	llist_for_each_entry(hnb, &gw->hnb_list, list) {
+		rc = rua_tx_udt(hnb, data, len);
+	}
+	return 0;
 }
 
 static int cn_ranap_rx_initiating_msg(struct hnbgw_cnlink *cnlink,
-				      RANAP_InitiatingMessage_t *imsg)
+				      RANAP_InitiatingMessage_t *imsg,
+				      const uint8_t *data, unsigned int len)
 {
 	int rc;
 
@@ -141,7 +149,7 @@ static int cn_ranap_rx_initiating_msg(struct hnbgw_cnlink *cnlink,
 	case RANAP_ProcedureCode_id_Reset:
 		return cn_ranap_rx_reset_cmd(cnlink, imsg);
 	case RANAP_ProcedureCode_id_Paging:
-		return cn_ranap_rx_paging_cmd(cnlink, imsg);
+		return cn_ranap_rx_paging_cmd(cnlink, imsg, data, len);
 	case RANAP_ProcedureCode_id_OverloadControl: /* Overload ind */
 		break;
 	case RANAP_ProcedureCode_id_ErrorIndication: /* Error ind */
@@ -185,13 +193,15 @@ static int cn_ranap_rx_successful_msg(struct hnbgw_cnlink *cnlink,
 }
 
 
-static int _cn_ranap_rx(struct hnbgw_cnlink *cnlink, RANAP_RANAP_PDU_t *pdu)
+static int _cn_ranap_rx(struct hnbgw_cnlink *cnlink, RANAP_RANAP_PDU_t *pdu,
+			const uint8_t *data, unsigned int len)
 {
 	int rc;
 
 	switch (pdu->present) {
 	case RANAP_RANAP_PDU_PR_initiatingMessage:
-		rc = cn_ranap_rx_initiating_msg(cnlink, &pdu->choice.initiatingMessage);
+		rc = cn_ranap_rx_initiating_msg(cnlink, &pdu->choice.initiatingMessage,
+						data, len);
 		break;
 	case RANAP_RANAP_PDU_PR_successfulOutcome:
 		rc = cn_ranap_rx_successful_msg(cnlink, &pdu->choice.successfulOutcome);
@@ -223,7 +233,7 @@ static int handle_cn_ranap(struct hnbgw_cnlink *cnlink, const uint8_t *data,
 		return rc;
 	}
 
-	rc = _cn_ranap_rx(cnlink, pdu);
+	rc = _cn_ranap_rx(cnlink, pdu, data, len);
 
 	return rc;
 }
