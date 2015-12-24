@@ -278,7 +278,7 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	context_id = asn1bitstr_to_u32(&ies.context_ID);
+	context_id = asn1bitstr_to_u24(&ies.context_ID);
 
 	/* route to CS (MSC) or PS (SGSN) domain */
 	switch (ies.cN_DomainIndicator) {
@@ -317,7 +317,7 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	context_id = asn1bitstr_to_u32(&ies.context_ID);
+	context_id = asn1bitstr_to_u24(&ies.context_ID);
 	scu_cause = rua_to_scu_cause(&ies.cause);
 
 	DEBUGP(DRUA, "RUA Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
@@ -357,7 +357,7 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	context_id = asn1bitstr_to_u32(&ies.context_ID);
+	context_id = asn1bitstr_to_u24(&ies.context_ID);
 
 	DEBUGP(DRUA, "RUA Data.req(ctx=0x%x)\n", context_id);
 
