@@ -7,8 +7,6 @@
 #define DEBUG
 #include <osmocom/core/logging.h>
 
-#define msgb_ppid(msg)		(msg)->cb[0]
-
 enum {
 	DMAIN,
 	DHNBAP,

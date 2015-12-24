@@ -40,13 +40,20 @@
 #include <osmocom/core/socket.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/write_queue.h>
+#include <osmocom/netif/stream.h>
 
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
+#include <osmocom/vty/command.h>
 
 #include "hnb-test.h"
 #include "hnbap_common.h"
 #include "hnbap_ies_defs.h"
+#include "rua_helper.h"
+#include "asn1helpers.h"
+#include "iu_helpers.h"
+
+#include "ranap_msg_factory.h"
 
 static void *tall_hnb_ctx;
 void *talloc_asn1_ctx;
@@ -55,7 +62,10 @@ struct hnb_test g_hnb_test = {
 	.gw_port = IUH_DEFAULT_SCTP_PORT,
 };
 
-int hnb_test_ue_de_register_tx(struct hnb_test *hnb_test)
+struct msgb *rua_new_udt(struct msgb *inmsg);
+
+
+static int hnb_test_ue_de_register_tx(struct hnb_test *hnb_test)
 {
 	struct msgb *msg;
 	int rc, imsi_len;
@@ -77,25 +87,19 @@ int hnb_test_ue_de_register_tx(struct hnb_test *hnb_test)
 						&asn_DEF_UEDe_Register,
 						&dereg);
 
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_UEDe_Register, &dereg);
 
-	msgb_ppid(msg) = IUH_PPI_HNBAP;
+	msgb_sctp_ppid(msg) = IUH_PPI_HNBAP;
 
 	return osmo_wqueue_enqueue(&hnb_test->wqueue, msg);
 }
 
-int hnb_test_ue_register_tx(struct hnb_test *hnb_test)
+static int hnb_test_ue_register_tx(struct hnb_test *hnb_test, const char *imsi_str)
 {
 	struct msgb *msg;
 	int rc, imsi_len;
 
 	char imsi_buf[16];
-	char *imsi_str = "262019876543210";
-
-	if (hnb_test->ues > 0) {
-		hnb_test->ues--;
-	} else {
-		return 0;
-	}
 
 	UERegisterRequest_t request_out;
 	UERegisterRequestIEs_t request;
@@ -104,8 +108,7 @@ int hnb_test_ue_register_tx(struct hnb_test *hnb_test)
 	request.uE_Identity.present = UE_Identity_PR_iMSI;
 
 	imsi_len = encode_iu_imsi(imsi_buf, sizeof(imsi_buf), imsi_str);
-	request.uE_Identity.choice.iMSI.buf = imsi_buf;
-	request.uE_Identity.choice.iMSI.size = imsi_len;
+	OCTET_STRING_fromBuf(&request.uE_Identity.choice.iMSI, imsi_buf, imsi_len);
 
 	request.registration_Cause = Registration_Cause_normal;
 	request.uE_Capabilities.access_stratum_release_indicator = Access_stratum_release_indicator_rel_6;
@@ -119,13 +122,14 @@ int hnb_test_ue_register_tx(struct hnb_test *hnb_test)
 						&asn_DEF_UERegisterRequest,
 						&request_out);
 
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_UERegisterRequest, &request_out);
 
-	msgb_ppid(msg) = IUH_PPI_HNBAP;
+	msgb_sctp_ppid(msg) = IUH_PPI_HNBAP;
 
 	return osmo_wqueue_enqueue(&hnb_test->wqueue, msg);
 }
 
-int hnb_test_rx_hnb_register_acc(struct hnb_test *hnb, ANY_t *in)
+static int hnb_test_rx_hnb_register_acc(struct hnb_test *hnb, ANY_t *in)
 {
 	int rc;
 	HNBRegisterAcceptIEs_t accept;
@@ -137,10 +141,10 @@ int hnb_test_rx_hnb_register_acc(struct hnb_test *hnb, ANY_t *in)
 	hnb->rnc_id = accept.rnc_id;
 	printf("HNB Register accept with RNC ID %u\n", hnb->rnc_id);
 
-	return hnb_test_ue_register_tx(hnb);
+	return 0;
 }
 
-int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
+static int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
 {
 	int rc;
 	uint32_t ctx_id;
@@ -164,8 +168,6 @@ int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
 	printf("UE Register accept for IMSI %s, context %u\n", imsi, ctx_id);
 
 	hnb->ctx_id = ctx_id;
-
-	return hnb_test_ue_de_register_tx(hnb);
 
 	return 0;
 }
@@ -195,7 +197,6 @@ int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 		break;
 	case ProcedureCode_id_UERegister:
 		rc = hnb_test_rx_ue_register_acc(hnb, &pdu->choice.successfulOutcome.value);
-		hnb_test_ue_register_tx(hnb);
 		break;
 	default:
 		break;
@@ -273,7 +274,7 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 {
 	struct hnb_test *ctx = fd->data;
 	struct sctp_sndrcvinfo sinfo = {
-		.sinfo_ppid = htonl(msgb_ppid(msg)),
+		.sinfo_ppid = htonl(msgb_sctp_ppid(msg)),
 		.sinfo_stream = 0,
 	};
 	int rc;
@@ -328,7 +329,35 @@ static void hnb_send_register_req(struct hnb_test *hnb_test)
 						&request_out);
 
 
-	msgb_ppid(msg) = IUH_PPI_HNBAP;
+	msgb_sctp_ppid(msg) = IUH_PPI_HNBAP;
+
+	osmo_wqueue_enqueue(&hnb_test->wqueue, msg);
+}
+
+static void hnb_send_deregister_req(struct hnb_test *hnb_test)
+{
+	struct msgb *msg;
+	int rc;
+
+	HNBDe_RegisterIEs_t request;
+	memset(&request, 0, sizeof(request));
+
+	request.cause.present = Cause_PR_misc;
+	request.cause.choice.misc = CauseMisc_o_and_m_intervention;
+
+	HNBDe_Register_t request_out;
+	memset(&request_out, 0, sizeof(request_out));
+	rc = hnbap_encode_hnbde_registeries(&request_out, &request);
+	if (rc < 0) {
+		printf("Could not encode HNB deregister request IEs\n");
+	}
+
+	msg = hnbap_generate_initiating_message(ProcedureCode_id_HNBDe_Register,
+						Criticality_reject,
+						&asn_DEF_HNBDe_Register,
+						&request_out);
+
+	msgb_sctp_ppid(msg) = IUH_PPI_HNBAP;
 
 	osmo_wqueue_enqueue(&hnb_test->wqueue, msg);
 }
@@ -370,6 +399,144 @@ static int sctp_sock_init(int fd)
 	return rc;
 }
 
+#define HNBAP_STR	"HNBAP related commands\n"
+#define HNB_STR		"HomeNodeB commands\n"
+#define UE_STR		"User Equipment commands\n"
+#define RANAP_STR	"RANAP related commands\n"
+#define CSPS_STR	"Circuit Switched\n" "Packet Switched\n"
+
+DEFUN(hnb_register, hnb_register_cmd,
+	"hnbap hnb register", HNBAP_STR HNB_STR "Send HNB-REGISTER REQUEST")
+{
+	hnb_send_register_req(&g_hnb_test);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(hnb_deregister, hnb_deregister_cmd,
+	"hnbap hnb deregister", HNBAP_STR HNB_STR "Send HNB-DEREGISTER REQUEST")
+{
+	hnb_send_deregister_req(&g_hnb_test);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(ue_register, ue_register_cmd,
+	"hnbap ue register IMSI", HNBAP_STR UE_STR "Send UE-REGISTER REQUEST")
+{
+	hnb_test_ue_register_tx(&g_hnb_test, argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(asn_dbg, asn_dbg_cmd,
+	"asn-debug (1|0)", "Enable or disabel libasn1c debugging")
+{
+	asn_debug = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(ranap_reset, ranap_reset_cmd,
+	"ranap reset (cs|ps)", RANAP_STR "Send RANAP RESET\n" CSPS_STR)
+{
+	int is_ps = 0;
+	struct msgb *msg, *rua;
+
+	RANAP_Cause_t cause = {
+		.present = RANAP_Cause_PR_transmissionNetwork,
+		.choice.transmissionNetwork = RANAP_CauseTransmissionNetwork_signalling_transport_resource_failure,
+	};
+
+	if (!strcmp(argv[0], "ps"))
+		is_ps = 1;
+
+	msg = ranap_new_msg_reset(is_ps, &cause);
+	rua = rua_new_udt(msg);
+	//msgb_free(msg);
+	osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
+
+	return CMD_SUCCESS;
+}
+
+
+enum my_vty_nodes {
+	CHAN_NODE = _LAST_OSMOVTY_NODE,
+};
+
+static struct cmd_node chan_node = {
+	CHAN_NODE,
+	"%s(chan)> ",
+	1,
+};
+
+
+struct hnbtest_chan {
+	int is_ps;
+	uint32_t conn_id;
+	char *imsi;
+};
+
+static struct msgb *gen_initue_lu(int is_ps, uint32_t conn_id, const char *imsi)
+{
+	uint8_t lu[] = { 0x05, 0x08, 0x70, 0x62, 0xf2, 0x30, 0xff, 0xf3, 0x57,
+		/*	 len-  IMSI------------------------------------------ */
+			 0x08, 0x29, 0x26, 0x24, 0x10, 0x32, 0x54, 0x76, 0x98,
+			 0x33, 0x03, 0x57, 0x18 , 0xb2 };
+	uint8_t plmn_id[] = { 0x09, 0x01, 0x99 };
+	RANAP_GlobalRNC_ID_t rnc_id = {
+		.rNC_ID = 23,
+		.pLMNidentity.buf = plmn_id,
+		.pLMNidentity.size = sizeof(plmn_id),
+	};
+	struct msgb *msg;
+
+	/* FIXME: patch imsi */
+
+	return ranap_new_msg_initial_ue(is_ps, conn_id, &rnc_id, lu, sizeof(lu));
+}
+
+DEFUN(chan, chan_cmd,
+	"channel (cs|ps) lu imsi IMSI",
+	"Open a new Signalling Connection\n"
+	"To Circuit-Switched CN\n"
+	"To Packet-Switched CN\n"
+	"Performing a Location Update\n"
+	)
+{
+	struct hnbtest_chan *chan;
+	struct msgb *msg, *rua;
+
+	chan = talloc_zero(tall_hnb_ctx, struct hnbtest_chan);
+	if (!strcmp(argv[0], "ps"))
+		chan->is_ps = 1;
+	chan->imsi = talloc_strdup(chan, argv[1]);
+	chan->conn_id = 42;
+
+	msg = gen_initue_lu(chan->is_ps, chan->conn_id, chan->imsi);
+	rua = rua_new_conn(chan->is_ps, chan->conn_id, msg);
+
+	osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
+
+	vty->index = chan;
+	vty->node = CHAN_NODE;
+
+	return CMD_SUCCESS;
+}
+
+static void hnbtest_vty_init(void)
+{
+	install_element_ve(&asn_dbg_cmd);
+	install_element_ve(&hnb_register_cmd);
+	install_element_ve(&hnb_deregister_cmd);
+	install_element_ve(&ue_register_cmd);
+	install_element_ve(&ranap_reset_cmd);
+	install_element_ve(&chan_cmd);
+
+	install_node(&chan_node, NULL);
+	vty_install_default(CHAN_NODE);
+}
+
 static void handle_options(int argc, char **argv)
 {
 	while (1) {
@@ -392,7 +559,7 @@ static void handle_options(int argc, char **argv)
 	}
 }
 
-int main(int argc, const char *argv)
+int main(int argc, char **argv)
 {
 	int rc;
 
@@ -404,6 +571,13 @@ int main(int argc, const char *argv)
 		exit(1);
 
 	vty_init(&vty_info);
+	hnbtest_vty_init();
+
+	rc = telnet_init(NULL, NULL, 2324);
+	if (rc < 0) {
+		perror("Error binding VTY port");
+		exit(1);
+	}
 
 	handle_options(argc, argv);
 
@@ -421,7 +595,40 @@ int main(int argc, const char *argv)
 	}
 	sctp_sock_init(g_hnb_test.wqueue.bfd.fd);
 
-	hnb_send_register_req(&g_hnb_test);
+#if 0
+	/* some hard-coded message generation.  Doesn't make sense from
+	 * a protocol point of view but enables to look at the encoded
+	 * results in wireshark for manual verification */
+	{
+		struct msgb *msg, *rua;
+		const uint8_t nas[] = { 0, 1, 2, 3 };
+		const uint8_t ik[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+
+		msg = ranap_new_msg_dt(0, nas, sizeof(nas));
+		rua = rua_new_udt(msg);
+		osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
+
+		msg = ranap_new_msg_sec_mod_cmd(ik, ik);
+		rua = rua_new_udt(msg);
+		osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
+
+		msg = ranap_new_msg_iu_rel_cmd()
+		rua = rua_new_udt(msg);
+		osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
+
+		msg = ranap_new_msg_paging_cmd("901990123456789", NULL, 0, 0);
+		rua = rua_new_udt(msg);
+		osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
+
+		msg = ranap_new_msg_rab_assign_voice(1, 0x01020304, 0x1020);
+		rua = rua_new_udt(msg);
+		osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
+
+		msg = ranap_new_msg_rab_assign_data(2, 0x01020304, 0x11223344);
+		rua = rua_new_udt(msg);
+		osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
+	}
+#endif
 
 	while (1) {
 		rc = osmo_select_main(0);
