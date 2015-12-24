@@ -71,9 +71,10 @@ context_map_alloc_by_hnb(struct hnb_context *hnb, uint32_t rua_ctx_id,
 		}
 	}
 
-	/* FIXME: allocated CN side ID! */
-	if (alloc_cn_conn_id(cn_if_new, &new_scu_conn_id) < 0)
+	if (alloc_cn_conn_id(cn_if_new, &new_scu_conn_id) < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Unable to allocate CN connection ID\n");
 		return NULL;
+	}
 
 	/* alloate a new map entry */
 	map = talloc_zero(hnb, struct hnbgw_context_map);
@@ -96,8 +97,6 @@ context_map_by_cn(struct hnbgw_cnlink *cn, uint32_t scu_conn_id)
 {
 	struct hnbgw_context_map *map;
 
-	/* FIXME: allocated HNB side ID! */
-
 	llist_for_each_entry(map, &cn->map_list, cn_list) {
 		if (map->state != MAP_S_ACTIVE)
 			continue;
@@ -107,7 +106,9 @@ context_map_by_cn(struct hnbgw_cnlink *cn, uint32_t scu_conn_id)
 	}
 	/* we don't allocate new mappings in the CN->HNB
 	 * direction, as the RUA=SCCP=SUA connections are always
-	 * established from HNB towards CN. */ 
+	 * established from HNB towards CN. */
+	LOGP(DMAIN, LOGL_NOTICE, "Unable to resolve map for CN "
+		"connection ID %u\n", scu_conn_id);
 	return NULL;
 }
 
@@ -128,6 +129,7 @@ static void context_map_tmr_cb(void *data)
 	struct hnb_gw *gw = data;
 	struct hnbgw_cnlink *cn;
 
+	DEBUGP(DMAIN, "Running context mapper garbage collection\n");
 	/* iterate over list of core network (links) */
 	llist_for_each_entry(cn, &gw->cn_list, list) {
 		struct hnbgw_context_map *map;

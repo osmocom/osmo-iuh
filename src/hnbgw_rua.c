@@ -290,7 +290,7 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 		break;
 	}
 
-	DEBUGP(DRUA, "Connect.req(ctx=0x%x, %s)\n", context_id,
+	DEBUGP(DRUA, "RUA Connect.req(ctx=0x%x, %s)\n", context_id,
 		ies.establishment_Cause == RUA_Establishment_Cause_emergency_call
 		? "emergency" : "normal");
 
@@ -320,7 +320,7 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 	context_id = asn1bitstr_to_u32(&ies.context_ID);
 	scu_cause = rua_to_scu_cause(&ies.cause);
 
-	DEBUGP(DRUA, "Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
+	DEBUGP(DRUA, "RUA Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
 		rua_cause_str(&ies.cause));
 
 	/* route to CS (MSC) or PS (SGSN) domain */
@@ -359,7 +359,7 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 
 	context_id = asn1bitstr_to_u32(&ies.context_ID);
 
-	DEBUGP(DRUA, "Data.req(ctx=0x%x)\n", context_id);
+	DEBUGP(DRUA, "RUA Data.req(ctx=0x%x)\n", context_id);
 
 	/* route to CS (MSC) or PS (SGSN) domain */
 	switch (ies.cN_DomainIndicator) {
@@ -390,7 +390,7 @@ static int rua_rx_init_udt(struct msgb *msg, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	DEBUGP(DRUA, "UData.req()\n");
+	DEBUGP(DRUA, "RUA UData.req()\n");
 
 	/* according tot the spec, we can primarily receive Overload,
 	 * Reset, Reset ACK, Error Indication, reset Resource, Reset
@@ -414,7 +414,7 @@ static int rua_rx_init_err_ind(struct msgb *msg, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	DEBUGP(DRUA, "UData.ErrorInd()\n");
+	DEBUGP(DRUA, "RUA UData.ErrorInd()\n");
 
 	return rc;
 }
@@ -442,18 +442,26 @@ static int rua_rx_initiating_msg(struct msgb *msg, RUA_InitiatingMessage_t *imsg
 	case RUA_ProcedureCode_id_privateMessage:
 		break;
 	default:
-		return -1;
+		LOGP(DRUA, LOGL_NOTICE, "Unknown RUA Procedure %u\n",
+		     imsg->procedureCode);
+		rc = -1;
 	}
+
+	return rc;
 }
 
 static int rua_rx_successful_outcome_msg(struct msgb *msg, RUA_SuccessfulOutcome_t *in)
 {
 	/* FIXME */
+	LOGP(DRUA, LOGL_NOTICE, "Unexpected RUA Sucessful Outcome\n");
+	return -1;
 }
 
 static int rua_rx_unsuccessful_outcome_msg(struct msgb *msg, RUA_UnsuccessfulOutcome_t *in)
 {
 	/* FIXME */
+	LOGP(DRUA, LOGL_NOTICE, "Unexpected RUA Unsucessful Outcome\n");
+	return -1;
 }
 
 
@@ -474,8 +482,11 @@ static int _hnbgw_rua_rx(struct msgb *msg, RUA_RUA_PDU_t *pdu)
 		rc = rua_rx_unsuccessful_outcome_msg(msg, &pdu->choice.unsuccessfulOutcome);
 		break;
 	default:
-		return -1;
+		LOGP(DRUA, LOGL_NOTICE, "Unknown RUA presence %u\n", pdu->present);
+		rc = -1;
 	}
+
+	return rc;
 }
 
 int hnbgw_rua_rx(struct hnb_context *hnb, struct msgb *msg)
