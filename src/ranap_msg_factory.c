@@ -131,11 +131,11 @@ struct msgb *ranap_new_msg_initial_ue(uint32_t conn_id, int is_ps,
 		ies.cN_DomainIndicator = RANAP_CN_DomainIndicator_cs_domain;
 
 	OCTET_STRING_fromBuf(&ies.lai.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
-	OCTET_STRING_fromBuf(&ies.lai.lAC, &buf0, sizeof(buf0));
+	OCTET_STRING_fromBuf(&ies.lai.lAC, (uint8_t *)&buf0, sizeof(buf0));
 
 	OCTET_STRING_fromBuf(&ies.sai.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
-	OCTET_STRING_fromBuf(&ies.sai.lAC, &buf0, sizeof(buf0));
-	OCTET_STRING_fromBuf(&ies.sai.sAC, &buf0, sizeof(buf0));
+	OCTET_STRING_fromBuf(&ies.sai.lAC, (uint8_t *)&buf0, sizeof(buf0));
+	OCTET_STRING_fromBuf(&ies.sai.sAC, (uint8_t *)&buf0, sizeof(buf0));
 
 	OCTET_STRING_fromBuf(&ies.nas_pdu, nas_pdu, nas_len);
 	asn1_u24_to_bitstring(&ies.iuSigConId, &ctxidbuf, conn_id);
@@ -360,11 +360,11 @@ struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, in
 		ies.presenceMask |= PAGINGIES_RANAP_TEMPORARYUE_ID_PRESENT;
 		if (is_ps) {
 			ies.temporaryUE_ID.present = RANAP_TemporaryUE_ID_PR_p_TMSI;
-			ies.temporaryUE_ID.choice.tMSI.buf = tmsi_buf;
+			ies.temporaryUE_ID.choice.tMSI.buf = (uint8_t *) tmsi_buf;
 			ies.temporaryUE_ID.choice.tMSI.size = sizeof(*tmsi_buf);
 		} else {
 			ies.temporaryUE_ID.present = RANAP_TemporaryUE_ID_PR_tMSI;
-			ies.temporaryUE_ID.choice.p_TMSI.buf = tmsi_buf;
+			ies.temporaryUE_ID.choice.p_TMSI.buf = (uint8_t *) tmsi_buf;
 			ies.temporaryUE_ID.choice.p_TMSI.size = sizeof(*tmsi_buf);
 		}
 	}
@@ -593,7 +593,7 @@ static RANAP_UserPlaneInformation_t *new_upi(long mode, uint8_t mode_versions)
 	*buf = mode_versions;
 
 	upi->userPlaneMode = mode;
-	upi->uP_ModeVersions.buf = buf;
+	upi->uP_ModeVersions.buf = (uint8_t *) buf;
 	upi->uP_ModeVersions.size = sizeof(*buf);
 	upi->uP_ModeVersions.bits_unused = 0;
 
