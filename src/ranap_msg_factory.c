@@ -180,8 +180,7 @@ struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas
 	else
 		ies.sapi = RANAP_SAPI_sapi_0;
 
-	ies.nas_pdu.buf = (uint8_t *) nas;
-	ies.nas_pdu.size = nas_len;
+	OCTET_STRING_fromBuf(&ies.nas_pdu, nas, nas_len);
 
 	/* ies -> dt */
 	rc = ranap_encode_directtransferies(&dt, &ies);
