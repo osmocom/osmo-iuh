@@ -12,14 +12,14 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_TBCD-STRING.h"
+#include <OCTET_STRING.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* RANAP_PLMNidentity */
-typedef RANAP_TBCD_STRING_t	 RANAP_PLMNidentity_t;
+typedef OCTET_STRING_t	 RANAP_PLMNidentity_t;
 
 /* Implementation */
 extern asn_TYPE_descriptor_t asn_DEF_RANAP_PLMNidentity;

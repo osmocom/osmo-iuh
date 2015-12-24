@@ -1334,7 +1334,7 @@ LoggingDuration	::=	ENUMERATED {
 
 
 
-PLMNidentity 				::= TBCD-STRING (SIZE (3))
+PLMNidentity 				::= OCTET STRING (SIZE (3))
 
 PLMNs-in-shared-network ::= SEQUENCE (SIZE (1..maxNrOfPLMNsSN)) OF
 	SEQUENCE {
