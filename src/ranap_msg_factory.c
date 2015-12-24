@@ -86,7 +86,9 @@ struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
 	 * ACKNOWLEDGE message to the CN */
 	if (rnc_id) {
 		ies.presenceMask = RESETACKNOWLEDGEIES_RANAP_GLOBALRNC_ID_PRESENT;
-		/* FIXME: Copy PLMN Identity TBCD-String */
+		OCTET_STRING_fromBuf(&ies.globalRNC_ID.pLMNidentity,
+				     rnc_id->pLMNidentity.buf,
+				     rnc_id->pLMNidentity.size);
 		ies.globalRNC_ID.rNC_ID = rnc_id->rNC_ID;
 	}
 
@@ -109,6 +111,55 @@ struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
 
 	return msg;
 }
+
+/*! \brief generate RANAP INITIAL UE message */
+struct msgb *ranap_new_msg_initial_ue(uint32_t conn_id, int is_ps,
+				     RANAP_GlobalRNC_ID_t *rnc_id,
+				     uint8_t *nas_pdu, unsigned int nas_len)
+{
+	RANAP_InitialUE_MessageIEs_t ies;
+	RANAP_InitialUE_Message_t out;
+	struct msgb *msg;
+	uint32_t ctxidbuf;
+	int rc;
+	uint16_t buf0 = 0x2342;
+
+	memset(&ies, 0, sizeof(ies));
+	if (is_ps)
+		ies.cN_DomainIndicator = RANAP_CN_DomainIndicator_ps_domain;
+	else
+		ies.cN_DomainIndicator = RANAP_CN_DomainIndicator_cs_domain;
+
+	OCTET_STRING_fromBuf(&ies.lai.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
+	OCTET_STRING_fromBuf(&ies.lai.lAC, &buf0, sizeof(buf0));
+
+	OCTET_STRING_fromBuf(&ies.sai.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
+	OCTET_STRING_fromBuf(&ies.sai.lAC, &buf0, sizeof(buf0));
+	OCTET_STRING_fromBuf(&ies.sai.sAC, &buf0, sizeof(buf0));
+
+	OCTET_STRING_fromBuf(&ies.nas_pdu, nas_pdu, nas_len);
+	asn1_u24_to_bitstring(&ies.iuSigConId, &ctxidbuf, conn_id);
+	OCTET_STRING_fromBuf(&ies.globalRNC_ID.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
+	ies.globalRNC_ID.rNC_ID = rnc_id->rNC_ID;
+
+	memset(&out, 0, sizeof(out));
+	rc = ranap_encode_initialue_messageies(&out, &ies);
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding initial UE IEs: %d\n", rc);
+		return NULL;
+	}
+
+	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_InitialUE_Message,
+						RANAP_Criticality_reject,
+						&asn_DEF_RANAP_InitialUE_Message,
+						&out);
+
+	/* release dynamic allocations attached to dt */
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_InitialUE_Message, &out);
+
+	return msg;
+}
+
 
 /*! \brief generate RANAP DIRECT TRANSFER message */
 struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas_len)

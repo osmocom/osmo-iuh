@@ -55,13 +55,16 @@ static int ranap_tx_reset_ack(struct hnb_context *hnb,
 static int ranap_rx_init_reset(struct hnb_context *hnb, ANY_t *in)
 {
 	RANAP_ResetIEs_t ies;
-	int rc;
+	int rc, is_ps = 0;
 
 	rc = ranap_decode_reseties(&ies, in);
 	if (rc < 0)
 		return rc;
 
-	DEBUGP(DRANAP, "RESET.req\n");
+	if (ies.cN_DomainIndicator == RANAP_CN_DomainIndicator_ps_domain)
+		is_ps=1;
+
+	DEBUGP(DRANAP, "RESET.req(%s)\n", is_ps ? "ps" : "cs");
 
 	/* FIXME: Actually we have to wait for some guard time? */
 	/* FIXME: Reset all resources related to this HNB/RNC */

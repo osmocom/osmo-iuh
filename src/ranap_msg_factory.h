@@ -33,3 +33,9 @@ struct msgb *ranap_new_msg_reset(RANAP_CN_DomainIndicator_t domain,
 /*! \brief generate RANAP RESET ACK message */
 struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
 				     RANAP_GlobalRNC_ID_t *rnc_id);
+
+
+/*! \brief generate RANAP INITIAL UE message */
+struct msgb *ranap_new_msg_initial_ue(uint32_t conn_id, int is_ps,
+				     RANAP_GlobalRNC_ID_t *rnc_id,
+				     uint8_t *nas_pdu, unsigned int nas_len);
