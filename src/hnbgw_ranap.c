@@ -64,11 +64,30 @@ static int ranap_rx_init_reset(struct hnb_context *hnb, ANY_t *in)
 	if (ies.cN_DomainIndicator == RANAP_CN_DomainIndicator_ps_domain)
 		is_ps=1;
 
-	DEBUGP(DRANAP, "RESET.req(%s)\n", is_ps ? "ps" : "cs");
+	LOGP(DRANAP, LOGL_INFO, "Rx RESET.req(%s,%s)\n", is_ps ? "ps" : "cs",
+		ranap_cause_str(&ies.cause));
 
 	/* FIXME: Actually we have to wait for some guard time? */
 	/* FIXME: Reset all resources related to this HNB/RNC */
 	ranap_tx_reset_ack(hnb, ies.cN_DomainIndicator);
+
+	return 0;
+}
+
+static int ranap_rx_error_ind(struct hnb_context *hnb, ANY_t *in)
+{
+	RANAP_ErrorIndicationIEs_t ies;
+	int rc, is_ps = 0;
+
+	rc = ranap_decode_errorindicationies(&ies, in);
+	if (rc < 0)
+		return rc;
+
+	if (ies.presenceMask & ERRORINDICATIONIES_RANAP_CAUSE_PRESENT) {
+		LOGP(DRANAP, LOGL_ERROR, "Rx ERROR.ind(%s)\n",
+			ranap_cause_str(&ies.cause));
+	} else
+		LOGP(DRANAP, LOGL_ERROR, "Rx ERROR.ind\n");
 
 	return 0;
 }
@@ -143,6 +162,7 @@ static int ranap_rx_initiating_msg(struct hnb_context *hnb, RANAP_InitiatingMess
 	case RANAP_ProcedureCode_id_OverloadControl: /* Overload ind */
 		break;
 	case RANAP_ProcedureCode_id_ErrorIndication: /* Error ind */
+		rc = ranap_rx_error_ind(hnb, &imsg->value);
 		break;
 	case RANAP_ProcedureCode_id_ResetResource: /* request */
 	case RANAP_ProcedureCode_id_InformationTransfer:
