@@ -28,31 +28,13 @@
 #include "ranap_ies_defs.h"
 #include "ranap_msg_factory.h"
 
+#include "test_common.h"
+
 #include "hnbgw.h"
 
-void *talloc_asn1_ctx;
 int asn1_xer_print = 1;
 
 extern void *tall_msgb_ctx;
-
-static const struct log_info_cat log_cat[] = {
-	[DMAIN] = {
-		.name = "DMAIN", .loglevel = LOGL_INFO, .enabled = 1,
-		.color = "",
-		.description = "Main program",
-	},
-	[DHNBAP] = {
-		.name = "DHNBAP", .loglevel = LOGL_DEBUG, .enabled = 1,
-		.color = "",
-		.description = "Home Node B Application Part",
-	},
-};
-
-static const struct log_info hnbgw_log_info = {
-	.cat = log_cat,
-	.num_cat = ARRAY_SIZE(log_cat),
-};
-
 
 int main(int argc, char **argv)
 {
@@ -70,12 +52,9 @@ int main(int argc, char **argv)
 
 	//asn_debug = 1;
 
-	talloc_asn1_ctx = talloc_named_const(NULL, 1, "ASN");
 	msgb_set_talloc_ctx(talloc_named_const(NULL, 1, "msgb"));
 
-	rc = osmo_init_logging(&hnbgw_log_info);
-	if (rc < 0)
-		exit(1);
+	test_common_init();
 
 	for (i = 0; i < 1; i++) {
 		printf("\n==> DIRECT TRANSFER\n");

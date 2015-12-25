@@ -52,18 +52,17 @@
 #include "rua_helper.h"
 #include "asn1helpers.h"
 #include "iu_helpers.h"
+#include "test_common.h"
 
 #include "ranap_msg_factory.h"
 
 static void *tall_hnb_ctx;
-void *talloc_asn1_ctx;
 
 struct hnb_test g_hnb_test = {
 	.gw_port = IUH_DEFAULT_SCTP_PORT,
 };
 
 struct msgb *rua_new_udt(struct msgb *inmsg);
-
 
 static int hnb_test_ue_de_register_tx(struct hnb_test *hnb_test)
 {
@@ -563,12 +562,9 @@ int main(int argc, char **argv)
 {
 	int rc;
 
-	tall_hnb_ctx = talloc_named_const(NULL, 0, "hnb_context");
-	talloc_asn1_ctx = talloc_named_const(NULL, 0, "asn1_context");
+	test_common_init();
 
-	rc = osmo_init_logging(&hnb_test_log_info);
-	if (rc < 0)
-		exit(1);
+	tall_hnb_ctx = talloc_named_const(NULL, 0, "hnb_context");
 
 	vty_init(&vty_info);
 	hnbtest_vty_init();

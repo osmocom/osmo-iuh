@@ -24,14 +24,14 @@
 
 #include "hnbap_common.h"
 #include "hnbap_ies_defs.h"
+#include "test_common.h"
 
 #include <assert.h>
 #define ASSERT(x)	assert(x)
 
 #include <osmocom/core/utils.h>
 #include <osmocom/core/logging.h>
-
-void *talloc_asn1_ctx;
+#include <osmocom/core/application.h>
 
 static const unsigned char hnbap_reg_req[] = {
 0x00, 0x01,
@@ -161,21 +161,13 @@ void test_asn1_decoding(void)
 
 }
 
-
-static const struct log_info osmo_log = {
-	.cat = NULL,
-	.num_cat = 0,
-};
-
 int main(int argc, char **argv)
 {
 	int rc;
 
-	rc = osmo_init_logging(&osmo_log);
-	if (rc < 0) {
-		printf("Error in init logging\n");
-		return -1;
-	}
+	test_common_init();
+	log_set_log_level(osmo_stderr_target, LOGL_INFO);
+
 
 	test_asn1_decoding();
 

@@ -15,13 +15,13 @@ HELPER_FILES = $(top_builddir)/src/iu_helpers.c $(top_builddir)/src/asn1helpers.
 test_helpers_SOURCES = $(HELPER_FILES) test-helpers.c
 test_helpers_LDADD = $(COMMON_LIBS)
 
-test_hnbap_SOURCES = $(HELPER_FILES) $(top_builddir)/src/hnbap_common.c $(top_builddir)/src/hnbap_decoder.c test-hnbap.c
+test_hnbap_SOURCES = $(HELPER_FILES) $(top_builddir)/src/hnbap_common.c $(top_builddir)/src/hnbap_decoder.c test-hnbap.c test_common.c
 test_hnbap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a
 
-hnb_test_SOURCES = $(HELPER_FILES) $(HNBAP_FILES) $(RUA_FILES) $(RANAP_FILES) hnb-test.c rua_helper.c
+hnb_test_SOURCES = $(HELPER_FILES) $(HNBAP_FILES) $(RUA_FILES) $(RANAP_FILES) hnb-test.c rua_helper.c test_common.c
 hnb_test_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a $(top_builddir)/src/rua/libosmo-asn1-rua.a $(top_builddir)/src/ranap/libosmo-asn1-ranap.a
 
-test_ranap_SOURCES = $(HELPER_FILES) $(RANAP_FILES) test-ranap.c
+test_ranap_SOURCES = $(HELPER_FILES) $(RANAP_FILES) test-ranap.c test_common.c
 test_ranap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/ranap/libosmo-asn1-ranap.a
 
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.
