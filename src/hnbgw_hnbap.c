@@ -190,8 +190,8 @@ static int hnbgw_rx_ue_deregister(struct hnb_context *ctx, ANY_t *in)
 
 	ctxid = asn1bitstr_to_u24(&ies.context_ID);
 
-	DEBUGP(DHNBAP, "UE-DE-REGSITER context=%ld cause=%ld\n",
-		ctxid, ies.cause);
+	DEBUGP(DHNBAP, "UE-DE-REGSITER context=%ld cause=%s\n",
+		ctxid, hnbap_cause_str(&ies.cause));
 
 	ue = ue_context_by_id(ctx->gw, ctxid);
 	if (ue)
