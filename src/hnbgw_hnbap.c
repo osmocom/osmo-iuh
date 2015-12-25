@@ -166,7 +166,7 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 		return -1;
 	}
 
-	DEBUGP(DHNBAP, "UE-REGSITER-REQ ID_type=%d imsi=%s cause=%ld\n",
+	DEBUGP(DHNBAP, "UE-REGISTER-REQ ID_type=%d imsi=%s cause=%ld\n",
 		ies.uE_Identity.present, imsi, ies.registration_Cause);
 
 	ue = ue_context_by_imsi(ctx->gw, imsi);
@@ -190,7 +190,7 @@ static int hnbgw_rx_ue_deregister(struct hnb_context *ctx, ANY_t *in)
 
 	ctxid = asn1bitstr_to_u24(&ies.context_ID);
 
-	DEBUGP(DHNBAP, "UE-DE-REGSITER context=%ld cause=%s\n",
+	DEBUGP(DHNBAP, "UE-DE-REGISTER context=%ld cause=%s\n",
 		ctxid, hnbap_cause_str(&ies.cause));
 
 	ue = ue_context_by_id(ctx->gw, ctxid);
