@@ -414,7 +414,8 @@ static int rua_rx_init_err_ind(struct msgb *msg, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	DEBUGP(DRUA, "RUA UData.ErrorInd()\n");
+	LOGP(DRUA, LOGL_ERROR, "RUA UData.ErrorInd(%s)\n",
+		rua_cause_str(&ies.cause));
 
 	return rc;
 }
