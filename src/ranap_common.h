@@ -593,6 +593,8 @@
 
 extern int asn1_xer_print;
 
+char *ranap_cause_str(const RANAP_Cause_t *cause);
+
 struct msgb *ranap_generate_initiating_message(e_RANAP_ProcedureCode procedureCode,
 					  RANAP_Criticality_t criticality,
 					  asn_TYPE_descriptor_t *td, void *sptr);
