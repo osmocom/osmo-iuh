@@ -90,6 +90,9 @@ char *rua_cause_str(RUA_Cause_t *cause)
 			get_value_string(rua_cause_misc_vals,
 					cause->choice.misc));
 		break;
+	default:
+		strcpy(buf, "unknown");
+		break;
 	}
 	return buf;
 }
