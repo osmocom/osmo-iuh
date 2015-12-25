@@ -588,10 +588,14 @@
 #endif
 
 #include <osmocom/core/logging.h>
+#include <osmocom/core/utils.h>
 
 #define RANAP_DEBUG(x, args ...) DEBUGP(0, x, ## args)
 
 extern int asn1_xer_print;
+
+extern const struct value_string ranap_presence_vals[5];
+extern const struct value_string ranap_procedure_code_vals[48];
 
 char *ranap_cause_str(const RANAP_Cause_t *cause);
 

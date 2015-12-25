@@ -27,6 +27,65 @@
 
 extern int asn1_xer_print;
 
+const struct value_string ranap_presence_vals[5] = {
+	{ RANAP_RANAP_PDU_PR_initiatingMessage,		"Initiating" },
+	{ RANAP_RANAP_PDU_PR_successfulOutcome,		"Successful Outcome" },
+	{ RANAP_RANAP_PDU_PR_unsuccessfulOutcome,	"Unsuccessful Outcome" },
+	{ RANAP_RANAP_PDU_PR_outcome,			"(Intermediate) Outcome" },
+	{ 0, NULL }
+};
+
+const struct value_string ranap_procedure_code_vals[48] = {
+	{ RANAP_ProcedureCode_id_RAB_Assignment,		"RAB Assignment" },
+	{ RANAP_ProcedureCode_id_Iu_Release,			"Iu Release" },
+	{ RANAP_ProcedureCode_id_RelocationPreparation,		"Relocation Preparation" },
+	{ RANAP_ProcedureCode_id_RelocationResourceAllocation,	"Relocation Resource Allocation" },
+	{ RANAP_ProcedureCode_id_RelocationCancel,		"Relocation Cancel" },
+	{ RANAP_ProcedureCode_id_SRNS_ContextTransfer,		"SRNS Context Transfer" },
+	{ RANAP_ProcedureCode_id_SecurityModeControl,		"Security Mode Control" },
+	{ RANAP_ProcedureCode_id_DataVolumeReport,		"Data Volume Report" },
+	{ RANAP_ProcedureCode_id_Reset,				"Reset" },
+	{ RANAP_ProcedureCode_id_RAB_ReleaseRequest,		"RAB Release Request" },
+	{ RANAP_ProcedureCode_id_Iu_ReleaseRequest,		"Iu Release Request" },
+	{ RANAP_ProcedureCode_id_RelocationDetect,		"Relocation Detect" },
+	{ RANAP_ProcedureCode_id_RelocationComplete,		"Relocation Complete" },
+	{ RANAP_ProcedureCode_id_Paging,			"Paging" },
+	{ RANAP_ProcedureCode_id_CommonID,			"Common ID" },
+	{ RANAP_ProcedureCode_id_CN_InvokeTrace,		"CN Invoke Trace" },
+	{ RANAP_ProcedureCode_id_LocationReportingControl,	"Location Reporting Control" },
+	{ RANAP_ProcedureCode_id_LocationReport,		"Location Report" },
+	{ RANAP_ProcedureCode_id_InitialUE_Message,		"Initial UE Message" },
+	{ RANAP_ProcedureCode_id_DirectTransfer,		"Direct Transfer" },
+	{ RANAP_ProcedureCode_id_OverloadControl,		"Overload Control" },
+	{ RANAP_ProcedureCode_id_ErrorIndication,		"Error Indication" },
+	{ RANAP_ProcedureCode_id_SRNS_DataForward,		"SRNS Data Forward" },
+	{ RANAP_ProcedureCode_id_ForwardSRNS_Context,		"Forward SRNS Context" },
+	{ RANAP_ProcedureCode_id_privateMessage,		"Private Message" },
+	{ RANAP_ProcedureCode_id_CN_DeactivateTrace,		"CN Deactivate Trace" },
+	{ RANAP_ProcedureCode_id_ResetResource,			"Reset Resource" },
+	{ RANAP_ProcedureCode_id_RANAP_Relocation,		"RANAP Relocation" },
+	{ RANAP_ProcedureCode_id_RAB_ModifyRequest,		"RAB Modify Request" },
+	{ RANAP_ProcedureCode_id_LocationRelatedData,		"Location Related Data" },
+	{ RANAP_ProcedureCode_id_InformationTransfer,		"Information Transfer" },
+	{ RANAP_ProcedureCode_id_UESpecificInformation,		"UE Specific Information" },
+	{ RANAP_ProcedureCode_id_UplinkInformationExchange,	"Uplink Information Transfer" },
+	{ RANAP_ProcedureCode_id_DirectInformationTransfer,	"Direct Information Transfer" },
+	{ RANAP_ProcedureCode_id_MBMSSessionStart,		"MBMS Session Start" },
+	{ RANAP_ProcedureCode_id_MBMSSessionUpdate,		"MBMS Session Update" },
+	{ RANAP_ProcedureCode_id_MBMSSessionStop,		"MBMS Session Stop" },
+	{ RANAP_ProcedureCode_id_MBMSUELinking,			"MBMS UE Linking" },
+	{ RANAP_ProcedureCode_id_MBMSRegistration,		"MBMS Registration" },
+	{ RANAP_ProcedureCode_id_MBMSCNDe_Registration_Procedure, "MBMS CN De-Registration" },
+	{ RANAP_ProcedureCode_id_MBMSRABEstablishmentIndication,  "MBMS RAB Establishment Indication" },
+	{ RANAP_ProcedureCode_id_MBMSRABRelease,		"MBMS RAB Release" },
+	{ RANAP_ProcedureCode_id_enhancedRelocationComplete,	"Enhanced Relocation Complete" },
+	{ RANAP_ProcedureCode_id_enhancedRelocationCompleteConfirm, "Enhanced Relocation Complete Confirm" },
+	{ RANAP_ProcedureCode_id_RANAPenhancedRelocation,	"RANAP Enhanced Relocation" },
+	{ RANAP_ProcedureCode_id_SRVCCPreparation,		"SRVCC Preparation" },
+	{ RANAP_ProcedureCode_id_UeRadioCapabilityMatch,	"UE Radio Capability Match" },
+	{ 0, NULL }
+};
+
 static const struct value_string ranap_cause_radio_vals[] = {
 	{ RANAP_CauseRadioNetwork_rab_pre_empted,	"RAB pre-empted" },
 	{ RANAP_CauseRadioNetwork_trelocoverall_expiry,	"Treloc_overall expiry" },
