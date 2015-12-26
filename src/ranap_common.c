@@ -290,7 +290,7 @@ char *ranap_cause_str(const RANAP_Cause_t *cause)
 
 static struct msgb *ranap_msgb_alloc(void)
 {
-	return msgb_alloc(1024, "RANAP Tx");
+	return msgb_alloc_headroom(1024+256, 256, "RANAP Tx");
 }
 
 static struct msgb *_ranap_gen_msg(RANAP_RANAP_PDU_t *pdu)
