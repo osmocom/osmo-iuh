@@ -250,7 +250,7 @@ static int handle_cn_unitdata(struct hnbgw_cnlink *cnlink,
 	return handle_cn_ranap(cnlink, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 }
 
-static int handle_cn_conn_conf(struct hnbgw_cnlink *cnlink,
+static int handle_cn_conn_conf(void *slink,
 			      const struct osmo_scu_connect_param *param,
 			      struct osmo_prim_hdr *oph)
 {
@@ -261,11 +261,12 @@ static int handle_cn_conn_conf(struct hnbgw_cnlink *cnlink,
 	return 0;
 }
 
-static int handle_cn_data_ind(struct hnbgw_cnlink *cnlink,
+static int handle_cn_data_ind(void *slink,
 			      const struct osmo_scu_data_param *param,
 			      struct osmo_prim_hdr *oph)
 {
 	struct hnbgw_context_map *map;
+	struct hnbgw_cnlink *cnlink = osmo_sua_link_get_user_priv(slink);
 
 	/* connection-oriented data is always passed transparently
 	 * towards the specific HNB, via a RUA connection identified by
@@ -281,11 +282,12 @@ static int handle_cn_data_ind(struct hnbgw_cnlink *cnlink,
 			 msgb_l2(oph->msg), msgb_l2len(oph->msg));
 }
 
-static int handle_cn_disc_ind(struct hnbgw_cnlink *cnlink,
+static int handle_cn_disc_ind(void *slink,
 			      const struct osmo_scu_disconn_param *param,
 			      struct osmo_prim_hdr *oph)
 {
 	struct hnbgw_context_map *map;
+	struct hnbgw_cnlink *cnlink = osmo_sua_link_get_user_priv(slink);
 
 	RUA_Cause_t rua_cause = {
 		.present = RUA_Cause_PR_NOTHING,
@@ -350,7 +352,7 @@ struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint
 	sccp_make_addr_pc_ssn(&cnlink->local_addr, 2, OSMO_SCCP_SSN_RANAP);
 	sccp_make_addr_pc_ssn(&cnlink->remote_addr, 1, OSMO_SCCP_SSN_RANAP);
 
-	cnlink->sua_user = osmo_sua_user_create(cnlink, sccp_sap_up);
+	cnlink->sua_user = osmo_sua_user_create(cnlink, sccp_sap_up, cnlink);
 	if (!cnlink->sua_user) {
 		LOGP(DMAIN, LOGL_ERROR, "Failed to init SUA\n");
 		goto out_free;

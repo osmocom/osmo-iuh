@@ -251,7 +251,7 @@ int main(int argc, char **argv)
 
 	test_common_init();
 
-	user = osmo_sua_user_create(ctx, sccp_sap_up);
+	user = osmo_sua_user_create(ctx, sccp_sap_up, ctx);
 
 	rc = osmo_sua_server_listen(user, "127.0.0.1", 14001);
 	if (rc < 0) {
