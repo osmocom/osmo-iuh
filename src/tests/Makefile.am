@@ -1,8 +1,8 @@
-AM_CFLAGS = $(OSMOVTY_CFLAGS) $(OSMOCORE_CFLAGS) $(OSMOGSM_CFLAGS) $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) -g -I$(top_builddir)/src -I$(top_builddir)/src/hnbap/
+AM_CFLAGS = $(OSMOVTY_CFLAGS) $(OSMOCORE_CFLAGS) $(OSMOGSM_CFLAGS) $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS) -g -I$(top_builddir)/src -I$(top_builddir)/src/hnbap/
 
-COMMON_LIBS = $(OSMOVTY_LIBS) $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) -lsctp
+COMMON_LIBS = $(OSMOVTY_LIBS) $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) $(OSMOSIGTRAN_LIBS) -lsctp
 
-check_PROGRAMS = test-ranap test-helpers test-hnbap hnb-test
+check_PROGRAMS = test-ranap test-helpers test-hnbap hnb-test dummy-cn
 
 HNBAP_FILES = $(top_builddir)/src/hnbap_common.c $(top_builddir)/src/hnbap_decoder.c $(top_builddir)/src/hnbap_encoder.c
 RUA_FILES = $(top_builddir)/src/rua_common.c $(top_builddir)/src/rua_decoder.c $(top_builddir)/src/rua_encoder.c
@@ -23,6 +23,9 @@ hnb_test_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a $
 
 test_ranap_SOURCES = $(HELPER_FILES) $(RANAP_FILES) test-ranap.c test_common.c
 test_ranap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/ranap/libosmo-asn1-ranap.a
+
+dummy_cn_SOURCES = $(HELPER_FILES) $(RANAP_FILES) test_common.c dummy_cn_sua.c ranap_common_cn.c
+dummy_cn_LDADD = $(COMMON_LIBS) $(top_builddir)/src/ranap/libosmo-asn1-ranap.a
 
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
