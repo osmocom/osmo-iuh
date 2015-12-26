@@ -20,6 +20,36 @@
 
 int asn1_xer_print = 1;
 
+struct ue_conn_ctx {
+	struct llist_head list;
+	struct osmo_sua_link *link;
+	uint32_t conn_id;
+};
+
+static LLIST_HEAD(conn_ctx_list);
+
+struct ue_conn_ctx *ue_conn_ctx_alloc(struct osmo_sua_link *link, uint32_t conn_id)
+{
+	struct ue_conn_ctx *ctx = talloc_zero(NULL, struct ue_conn_ctx);
+
+	ctx->link = link;
+	ctx->conn_id = conn_id;
+	llist_add(&ctx->list, &conn_ctx_list);
+
+	return ctx;
+}
+
+struct ue_conn_ctx *ue_conn_ctx_find(struct osmo_sua_link *link, uint32_t conn_id)
+{
+	struct ue_conn_ctx *ctx;
+
+	llist_for_each_entry(ctx, &conn_ctx_list, list) {
+		if (ctx->link == link && ctx->conn_id == conn_id)
+			return ctx;
+	}
+	return NULL;
+}
+
 /***********************************************************************
  * RANAP handling
  ***********************************************************************/
@@ -195,7 +225,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *link)
 	struct osmo_prim_hdr *resp = NULL;
 	const uint8_t payload[] = { 0xb1, 0xb2, 0xb3 };
 	int rc;
-	void *ue;
+	struct ue_conn_ctx *ue;
 
 	printf("sccp_sap_up(%s)\n", osmo_scu_prim_name(oph));
 
@@ -212,6 +242,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *link)
 			return 0;
 		}
 		/* FIXME: allocate UE context */
+		ue = ue_conn_ctx_alloc(link, prim->u.connect.conn_id);
 		/* first ensure the local SUA/SCCP socket is ACTIVE */
 		resp = make_conn_resp(&prim->u.connect);
 		osmo_sua_user_link_down(link, resp);
@@ -226,7 +257,8 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *link)
 		/* connection-oriented data received */
 		printf("N-DATA.ind(%u, %s)\n", prim->u.data.conn_id,
 			osmo_hexdump(msgb_l2(oph->msg), msgb_l2len(oph->msg)));
-		/* FIXME: resolve UE context */
+		/* resolve UE context */
+		ue = ue_conn_ctx_find(link, prim->u.data.conn_id);
 		rc = cn_ranap_rx_co(ue, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_UNITDATA, PRIM_OP_INDICATION):
