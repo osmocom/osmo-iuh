@@ -117,6 +117,23 @@ static int ranap_handle_co_err_ind(void *ctx, RANAP_ErrorIndicationIEs_t *ies)
 	return 0;
 }
 
+static int ranap_handle_co_iu_rel_req(struct ue_conn_ctx *ctx, RANAP_Iu_ReleaseRequestIEs_t *ies)
+{
+	struct msgb *msg;
+	struct osmo_scu_prim *prim;
+
+	LOGP(DRANAP, LOGL_INFO, "Received Iu Release Request, Sending Release Command\n");
+	msg = ranap_new_msg_iu_rel_cmd(&ies->cause);
+	msg->l2h = msg->data;
+	prim = (struct osmo_scu_prim *) msgb_push(msg, sizeof(*prim));
+	prim->u.data.conn_id = ctx->conn_id;
+	osmo_prim_init(&prim->oph, SCCP_SAP_USER,
+			OSMO_SCU_PRIM_N_DATA,
+			PRIM_OP_REQUEST, msg);
+	osmo_sua_user_link_down(ctx->link, &prim->oph);
+	return 0;
+}
+
 /* Entry point for connection-oriented ANAP message */
 int cn_ranap_handle_co(void *ctx, ranap_message *message)
 {
@@ -133,6 +150,10 @@ int cn_ranap_handle_co(void *ctx, ranap_message *message)
 			break;
 		case RANAP_ProcedureCode_id_ErrorIndication:
 			rc = ranap_handle_co_err_ind(ctx, &message->msg.errorIndicationIEs);
+			break;
+		case RANAP_ProcedureCode_id_Iu_ReleaseRequest:
+			/* Iu Release Request */
+			rc = ranap_handle_co_iu_rel_req(ctx, &message->msg.iu_ReleaseRequestIEs);
 			break;
 		}
 		break;
