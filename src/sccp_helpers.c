@@ -25,6 +25,13 @@
 
 #include "sccp_helpers.h"
 
+void sccp_make_addr_pc_ssn(struct osmo_sccp_addr *addr, uint32_t pc, uint32_t ssn)
+{
+	addr->presence = OSMO_SCCP_ADDR_T_SSN | OSMO_SCCP_ADDR_T_PC;
+	addr->ssn = ssn;
+	addr->pc = pc;
+}
+
 int sccp_tx_unitdata(struct osmo_sua_link *link,
 		     const struct osmo_sccp_addr *calling_addr,
 		     const struct osmo_sccp_addr *called_addr,
@@ -36,8 +43,8 @@ int sccp_tx_unitdata(struct osmo_sua_link *link,
 
 	prim = (struct osmo_scu_prim *) msgb_put(msg, sizeof(*prim));
 	param = &prim->u.unitdata;
-	param->calling_addr.presence = OSMO_SCCP_ADDR_T_SSN;
-	param->called_addr.presence = OSMO_SCCP_ADDR_T_SSN;
+	sccp_make_addr_pc_ssn(&param->calling_addr, 1, OSMO_SCCP_SSN_RANAP);
+	sccp_make_addr_pc_ssn(&param->called_addr, 2, OSMO_SCCP_SSN_RANAP);
 	osmo_prim_init(&prim->oph, SCCP_SAP_USER, OSMO_SCU_PRIM_N_UNITDATA, PRIM_OP_REQUEST, msg);
 
 	msg->l2h = msgb_put(msg, len);
@@ -60,15 +67,6 @@ int sccp_tx_unitdata_msg(struct osmo_sua_link *link,
 	return rc;
 }
 
-
-#define SSN_RANAP 142
-void sccp_make_addr_pc_ssn(struct osmo_sccp_addr *addr, uint32_t pc, uint32_t ssn)
-{
-	addr->presence = OSMO_SCCP_ADDR_T_SSN | OSMO_SCCP_ADDR_T_PC;
-	addr->ssn = ssn;
-	addr->pc = pc;
-}
-
 int sccp_tx_conn_req(struct osmo_sua_link *link, uint32_t conn_id,
 		     const struct osmo_sccp_addr *calling_addr,
 		     const struct osmo_sccp_addr *called_addr,
@@ -81,7 +79,7 @@ int sccp_tx_conn_req(struct osmo_sua_link *link, uint32_t conn_id,
 	osmo_prim_init(&prim->oph, SCCP_SAP_USER,
 			OSMO_SCU_PRIM_N_CONNECT,
 			PRIM_OP_REQUEST, msg);
-	sccp_make_addr_pc_ssn(&prim->u.connect.calling_addr, 1, SSN_RANAP);
+	sccp_make_addr_pc_ssn(&prim->u.connect.calling_addr, 1, OSMO_SCCP_SSN_RANAP);
 	prim->u.connect.sccp_class = 2;
 	prim->u.connect.conn_id = conn_id;
 

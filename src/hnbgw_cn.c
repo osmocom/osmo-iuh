@@ -33,8 +33,6 @@
 #include "context_map.h"
 #include "sccp_helpers.h"
 
-#define SCCP_SSN_RANAP 143
-
 /***********************************************************************
  * Outbound RANAP RESET to CN
  ***********************************************************************/
@@ -243,7 +241,7 @@ static int handle_cn_unitdata(struct hnbgw_cnlink *cnlink,
 			      const struct osmo_scu_unitdata_param *param,
 			      struct osmo_prim_hdr *oph)
 {
-	if (param->called_addr.ssn != SCCP_SSN_RANAP) {
+	if (param->called_addr.ssn != OSMO_SCCP_SSN_RANAP) {
 		LOGP(DMAIN, LOGL_NOTICE, "N-UNITDATA.ind for unknown SSN %u\n",
 			param->called_addr.ssn);
 		return -1;
@@ -349,8 +347,8 @@ struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint
 	INIT_LLIST_HEAD(&cnlink->map_list);
 	cnlink->T_RafC.cb = cnlink_trafc_cb;
 	cnlink->T_RafC.data = cnlink;
-	sccp_make_addr_pc_ssn(&cnlink->local_addr, 2, SCCP_SSN_RANAP);
-	sccp_make_addr_pc_ssn(&cnlink->remote_addr, 1, SCCP_SSN_RANAP);
+	sccp_make_addr_pc_ssn(&cnlink->local_addr, 2, OSMO_SCCP_SSN_RANAP);
+	sccp_make_addr_pc_ssn(&cnlink->remote_addr, 1, OSMO_SCCP_SSN_RANAP);
 
 	cnlink->sua_user = osmo_sua_user_create(cnlink, sccp_sap_up);
 	if (!cnlink->sua_user) {
