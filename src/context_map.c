@@ -82,6 +82,7 @@ context_map_alloc_by_hnb(struct hnb_context *hnb, uint32_t rua_ctx_id,
 	map->cn_link = cn_if_new;
 	map->hnb_ctx = hnb;
 	map->rua_ctx_id = rua_ctx_id;
+	map->scu_conn_id = new_scu_conn_id;
 
 	/* put it into both lists */
 	llist_add_tail(&map->hnb_list, &hnb->map_list);
