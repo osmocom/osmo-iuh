@@ -107,7 +107,8 @@ int rua_tx_dt(struct hnb_context *hnb, int is_ps, uint32_t context_id,
 					      &out);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_DirectTransfer, &out);
 
-	DEBUGP(DRUA, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+	DEBUGP(DRUA, "transmitting RUA (cn=%s) payload of %u bytes\n",
+		is_ps ? "ps" : "cs", msgb_length(msg));
 
 	return hnbgw_rua_tx(hnb, msg);
 }
@@ -147,7 +148,9 @@ int rua_tx_disc(struct hnb_context *hnb, int is_ps, uint32_t context_id,
 					      &out);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_Disconnect, &out);
 
-	DEBUGP(DRUA, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+	DEBUGP(DRUA, "transmitting RUA (cn=%s) payload of %u bytes\n",
+		is_ps ? "ps" : "cs", msgb_length(msg));
+
 
 	return hnbgw_rua_tx(hnb, msg);
 }
@@ -288,6 +291,10 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 	case RUA_CN_DomainIndicator_ps_domain:
 		cn = hnb->gw->cnlink_ps;
 		break;
+	default:
+		LOGP(DRUA, LOGL_ERROR, "Unsupported Domain %u\n",
+			ies.cN_DomainIndicator);
+		return -1;
 	}
 
 	DEBUGP(DRUA, "RUA Connect.req(ctx=0x%x, %s)\n", context_id,
