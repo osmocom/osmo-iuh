@@ -349,6 +349,7 @@ struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint
 	INIT_LLIST_HEAD(&cnlink->map_list);
 	cnlink->T_RafC.cb = cnlink_trafc_cb;
 	cnlink->T_RafC.data = cnlink;
+	cnlink->next_conn_id = 1000;
 	sccp_make_addr_pc_ssn(&cnlink->local_addr, 2, OSMO_SCCP_SSN_RANAP);
 	sccp_make_addr_pc_ssn(&cnlink->remote_addr, 1, OSMO_SCCP_SSN_RANAP);
 
