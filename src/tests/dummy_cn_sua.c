@@ -11,10 +11,14 @@
 #include <osmocom/core/application.h>
 #include <osmocom/vty/logging.h>
 
+#include <osmocom/gsm/gsm48.h>
+
 #include <osmocom/sigtran/sua.h>
 #include <osmocom/sigtran/sccp_sap.h>
 
 #include "test_common.h"
+
+#include "ranap_ies_defs.h"
 #include "ranap_common_cn.h"
 #include "hnbgw.h"
 
@@ -54,21 +58,21 @@ struct ue_conn_ctx *ue_conn_ctx_find(struct osmo_sua_link *link, uint32_t conn_i
  * RANAP handling
  ***********************************************************************/
 
-static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MEssageIEs_t *ies)
+static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *ies)
 {
 	struct gprs_ra_id ra_id;
 	uint16_t sai;
 	struct msgb *msg = msgb_alloc(256, "RANAP->NAS");
 	uint8_t *cur;
 
-	ranap_parse_lai(&ra_id, &ies.lai);
-	sai = asn1str_to_u16(&ies.sai.sAC);
-	cur = msgb_put(msg, ies.nas_pdu.size);
-	memcpy(msg, ies.nas_pdu.buf, ies.nas_pdu.size);
+	ranap_parse_lai(&ra_id, &ies->lai);
+	sai = asn1str_to_u16(&ies->sai.sAC);
+	cur = msgb_put(msg, ies->nas_pdu.size);
+	memcpy(msg, ies->nas_pdu.buf, ies->nas_pdu.size);
 	/* FIXME: set msgb_gmmh() */
 
 	/* FIXME: Feed into the MM layer */
-	rc = gsm0408_gprs_rcvmsg_iu(msg, ra_id, sai, conn_id);
+	//rc = gsm0408_gprs_rcvmsg_iu(msg, ra_id, sai, conn_id);
 
 	return 0;
 }
@@ -80,24 +84,24 @@ static int ranap_handle_co_dt(void *ctx, RANAP_DirectTransferIEs_t *ies)
 	struct msgb *msg = msgb_alloc(256, "RANAP->NAS");
 	uint8_t *cur;
 
-	if (ies.presenceMask & DIRECTTRANSFERIES_RANAP_LAI_PRESENT) {
-		ranap_parse_lai(&_ra_id, &ies.lai);
+	if (ies->presenceMask & DIRECTTRANSFERIES_RANAP_LAI_PRESENT) {
+		ranap_parse_lai(&_ra_id, &ies->lai);
 		ra_id = &_ra_id;
-		if (ies.presenceMask & DIRECTTRANSFERIES_RANAP_RAC_PRESENT) {
-			_ra_id.rac = asn1str_to_u16(&ies.rac);
+		if (ies->presenceMask & DIRECTTRANSFERIES_RANAP_RAC_PRESENT) {
+			_ra_id.rac = asn1str_to_u8(&ies->rac);
 		}
-		if (ies.presenceMask & DIRECTTRANSFERIES_RANAP_SAI_PRESENT) {
-			_sai = asn1str_to_u16(&ies.sai.sAC);
+		if (ies->presenceMask & DIRECTTRANSFERIES_RANAP_SAI_PRESENT) {
+			_sai = asn1str_to_u16(&ies->sai.sAC);
 			sai = &_sai;
 		}
 	}
 
-	cur = msgb_put(msg, ies.nas_pdu.size);
-	memcpy(msg, ies.nas_pdu.buf, ies.nas_pdu.size);
+	cur = msgb_put(msg, ies->nas_pdu.size);
+	memcpy(msg, ies->nas_pdu.buf, ies->nas_pdu.size);
 	/* FIXME: set msgb_gmmh() */
 
 	/* FIXME: Feed into the MM/CC/SMS-CP layer */
-	rc = gsm0408_gprs_rcvmsg_iu(msg, ra_id, sai, conn_id);
+	//rc = gsm0408_gprs_rcvmsg_iu(msg, ra_id, sai, conn_id);
 
 	return 0;
 }
