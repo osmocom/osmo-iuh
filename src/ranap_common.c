@@ -21,6 +21,7 @@
 #include <stdint.h>
 
 #include <osmocom/core/msgb.h>
+#include <osmocom/gsm/gsm48.h>
 
 #include "ranap_common.h"
 #include "hnbgw.h"
@@ -490,4 +491,29 @@ RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
 		}
 
 	return buff;
+}
+
+int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai)
+{
+	uint8_t *ptr = lai->pLMNidentity.buf;
+
+	/* TS 25.413 9.2.3.55 */
+	if (lai->pLMNidentity.size != 3)
+		return -1;
+
+	ra_id->mcc = (ptr[0] & 0xF) * 100 +
+		     (ptr[0] >> 4) * 10 +
+		     (ptr[1] & 0xF);
+	ra_id->mnc = (ptr[2] & 0xF) +
+		     (ptr[2] >> 4) * 10;
+	if ((ptr[1] >> 4) != 0xF)
+		ra_id->mnc += (ptr[1] >> 4) * 100;
+
+	ra_id->lac = asn1str_to_u16(&lai->lAC);
+
+	/* TS 25.413 9.2.3.6 */
+	if (ra_id->lac == 0 || ra_id->lac == 0xfffe)
+		return -1;
+
+	return 0;
 }
