@@ -58,8 +58,6 @@ struct msgb *rua_new_conn(int is_ps, uint32_t context_id, struct msgb *inmsg)
 	if (rc < 0)
 		return NULL;
 
-	msgb_free(inmsg);
-
 	msg = rua_generate_initiating_message(RUA_ProcedureCode_id_Connect,
 					      RUA_Criticality_reject,
 					      &asn_DEF_RUA_Connect,
@@ -96,8 +94,6 @@ struct msgb *rua_new_dt(int is_ps, uint32_t context_id, struct msgb *inmsg)
 	if (rc < 0)
 		return NULL;
 
-	msgb_free(inmsg);
-
 	msg = rua_generate_initiating_message(RUA_ProcedureCode_id_DirectTransfer,
 					      RUA_Criticality_reject,
 					      &asn_DEF_RUA_DirectTransfer,
@@ -132,15 +128,13 @@ struct msgb *rua_new_disc(int is_ps, uint32_t context_id, struct msgb *inmsg)
 	if (inmsg && inmsg->data&& msgb_length(inmsg)) {
 		ies.presenceMask |= DISCONNECTIES_RUA_RANAP_MESSAGE_PRESENT;
 		OCTET_STRING_fromBuf(&ies.ranaP_Message.buf, inmsg->data, msgb_length(inmsg));
-		msgb_free(inmsg);
 	}
+	msgb_free(inmsg);
 
 	memset(&out, 0, sizeof(out));
 	rc = rua_encode_disconnecties(&out, &ies);
 	if (rc < 0)
 		return NULL;
-
-	msgb_free(inmsg);
 
 	msg = rua_generate_initiating_message(RUA_ProcedureCode_id_Disconnect,
 					      RUA_Criticality_reject,

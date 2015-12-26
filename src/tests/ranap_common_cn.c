@@ -27,8 +27,9 @@
 
 #include "ranap_common.h"
 #include "ranap_ies_defs.h"
+#include "ranap_common_cn.h"
 
-#include "cn_ranap_common.h"
+#include "hnbgw.h"
 
 static int cn_ranap_rx_initiating_msg_co(void *ctx, RANAP_InitiatingMessage_t *imsg,
 					 ranap_message *message)
@@ -148,7 +149,6 @@ int cn_ranap_rx_co(void *ctx, uint8_t *data, size_t len)
 
 	memset(&message, 0, sizeof(message));
 
-	memset(pdu, 0, sizeof(*pdu));
 	dec_ret = aper_decode(NULL,&asn_DEF_RANAP_RANAP_PDU, (void **) &pdu,
 			      data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
@@ -282,7 +282,6 @@ int cn_ranap_rx_cl(void *ctx, uint8_t *data, size_t len)
 
 	memset(&message, 0, sizeof(message));
 
-	memset(pdu, 0, sizeof(*pdu));
 	dec_ret = aper_decode(NULL,&asn_DEF_RANAP_RANAP_PDU, (void **) &pdu,
 			      data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
