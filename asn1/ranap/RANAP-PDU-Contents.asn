@@ -1924,7 +1924,7 @@ InitialUE-Message ::= SEQUENCE {
 InitialUE-MessageIEs RANAP-PROTOCOL-IES ::= {
 	{ ID id-CN-DomainIndicator	CRITICALITY ignore	TYPE CN-DomainIndicator		PRESENCE mandatory	} |
 	{ ID id-LAI			CRITICALITY ignore	TYPE LAI			PRESENCE mandatory	} |
-	{ ID id-RAC			CRITICALITY ignore	TYPE RAC			PRESENCE conditional
+	{ ID id-RAC			CRITICALITY ignore	TYPE RAC			PRESENCE conditional    } |
 	-- This IE shall be present if the CN Domain Indicator IE is set to "PS domain"		--			} |
 	{ ID id-SAI			CRITICALITY ignore	TYPE SAI			PRESENCE mandatory	} |
 	{ ID id-NAS-PDU			CRITICALITY ignore	TYPE NAS-PDU			PRESENCE mandatory	} |
