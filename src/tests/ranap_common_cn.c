@@ -109,6 +109,33 @@ static int cn_ranap_rx_successful_msg_co(void *ctx, RANAP_SuccessfulOutcome_t *i
 	return rc;
 }
 
+static int cn_ranap_rx_outcome_msg_co(void *ctx, RANAP_Outcome_t *imsg,
+					ranap_message *message)
+{
+	int rc = 0;
+
+	message->procedureCode = imsg->procedureCode;
+	message->criticality = imsg->criticality;
+
+	DEBUGP(DRANAP, "Rx CO O (%s)\n",
+		get_value_string(ranap_procedure_code_vals, imsg->procedureCode));
+
+	switch (imsg->procedureCode) {
+	case RANAP_ProcedureCode_id_RAB_Assignment:
+		/* RAB assignment response */
+		rc = ranap_decode_rab_assignmentresponseies(&message->msg.raB_AssignmentResponseIEs, &imsg->value);
+		break;
+	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
+		     "Procedure %s (O) from RNC, ignoring\n",
+		     get_value_string(ranap_procedure_code_vals, imsg->procedureCode));
+		rc = -1;
+		break;
+	}
+
+	return rc;
+}
+
 static int _cn_ranap_rx_co(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *message)
 {
 	int rc = 0;
@@ -126,6 +153,9 @@ static int _cn_ranap_rx_co(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *mes
 		     get_value_string(ranap_procedure_code_vals,
 			     	      pdu->choice.unsuccessfulOutcome.procedureCode));
 		rc = -1;
+		break;
+	case RANAP_RANAP_PDU_PR_outcome:
+		rc = cn_ranap_rx_outcome_msg_co(ctx, &pdu->choice.successfulOutcome, message);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
