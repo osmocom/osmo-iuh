@@ -553,17 +553,38 @@ static RANAP_RAB_Parameters_t *new_rab_par_data(void)
 	return rab;
 }
 
+static void new_transp_layer_addr(BIT_STRING_t *out, uint32_t ip, int use_x213_nsap)
+{
+	uint8_t *buf;
+	unsigned int len;
+
+	if (use_x213_nsap) {
+		len = 7;
+		buf = CALLOC(len, sizeof(uint8_t));
+		buf[0] = 0x35;	/* AFI For IANA ICP */
+		buf[1] = 0x00;	/* See A.5.2.1.2.7 of X.213 */
+		buf[2] = 0x01;
+		*(uint32_t *)&buf[3] = ntohl(ip);
+	} else {
+		len = 4;
+		buf = CALLOC(len, sizeof(uint8_t));
+		*(uint32_t *)buf = ip;
+	}
+	out->buf = buf;
+	out->size = len;
+	out->bits_unused = 0;
+}
+
 static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint16_t port)
 {
 	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
-	uint32_t *ipbuf = CALLOC(1, sizeof(*ipbuf));
 	uint8_t binding_id[4];
 
 	binding_id[0] = port >> 8;
 	binding_id[1] = port & 0xff;
 	binding_id[2] = binding_id[3] = 0;
 
-	asn1_u32_to_bitstring(&tli->transportLayerAddress, ipbuf, ip);
+	new_transp_layer_addr(&tli->transportLayerAddress, ip, 1);
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_bindingID;
 	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.bindingID,
 				(const char *) binding_id, sizeof(binding_id));
@@ -574,10 +595,9 @@ static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint1
 static RANAP_TransportLayerInformation_t *new_transp_info_gtp(uint32_t ip, uint32_t tei)
 {
 	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
-	uint32_t *ipbuf = CALLOC(1, sizeof(*ipbuf));
 	uint32_t binding_buf = tei;
 
-	asn1_u32_to_bitstring(&tli->transportLayerAddress, ipbuf, ip);
+	new_transp_layer_addr(&tli->transportLayerAddress, ip, 1);
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_gTP_TEI;
 	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.bindingID,
 			     (const char *) &binding_buf, sizeof(binding_buf));
