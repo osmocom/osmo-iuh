@@ -82,7 +82,7 @@ static int cn_ranap_rx_successful_msg_co(void *ctx, RANAP_SuccessfulOutcome_t *i
 	message->procedureCode = imsg->procedureCode;
 	message->criticality = imsg->criticality;
 
-	DEBUGP(DRANAP, "Rx CL SO (%s)\n",
+	DEBUGP(DRANAP, "Rx CO SO (%s)\n",
 		get_value_string(ranap_procedure_code_vals, imsg->procedureCode));
 
 	switch (imsg->procedureCode) {
