@@ -218,8 +218,6 @@ struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck)
 	memset(&ies, 0, sizeof(ies));
 	memset(&out, 0, sizeof(out));
 
-	ies.presenceMask = SECURITYMODECOMMANDIES_RANAP_ENCRYPTIONINFORMATION_PRESENT;
-
 	for (i = 0; i < ARRAY_SIZE(ip_alg); i++) {
 		/* needs to be dynamically allocated, as
 		 * SET_OF_free() will call FREEMEM() on it */
@@ -231,6 +229,7 @@ struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck)
 	BIT_STRING_fromBuf(&ies.integrityProtectionInformation.key, ik, 16*8);
 
 	if (ck) {
+		ies.presenceMask = SECURITYMODECOMMANDIES_RANAP_ENCRYPTIONINFORMATION_PRESENT;
 		for (i = 0; i < ARRAY_SIZE(ip_alg); i++) {
 			/* needs to be dynamically allocated, as
 			 * SET_OF_free() will call FREEMEM() on it */
@@ -248,7 +247,8 @@ struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck)
 
 	/* release dynamic allocations attached to ies */
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_IntegrityProtectionInformation, &ies.integrityProtectionInformation);
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_EncryptionInformation, &ies.encryptionInformation);
+	if (ck)
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_EncryptionInformation, &ies.encryptionInformation);
 
 	/* out -> msg */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_SecurityModeControl,
