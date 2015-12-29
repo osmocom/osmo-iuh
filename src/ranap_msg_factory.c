@@ -530,7 +530,7 @@ static RANAP_RAB_Parameters_t *new_rab_par_voice(void)
 	return rab;
 }
 
-static RANAP_RAB_Parameters_t *new_rab_par_data(void)
+static RANAP_RAB_Parameters_t *new_rab_par_data(uint32_t dl_max_bitrate, uint32_t ul_max_bitrate)
 {
 	RANAP_RAB_Parameters_t *rab = CALLOC(1, sizeof(*rab));
 	RANAP_SDU_ParameterItem_t *sdui;
@@ -538,8 +538,8 @@ static RANAP_RAB_Parameters_t *new_rab_par_data(void)
 	rab->trafficClass = RANAP_TrafficClass_background;
 	rab->rAB_AsymmetryIndicator = RANAP_RAB_AsymmetryIndicator_asymmetric_bidirectional;
 
-	ASN_SEQUENCE_ADD(&rab->maxBitrate.list, new_long(16000000));
-	ASN_SEQUENCE_ADD(&rab->maxBitrate.list, new_long(8000000));
+	ASN_SEQUENCE_ADD(&rab->maxBitrate.list, new_long(dl_max_bitrate));
+	ASN_SEQUENCE_ADD(&rab->maxBitrate.list, new_long(ul_max_bitrate));
 	rab->deliveryOrder = RANAP_DeliveryOrder_delivery_order_requested;
 	rab->maxSDU_Size = 8000;
 
@@ -717,7 +717,8 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip, uint
 	memset(&first, 0, sizeof(first));
 	assign_new_ra_id(&first.rAB_ID, rab_id);
 	//first.nAS_SynchronisationIndicator = FIXME;
-	first.rAB_Parameters = new_rab_par_data();
+
+	first.rAB_Parameters = new_rab_par_data(1600000, 800000);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_transparent_mode, 1);
 	first.transportLayerInformation = new_transp_info_rtp(gtp_ip, gtp_tei);
 
