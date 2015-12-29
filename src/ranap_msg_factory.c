@@ -595,11 +595,11 @@ static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint1
 static RANAP_TransportLayerInformation_t *new_transp_info_gtp(uint32_t ip, uint32_t tei)
 {
 	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
-	uint32_t binding_buf = tei;
+	uint32_t binding_buf = htonl(tei);
 
 	new_transp_layer_addr(&tli->transportLayerAddress, ip, 1);
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_gTP_TEI;
-	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.bindingID,
+	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.gTP_TEI,
 			     (const char *) &binding_buf, sizeof(binding_buf));
 
 	return tli;
@@ -720,7 +720,7 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip, uint
 
 	first.rAB_Parameters = new_rab_par_data(1600000, 800000);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_transparent_mode, 1);
-	first.transportLayerInformation = new_transp_info_rtp(gtp_ip, gtp_tei);
+	first.transportLayerInformation = new_transp_info_gtp(gtp_ip, gtp_tei);
 
 	/* put together the 'Second' part */
 	RANAP_RAB_SetupOrModifyItemSecond_t second;
