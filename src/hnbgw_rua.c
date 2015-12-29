@@ -168,6 +168,11 @@ static int rua_to_scu(struct hnb_context *hnb, struct hnbgw_cnlink *cn,
 	struct hnbgw_context_map *map;
 	int rc;
 
+	if (!cn) {
+		DEBUGP(DRUA, "CN=NULL, discarding message\n");
+		return 0;
+	}
+
 	prim = (struct osmo_scu_prim *) msgb_put(msg, sizeof(*prim));
 	osmo_prim_init(&prim->oph, SCCP_SAP_USER, type, PRIM_OP_REQUEST, msg);
 

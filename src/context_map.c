@@ -76,6 +76,9 @@ context_map_alloc_by_hnb(struct hnb_context *hnb, uint32_t rua_ctx_id,
 		return NULL;
 	}
 
+	LOGP(DMAIN, LOGL_INFO, "Creating new Mapping RUA CTX %p/%u <-> SCU Conn ID %p/%u\n",
+		hnb, rua_ctx_id, cn_if_new, new_scu_conn_id);
+
 	/* alloate a new map entry */
 	map = talloc_zero(hnb, struct hnbgw_context_map);
 	map->state = MAP_S_NULL;
@@ -109,7 +112,7 @@ context_map_by_cn(struct hnbgw_cnlink *cn, uint32_t scu_conn_id)
 	 * direction, as the RUA=SCCP=SUA connections are always
 	 * established from HNB towards CN. */
 	LOGP(DMAIN, LOGL_NOTICE, "Unable to resolve map for CN "
-		"connection ID %u\n", scu_conn_id);
+		"connection ID %p/%u\n", cn, scu_conn_id);
 	return NULL;
 }
 

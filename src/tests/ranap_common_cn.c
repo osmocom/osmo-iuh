@@ -192,6 +192,8 @@ int cn_ranap_rx_co(void *ctx, uint8_t *data, size_t len)
 
 	if (rc == 0)
 		cn_ranap_handle_co(ctx, &message);
+	else
+		LOGP(DRANAP, LOGL_ERROR, "Not calling cn_ranap_handle_co() due to rc=%d\n", rc);
 
 	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
 
@@ -325,6 +327,8 @@ int cn_ranap_rx_cl(void *ctx, uint8_t *data, size_t len)
 
 	if (rc == 0)
 		cn_ranap_handle_cl(ctx, &message);
+	else
+		LOGP(DRANAP, LOGL_ERROR, "Not calling cn_ranap_handle_cl() due to rc=%d\n", rc);
 
 	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
 

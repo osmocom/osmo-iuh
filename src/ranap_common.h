@@ -590,7 +590,8 @@
 #include <osmocom/core/logging.h>
 #include <osmocom/core/utils.h>
 
-#define RANAP_DEBUG(x, args ...) DEBUGP(0, x, ## args)
+#include "hnbgw.h"
+#define RANAP_DEBUG(x, args ...) DEBUGP(DRANAP, x, ## args)
 
 extern int asn1_xer_print;
 
