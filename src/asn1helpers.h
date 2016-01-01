@@ -18,3 +18,9 @@ uint8_t asn1str_to_u8(const OCTET_STRING_t *in);
 uint32_t asn1bitstr_to_u32(const BIT_STRING_t *in);
 uint32_t asn1bitstr_to_u28(const BIT_STRING_t *in);
 uint32_t asn1bitstr_to_u24(const BIT_STRING_t *in);
+
+static inline void OCTET_STRING_noalloc(OCTET_STRING_t *s, const uint8_t *str, int size)
+{
+	s->buf = str;
+	s->size = size;
+}
