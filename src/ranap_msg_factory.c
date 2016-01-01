@@ -86,7 +86,7 @@ struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
 	 * ACKNOWLEDGE message to the CN */
 	if (rnc_id) {
 		ies.presenceMask = RESETACKNOWLEDGEIES_RANAP_GLOBALRNC_ID_PRESENT;
-		OCTET_STRING_fromBuf(&ies.globalRNC_ID.pLMNidentity,
+		OCTET_STRING_noalloc(&ies.globalRNC_ID.pLMNidentity,
 				     rnc_id->pLMNidentity.buf,
 				     rnc_id->pLMNidentity.size);
 		ies.globalRNC_ID.rNC_ID = rnc_id->rNC_ID;
@@ -130,16 +130,16 @@ struct msgb *ranap_new_msg_initial_ue(uint32_t conn_id, int is_ps,
 	else
 		ies.cN_DomainIndicator = RANAP_CN_DomainIndicator_cs_domain;
 
-	OCTET_STRING_fromBuf(&ies.lai.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
-	OCTET_STRING_fromBuf(&ies.lai.lAC, (uint8_t *)&buf0, sizeof(buf0));
+	OCTET_STRING_noalloc(&ies.lai.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
+	OCTET_STRING_noalloc(&ies.lai.lAC, (uint8_t *)&buf0, sizeof(buf0));
 
-	OCTET_STRING_fromBuf(&ies.sai.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
-	OCTET_STRING_fromBuf(&ies.sai.lAC, (uint8_t *)&buf0, sizeof(buf0));
-	OCTET_STRING_fromBuf(&ies.sai.sAC, (uint8_t *)&buf0, sizeof(buf0));
+	OCTET_STRING_noalloc(&ies.sai.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
+	OCTET_STRING_noalloc(&ies.sai.lAC, (uint8_t *)&buf0, sizeof(buf0));
+	OCTET_STRING_noalloc(&ies.sai.sAC, (uint8_t *)&buf0, sizeof(buf0));
 
-	OCTET_STRING_fromBuf(&ies.nas_pdu, nas_pdu, nas_len);
+	OCTET_STRING_noalloc(&ies.nas_pdu, nas_pdu, nas_len);
 	asn1_u24_to_bitstring(&ies.iuSigConId, &ctxidbuf, conn_id);
-	OCTET_STRING_fromBuf(&ies.globalRNC_ID.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
+	OCTET_STRING_noalloc(&ies.globalRNC_ID.pLMNidentity, rnc_id->pLMNidentity.buf, rnc_id->pLMNidentity.size);
 	ies.globalRNC_ID.rNC_ID = rnc_id->rNC_ID;
 
 	memset(&out, 0, sizeof(out));
@@ -180,7 +180,8 @@ struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas
 	else
 		ies.sapi = RANAP_SAPI_sapi_0;
 
-	OCTET_STRING_fromBuf(&ies.nas_pdu, nas, nas_len);
+	/* Avoid copying + later freeing of OCTET STRING */
+	OCTET_STRING_noalloc(&ies.nas_pdu, nas, nas_len);
 
 	/* ies -> dt */
 	rc = ranap_encode_directtransferies(&dt, &ies);
