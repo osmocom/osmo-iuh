@@ -40,7 +40,7 @@ static long *new_long(long in)
 
 /*! \brief generate RANAP RESET message */
 struct msgb *ranap_new_msg_reset(RANAP_CN_DomainIndicator_t domain,
-				 RANAP_Cause_t *cause)
+				 const RANAP_Cause_t *cause)
 {
 	RANAP_ResetIEs_t ies;
 	RANAP_Reset_t out;
