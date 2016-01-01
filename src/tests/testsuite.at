@@ -13,3 +13,9 @@ AT_KEYWORDS([hnbap])
 cat $abs_srcdir/test-hnbap.ok > expout
 AT_CHECK([$abs_top_builddir/src/tests/test-hnbap], [0], [expout])
 AT_CLEANUP
+
+AT_SETUP([ranap])
+AT_KEYWORDS([ranap])
+cat $abs_srcdir/test-ranap.ok > expout
+AT_CHECK([$abs_top_builddir/src/tests/test-ranap], [0], [expout])
+AT_CLEANUP
