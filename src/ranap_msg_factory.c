@@ -580,9 +580,14 @@ static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint1
 	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
 	uint8_t binding_id[4];
 
+#if 0
 	binding_id[0] = port >> 8;
 	binding_id[1] = port & 0xff;
 	binding_id[2] = binding_id[3] = 0;
+#else
+	binding_id[0] = binding_id[1] = binding_id[2]  = 0;
+	binding_id[3] = 1;
+#endif
 
 	new_transp_layer_addr(&tli->transportLayerAddress, ip, 1);
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_bindingID;
@@ -768,6 +773,70 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip, uint
 
 	/* 'msg' has been generated, we cann now release the input 'out' */
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_AssignmentRequest, &out);
+
+	return msg;
+}
+
+struct msgb *ranap_new_msg_iu_rel_req(const RANAP_Cause_t *cause)
+{
+	RANAP_Iu_ReleaseRequestIEs_t ies;
+	RANAP_Iu_ReleaseRequest_t out;
+	struct msgb *msg;
+	int rc;
+
+	memset(&ies, 0, sizeof(ies));
+	memset(&out, 0, sizeof(out));
+
+	memcpy(&ies.cause, cause, sizeof(ies.cause));
+
+	rc = ranap_encode_iu_releaserequesties(&out, &ies);
+	if (rc < 0)
+		return NULL;
+
+	/* encode the output into the msgb */
+	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_Iu_ReleaseRequest,
+						RANAP_Criticality_reject,
+						&asn_DEF_RANAP_Iu_ReleaseRequest, &out);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_Iu_ReleaseRequest, &out);
+
+	return msg;
+}
+
+struct msgb *ranap_new_msg_rab_rel_req(uint8_t rab_id, const RANAP_Cause_t *cause)
+{
+	RANAP_RAB_ReleaseItemIEs_t item_ies;
+	RANAP_RAB_ReleaseRequestIEs_t ies;
+	RANAP_RAB_ReleaseRequest_t out;
+	struct msgb *msg;
+	int rc;
+
+	memset(&item_ies, 0, sizeof(item_ies));
+	memset(&ies, 0, sizeof(ies));
+	memset(&out, 0, sizeof(out));
+
+	/* put together the ReleaseItem */
+	assign_new_ra_id(&item_ies.raB_ReleaseItem.rAB_ID, rab_id);
+	memcpy(&item_ies.raB_ReleaseItem.cause, cause, sizeof(item_ies.raB_ReleaseItem.cause));
+
+	/* add to the list */
+	rc = ranap_encode_rab_releaseitemies(&ies.raB_ReleaseList, &item_ies);
+	if (rc < 0)
+		return NULL;
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_ReleaseItem, &item_ies.raB_ReleaseItem);
+
+	/* encoe the list IEs into the output */
+	rc = ranap_encode_rab_releaserequesties(&out, &ies);
+	if (rc < 0)
+		return NULL;
+	/* 'out' has been generated, we can release the input */
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_ReleaseList, &ies.raB_ReleaseList);
+
+	/* encode the output into the msgb */
+	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_RAB_ReleaseRequest,
+						RANAP_Criticality_reject,
+						&asn_DEF_RANAP_RAB_ReleaseRequest, &out);
+
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_ReleaseRequest, &out);
 
 	return msg;
 }
