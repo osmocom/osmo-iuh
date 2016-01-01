@@ -100,6 +100,41 @@ int main(int argc, char **argv)
 		if (msg)
 			printf("%s\n", msgb_hexdump(msg));
 		msgb_free(msg);
+
+		printf("\n==> RESET CMD\n");
+		msg = ranap_new_msg_reset(RANAP_CN_DomainIndicator_cs_domain, &cause);
+		if (msg)
+			printf("%s\n", msgb_hexdump(msg));
+		msgb_free(msg);
+
+		printf("\n==> RESET ACK\n");
+		uint8_t plmn_id[] = { 0x09, 0x01, 0x99 };
+		RANAP_GlobalRNC_ID_t rnc_id;
+		rnc_id.pLMNidentity.buf = plmn_id;
+		rnc_id.pLMNidentity.size = sizeof(plmn_id);
+		rnc_id.rNC_ID = 2342;
+		msg = ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_cs_domain, &rnc_id);
+		if (msg)
+			printf("%s\n", msgb_hexdump(msg));
+		msgb_free(msg);
+
+		printf("\n==> INITIAL UE\n");
+		msg = ranap_new_msg_initial_ue(23, 0, &rnc_id, nas_buf, sizeof(nas_buf));
+		if (msg)
+			printf("%s\n", msgb_hexdump(msg));
+		msgb_free(msg);
+
+		printf("\n==> IU RELEASE REQ\n");
+		msg = ranap_new_msg_iu_rel_req(&cause);
+		if (msg)
+			printf("%s\n", msgb_hexdump(msg));
+		msgb_free(msg);
+
+		printf("\n==> RAB RELEASE REQ\n");
+		msg = ranap_new_msg_rab_rel_req(23, &cause);
+		if (msg)
+			printf("%s\n", msgb_hexdump(msg));
+		msgb_free(msg);
 	}
 
 	printf("report\n");
