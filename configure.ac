@@ -29,6 +29,7 @@ dnl checks for header files
 AC_HEADER_STDC
 
 AC_OUTPUT(
+	libosmo-ranap.pc
 	src/Makefile
 	src/hnbap/Makefile
 	src/ranap/Makefile
