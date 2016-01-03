@@ -2,6 +2,8 @@ AC_INIT([osmo-iuh], [0.0],
 dnl	m4_esyscmd([./git-version-gen .tarball-version]),
 	[openbsc@lists.osmocom.org])
 
+LT_INIT
+
 AM_INIT_AUTOMAKE([foreign dist-bzip2 no-dist-gzip 1.6 subdir-objects])
 AC_CONFIG_TESTDIR(src/tests)
 
@@ -13,7 +15,6 @@ AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P
 AC_PROG_CC
 AC_PROG_INSTALL
-AC_PROG_RANLIB
 
 PKG_CHECK_MODULES(OSMOCORE, libosmocore)
 PKG_CHECK_MODULES(OSMOGSM, libosmogsm)

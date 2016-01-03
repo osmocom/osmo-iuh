@@ -1162,10 +1162,10 @@ ASN_MODULE_INC=	\
 
 AM_CFLAGS = $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS) -I.
 
-noinst_LIBRARIES=libosmo-asn1-ranap.a
-libosmo_asn1_ranap_a_SOURCES=$(ASN_MODULE_SRC)
+noinst_LTLIBRARIES=libosmo-asn1-ranap.la
+libosmo_asn1_ranap_la_SOURCES=$(ASN_MODULE_SRC)
 include_HEADERS=$(ASN_MODULE_INC)
-libosmo_asn1_ranap_a_LIBADD=$(ASN1C_LDADD)
+libosmo_asn1_ranap_la_LIBADD=$(ASN1C_LDADD)
 
 regen: regenerate-from-asn1-source
 
