@@ -1,5 +1,5 @@
-AC_INIT([osmo-iuh], [0.0],
-dnl	m4_esyscmd([./git-version-gen .tarball-version]),
+AC_INIT([osmo-iuh],
+	m4_esyscmd([./git-version-gen .tarball-version]),
 	[openbsc@lists.osmocom.org])
 
 LT_INIT
