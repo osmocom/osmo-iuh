@@ -76,7 +76,7 @@ AM_CFLAGS = $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS) -I.
 
 noinst_LIBRARIES=libosmo-asn1-rua.a
 libosmo_asn1_rua_a_SOURCES=$(ASN_MODULE_SOURCES)
-include_HEADERS=$(ASN_MODULES_INC)
+noinst_HEADERS=$(ASN_MODULE_INC)
 libosmo_asn1_rua_a_LIBADD=$(ASN1C_LDADD)
 
 regen: regenerate-from-asn1-source

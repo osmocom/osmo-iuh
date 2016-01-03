@@ -37,7 +37,8 @@ bin_PROGRAMS = osmo-hnbgw
 noinst_HEADERS = hnbap_common.h hnbap_ies_defs.h \
 		 rua_common.h rua_ies_defs.h \
 		 context_map.h hnbgw.h hnbgw_cn.h \
-		 hnbgw_hnbap.h hnbgw_rua.h hnbgw_ranap.h
+		 hnbgw_hnbap.h hnbgw_rua.h hnbgw_ranap.h \
+		 sccp_helpers.h
 
 osmo_hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c hnbap_common.c \
 		     rua_encoder.c rua_decoder.c rua_common.c \
