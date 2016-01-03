@@ -6,13 +6,13 @@ check_PROGRAMS = test-ranap test-helpers test-hnbap hnb-test dummy-cn
 
 HNBAP_FILES = $(top_builddir)/src/hnbap_common.c $(top_builddir)/src/hnbap_decoder.c $(top_builddir)/src/hnbap_encoder.c
 RUA_FILES = $(top_builddir)/src/rua_common.c $(top_builddir)/src/rua_decoder.c $(top_builddir)/src/rua_encoder.c
-HELPER_FILES = $(top_builddir)/src/iu_helpers.c $(top_builddir)/src/asn1helpers.c
+HELPER_FILES = $(top_builddir)/src/asn1helpers.c
 
 test_helpers_SOURCES = $(HELPER_FILES) test-helpers.c
-test_helpers_LDADD = $(COMMON_LIBS)
+test_helpers_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 
 test_hnbap_SOURCES = $(HELPER_FILES) $(top_builddir)/src/hnbap_common.c $(top_builddir)/src/hnbap_decoder.c test-hnbap.c test_common.c
-test_hnbap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a
+test_hnbap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a $(top_builddir)/src/libosmo-ranap.la
 
 hnb_test_SOURCES = $(HELPER_FILES) $(HNBAP_FILES) $(RUA_FILES) hnb-test.c rua_helper.c test_common.c
 hnb_test_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a $(top_builddir)/src/rua/libosmo-asn1-rua.a $(top_builddir)/src/libosmo-ranap.la

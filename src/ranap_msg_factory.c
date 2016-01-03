@@ -276,7 +276,7 @@ struct msgb *ranap_new_msg_common_id(const char *imsi)
 
 	if (imsi) {
 		uint8_t *imsi_buf = CALLOC(1, 16);
-		rc = encode_iu_imsi(imsi_buf, 16, imsi);
+		rc = ranap_imsi_encode(imsi_buf, 16, imsi);
 		ies.permanentNAS_UE_ID.present = RANAP_PermanentNAS_UE_ID_PR_iMSI;
 		ies.permanentNAS_UE_ID.choice.iMSI.buf = imsi_buf;
 		ies.permanentNAS_UE_ID.choice.iMSI.size = rc;
@@ -350,7 +350,7 @@ struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, in
 	else
 		ies.cN_DomainIndicator = RANAP_CN_DomainIndicator_cs_domain;
 
-	rc = encode_iu_imsi(imsi_buf, 16, imsi);
+	rc = ranap_imsi_encode(imsi_buf, 16, imsi);
 	ies.permanentNAS_UE_ID.present = RANAP_PermanentNAS_UE_ID_PR_iMSI;
 	ies.permanentNAS_UE_ID.choice.iMSI.buf = imsi_buf;
 	ies.permanentNAS_UE_ID.choice.iMSI.size = rc;

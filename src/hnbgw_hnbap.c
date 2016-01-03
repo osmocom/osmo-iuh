@@ -86,7 +86,7 @@ static int hnbgw_tx_ue_register_acc(struct ue_context *ue)
 	size_t encoded_imsi_len;
 	int rc;
 
-	encoded_imsi_len = encode_iu_imsi(encoded_imsi,
+	encoded_imsi_len = ranap_imsi_encode(encoded_imsi,
 					  sizeof(encoded_imsi), ue->imsi);
 
 	memset(&accept, 0, sizeof(accept));
@@ -150,15 +150,15 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 
 	switch (ies.uE_Identity.present) {
 	case UE_Identity_PR_iMSI:
-		decode_iu_bcd(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSI.buf,
+		ranap_bcd_decode(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSI.buf,
 			      ies.uE_Identity.choice.iMSI.size);
 		break;
 	case UE_Identity_PR_iMSIDS41:
-		decode_iu_bcd(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSIDS41.buf,
+		ranap_bcd_decode(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSIDS41.buf,
 			      ies.uE_Identity.choice.iMSIDS41.size);
 		break;
 	case UE_Identity_PR_iMSIESN:
-		decode_iu_bcd(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSIESN.iMSIDS41.buf,
+		ranap_bcd_decode(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSIESN.iMSIDS41.buf,
 			      ies.uE_Identity.choice.iMSIESN.iMSIDS41.size);
 		break;
 	default:

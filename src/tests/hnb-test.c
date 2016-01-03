@@ -106,7 +106,7 @@ static int hnb_test_ue_register_tx(struct hnb_test *hnb_test, const char *imsi_s
 
 	request.uE_Identity.present = UE_Identity_PR_iMSI;
 
-	imsi_len = encode_iu_imsi(imsi_buf, sizeof(imsi_buf), imsi_str);
+	imsi_len = ranap_imsi_encode(imsi_buf, sizeof(imsi_buf), imsi_str);
 	OCTET_STRING_fromBuf(&request.uE_Identity.choice.iMSI, imsi_buf, imsi_len);
 
 	request.registration_Cause = Registration_Cause_normal;
@@ -162,7 +162,7 @@ static int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
 
 	ctx_id = asn1bitstr_to_u24(&accept.context_ID);
 
-	decode_iu_bcd(imsi, sizeof(imsi), accept.uE_Identity.choice.iMSI.buf,
+	ranap_bcd_decode(imsi, sizeof(imsi), accept.uE_Identity.choice.iMSI.buf,
 			accept.uE_Identity.choice.iMSI.size);
 	printf("UE Register accept for IMSI %s, context %u\n", imsi, ctx_id);
 

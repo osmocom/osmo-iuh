@@ -24,9 +24,9 @@ RANAP_LIBVERSION=0:0:0
 lib_LTLIBRARIES = libosmo-ranap.la
 libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION)
 libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) $(COMMON_LDADD) ranap/libosmo-asn1-ranap.la
-libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_msg_factory.c
+libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_msg_factory.c iu_helpers.c
 
-osmoranap_HEADERS = ranap_common.h ranap_ies_defs.h ranap_msg_factory.h
+osmoranap_HEADERS = ranap_common.h ranap_ies_defs.h ranap_msg_factory.h iu_helpers.h
 osmoranapdir = $(includedir)/osmocom/ranap
 
 
@@ -41,7 +41,7 @@ noinst_HEADERS = hnbap_common.h hnbap_ies_defs.h \
 
 osmo_hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c hnbap_common.c \
 		     rua_encoder.c rua_decoder.c rua_common.c \
-		     iu_helpers.c asn1helpers.c sccp_helpers.c \
+		     asn1helpers.c sccp_helpers.c \
 		     hnbgw.c hnbgw_hnbap.c hnbgw_rua.c hnbgw_ranap.c \
 		     context_map.c hnbgw_cn.c
 

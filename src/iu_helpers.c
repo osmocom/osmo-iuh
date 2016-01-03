@@ -24,7 +24,7 @@
 #include <osmocom/core/utils.h>
 
 /* decode a BCD-string as used inside ASN.1 encoded Iu interface protocols */
-int decode_iu_bcd(char *out, size_t out_len, const uint8_t *in, size_t in_len)
+int ranap_bcd_decode(char *out, size_t out_len, const uint8_t *in, size_t in_len)
 {
 	const uint8_t *ch;
 	char *outch = out;
@@ -45,7 +45,7 @@ int decode_iu_bcd(char *out, size_t out_len, const uint8_t *in, size_t in_len)
 }
 
 /* decode an IMSI as used inside ASN.1 encoded Iu interface protocols */
-int encode_iu_imsi(uint8_t *out, size_t out_len, const char *in)
+int ranap_imsi_encode(uint8_t *out, size_t out_len, const char *in)
 {
 	unsigned int len = strlen(in);
 	unsigned int octlen;

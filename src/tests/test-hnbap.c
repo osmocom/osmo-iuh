@@ -134,7 +134,7 @@ void test_asn1_decoding(void)
 	ASSERT(rc >= 0);
 
 	ASSERT(ue_req_ies.uE_Identity.present == UE_Identity_PR_iMSI);
-	decode_iu_bcd(imsi, sizeof(imsi), ue_req_ies.uE_Identity.choice.iMSI.buf,
+	ranap_bcd_decode(imsi, sizeof(imsi), ue_req_ies.uE_Identity.choice.iMSI.buf,
 			ue_req_ies.uE_Identity.choice.iMSI.size);
 
 	printf("HNBAP UE Register request from IMSI %s\n", imsi);
@@ -154,7 +154,7 @@ void test_asn1_decoding(void)
 	ASSERT(rc >= 0);
 
 	ASSERT(ue_acc_ies.uE_Identity.present == UE_Identity_PR_iMSI);
-	decode_iu_bcd(imsi, sizeof(imsi), ue_acc_ies.uE_Identity.choice.iMSI.buf,
+	ranap_bcd_decode(imsi, sizeof(imsi), ue_acc_ies.uE_Identity.choice.iMSI.buf,
 			ue_acc_ies.uE_Identity.choice.iMSI.size);
 
 	printf("HNBAP UE Register accept to IMSI %s\n", imsi);
