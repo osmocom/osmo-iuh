@@ -1164,7 +1164,8 @@ AM_CFLAGS = $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS) -I.
 
 noinst_LTLIBRARIES=libosmo-asn1-ranap.la
 libosmo_asn1_ranap_la_SOURCES=$(ASN_MODULE_SRC)
-include_HEADERS=$(ASN_MODULE_INC)
+osmoranap_HEADERS=$(ASN_MODULE_INC)
+osmoranapdir = $(includedir)/osmocom/ranap
 libosmo_asn1_ranap_la_LIBADD=$(ASN1C_LDADD)
 
 regen: regenerate-from-asn1-source
