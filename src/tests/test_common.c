@@ -84,4 +84,5 @@ int test_common_init(void)
 	if (rc < 0)
 		exit(1);
 
+	ranap_set_log_area(DRANAP);
 }

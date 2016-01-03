@@ -590,8 +590,8 @@
 #include <osmocom/core/logging.h>
 #include <osmocom/core/utils.h>
 
-#include "hnbgw.h"
-#define RANAP_DEBUG(x, args ...) DEBUGP(DRANAP, x, ## args)
+#define RANAP_DEBUG(x, args ...) DEBUGP(_ranap_DRANAP, x, ## args)
+extern int _ranap_DRANAP;
 
 extern int asn1_xer_print;
 
@@ -630,3 +630,5 @@ RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
 				asn_TYPE_descriptor_t *type1, void *sptr1,
 				RANAP_Criticality_t criticality2,
 				asn_TYPE_descriptor_t *type2, void *sptr2);
+
+void ranap_set_log_area(int log_area);

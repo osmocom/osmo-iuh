@@ -28,7 +28,7 @@
 #include "ranap_ies_defs.h"
 #include "ranap_msg_factory.h"
 
-#include "hnbgw.h"
+#define DRANAP _ranap_DRANAP
 
 /*! \brief allocate a new long and assing a value to it */
 static long *new_long(long in)

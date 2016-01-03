@@ -24,9 +24,10 @@
 #include <osmocom/gsm/gsm48.h>
 
 #include "ranap_common.h"
-#include "hnbgw.h"
 
 extern int asn1_xer_print;
+int _ranap_DRANAP = 0;
+#define DRANAP _ranap_DRANAP
 
 const struct value_string ranap_presence_vals[5] = {
 	{ RANAP_RANAP_PDU_PR_initiatingMessage,		"Initiating" },
@@ -516,4 +517,9 @@ int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai)
 		return -1;
 
 	return 0;
+}
+
+void ranap_set_log_area(int log_area)
+{
+	_ranap_DRANAP = log_area;
 }

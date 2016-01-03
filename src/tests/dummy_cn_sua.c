@@ -307,6 +307,7 @@ int main(int argc, char **argv)
 	int rc;
 
 	osmo_sua_set_log_area(DSUA);
+	ranap_set_log_area(DRANAP);
 
 	test_common_init();
 
