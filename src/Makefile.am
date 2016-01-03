@@ -42,7 +42,7 @@ noinst_HEADERS = hnbap_common.h hnbap_ies_defs.h \
 
 osmo_hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c hnbap_common.c \
 		     rua_encoder.c rua_decoder.c rua_common.c \
-		     sccp_helpers.c \
+		     rua_msg_factory.c sccp_helpers.c \
 		     hnbgw.c hnbgw_hnbap.c hnbgw_rua.c hnbgw_ranap.c \
 		     context_map.c hnbgw_cn.c
 
