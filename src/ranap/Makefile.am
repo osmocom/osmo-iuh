@@ -1160,12 +1160,10 @@ ASN_MODULE_INC=	\
 	RANAP_LeftMBMSBearerService-IEs.h	\
 	RANAP_UnsuccessfulLinking-IEs.h
 
-AM_CFLAGS = $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS) -I.
+AM_CFLAGS = $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS) -I../../include
 
 noinst_LTLIBRARIES=libosmo-asn1-ranap.la
 libosmo_asn1_ranap_la_SOURCES=$(ASN_MODULE_SRC)
-osmoranap_HEADERS=$(ASN_MODULE_INC)
-osmoranapdir = $(includedir)/osmocom/ranap
 libosmo_asn1_ranap_la_LIBADD=$(ASN1C_LDADD)
 
 regen: regenerate-from-asn1-source

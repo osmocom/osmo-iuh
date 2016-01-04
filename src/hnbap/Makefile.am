@@ -236,7 +236,6 @@ AM_CFLAGS = $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS) -I../../include
 
 noinst_LIBRARIES=libosmo-asn1-hnbap.a
 libosmo_asn1_hnbap_a_SOURCES=$(ASN_MODULE_SOURCES)
-noinst_HEADERS = $(ASN_MODULE_INC)
 libosmo_asn1_hnbap_a_LIBADD=$(ASN1C_LDADD)
 
 regen: regenerate-from-asn1-source

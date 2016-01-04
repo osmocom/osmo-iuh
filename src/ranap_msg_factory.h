@@ -1,9 +1,9 @@
 #pragma once
 
 #include <stdint.h>
-#include "ranap/RANAP_Cause.h"
-#include "ranap/RANAP_CN-DomainIndicator.h"
-#include "ranap/RANAP_GlobalRNC-ID.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Cause.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_CN-DomainIndicator.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_GlobalRNC-ID.h>
 
 /*! \brief generate RANAP DIRECT TRANSFER message */
 struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas_len);
