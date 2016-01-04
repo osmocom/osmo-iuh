@@ -31,3 +31,5 @@ src/tests/testsuite
 src/tests/testsuite.log
 src/osmo-hnbgw
 tags
+libosmo-ranap.pc
+m4
