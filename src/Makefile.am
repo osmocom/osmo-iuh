@@ -50,3 +50,11 @@ osmo_hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOVTY_LIBS) $(OSMOGSM_LIBS) \
 		   $(ASN1C_LIBS) $(OSMOSIGTRAN_LIBS) $(COMMON_LDADD) \
 		   hnbap/libosmo-asn1-hnbap.a rua/libosmo-asn1-rua.a \
 		   libosmo-ranap.la
+
+
+regen: regenerate-from-asn1-source
+
+regenerate-from-asn1-source:
+	make -C hnbap regen
+	make -C ranap regen
+	make -C rua regen

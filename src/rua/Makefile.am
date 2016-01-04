@@ -85,4 +85,6 @@ regenerate-from-asn1-source:
 	ASN1C_PREFIX="RUA_" asn1c -gen-PER ../../asn1/rua/RUA-CommonDataTypes.asn ../../asn1/rua/RUA-Constants.asn ../../asn1/rua/RUA-IEs.asn ../../asn1/rua/RUA-PDU.asn
 #	remove the local copy of the runtime code
 	@rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
+#	change include style to `#include <dir/foo.h>'
+	../../move-asn1-header-files.sh osmocom/osmo-iuh/rua $(ASN_MODULE_INC)
 
