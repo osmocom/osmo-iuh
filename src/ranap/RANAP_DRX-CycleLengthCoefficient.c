@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_DRX-CycleLengthCoefficient.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_DRX-CycleLengthCoefficient.h>
 
 int
 RANAP_DRX_CycleLengthCoefficient_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

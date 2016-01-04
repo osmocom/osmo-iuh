@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_SNA-Access-Information.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SNA-Access-Information.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_SNA_Access_Information_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_SNA_Access_Information, authorisedPLMNs),

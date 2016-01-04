@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_RABs-failed-to-reportList.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RABs-failed-to-reportList.h>
 
 static int
 memb_raBs_failed_to_reportList_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

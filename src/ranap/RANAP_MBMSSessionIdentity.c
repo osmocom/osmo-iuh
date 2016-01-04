@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_MBMSSessionIdentity.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MBMSSessionIdentity.h>
 
 int
 RANAP_MBMSSessionIdentity_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

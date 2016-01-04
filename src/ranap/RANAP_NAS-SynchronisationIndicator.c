@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_NAS-SynchronisationIndicator.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_NAS-SynchronisationIndicator.h>
 
 int
 RANAP_NAS_SynchronisationIndicator_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_RNSAPRelocationParameters.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RNSAPRelocationParameters.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_RNSAPRelocationParameters_1[] = {
 	{ ATF_POINTER, 5, offsetof(struct RANAP_RNSAPRelocationParameters, rabParmetersList),

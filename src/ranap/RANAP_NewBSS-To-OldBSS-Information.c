@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_NewBSS-To-OldBSS-Information.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_NewBSS-To-OldBSS-Information.h>
 
 int
 RANAP_NewBSS_To_OldBSS_Information_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

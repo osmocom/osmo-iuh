@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "ProcedureCode.h"
+#include <osmocom/osmo-iuh/hnbap/ProcedureCode.h>
 
 int
 ProcedureCode_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_TraceRecordingSessionReference.h"
-#include "RANAP_TraceDepth.h"
-#include "RANAP_ListOfInterfacesToTrace.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_TraceRecordingSessionReference.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_TraceDepth.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ListOfInterfacesToTrace.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

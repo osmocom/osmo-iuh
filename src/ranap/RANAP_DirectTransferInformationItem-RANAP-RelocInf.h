@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_NAS-PDU.h"
-#include "RANAP_SAPI.h"
-#include "RANAP_CN-DomainIndicator.h"
-#include "RANAP_ProtocolExtensionContainer.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_NAS-PDU.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_SAPI.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_CN-DomainIndicator.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

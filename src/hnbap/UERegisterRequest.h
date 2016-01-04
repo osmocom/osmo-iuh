@@ -48,7 +48,7 @@ extern asn_TYPE_descriptor_t asn_DEF_UERegisterRequest;
 #endif
 
 /* Referred external types */
-#include "IE.h"
+#include <osmocom/osmo-iuh/hnbap/IE.h>
 
 #endif	/* _UERegisterRequest_H_ */
 #include <asn_internal.h>

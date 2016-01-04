@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "HNBCapacity.h"
+#include <osmocom/osmo-iuh/hnbap/HNBCapacity.h>
 
 int
 HNBCapacity_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

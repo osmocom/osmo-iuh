@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_VerticalSpeedDirection.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_VerticalSpeedDirection.h>
 
 int
 RANAP_VerticalSpeedDirection_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

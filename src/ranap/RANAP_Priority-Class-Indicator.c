@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_Priority-Class-Indicator.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Priority-Class-Indicator.h>
 
 int
 RANAP_Priority_Class_Indicator_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

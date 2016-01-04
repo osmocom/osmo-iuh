@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_CommonID.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CommonID.h>
 
 static int
 memb_commonID_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

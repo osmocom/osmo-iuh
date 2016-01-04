@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_ResetResourceItem.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ResetResourceItem.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_ResetResourceItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_ResetResourceItem, iuSigConId),

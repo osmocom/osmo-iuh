@@ -13,7 +13,7 @@
 
 /* Including external dependencies */
 #include <BIT_STRING.h>
-#include "LAI.h"
+#include <osmocom/osmo-iuh/hnbap/LAI.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

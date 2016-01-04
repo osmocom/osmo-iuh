@@ -11,11 +11,11 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_RAB-ID.h"
-#include "RANAP_DataVolumeList.h"
-#include "RANAP_DL-GTP-PDU-SequenceNumber.h"
-#include "RANAP_UL-GTP-PDU-SequenceNumber.h"
-#include "RANAP_ProtocolExtensionContainer.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_DataVolumeList.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_DL-GTP-PDU-SequenceNumber.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_UL-GTP-PDU-SequenceNumber.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

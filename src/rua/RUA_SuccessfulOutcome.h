@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RUA_ProcedureCode.h"
-#include "RUA_Criticality.h"
+#include <osmocom/osmo-iuh/rua/RUA_ProcedureCode.h>
+#include <osmocom/osmo-iuh/rua/RUA_Criticality.h>
 #include <ANY.h>
 #include <constr_SEQUENCE.h>
 

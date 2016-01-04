@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_RABs-failed-to-reportItem.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RABs-failed-to-reportItem.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_RABs_failed_to_reportItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_RABs_failed_to_reportItem, rAB_ID),

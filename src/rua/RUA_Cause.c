@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include "RUA_Cause.h"
+#include <osmocom/osmo-iuh/rua/RUA_Cause.h>
 
 static asn_per_constraints_t asn_PER_type_RUA_Cause_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  2,  2,  0l,  3l }	/* (0..3,...) */,

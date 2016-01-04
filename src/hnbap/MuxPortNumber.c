@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "MuxPortNumber.h"
+#include <osmocom/osmo-iuh/hnbap/MuxPortNumber.h>
 
 int
 MuxPortNumber_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

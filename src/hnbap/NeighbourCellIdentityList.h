@@ -38,7 +38,7 @@ extern asn_TYPE_descriptor_t asn_DEF_NeighbourCellIdentityList;
 #endif
 
 /* Referred external types */
-#include "NeighbourIdentity.h"
+#include <osmocom/osmo-iuh/hnbap/NeighbourIdentity.h>
 
 #endif	/* _NeighbourCellIdentityList_H_ */
 #include <asn_internal.h>

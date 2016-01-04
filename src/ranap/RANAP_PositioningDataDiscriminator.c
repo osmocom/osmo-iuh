@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_PositioningDataDiscriminator.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_PositioningDataDiscriminator.h>
 
 int
 RANAP_PositioningDataDiscriminator_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_Requested-RAB-Parameter-Values.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Requested-RAB-Parameter-Values.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_Requested_RAB_Parameter_Values_1[] = {
 	{ ATF_POINTER, 3, offsetof(struct RANAP_Requested_RAB_Parameter_Values, requestedMaxBitrates),

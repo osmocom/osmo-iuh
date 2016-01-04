@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_CellIdList.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CellIdList.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

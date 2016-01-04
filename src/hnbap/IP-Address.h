@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "Ipv4Address.h"
-#include "Ipv6Address.h"
+#include <osmocom/osmo-iuh/hnbap/Ipv4Address.h>
+#include <osmocom/osmo-iuh/hnbap/Ipv6Address.h>
 #include <constr_CHOICE.h>
 #include <constr_SEQUENCE.h>
 
@@ -67,7 +67,7 @@ extern asn_TYPE_descriptor_t asn_DEF_IP_Address;
 #endif
 
 /* Referred external types */
-#include "IE-Extensions.h"
+#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
 
 #endif	/* _IP_Address_H_ */
 #include <asn_internal.h>

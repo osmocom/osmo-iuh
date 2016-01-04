@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_ImmediateMDT.h"
-#include "RANAP_LoggedMDT.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ImmediateMDT.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_LoggedMDT.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

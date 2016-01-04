@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_SourceRNC-ID.h"
-#include "RANAP_SAI.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SourceRNC-ID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_SAI.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

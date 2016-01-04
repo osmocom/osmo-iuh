@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_PermanentNAS-UE-ID.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_PermanentNAS-UE-ID.h>
 
 static asn_per_constraints_t asn_PER_type_RANAP_PermanentNAS_UE_ID_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  0,  0,  0l,  0l }	/* (0..0,...) */,

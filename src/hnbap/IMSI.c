@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "IMSI.h"
+#include <osmocom/osmo-iuh/hnbap/IMSI.h>
 
 int
 IMSI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

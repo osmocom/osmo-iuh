@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "PLMNidentity.h"
-#include "LAC.h"
+#include <osmocom/osmo-iuh/hnbap/PLMNidentity.h>
+#include <osmocom/osmo-iuh/hnbap/LAC.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

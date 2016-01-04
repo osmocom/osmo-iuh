@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_Port-Number.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Port-Number.h>
 
 int
 RANAP_Port_Number_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

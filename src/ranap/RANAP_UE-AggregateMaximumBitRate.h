@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_UE-AggregateMaximumBitRateDownlink.h"
-#include "RANAP_UE-AggregateMaximumBitRateUplink.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_UE-AggregateMaximumBitRateDownlink.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_UE-AggregateMaximumBitRateUplink.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

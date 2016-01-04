@@ -12,9 +12,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RAB-ID.h"
-#include "TransportInfo.h"
-#include "CN-DomainIndicator.h"
+#include <osmocom/osmo-iuh/hnbap/RAB-ID.h>
+#include <osmocom/osmo-iuh/hnbap/TransportInfo.h>
+#include <osmocom/osmo-iuh/hnbap/CN-DomainIndicator.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus
@@ -48,7 +48,7 @@ extern asn_TYPE_descriptor_t asn_DEF_RABListItem;
 #endif
 
 /* Referred external types */
-#include "IE-Extensions.h"
+#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
 
 #endif	/* _RABListItem_H_ */
 #include <asn_internal.h>

@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "LAI.h"
+#include <osmocom/osmo-iuh/hnbap/LAI.h>
 
 static asn_TYPE_member_t asn_MBR_LAI_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct LAI, pLMNID),

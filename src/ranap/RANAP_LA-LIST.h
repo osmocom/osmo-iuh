@@ -12,9 +12,9 @@
 
 /* Including external dependencies */
 #include <asn_SEQUENCE_OF.h>
-#include "RANAP_LAC.h"
-#include "RANAP_ListOF-SNAs.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_LAC.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ListOF-SNAs.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 

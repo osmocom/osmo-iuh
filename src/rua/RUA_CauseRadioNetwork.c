@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include "RUA_CauseRadioNetwork.h"
+#include <osmocom/osmo-iuh/rua/RUA_CauseRadioNetwork.h>
 
 int
 RUA_CauseRadioNetwork_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_M5-Period.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_M5-Period.h>
 
 int
 RANAP_M5_Period_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

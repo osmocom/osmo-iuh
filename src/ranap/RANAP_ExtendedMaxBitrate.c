@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_ExtendedMaxBitrate.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ExtendedMaxBitrate.h>
 
 int
 RANAP_ExtendedMaxBitrate_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-CommonDataTypes.asn"
  */
 
-#include "RANAP_Presence.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Presence.h>
 
 int
 RANAP_Presence_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_Alt-RAB-Parameter-MaxBitrateInf.h"
-#include "RANAP_Alt-RAB-Parameter-GuaranteedBitrateInf.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Alt-RAB-Parameter-MaxBitrateInf.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_Alt-RAB-Parameter-GuaranteedBitrateInf.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

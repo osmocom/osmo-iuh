@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_TimingDifferenceULDL.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_TimingDifferenceULDL.h>
 
 int
 RANAP_TimingDifferenceULDL_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "RAB-ID.h"
+#include <osmocom/osmo-iuh/hnbap/RAB-ID.h>
 
 int
 RAB_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_CN-DomainIndicator.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CN-DomainIndicator.h>
 
 int
 RANAP_CN_DomainIndicator_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "PTMSI.h"
+#include <osmocom/osmo-iuh/hnbap/PTMSI.h>
 
 int
 PTMSI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

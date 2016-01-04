@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_JoinedMBMSBearerService-IEs.h"
-#include "RANAP_ProtocolExtensionContainer.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_JoinedMBMSBearerService-IEs.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

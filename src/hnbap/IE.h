@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "ProtocolIE-ID.h"
-#include "Criticality.h"
+#include <osmocom/osmo-iuh/hnbap/ProtocolIE-ID.h>
+#include <osmocom/osmo-iuh/hnbap/Criticality.h>
 #include <ANY.h>
 #include <constr_SEQUENCE.h>
 

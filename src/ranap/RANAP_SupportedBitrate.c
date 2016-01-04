@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_SupportedBitrate.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SupportedBitrate.h>
 
 int
 RANAP_SupportedBitrate_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

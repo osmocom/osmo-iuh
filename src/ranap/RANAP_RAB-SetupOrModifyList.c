@@ -5,7 +5,7 @@
  */
 #include <constr_CHOICE.h>
 
-#include "RANAP_RAB-SetupOrModifyList.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-SetupOrModifyList.h>
 
 int
 RANAP_RAB_SetupOrModifyList_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

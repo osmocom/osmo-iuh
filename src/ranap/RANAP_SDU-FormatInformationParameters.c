@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_SDU-FormatInformationParameters.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SDU-FormatInformationParameters.h>
 
 static asn_per_constraints_t asn_PER_type_RANAP_SDU_FormatInformationParameters_constr_1 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },

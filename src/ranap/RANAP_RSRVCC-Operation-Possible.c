@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_RSRVCC-Operation-Possible.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RSRVCC-Operation-Possible.h>
 
 int
 RANAP_RSRVCC_Operation_Possible_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

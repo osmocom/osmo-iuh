@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_ForwardingIndication.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ForwardingIndication.h>
 
 int
 RANAP_ForwardingIndication_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

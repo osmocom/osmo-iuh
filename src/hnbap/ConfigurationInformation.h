@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "HNBConfigurationInformationProvided.h"
-#include "HNBConfigurationInformationMissing.h"
+#include <osmocom/osmo-iuh/hnbap/HNBConfigurationInformationProvided.h>
+#include <osmocom/osmo-iuh/hnbap/HNBConfigurationInformationMissing.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

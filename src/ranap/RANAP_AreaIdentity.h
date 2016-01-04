@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_SAI.h"
-#include "RANAP_GeographicalArea.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SAI.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_GeographicalArea.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

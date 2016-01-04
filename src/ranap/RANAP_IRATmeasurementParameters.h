@@ -12,8 +12,8 @@
 
 /* Including external dependencies */
 #include <NativeInteger.h>
-#include "RANAP_EUTRANFrequencies.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_EUTRANFrequencies.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

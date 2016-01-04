@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_SRB-ID.h"
-#include "RANAP_TrCH-ID.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SRB-ID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_TrCH-ID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

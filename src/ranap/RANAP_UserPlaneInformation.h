@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_UserPlaneMode.h"
-#include "RANAP_UP-ModeVersions.h"
-#include "RANAP_ProtocolExtensionContainer.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_UserPlaneMode.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_UP-ModeVersions.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_VoiceSupportMatchIndicator.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_VoiceSupportMatchIndicator.h>
 
 int
 RANAP_VoiceSupportMatchIndicator_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

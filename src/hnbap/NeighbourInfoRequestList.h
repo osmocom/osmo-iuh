@@ -38,7 +38,7 @@ extern asn_TYPE_descriptor_t asn_DEF_NeighbourInfoRequestList;
 #endif
 
 /* Referred external types */
-#include "NeighbourInfoRequestItem.h"
+#include <osmocom/osmo-iuh/hnbap/NeighbourInfoRequestItem.h>
 
 #endif	/* _NeighbourInfoRequestList_H_ */
 #include <asn_internal.h>

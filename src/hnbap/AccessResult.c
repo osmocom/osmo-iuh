@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "AccessResult.h"
+#include <osmocom/osmo-iuh/hnbap/AccessResult.h>
 
 int
 AccessResult_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

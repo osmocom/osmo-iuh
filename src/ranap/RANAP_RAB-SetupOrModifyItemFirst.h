@@ -11,13 +11,13 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_RAB-ID.h"
-#include "RANAP_NAS-SynchronisationIndicator.h"
-#include "RANAP_RAB-Parameters.h"
-#include "RANAP_UserPlaneInformation.h"
-#include "RANAP_TransportLayerInformation.h"
-#include "RANAP_Service-Handover.h"
-#include "RANAP_ProtocolExtensionContainer.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_NAS-SynchronisationIndicator.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-Parameters.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_UserPlaneInformation.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_TransportLayerInformation.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_Service-Handover.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

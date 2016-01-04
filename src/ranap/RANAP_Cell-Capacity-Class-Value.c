@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_Cell-Capacity-Class-Value.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Cell-Capacity-Class-Value.h>
 
 int
 RANAP_Cell_Capacity_Class_Value_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

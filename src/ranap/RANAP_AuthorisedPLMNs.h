@@ -12,9 +12,9 @@
 
 /* Including external dependencies */
 #include <asn_SEQUENCE_OF.h>
-#include "RANAP_PLMNidentity.h"
-#include "RANAP_AuthorisedSNAs.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_PLMNidentity.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_AuthorisedSNAs.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 

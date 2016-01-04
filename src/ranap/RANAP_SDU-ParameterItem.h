@@ -11,11 +11,11 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_SDU-ErrorRatio.h"
-#include "RANAP_ResidualBitErrorRatio.h"
-#include "RANAP_DeliveryOfErroneousSDU.h"
-#include "RANAP_SDU-FormatInformationParameters.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SDU-ErrorRatio.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ResidualBitErrorRatio.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_DeliveryOfErroneousSDU.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_SDU-FormatInformationParameters.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

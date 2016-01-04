@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_RTLoadValue.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RTLoadValue.h>
 
 int
 RANAP_RTLoadValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

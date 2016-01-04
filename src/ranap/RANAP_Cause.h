@@ -11,13 +11,13 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_CauseRadioNetwork.h"
-#include "RANAP_CauseTransmissionNetwork.h"
-#include "RANAP_CauseNAS.h"
-#include "RANAP_CauseProtocol.h"
-#include "RANAP_CauseMisc.h"
-#include "RANAP_CauseNon-Standard.h"
-#include "RANAP_CauseRadioNetworkExtension.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CauseRadioNetwork.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_CauseTransmissionNetwork.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_CauseNAS.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_CauseProtocol.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_CauseMisc.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_CauseNon-Standard.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_CauseRadioNetworkExtension.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

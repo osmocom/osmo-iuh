@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-CommonDataTypes.asn"
  */
 
-#include "RANAP_TriggeringMessage.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_TriggeringMessage.h>
 
 int
 RANAP_TriggeringMessage_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -5,7 +5,7 @@
  */
 #include <constr_CHOICE.h>
 
-#include "RANAP_RAB-ReleaseList.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ReleaseList.h>
 
 static int
 memb_raB_ReleaseList_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

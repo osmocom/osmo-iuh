@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include "RUA_RoutingParameter.h"
+#include <osmocom/osmo-iuh/rua/RUA_RoutingParameter.h>
 
 int
 RUA_RoutingParameter_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

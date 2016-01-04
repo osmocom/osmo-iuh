@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_HorizontalVelocity.h"
-#include "RANAP_HorizontalWithVerticalVelocity.h"
-#include "RANAP_HorizontalVelocityWithUncertainty.h"
-#include "RANAP_HorizontalWithVerticalVelocityAndUncertainty.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_HorizontalVelocity.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_HorizontalWithVerticalVelocity.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_HorizontalVelocityWithUncertainty.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_HorizontalWithVerticalVelocityAndUncertainty.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

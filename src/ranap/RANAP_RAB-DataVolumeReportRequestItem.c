@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_RAB-DataVolumeReportRequestItem.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-DataVolumeReportRequestItem.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_RAB_DataVolumeReportRequestItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_RAB_DataVolumeReportRequestItem, rAB_ID),

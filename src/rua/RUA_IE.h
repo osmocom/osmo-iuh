@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RUA_ProtocolIE-ID.h"
-#include "RUA_Criticality.h"
+#include <osmocom/osmo-iuh/rua/RUA_ProtocolIE-ID.h>
+#include <osmocom/osmo-iuh/rua/RUA_Criticality.h>
 #include <ANY.h>
 #include <constr_SEQUENCE.h>
 

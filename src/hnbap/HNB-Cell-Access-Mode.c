@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "HNB-Cell-Access-Mode.h"
+#include <osmocom/osmo-iuh/hnbap/HNB-Cell-Access-Mode.h>
 
 int
 HNB_Cell_Access_Mode_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

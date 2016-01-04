@@ -11,19 +11,19 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_TrafficClass.h"
-#include "RANAP_RAB-AsymmetryIndicator.h"
-#include "RANAP_RAB-Parameter-MaxBitrateList.h"
-#include "RANAP_RAB-Parameter-GuaranteedBitrateList.h"
-#include "RANAP_DeliveryOrder.h"
-#include "RANAP_MaxSDU-Size.h"
-#include "RANAP_SDU-Parameters.h"
-#include "RANAP_TransferDelay.h"
-#include "RANAP_TrafficHandlingPriority.h"
-#include "RANAP_AllocationOrRetentionPriority.h"
-#include "RANAP_SourceStatisticsDescriptor.h"
-#include "RANAP_RelocationRequirement.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_TrafficClass.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-AsymmetryIndicator.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-Parameter-MaxBitrateList.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-Parameter-GuaranteedBitrateList.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_DeliveryOrder.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_MaxSDU-Size.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_SDU-Parameters.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_TransferDelay.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_TrafficHandlingPriority.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_AllocationOrRetentionPriority.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_SourceStatisticsDescriptor.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RelocationRequirement.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

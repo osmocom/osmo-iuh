@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_CNMBMSLinkingInformation.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CNMBMSLinkingInformation.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_CNMBMSLinkingInformation_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_CNMBMSLinkingInformation, joinedMBMSBearerService_IEs),

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_GeographicalArea.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_GeographicalArea.h>
 
 static asn_per_constraints_t asn_PER_type_RANAP_GeographicalArea_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  2,  2,  0l,  2l }	/* (0..2,...) */,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_MBMSBearerServiceType.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MBMSBearerServiceType.h>
 
 int
 RANAP_MBMSBearerServiceType_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

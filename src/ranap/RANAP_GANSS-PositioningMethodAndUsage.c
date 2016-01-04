@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_GANSS-PositioningMethodAndUsage.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_GANSS-PositioningMethodAndUsage.h>
 
 int
 RANAP_GANSS_PositioningMethodAndUsage_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

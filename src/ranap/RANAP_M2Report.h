@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_MDT-Report-Parameters.h"
-#include "RANAP_Event1I-Parameters.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MDT-Report-Parameters.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_Event1I-Parameters.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

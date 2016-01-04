@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_MBMSCountingInformation.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MBMSCountingInformation.h>
 
 int
 RANAP_MBMSCountingInformation_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "HNBConfigTransferRequest.h"
+#include <osmocom/osmo-iuh/hnbap/HNBConfigTransferRequest.h>
 
 static int
 memb_hnbConfigTransferRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

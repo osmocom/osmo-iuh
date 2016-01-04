@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "TriggeringMessage.h"
+#include <osmocom/osmo-iuh/hnbap/TriggeringMessage.h>
 
 int
 TriggeringMessage_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-Item.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-Item.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_GERAN_Iumode_RAB_Failed_RABAssgntResponse_Item_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_GERAN_Iumode_RAB_Failed_RABAssgntResponse_Item, rAB_ID),

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-CommonDataTypes.asn"
  */
 
-#include "RUA_ProcedureCode.h"
+#include <osmocom/osmo-iuh/rua/RUA_ProcedureCode.h>
 
 int
 RUA_ProcedureCode_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

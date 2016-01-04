@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_GA-PointWithAltitude.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_GA-PointWithAltitude.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_GA_PointWithAltitude_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_GA_PointWithAltitude, geographicalCoordinates),

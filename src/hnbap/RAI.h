@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "LAI.h"
-#include "RAC.h"
+#include <osmocom/osmo-iuh/hnbap/LAI.h>
+#include <osmocom/osmo-iuh/hnbap/RAC.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

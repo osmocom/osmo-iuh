@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include "RUA_CriticalityDiagnostics.h"
+#include <osmocom/osmo-iuh/rua/RUA_CriticalityDiagnostics.h>
 
 static asn_TYPE_member_t asn_MBR_RUA_CriticalityDiagnostics_1[] = {
 	{ ATF_POINTER, 5, offsetof(struct RUA_CriticalityDiagnostics, procedureCode),

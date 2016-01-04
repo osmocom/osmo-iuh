@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include "RUA_Gsm-map-IDNNS.h"
+#include <osmocom/osmo-iuh/rua/RUA_Gsm-map-IDNNS.h>
 
 static asn_per_constraints_t asn_PER_type_routingbasis_constr_2 GCC_NOTUSED = {
 	{ APC_CONSTRAINED,	 3,  3,  0l,  7l }	/* (0..7) */,

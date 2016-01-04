@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_UESBI-IuA.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_UESBI-IuA.h>
 
 int
 RANAP_UESBI_IuA_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "ProtocolIE-ID.h"
+#include <osmocom/osmo-iuh/hnbap/ProtocolIE-ID.h>
 
 int
 ProtocolIE_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

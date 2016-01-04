@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "Registration-Cause.h"
+#include <osmocom/osmo-iuh/hnbap/Registration-Cause.h>
 
 int
 Registration_Cause_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -12,10 +12,10 @@
 
 /* Including external dependencies */
 #include <asn_SEQUENCE_OF.h>
-#include "RANAP_Criticality.h"
-#include "RANAP_ProtocolIE-ID.h"
-#include "RANAP_RepetitionNumber0.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Criticality.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolIE-ID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RepetitionNumber0.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 

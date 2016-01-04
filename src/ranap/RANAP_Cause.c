@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_Cause.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Cause.h>
 
 static asn_per_constraints_t asn_PER_type_RANAP_Cause_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  3,  3,  0l,  5l }	/* (0..5,...) */,

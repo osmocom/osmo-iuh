@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_RejectCauseValue.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RejectCauseValue.h>
 
 int
 RANAP_RejectCauseValue_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

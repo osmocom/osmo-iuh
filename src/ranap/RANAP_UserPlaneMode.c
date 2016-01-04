@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_UserPlaneMode.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_UserPlaneMode.h>
 
 int
 RANAP_UserPlaneMode_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

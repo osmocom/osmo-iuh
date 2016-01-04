@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "ConfigurationInformation.h"
+#include <osmocom/osmo-iuh/hnbap/ConfigurationInformation.h>
 
 static asn_per_constraints_t asn_PER_type_ConfigurationInformation_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  1,  1,  0l,  1l }	/* (0..1,...) */,

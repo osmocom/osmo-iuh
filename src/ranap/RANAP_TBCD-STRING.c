@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_TBCD-STRING.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_TBCD-STRING.h>
 
 int
 RANAP_TBCD_STRING_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

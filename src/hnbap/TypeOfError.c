@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "TypeOfError.h"
+#include <osmocom/osmo-iuh/hnbap/TypeOfError.h>
 
 int
 TypeOfError_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

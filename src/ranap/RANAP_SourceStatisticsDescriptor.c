@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_SourceStatisticsDescriptor.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SourceStatisticsDescriptor.h>
 
 int
 RANAP_SourceStatisticsDescriptor_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

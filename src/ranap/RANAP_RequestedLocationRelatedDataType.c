@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_RequestedLocationRelatedDataType.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RequestedLocationRelatedDataType.h>
 
 int
 RANAP_RequestedLocationRelatedDataType_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

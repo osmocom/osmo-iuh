@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_ReportAmount.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ReportAmount.h>
 
 int
 RANAP_ReportAmount_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

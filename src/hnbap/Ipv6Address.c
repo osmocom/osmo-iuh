@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "Ipv6Address.h"
+#include <osmocom/osmo-iuh/hnbap/Ipv6Address.h>
 
 int
 Ipv6Address_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

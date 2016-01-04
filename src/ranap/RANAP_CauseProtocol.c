@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_CauseProtocol.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CauseProtocol.h>
 
 int
 RANAP_CauseProtocol_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_M4-Collection-Parameters.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_M4-Collection-Parameters.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_M4_Collection_Parameters_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_M4_Collection_Parameters, m4_period),

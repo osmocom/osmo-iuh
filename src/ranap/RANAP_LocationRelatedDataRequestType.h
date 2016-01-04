@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_RequestedLocationRelatedDataType.h"
-#include "RANAP_RequestedGPSAssistanceData.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RequestedLocationRelatedDataType.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RequestedGPSAssistanceData.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

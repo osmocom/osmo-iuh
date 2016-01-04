@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include "RUA_Ansi-41-IDNNS.h"
+#include <osmocom/osmo-iuh/rua/RUA_Ansi-41-IDNNS.h>
 
 int
 RUA_Ansi_41_IDNNS_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

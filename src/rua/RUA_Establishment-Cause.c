@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include "RUA_Establishment-Cause.h"
+#include <osmocom/osmo-iuh/rua/RUA_Establishment-Cause.h>
 
 int
 RUA_Establishment_Cause_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

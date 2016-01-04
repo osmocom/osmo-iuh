@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "SuccessfulOutcome.h"
+#include <osmocom/osmo-iuh/hnbap/SuccessfulOutcome.h>
 
 static asn_TYPE_member_t asn_MBR_SuccessfulOutcome_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct SuccessfulOutcome, procedureCode),

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_DirectTransferInformationItem-RANAP-RelocInf.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_DirectTransferInformationItem-RANAP-RelocInf.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_DirectTransferInformationItem_RANAP_RelocInf_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_DirectTransferInformationItem_RANAP_RelocInf, nAS_PDU),

@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "MacroCellID.h"
+#include <osmocom/osmo-iuh/hnbap/MacroCellID.h>
 
 static asn_per_constraints_t asn_PER_type_MacroCellID_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  1,  1,  0l,  1l }	/* (0..1,...) */,

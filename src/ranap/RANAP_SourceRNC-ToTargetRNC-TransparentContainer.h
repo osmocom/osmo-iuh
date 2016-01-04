@@ -11,17 +11,17 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_RRC-Container.h"
-#include "RANAP_NumberOfIuInstances.h"
-#include "RANAP_RelocationType.h"
-#include "RANAP_ChosenIntegrityProtectionAlgorithm.h"
-#include "RANAP_IntegrityProtectionKey.h"
-#include "RANAP_ChosenEncryptionAlgorithm.h"
-#include "RANAP_EncryptionKey.h"
-#include "RANAP_D-RNTI.h"
-#include "RANAP_TargetCellId.h"
-#include "RANAP_RAB-TrCH-Mapping.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RRC-Container.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_NumberOfIuInstances.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RelocationType.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ChosenIntegrityProtectionAlgorithm.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IntegrityProtectionKey.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ChosenEncryptionAlgorithm.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_EncryptionKey.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_D-RNTI.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_TargetCellId.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-TrCH-Mapping.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include "RUA_IntraDomainNasNodeSelector.h"
+#include <osmocom/osmo-iuh/rua/RUA_IntraDomainNasNodeSelector.h>
 
 static int
 memb_futurecoding_constraint_7(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "RAI.h"
+#include <osmocom/osmo-iuh/hnbap/RAI.h>
 
 static asn_TYPE_member_t asn_MBR_RAI_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RAI, lAI),

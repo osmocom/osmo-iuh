@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_RateControlAllowed.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RateControlAllowed.h>
 
 int
 RANAP_RateControlAllowed_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

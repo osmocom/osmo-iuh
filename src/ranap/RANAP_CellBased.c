@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_CellBased.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CellBased.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_CellBased_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_CellBased, cellIdList),

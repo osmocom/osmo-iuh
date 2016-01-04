@@ -48,7 +48,7 @@ extern asn_TYPE_descriptor_t asn_DEF_U_RNTIQueryRequest;
 #endif
 
 /* Referred external types */
-#include "IE.h"
+#include <osmocom/osmo-iuh/hnbap/IE.h>
 
 #endif	/* _U_RNTIQueryRequest_H_ */
 #include <asn_internal.h>

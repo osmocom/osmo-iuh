@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_PositionDataSpecificToGERANIuMode.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_PositionDataSpecificToGERANIuMode.h>
 
 int
 RANAP_PositionDataSpecificToGERANIuMode_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -38,7 +38,7 @@ extern asn_TYPE_descriptor_t asn_DEF_RABList;
 #endif
 
 /* Referred external types */
-#include "RABListItem.h"
+#include <osmocom/osmo-iuh/hnbap/RABListItem.h>
 
 #endif	/* _RABList_H_ */
 #include <asn_internal.h>

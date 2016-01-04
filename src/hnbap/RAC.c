@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "RAC.h"
+#include <osmocom/osmo-iuh/hnbap/RAC.h>
 
 int
 RAC_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

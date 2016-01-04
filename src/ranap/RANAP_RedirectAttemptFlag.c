@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_RedirectAttemptFlag.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RedirectAttemptFlag.h>
 
 int
 RANAP_RedirectAttemptFlag_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

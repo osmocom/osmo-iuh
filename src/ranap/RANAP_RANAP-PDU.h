@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_InitiatingMessage.h"
-#include "RANAP_SuccessfulOutcome.h"
-#include "RANAP_UnsuccessfulOutcome.h"
-#include "RANAP_Outcome.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_InitiatingMessage.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_SuccessfulOutcome.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_UnsuccessfulOutcome.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_Outcome.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

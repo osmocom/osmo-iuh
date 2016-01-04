@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "HNBRegisterReject.h"
+#include <osmocom/osmo-iuh/hnbap/HNBRegisterReject.h>
 
 static int
 memb_hnbRegisterReject_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-List.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-List.h>
 
 static int
 memb_geraN_Iumode_RAB_Failed_RABAssgntResponse_List_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

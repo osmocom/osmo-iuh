@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_CauseNon-Standard.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CauseNon-Standard.h>
 
 int
 RANAP_CauseNon_Standard_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

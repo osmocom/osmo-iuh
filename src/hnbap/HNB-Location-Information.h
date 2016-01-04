@@ -45,9 +45,9 @@ extern asn_TYPE_descriptor_t asn_DEF_HNB_Location_Information;
 #endif
 
 /* Referred external types */
-#include "MacroCoverageInformation.h"
-#include "GeographicalLocation.h"
-#include "IE-Extensions.h"
+#include <osmocom/osmo-iuh/hnbap/MacroCoverageInformation.h>
+#include <osmocom/osmo-iuh/hnbap/GeographicalLocation.h>
+#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
 
 #endif	/* _HNB_Location_Information_H_ */
 #include <asn_internal.h>

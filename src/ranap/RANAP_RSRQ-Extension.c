@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_RSRQ-Extension.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RSRQ-Extension.h>
 
 int
 RANAP_RSRQ_Extension_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

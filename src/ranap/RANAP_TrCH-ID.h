@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_DCH-ID.h"
-#include "RANAP_DSCH-ID.h"
-#include "RANAP_USCH-ID.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_DCH-ID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_DSCH-ID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_USCH-ID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

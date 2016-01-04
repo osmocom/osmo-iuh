@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_LocationReport.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_LocationReport.h>
 
 static int
 memb_locationReport_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

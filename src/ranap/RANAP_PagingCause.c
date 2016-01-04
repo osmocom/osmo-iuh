@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_PagingCause.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_PagingCause.h>
 
 int
 RANAP_PagingCause_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

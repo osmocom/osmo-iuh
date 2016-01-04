@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_ReportInterval.h"
-#include "RANAP_ReportAmount.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ReportInterval.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ReportAmount.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

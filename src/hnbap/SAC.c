@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "SAC.h"
+#include <osmocom/osmo-iuh/hnbap/SAC.h>
 
 int
 SAC_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

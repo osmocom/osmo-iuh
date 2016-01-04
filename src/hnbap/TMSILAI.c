@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "TMSILAI.h"
+#include <osmocom/osmo-iuh/hnbap/TMSILAI.h>
 
 static int
 memb_tMSI_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

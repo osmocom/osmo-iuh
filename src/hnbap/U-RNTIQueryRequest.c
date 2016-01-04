@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "U-RNTIQueryRequest.h"
+#include <osmocom/osmo-iuh/hnbap/U-RNTIQueryRequest.h>
 
 static int
 memb_u_RNTIQueryRequest_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

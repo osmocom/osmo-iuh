@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "CSGMembershipUpdate.h"
+#include <osmocom/osmo-iuh/hnbap/CSGMembershipUpdate.h>
 
 static int
 memb_csgMembershipUpdate_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

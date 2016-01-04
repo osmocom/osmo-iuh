@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_UE-AggregateMaximumBitRate.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_UE-AggregateMaximumBitRate.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_UE_AggregateMaximumBitRate_1[] = {
 	{ ATF_POINTER, 2, offsetof(struct RANAP_UE_AggregateMaximumBitRate, uE_AggregateMaximumBitRateDownlink),

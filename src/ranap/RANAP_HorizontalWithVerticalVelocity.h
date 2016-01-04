@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_HorizontalSpeedAndBearing.h"
-#include "RANAP_VerticalVelocity.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_HorizontalSpeedAndBearing.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_VerticalVelocity.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

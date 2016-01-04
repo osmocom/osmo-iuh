@@ -11,7 +11,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_SupportedRAB-ParameterBitrateList.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SupportedRAB-ParameterBitrateList.h>
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 

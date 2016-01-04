@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_MDT-Configuration.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MDT-Configuration.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_MDT_Configuration_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_MDT_Configuration, mdtActivation),

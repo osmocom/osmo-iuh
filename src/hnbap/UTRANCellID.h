@@ -12,10 +12,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "LAC.h"
-#include "RAC.h"
-#include "PLMNidentity.h"
-#include "CellIdentity.h"
+#include <osmocom/osmo-iuh/hnbap/LAC.h>
+#include <osmocom/osmo-iuh/hnbap/RAC.h>
+#include <osmocom/osmo-iuh/hnbap/PLMNidentity.h>
+#include <osmocom/osmo-iuh/hnbap/CellIdentity.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus
@@ -45,7 +45,7 @@ extern asn_TYPE_descriptor_t asn_DEF_UTRANCellID;
 #endif
 
 /* Referred external types */
-#include "IE-Extensions.h"
+#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
 
 #endif	/* _UTRANCellID_H_ */
 #include <asn_internal.h>

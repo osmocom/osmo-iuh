@@ -12,9 +12,9 @@
 
 /* Including external dependencies */
 #include <asn_SEQUENCE_OF.h>
-#include "RANAP_UnsuccessfullyTransmittedDataVolume.h"
-#include "RANAP_DataVolumeReference.h"
-#include "RANAP_ProtocolExtensionContainer.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_UnsuccessfullyTransmittedDataVolume.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_DataVolumeReference.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 

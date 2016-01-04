@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-CommonDataTypes.asn"
  */
 
-#include "RANAP_Criticality.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Criticality.h>
 
 int
 RANAP_Criticality_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -12,14 +12,14 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "IMSI.h"
-#include "TMSILAI.h"
-#include "PTMSIRAI.h"
-#include "IMEI.h"
-#include "ESN.h"
-#include "IMSIDS41.h"
-#include "IMSIESN.h"
-#include "TMSIDS41.h"
+#include <osmocom/osmo-iuh/hnbap/IMSI.h>
+#include <osmocom/osmo-iuh/hnbap/TMSILAI.h>
+#include <osmocom/osmo-iuh/hnbap/PTMSIRAI.h>
+#include <osmocom/osmo-iuh/hnbap/IMEI.h>
+#include <osmocom/osmo-iuh/hnbap/ESN.h>
+#include <osmocom/osmo-iuh/hnbap/IMSIDS41.h>
+#include <osmocom/osmo-iuh/hnbap/IMSIESN.h>
+#include <osmocom/osmo-iuh/hnbap/TMSIDS41.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-PDU.asn"
  */
 
-#include "RUA_ConnectionlessTransfer.h"
+#include <osmocom/osmo-iuh/rua/RUA_ConnectionlessTransfer.h>
 
 static int
 memb_connectionlessTransfer_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

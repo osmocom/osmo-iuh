@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_RAB-ContextList-RANAP-RelocInf.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ContextList-RANAP-RelocInf.h>
 
 static int
 memb_raB_ContextList_RANAP_RelocInf_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

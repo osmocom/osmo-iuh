@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "CriticalityDiagnostics-IE-List.h"
+#include <osmocom/osmo-iuh/hnbap/CriticalityDiagnostics-IE-List.h>
 
 static asn_per_constraints_t asn_PER_type_CriticalityDiagnostics_IE_List_constr_1 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },

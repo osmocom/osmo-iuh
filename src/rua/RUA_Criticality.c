@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-CommonDataTypes.asn"
  */
 
-#include "RUA_Criticality.h"
+#include <osmocom/osmo-iuh/rua/RUA_Criticality.h>
 
 int
 RUA_Criticality_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

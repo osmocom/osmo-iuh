@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "RNC-ID.h"
+#include <osmocom/osmo-iuh/hnbap/RNC-ID.h>
 
 int
 RNC_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

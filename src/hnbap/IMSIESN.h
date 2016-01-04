@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "IMSIDS41.h"
-#include "ESN.h"
+#include <osmocom/osmo-iuh/hnbap/IMSIDS41.h>
+#include <osmocom/osmo-iuh/hnbap/ESN.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

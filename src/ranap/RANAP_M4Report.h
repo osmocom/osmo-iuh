@@ -12,7 +12,7 @@
 
 /* Including external dependencies */
 #include <NULL.h>
-#include "RANAP_M4-Collection-Parameters.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_M4-Collection-Parameters.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

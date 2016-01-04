@@ -11,11 +11,11 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_CN-DomainIndicator.h"
-#include "RANAP_RAB-ID.h"
-#include "RANAP_TNLInformationEnhRelInfoRes.h"
-#include "RANAP_Ass-RAB-Parameters.h"
-#include "RANAP_ProtocolExtensionContainer.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CN-DomainIndicator.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_TNLInformationEnhRelInfoRes.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_Ass-RAB-Parameters.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

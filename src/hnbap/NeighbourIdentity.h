@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "HNB-RNL-Identity.h"
-#include "CellIdentity.h"
+#include <osmocom/osmo-iuh/hnbap/HNB-RNL-Identity.h>
+#include <osmocom/osmo-iuh/hnbap/CellIdentity.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

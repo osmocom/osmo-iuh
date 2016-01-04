@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "CN-DomainIndicator.h"
+#include <osmocom/osmo-iuh/hnbap/CN-DomainIndicator.h>
 
 int
 CN_DomainIndicator_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

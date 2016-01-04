@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_IntegrityProtectionAlgorithm.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_IntegrityProtectionAlgorithm.h>
 
 int
 RANAP_IntegrityProtectionAlgorithm_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

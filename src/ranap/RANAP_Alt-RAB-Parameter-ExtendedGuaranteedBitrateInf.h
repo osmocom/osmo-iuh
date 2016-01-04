@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_Alt-RAB-Parameter-GuaranteedBitrateType.h"
-#include "RANAP_Alt-RAB-Parameter-ExtendedGuaranteedBitrates.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Alt-RAB-Parameter-GuaranteedBitrateType.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_Alt-RAB-Parameter-ExtendedGuaranteedBitrates.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

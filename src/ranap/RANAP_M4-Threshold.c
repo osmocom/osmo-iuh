@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_M4-Threshold.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_M4-Threshold.h>
 
 int
 RANAP_M4_Threshold_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

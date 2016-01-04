@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_IMEI.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_IMEI.h>
 
 int
 RANAP_IMEI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

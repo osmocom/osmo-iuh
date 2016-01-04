@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_LAC.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_LAC.h>
 
 int
 RANAP_LAC_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

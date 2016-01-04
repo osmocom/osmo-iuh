@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_Offload-RAB-Parameters-ChargingCharacteristics.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Offload-RAB-Parameters-ChargingCharacteristics.h>
 
 int
 RANAP_Offload_RAB_Parameters_ChargingCharacteristics_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

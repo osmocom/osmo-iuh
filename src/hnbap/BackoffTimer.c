@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "BackoffTimer.h"
+#include <osmocom/osmo-iuh/hnbap/BackoffTimer.h>
 
 int
 BackoffTimer_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

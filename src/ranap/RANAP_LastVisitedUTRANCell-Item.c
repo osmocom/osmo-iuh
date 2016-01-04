@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_LastVisitedUTRANCell-Item.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_LastVisitedUTRANCell-Item.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_LastVisitedUTRANCell_Item_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_LastVisitedUTRANCell_Item, uTRAN_CellID),

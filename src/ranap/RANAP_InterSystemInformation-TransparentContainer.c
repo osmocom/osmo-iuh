@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_InterSystemInformation-TransparentContainer.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_InterSystemInformation-TransparentContainer.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_InterSystemInformation_TransparentContainer_1[] = {
 	{ ATF_POINTER, 3, offsetof(struct RANAP_InterSystemInformation_TransparentContainer, downlinkCellLoadInformation),

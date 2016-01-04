@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_NAS-SequenceNumber.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_NAS-SequenceNumber.h>
 
 int
 RANAP_NAS_SequenceNumber_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

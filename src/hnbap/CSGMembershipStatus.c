@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "CSGMembershipStatus.h"
+#include <osmocom/osmo-iuh/hnbap/CSGMembershipStatus.h>
 
 int
 CSGMembershipStatus_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

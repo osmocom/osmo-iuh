@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include "RUA_IE-Extensions.h"
+#include <osmocom/osmo-iuh/rua/RUA_IE-Extensions.h>
 
 static asn_per_constraints_t asn_PER_type_RUA_IE_Extensions_constr_1 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_ResetResourceAcknowledge.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ResetResourceAcknowledge.h>
 
 static int
 memb_resetResourceAcknowledge_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

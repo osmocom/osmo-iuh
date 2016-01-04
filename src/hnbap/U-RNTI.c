@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "U-RNTI.h"
+#include <osmocom/osmo-iuh/hnbap/U-RNTI.h>
 
 int
 U_RNTI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

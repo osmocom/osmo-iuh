@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_UL-GTP-PDU-SequenceNumber.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_UL-GTP-PDU-SequenceNumber.h>
 
 int
 RANAP_UL_GTP_PDU_SequenceNumber_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

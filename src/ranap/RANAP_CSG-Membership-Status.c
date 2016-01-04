@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_CSG-Membership-Status.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CSG-Membership-Status.h>
 
 int
 RANAP_CSG_Membership_Status_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

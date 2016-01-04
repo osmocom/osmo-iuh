@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-PDU.asn"
  */
 
-#include "RUA_ErrorIndication.h"
+#include <osmocom/osmo-iuh/rua/RUA_ErrorIndication.h>
 
 static int
 memb_errorIndication_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

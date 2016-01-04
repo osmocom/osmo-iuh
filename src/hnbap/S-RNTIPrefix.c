@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "S-RNTIPrefix.h"
+#include <osmocom/osmo-iuh/hnbap/S-RNTIPrefix.h>
 
 int
 S_RNTIPrefix_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

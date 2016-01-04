@@ -11,11 +11,11 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_Cell-Capacity-Class-Value.h"
-#include "RANAP_LoadValue.h"
-#include "RANAP_RTLoadValue.h"
-#include "RANAP_NRTLoadInformationValue.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Cell-Capacity-Class-Value.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_LoadValue.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RTLoadValue.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_NRTLoadInformationValue.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

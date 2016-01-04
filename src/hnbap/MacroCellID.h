@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "UTRANCellID.h"
-#include "CGI.h"
+#include <osmocom/osmo-iuh/hnbap/UTRANCellID.h>
+#include <osmocom/osmo-iuh/hnbap/CGI.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

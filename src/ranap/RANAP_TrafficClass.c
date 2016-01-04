@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_TrafficClass.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_TrafficClass.h>
 
 int
 RANAP_TrafficClass_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

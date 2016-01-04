@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include "RUA_CauseTransport.h"
+#include <osmocom/osmo-iuh/rua/RUA_CauseTransport.h>
 
 int
 RUA_CauseTransport_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

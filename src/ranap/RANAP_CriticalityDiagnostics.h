@@ -11,11 +11,11 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_ProcedureCode.h"
-#include "RANAP_TriggeringMessage.h"
-#include "RANAP_Criticality.h"
-#include "RANAP_CriticalityDiagnostics-IE-List.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ProcedureCode.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_TriggeringMessage.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_Criticality.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_CriticalityDiagnostics-IE-List.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_TMSI.h"
-#include "RANAP_P-TMSI.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_TMSI.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_P-TMSI.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

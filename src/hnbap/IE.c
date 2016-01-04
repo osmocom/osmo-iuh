@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "IE.h"
+#include <osmocom/osmo-iuh/hnbap/IE.h>
 
 static asn_TYPE_member_t asn_MBR_IE_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct IE, id),

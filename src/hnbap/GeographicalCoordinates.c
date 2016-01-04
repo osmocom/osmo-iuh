@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "GeographicalCoordinates.h"
+#include <osmocom/osmo-iuh/hnbap/GeographicalCoordinates.h>
 
 static int
 latitudeSign_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

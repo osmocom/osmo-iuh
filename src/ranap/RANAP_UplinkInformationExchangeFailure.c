@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_UplinkInformationExchangeFailure.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_UplinkInformationExchangeFailure.h>
 
 static int
 memb_uplinkInformationExchangeFailure_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_ReportChangeOfSAI.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ReportChangeOfSAI.h>
 
 int
 RANAP_ReportChangeOfSAI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

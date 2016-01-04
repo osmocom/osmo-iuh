@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "UE-Identity.h"
+#include <osmocom/osmo-iuh/hnbap/UE-Identity.h>
 
 static asn_per_constraints_t asn_PER_type_UE_Identity_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  3,  3,  0l,  7l }	/* (0..7,...) */,

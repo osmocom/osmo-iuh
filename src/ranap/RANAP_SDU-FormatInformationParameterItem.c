@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_SDU-FormatInformationParameterItem.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SDU-FormatInformationParameterItem.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_SDU_FormatInformationParameterItem_1[] = {
 	{ ATF_POINTER, 3, offsetof(struct RANAP_SDU_FormatInformationParameterItem, subflowSDU_Size),

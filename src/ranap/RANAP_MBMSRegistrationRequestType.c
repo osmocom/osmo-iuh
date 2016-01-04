@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_MBMSRegistrationRequestType.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MBMSRegistrationRequestType.h>
 
 int
 RANAP_MBMSRegistrationRequestType_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

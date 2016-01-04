@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "CauseTransport.h"
+#include <osmocom/osmo-iuh/hnbap/CauseTransport.h>
 
 int
 CauseTransport_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

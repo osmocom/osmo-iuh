@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_Correlation-ID.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Correlation-ID.h>
 
 int
 RANAP_Correlation_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

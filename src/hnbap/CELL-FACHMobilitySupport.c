@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "CELL-FACHMobilitySupport.h"
+#include <osmocom/osmo-iuh/hnbap/CELL-FACHMobilitySupport.h>
 
 int
 CELL_FACHMobilitySupport_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

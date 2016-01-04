@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "TMSIDS41.h"
+#include <osmocom/osmo-iuh/hnbap/TMSIDS41.h>
 
 int
 TMSIDS41_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_RAB-ToBeReleasedItem-EnhancedRelocCompleteRes.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ToBeReleasedItem-EnhancedRelocCompleteRes.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_RAB_ToBeReleasedItem_EnhancedRelocCompleteRes_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_RAB_ToBeReleasedItem_EnhancedRelocCompleteRes, rAB_ID),

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_CellType.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_CellType.h>
 
 int
 RANAP_CellType_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

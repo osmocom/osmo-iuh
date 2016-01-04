@@ -11,13 +11,13 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_GA-Point.h"
-#include "RANAP_GA-PointWithUnCertainty.h"
-#include "RANAP_GA-Polygon.h"
-#include "RANAP_GA-PointWithUnCertaintyEllipse.h"
-#include "RANAP_GA-PointWithAltitude.h"
-#include "RANAP_GA-PointWithAltitudeAndUncertaintyEllipsoid.h"
-#include "RANAP_GA-EllipsoidArc.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_GA-Point.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_GA-PointWithUnCertainty.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_GA-Polygon.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_GA-PointWithUnCertaintyEllipse.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_GA-PointWithAltitude.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_GA-PointWithAltitudeAndUncertaintyEllipsoid.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_GA-EllipsoidArc.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

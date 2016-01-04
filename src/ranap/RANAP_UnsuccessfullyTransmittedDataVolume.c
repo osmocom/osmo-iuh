@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_UnsuccessfullyTransmittedDataVolume.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_UnsuccessfullyTransmittedDataVolume.h>
 
 int
 RANAP_UnsuccessfullyTransmittedDataVolume_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

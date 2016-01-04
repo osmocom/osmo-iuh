@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_MaxSDU-Size.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MaxSDU-Size.h>
 
 int
 RANAP_MaxSDU_Size_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

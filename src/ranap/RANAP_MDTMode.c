@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_MDTMode.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MDTMode.h>
 
 static asn_per_constraints_t asn_PER_type_RANAP_MDTMode_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  1,  1,  0l,  1l }	/* (0..1,...) */,

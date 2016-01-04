@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_PLMNidentity.h"
-#include "RANAP_RNC-ID.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_PLMNidentity.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RNC-ID.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

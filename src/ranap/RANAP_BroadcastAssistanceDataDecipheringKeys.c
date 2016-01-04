@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_BroadcastAssistanceDataDecipheringKeys.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_BroadcastAssistanceDataDecipheringKeys.h>
 
 static int
 memb_cipheringKeyFlag_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

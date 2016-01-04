@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "PrivateIE-ID.h"
+#include <osmocom/osmo-iuh/hnbap/PrivateIE-ID.h>
 
 static int
 memb_local_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

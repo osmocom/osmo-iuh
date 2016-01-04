@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-PDU.asn"
  */
 
-#include "RUA_SuccessfulOutcome.h"
+#include <osmocom/osmo-iuh/rua/RUA_SuccessfulOutcome.h>
 
 static asn_TYPE_member_t asn_MBR_RUA_SuccessfulOutcome_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RUA_SuccessfulOutcome, procedureCode),

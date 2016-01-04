@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_PDP-Type-extension.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_PDP-Type-extension.h>
 
 int
 RANAP_PDP_Type_extension_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

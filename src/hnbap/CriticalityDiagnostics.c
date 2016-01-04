@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "CriticalityDiagnostics.h"
+#include <osmocom/osmo-iuh/hnbap/CriticalityDiagnostics.h>
 
 static asn_TYPE_member_t asn_MBR_CriticalityDiagnostics_1[] = {
 	{ ATF_POINTER, 5, offsetof(struct CriticalityDiagnostics, procedureCode),

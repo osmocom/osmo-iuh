@@ -11,7 +11,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_RAB-IE-ContainerPairList.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-IE-ContainerPairList.h>
 
 #ifdef __cplusplus
 extern "C" {

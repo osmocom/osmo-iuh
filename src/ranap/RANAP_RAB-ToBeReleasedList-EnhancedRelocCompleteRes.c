@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_RAB-ToBeReleasedList-EnhancedRelocCompleteRes.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ToBeReleasedList-EnhancedRelocCompleteRes.h>
 
 static int
 memb_raB_ToBeReleasedList_EnhancedRelocCompleteRes_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

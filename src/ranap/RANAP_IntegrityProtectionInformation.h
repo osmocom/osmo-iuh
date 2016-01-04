@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_PermittedIntegrityProtectionAlgorithms.h"
-#include "RANAP_IntegrityProtectionKey.h"
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_PermittedIntegrityProtectionAlgorithms.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IntegrityProtectionKey.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

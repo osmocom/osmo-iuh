@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_Outcome.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Outcome.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_Outcome_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_Outcome, procedureCode),

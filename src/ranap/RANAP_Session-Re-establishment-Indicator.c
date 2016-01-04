@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_Session-Re-establishment-Indicator.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Session-Re-establishment-Indicator.h>
 
 int
 RANAP_Session_Re_establishment_Indicator_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

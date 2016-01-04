@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_NonSearchingIndication.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_NonSearchingIndication.h>
 
 int
 RANAP_NonSearchingIndication_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

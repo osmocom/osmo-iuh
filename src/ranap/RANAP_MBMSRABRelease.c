@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_MBMSRABRelease.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MBMSRABRelease.h>
 
 static int
 memb_mbmsrabRelease_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "ErrorIndication.h"
+#include <osmocom/osmo-iuh/hnbap/ErrorIndication.h>
 
 static int
 memb_errorIndication_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

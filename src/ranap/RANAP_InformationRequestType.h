@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_MBMSIPMulticastAddressandAPNRequest.h"
-#include "RANAP_PermanentNAS-UE-ID.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MBMSIPMulticastAddressandAPNRequest.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_PermanentNAS-UE-ID.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

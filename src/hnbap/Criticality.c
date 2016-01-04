@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "Criticality.h"
+#include <osmocom/osmo-iuh/hnbap/Criticality.h>
 
 int
 Criticality_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

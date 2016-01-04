@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "HNB-GWResponse.h"
+#include <osmocom/osmo-iuh/hnbap/HNB-GWResponse.h>
 
 static asn_per_constraints_t asn_PER_type_HNB_GWResponse_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  2,  2,  0l,  2l }	/* (0..2,...) */,

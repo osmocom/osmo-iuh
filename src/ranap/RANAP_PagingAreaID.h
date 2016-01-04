@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_LAI.h"
-#include "RANAP_RAI.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_LAI.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RAI.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

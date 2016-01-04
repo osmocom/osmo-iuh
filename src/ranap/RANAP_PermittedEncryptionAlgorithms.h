@@ -11,7 +11,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_EncryptionAlgorithm.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_EncryptionAlgorithm.h>
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 

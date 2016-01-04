@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_TMSI.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_TMSI.h>
 
 int
 RANAP_TMSI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

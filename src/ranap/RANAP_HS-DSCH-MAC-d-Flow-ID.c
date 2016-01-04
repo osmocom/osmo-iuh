@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_HS-DSCH-MAC-d-Flow-ID.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_HS-DSCH-MAC-d-Flow-ID.h>
 
 int
 RANAP_HS_DSCH_MAC_d_Flow_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

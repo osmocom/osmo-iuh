@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_Event.h"
-#include "RANAP_ReportArea.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Event.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_ReportArea.h>
 #include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
 

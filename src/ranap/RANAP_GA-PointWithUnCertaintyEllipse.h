@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_GeographicalCoordinates.h"
-#include "RANAP_GA-UncertaintyEllipse.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_GeographicalCoordinates.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_GA-UncertaintyEllipse.h>
 #include <NativeInteger.h>
-#include "RANAP_IE-Extensions.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

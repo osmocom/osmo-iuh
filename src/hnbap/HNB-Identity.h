@@ -12,7 +12,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "HNB-Identity-Info.h"
+#include <osmocom/osmo-iuh/hnbap/HNB-Identity-Info.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus
@@ -43,7 +43,7 @@ extern asn_TYPE_descriptor_t asn_DEF_HNB_Identity;
 #endif
 
 /* Referred external types */
-#include "IE-Extensions.h"
+#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
 
 #endif	/* _HNB_Identity_H_ */
 #include <asn_internal.h>

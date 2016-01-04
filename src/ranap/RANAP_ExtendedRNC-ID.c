@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_ExtendedRNC-ID.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ExtendedRNC-ID.h>
 
 int
 RANAP_ExtendedRNC_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

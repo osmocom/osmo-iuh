@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_RequestedMBMSIPMulticastAddressandAPNRequest.h"
-#include "RANAP_RequestedMulticastServiceList.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_RequestedMBMSIPMulticastAddressandAPNRequest.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_RequestedMulticastServiceList.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

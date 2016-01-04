@@ -12,10 +12,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "CauseRadioNetwork.h"
-#include "CauseTransport.h"
-#include "CauseProtocol.h"
-#include "CauseMisc.h"
+#include <osmocom/osmo-iuh/hnbap/CauseRadioNetwork.h>
+#include <osmocom/osmo-iuh/hnbap/CauseTransport.h>
+#include <osmocom/osmo-iuh/hnbap/CauseProtocol.h>
+#include <osmocom/osmo-iuh/hnbap/CauseMisc.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

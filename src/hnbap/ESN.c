@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "ESN.h"
+#include <osmocom/osmo-iuh/hnbap/ESN.h>
 
 int
 ESN_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

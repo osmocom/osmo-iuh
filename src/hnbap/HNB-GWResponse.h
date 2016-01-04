@@ -12,9 +12,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "HNBConfigInfo.h"
-#include "RNC-ID.h"
-#include "UnknownU-RNTIIndication.h"
+#include <osmocom/osmo-iuh/hnbap/HNBConfigInfo.h>
+#include <osmocom/osmo-iuh/hnbap/RNC-ID.h>
+#include <osmocom/osmo-iuh/hnbap/UnknownU-RNTIIndication.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_UPInitialisationFrame.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_UPInitialisationFrame.h>
 
 int
 RANAP_UPInitialisationFrame_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

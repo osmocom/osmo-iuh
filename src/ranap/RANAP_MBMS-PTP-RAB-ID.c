@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_MBMS-PTP-RAB-ID.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MBMS-PTP-RAB-ID.h>
 
 int
 RANAP_MBMS_PTP_RAB_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

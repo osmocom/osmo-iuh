@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include "RANAP_DirectTransfer.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_DirectTransfer.h>
 
 static int
 memb_directTransfer_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

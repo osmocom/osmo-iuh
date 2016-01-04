@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_MDT-Activation.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_MDT-Activation.h>
 
 int
 RANAP_MDT_Activation_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_SourceUTRANCellID.h"
-#include "RANAP_CGI.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_SourceUTRANCellID.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_CGI.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

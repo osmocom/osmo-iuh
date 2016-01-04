@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include "RANAP_Alt-RAB-Parameter-MaxBitrateType.h"
-#include "RANAP_Alt-RAB-Parameter-ExtendedMaxBitrates.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Alt-RAB-Parameter-MaxBitrateType.h>
+#include <osmocom/osmo-iuh/ranap/RANAP_Alt-RAB-Parameter-ExtendedMaxBitrates.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

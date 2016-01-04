@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_ResidualBitErrorRatio.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_ResidualBitErrorRatio.h>
 
 static int
 memb_mantissa_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

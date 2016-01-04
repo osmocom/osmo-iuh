@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "HNB-Identity-Info.h"
+#include <osmocom/osmo-iuh/hnbap/HNB-Identity-Info.h>
 
 int
 HNB_Identity_Info_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

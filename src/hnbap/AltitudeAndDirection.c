@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include "AltitudeAndDirection.h"
+#include <osmocom/osmo-iuh/hnbap/AltitudeAndDirection.h>
 
 static int
 directionOfAltitude_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

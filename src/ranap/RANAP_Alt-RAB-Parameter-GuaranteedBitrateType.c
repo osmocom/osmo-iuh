@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include "RANAP_Alt-RAB-Parameter-GuaranteedBitrateType.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_Alt-RAB-Parameter-GuaranteedBitrateType.h>
 
 int
 RANAP_Alt_RAB_Parameter_GuaranteedBitrateType_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

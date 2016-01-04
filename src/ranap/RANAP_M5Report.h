@@ -12,7 +12,7 @@
 
 /* Including external dependencies */
 #include <NULL.h>
-#include "RANAP_M5-Period.h"
+#include <osmocom/osmo-iuh/ranap/RANAP_M5-Period.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus
