@@ -32,4 +32,4 @@ move_headers() {
 sed_includes $@
 
 # move sed'ed *.h files to the proper include/dir
-#move_headers $@   TEMPORARILY DISABLED to simplify the diff
+move_headers $@
