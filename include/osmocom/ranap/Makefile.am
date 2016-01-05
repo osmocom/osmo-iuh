@@ -9,6 +9,7 @@ ranap_ies_defs.h: $(top_builddir)/src/ranap_encoder.c
 ranap_HEADERS = \
 	ranap_ies_defs.h \
 	ranap_common.h \
+	ranap_common_cn.h \
 	ranap_msg_factory.h \
 	iu_helpers.h \
 	RANAP_AccuracyFulfilmentIndicator.h \
