@@ -1,2 +1,0 @@
-SUBDIRS = hnbap ranap rua
-
