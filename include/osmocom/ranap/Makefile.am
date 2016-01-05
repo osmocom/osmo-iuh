@@ -579,4 +579,4 @@ ranap_HEADERS = \
 	RANAP_VerticalVelocity.h \
 	RANAP_VoiceSupportMatchIndicator.h
 
-ranapdir = $(includedir)/osmocom/osmo-iuh/ranap
+ranapdir = $(includedir)/osmocom/ranap
