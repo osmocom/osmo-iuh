@@ -1,4 +1,4 @@
-AM_CFLAGS = $(OSMOVTY_CFLAGS) $(OSMOCORE_CFLAGS) $(OSMOGSM_CFLAGS) $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS) -g -I$(top_srcdir)/src -I$(top_srcdir)/src/hnbap/
+AM_CFLAGS = $(OSMOVTY_CFLAGS) $(OSMOCORE_CFLAGS) $(OSMOGSM_CFLAGS) $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS) -g -I$(top_srcdir)/src -I$(top_srcdir)/include
 
 COMMON_LIBS = $(OSMOVTY_LIBS) $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) $(OSMOSIGTRAN_LIBS) -lsctp
 
@@ -49,6 +49,6 @@ AUTOM4TE = $(SHELL) $(top_srcdir)/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
 
 $(TESTSUITE): $(srcdir)/testsuite.at $(srcdir)/package.m4
-	$(AUTOTEST) -I '$(srcdir)' -o $@.tmp $@.at
+	$(AUTOTEST) -I '$(top_srcdir)/include' -I '$(srcdir)' -o $@.tmp $@.at
 	mv $@.tmp $@
 
