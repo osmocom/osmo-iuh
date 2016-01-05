@@ -2,8 +2,8 @@
 
 #include <stdint.h>
 
-#include "ranap_common.h"
-#include "ranap_ies_defs.h"
+#include <osmocom/ranap/ranap_common.h>
+#include <osmocom/ranap/ranap_ies_defs.h>
 
 /* call-back functions to be provided by actual core network node */
 int cn_ranap_handle_co(void *ctx, ranap_message *message);

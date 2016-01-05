@@ -22,11 +22,11 @@
 #include <osmocom/vty/logging.h>
 
 #include "asn1helpers.h"
-#include "iu_helpers.h"
+#include <osmocom/ranap/iu_helpers.h>
 
-#include "ranap_common.h"
-#include "ranap_ies_defs.h"
-#include "ranap_msg_factory.h"
+#include <osmocom/ranap/ranap_common.h>
+#include <osmocom/ranap/ranap_ies_defs.h>
+#include <osmocom/ranap/ranap_msg_factory.h>
 
 #include "test_common.h"
 

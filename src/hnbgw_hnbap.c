@@ -28,7 +28,7 @@
 #include <string.h>
 
 #include "asn1helpers.h"
-#include "iu_helpers.h"
+#include <osmocom/ranap/iu_helpers.h>
 
 #include "hnbgw.h"
 #include "hnbap_common.h"

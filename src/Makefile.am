@@ -11,9 +11,13 @@ hnbap_encoder.c hnbap_decoder.c hnbap_ies_defs.h: $(ASN1_ROOT)/hnbap/HNBAP-PDU-C
 rua_encoder.c rua_decoder.c rua_ies_defs.h: $(ASN1_ROOT)/rua/RUA-PDU-Contents.asn $(ASN1TOSTRUCT)
 	$(ASN1TOSTRUCT) -p RUA_ -f $<
 
-ranap_encoder.c ranap_decoder.c ranap_ies_defs.h: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN1TOSTRUCT)
+ranap_encoder.c ranap_decoder.c: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN1TOSTRUCT)
 	$(ASN1TOSTRUCT) -p RANAP_ -f $<
-
+	mv ranap_ies_defs.h $(includedir)/osmocom/ranap/
+#	this is ugly ^. ranap_ies_defs.h is generated from asn1tostruct.py here, but
+#	it should live in include/osmocom/ranap/.
+#	We also need to replace the include in the newly generated .c files:
+	sed -i 's,^#include "ranap_ies_defs.h",#include <osmocom/ranap/ranap_ies_defs.h>,' ranap_encoder.c ranap_decoder.c
 
 AM_CFLAGS = $(OSMOCORE_CFLAGS) $(OSMOVTY_CFLAGS) $(OSMOGSM_CFLAGS) $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS) -I../include
 COMMON_LDADD = -lsctp
@@ -25,10 +29,6 @@ lib_LTLIBRARIES = libosmo-ranap.la
 libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION)
 libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) $(COMMON_LDADD) ranap/libosmo-asn1-ranap.la
 libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_msg_factory.c iu_helpers.c
-
-osmoranap_HEADERS = ranap_common.h ranap_ies_defs.h ranap_msg_factory.h iu_helpers.h
-osmoranapdir = $(includedir)/osmocom/ranap
-
 
 # build the actual HomeNodeB gateway
 #

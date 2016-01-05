@@ -1,4 +1,16 @@
+# Ugly: ranap_ies_defs.h is generated from asn1tostruct.py at the same time as
+# the ranap_*.c files in src/, but the ranap_ies_defs.h should live here. If
+# the build process wants this header file, it should first build
+# src/ranap_encoder.c and src/ranap_decoder.c.
+# This rule sucks:
+ranap_ies_defs.h: $(top_builddir)/src/ranap_encoder.c
+	make -C $(top_builddir)/src/ ranap_encoder.c
+
 ranap_HEADERS = \
+	ranap_ies_defs.h \
+	ranap_common.h \
+	ranap_msg_factory.h \
+	iu_helpers.h \
 	RANAP_AccuracyFulfilmentIndicator.h \
 	RANAP_AllocationOrRetentionPriority.h \
 	RANAP_AlternativeRABConfigurationRequest.h \

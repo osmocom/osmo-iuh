@@ -19,7 +19,7 @@
  */
 
 
-#include "iu_helpers.h"
+#include <osmocom/ranap/iu_helpers.h>
 #include "asn1helpers.h"
 
 #include <assert.h>

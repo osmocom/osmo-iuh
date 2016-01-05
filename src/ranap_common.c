@@ -23,7 +23,7 @@
 #include <osmocom/core/msgb.h>
 #include <osmocom/gsm/gsm48.h>
 
-#include "ranap_common.h"
+#include <osmocom/ranap/ranap_common.h>
 
 extern int asn1_xer_print;
 int _ranap_DRANAP = 0;

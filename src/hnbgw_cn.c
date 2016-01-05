@@ -28,8 +28,8 @@
 
 #include "hnbgw.h"
 #include "hnbgw_rua.h"
-#include "ranap_ies_defs.h"
-#include "ranap_msg_factory.h"
+#include <osmocom/ranap/ranap_ies_defs.h>
+#include <osmocom/ranap/ranap_msg_factory.h>
 #include "context_map.h"
 #include "sccp_helpers.h"
 

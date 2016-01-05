@@ -51,10 +51,10 @@
 #include "hnbap_ies_defs.h"
 #include "rua_msg_factory.h"
 #include "asn1helpers.h"
-#include "iu_helpers.h"
+#include <osmocom/ranap/iu_helpers.h>
 #include "test_common.h"
 
-#include "ranap_msg_factory.h"
+#include <osmocom/ranap/ranap_msg_factory.h>
 
 static void *tall_hnb_ctx;
 

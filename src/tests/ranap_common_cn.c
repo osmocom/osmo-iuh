@@ -25,8 +25,8 @@
 #include <osmocom/core/utils.h>
 #include <osmocom/core/logging.h>
 
-#include "ranap_common.h"
-#include "ranap_ies_defs.h"
+#include <osmocom/ranap/ranap_common.h>
+#include <osmocom/ranap/ranap_ies_defs.h>
 #include "ranap_common_cn.h"
 
 #include "hnbgw.h"
