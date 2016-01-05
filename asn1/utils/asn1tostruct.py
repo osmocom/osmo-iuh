@@ -288,7 +288,7 @@ for key in iesDefs:
         f.write("    %s_t *%s,\n" % (prefix + re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
     f.write("    ANY_t *any_p) {\n\n")
 
-    f.write("    %s_t  %s;\n    %s_t *%s_p = &%s;\n" % (asn1cStruct, asn1cStructfirstlower, asn1cStruct, asn1cStructfirstlower, asn1cStructfirstlower))
+    f.write("    %s_t *%s_p = NULL;\n" % (asn1cStruct, asn1cStructfirstlower))
     f.write("    int i, decoded = 0;\n")
     if len(iesDefs[key]["ies"]) != 0:
         f.write("    int tempDecoded = 0;\n")
@@ -316,8 +316,7 @@ for key in iesDefs:
             f.write("            /* Conditional field */\n")
         f.write("            case %sProtocolIE_ID_%s:\n" % (prefix, re.sub('-', '_', ie[0])))
         f.write("            {\n")
-        f.write("                %s_t  %s;\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst)))
-        f.write("                %s_t *%s_p = &%s;\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst), lowerFirstCamelWord(ietypesubst)))
+        f.write("                %s_t *%s_p = NULL;\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst)))
         if ie[3] != "mandatory":
             f.write("                %s->presenceMask |= %s_%s_PRESENT;\n" % (lowerFirstCamelWord(re.sub('-', '_', key)), keyupperunderscore, ieupperunderscore))
         f.write("                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_%s, (void**)&%s_p);\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst)))
