@@ -1,4 +1,4 @@
-hnbap_HEADERS = \
+noinst_HEADERS = \
 	AccessResult.h \
 	Access-stratum-release-indicator.h \
 	AdditionalNeighbourInfoList.h \
@@ -114,5 +114,3 @@ hnbap_HEADERS = \
 	U-RNTIQueryRequest.h \
 	U-RNTIQueryResponse.h \
 	UTRANCellID.h
-
-hnbapdir = $(includedir)/osmocom/osmo-iuh/hnbap

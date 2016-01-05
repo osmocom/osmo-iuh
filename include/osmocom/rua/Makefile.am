@@ -1,4 +1,4 @@
-rua_HEADERS = \
+noinst_HEADERS = \
 	RUA_Ansi-41-IDNNS.h \
 	RUA_Cause.h \
 	RUA_CauseMisc.h \
@@ -34,6 +34,3 @@ rua_HEADERS = \
 	RUA_TriggeringMessage.h \
 	RUA_TypeOfError.h \
 	RUA_UnsuccessfulOutcome.h
-
-ruadir = $(includedir)/osmocom/osmo-iuh/rua
-
