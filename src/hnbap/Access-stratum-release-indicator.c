@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/Access-stratum-release-indicator.h>
+#include <osmocom/hnbap/Access-stratum-release-indicator.h>
 
 int
 Access_stratum_release_indicator_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_DeltaRAListofIdleModeUEs.h>
+#include <osmocom/ranap/RANAP_DeltaRAListofIdleModeUEs.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_DeltaRAListofIdleModeUEs_1[] = {
 	{ ATF_POINTER, 3, offsetof(struct RANAP_DeltaRAListofIdleModeUEs, newRAListofIdleModeUEs),

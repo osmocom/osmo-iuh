@@ -12,9 +12,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/hnbap/InitiatingMessage.h>
-#include <osmocom/osmo-iuh/hnbap/SuccessfulOutcome.h>
-#include <osmocom/osmo-iuh/hnbap/UnsuccessfulOutcome.h>
+#include <osmocom/hnbap/InitiatingMessage.h>
+#include <osmocom/hnbap/SuccessfulOutcome.h>
+#include <osmocom/hnbap/UnsuccessfulOutcome.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

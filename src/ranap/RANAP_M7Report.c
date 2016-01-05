@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_M7Report.h>
+#include <osmocom/ranap/RANAP_M7Report.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_M7Report_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_M7Report, m7_period),

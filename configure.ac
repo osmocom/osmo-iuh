@@ -38,8 +38,7 @@ AC_OUTPUT(
 	Makefile
 	include/Makefile
 	include/osmocom/Makefile
-	include/osmocom/osmo-iuh/Makefile
-	include/osmocom/osmo-iuh/hnbap/Makefile
-	include/osmocom/osmo-iuh/ranap/Makefile
-	include/osmocom/osmo-iuh/rua/Makefile
+	include/osmocom/hnbap/Makefile
+	include/osmocom/ranap/Makefile
+	include/osmocom/rua/Makefile
 	)

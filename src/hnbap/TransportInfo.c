@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/TransportInfo.h>
+#include <osmocom/hnbap/TransportInfo.h>
 
 static asn_per_constraints_t asn_PER_type_transportAssociation_constr_3 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  1,  1,  0l,  1l }	/* (0..1,...) */,

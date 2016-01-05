@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_RRC-Container.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_D-RNTI.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_RRC-Container.h>
+#include <osmocom/ranap/RANAP_D-RNTI.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

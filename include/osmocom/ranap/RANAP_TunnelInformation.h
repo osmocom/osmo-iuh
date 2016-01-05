@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_TransportLayerAddress.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_Port-Number.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_TransportLayerAddress.h>
+#include <osmocom/ranap/RANAP_Port-Number.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

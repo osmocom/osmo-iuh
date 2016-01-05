@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_Cell-Access-Mode.h>
+#include <osmocom/ranap/RANAP_Cell-Access-Mode.h>
 
 int
 RANAP_Cell_Access_Mode_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

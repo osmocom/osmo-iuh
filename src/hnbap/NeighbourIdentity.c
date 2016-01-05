@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/NeighbourIdentity.h>
+#include <osmocom/hnbap/NeighbourIdentity.h>
 
 static asn_per_constraints_t asn_PER_type_NeighbourIdentity_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  1,  1,  0l,  1l }	/* (0..1,...) */,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/rua/RUA_TypeOfError.h>
+#include <osmocom/rua/RUA_TypeOfError.h>
 
 int
 RUA_TypeOfError_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

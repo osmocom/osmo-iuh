@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_Pre-emptionCapability.h>
+#include <osmocom/ranap/RANAP_Pre-emptionCapability.h>
 
 int
 RANAP_Pre_emptionCapability_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

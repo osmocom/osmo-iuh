@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-CommonDataTypes.asn"
  */
 
-#include <osmocom/osmo-iuh/rua/RUA_ProtocolIE-ID.h>
+#include <osmocom/rua/RUA_ProtocolIE-ID.h>
 
 int
 RUA_ProtocolIE_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/PrivateMessage.h>
+#include <osmocom/hnbap/PrivateMessage.h>
 
 static int
 memb_privateMessage_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

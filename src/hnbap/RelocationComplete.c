@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/RelocationComplete.h>
+#include <osmocom/hnbap/RelocationComplete.h>
 
 static int
 memb_relocationComplete_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -11,7 +11,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-FailedList.h>
+#include <osmocom/ranap/RANAP_RAB-FailedList.h>
 
 #ifdef __cplusplus
 extern "C" {

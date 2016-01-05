@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/UE-Capabilities.h>
+#include <osmocom/hnbap/UE-Capabilities.h>
 
 static asn_TYPE_member_t asn_MBR_UE_Capabilities_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct UE_Capabilities, access_stratum_release_indicator),

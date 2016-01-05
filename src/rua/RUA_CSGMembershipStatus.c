@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/rua/RUA_CSGMembershipStatus.h>
+#include <osmocom/rua/RUA_CSGMembershipStatus.h>
 
 int
 RUA_CSGMembershipStatus_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

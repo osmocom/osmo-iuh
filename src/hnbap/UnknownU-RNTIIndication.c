@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/UnknownU-RNTIIndication.h>
+#include <osmocom/hnbap/UnknownU-RNTIIndication.h>
 
 int
 UnknownU_RNTIIndication_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

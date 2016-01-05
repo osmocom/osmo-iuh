@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/CGI.h>
+#include <osmocom/hnbap/CGI.h>
 
 static asn_TYPE_member_t asn_MBR_CGI_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct CGI, pLMNidentity),

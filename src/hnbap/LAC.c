@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/LAC.h>
+#include <osmocom/hnbap/LAC.h>
 
 int
 LAC_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

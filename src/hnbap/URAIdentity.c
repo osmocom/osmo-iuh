@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/URAIdentity.h>
+#include <osmocom/hnbap/URAIdentity.h>
 
 int
 URAIdentity_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

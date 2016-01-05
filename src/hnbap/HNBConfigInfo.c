@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/HNBConfigInfo.h>
+#include <osmocom/hnbap/HNBConfigInfo.h>
 
 static asn_TYPE_member_t asn_MBR_HNBConfigInfo_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct HNBConfigInfo, hnb_RNL_Identity),

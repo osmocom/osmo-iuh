@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/RABListItem.h>
+#include <osmocom/hnbap/RABListItem.h>
 
 static asn_TYPE_member_t asn_MBR_RABListItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RABListItem, rAB_ID),

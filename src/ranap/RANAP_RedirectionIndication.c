@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RedirectionIndication.h>
+#include <osmocom/ranap/RANAP_RedirectionIndication.h>
 
 static int
 memb_redirectionIndication_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

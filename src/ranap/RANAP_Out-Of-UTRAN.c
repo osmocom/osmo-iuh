@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_Out-Of-UTRAN.h>
+#include <osmocom/ranap/RANAP_Out-Of-UTRAN.h>
 
 int
 RANAP_Out_Of_UTRAN_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

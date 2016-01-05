@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RABs-ContextFailedtoTransferItem.h>
+#include <osmocom/ranap/RANAP_RABs-ContextFailedtoTransferItem.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_RABs_ContextFailedtoTransferItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_RABs_ContextFailedtoTransferItem, rAB_ID),

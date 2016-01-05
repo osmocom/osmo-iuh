@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/PLMNidentity.h>
+#include <osmocom/hnbap/PLMNidentity.h>
 
 int
 PLMNidentity_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -12,9 +12,9 @@
 
 /* Including external dependencies */
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_TMGI.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_MBMS-PTP-RAB-ID.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
+#include <osmocom/ranap/RANAP_TMGI.h>
+#include <osmocom/ranap/RANAP_MBMS-PTP-RAB-ID.h>
+#include <osmocom/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 

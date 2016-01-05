@@ -11,11 +11,11 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_FrameSequenceNumber.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_PDUType14FrameSequenceNumber.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_DataPDUType.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_UPInitialisationFrame.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_FrameSequenceNumber.h>
+#include <osmocom/ranap/RANAP_PDUType14FrameSequenceNumber.h>
+#include <osmocom/ranap/RANAP_DataPDUType.h>
+#include <osmocom/ranap/RANAP_UPInitialisationFrame.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

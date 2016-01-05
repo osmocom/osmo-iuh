@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-SetupOrModifyItemSecond.h>
+#include <osmocom/ranap/RANAP_RAB-SetupOrModifyItemSecond.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_RAB_SetupOrModifyItemSecond_1[] = {
 	{ ATF_POINTER, 7, offsetof(struct RANAP_RAB_SetupOrModifyItemSecond, pDP_TypeInformation),

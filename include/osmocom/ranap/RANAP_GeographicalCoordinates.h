@@ -13,7 +13,7 @@
 /* Including external dependencies */
 #include <NativeEnumerated.h>
 #include <NativeInteger.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

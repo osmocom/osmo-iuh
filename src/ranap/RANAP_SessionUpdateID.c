@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_SessionUpdateID.h>
+#include <osmocom/ranap/RANAP_SessionUpdateID.h>
 
 int
 RANAP_SessionUpdateID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

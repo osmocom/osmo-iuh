@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/BindingID.h>
+#include <osmocom/hnbap/BindingID.h>
 
 int
 BindingID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

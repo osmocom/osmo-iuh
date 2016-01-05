@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/CauseRadioNetwork.h>
+#include <osmocom/hnbap/CauseRadioNetwork.h>
 
 int
 CauseRadioNetwork_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

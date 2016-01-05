@@ -11,11 +11,11 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/rua/RUA_ProcedureCode.h>
-#include <osmocom/osmo-iuh/rua/RUA_TriggeringMessage.h>
-#include <osmocom/osmo-iuh/rua/RUA_Criticality.h>
-#include <osmocom/osmo-iuh/rua/RUA_CriticalityDiagnostics-IE-List.h>
-#include <osmocom/osmo-iuh/rua/RUA_IE-Extensions.h>
+#include <osmocom/rua/RUA_ProcedureCode.h>
+#include <osmocom/rua/RUA_TriggeringMessage.h>
+#include <osmocom/rua/RUA_Criticality.h>
+#include <osmocom/rua/RUA_CriticalityDiagnostics-IE-List.h>
+#include <osmocom/rua/RUA_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

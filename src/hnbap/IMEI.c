@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/IMEI.h>
+#include <osmocom/hnbap/IMEI.h>
 
 int
 IMEI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

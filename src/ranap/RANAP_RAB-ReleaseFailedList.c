@@ -5,7 +5,7 @@
  */
 #include <constr_CHOICE.h>
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ReleaseFailedList.h>
+#include <osmocom/ranap/RANAP_RAB-ReleaseFailedList.h>
 
 int
 RANAP_RAB_ReleaseFailedList_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

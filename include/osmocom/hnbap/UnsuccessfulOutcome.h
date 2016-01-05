@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/hnbap/ProcedureCode.h>
-#include <osmocom/osmo-iuh/hnbap/Criticality.h>
+#include <osmocom/hnbap/ProcedureCode.h>
+#include <osmocom/hnbap/Criticality.h>
 #include <ANY.h>
 #include <constr_SEQUENCE.h>
 

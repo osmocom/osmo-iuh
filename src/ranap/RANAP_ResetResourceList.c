@@ -5,7 +5,7 @@
  */
 #include <constr_CHOICE.h>
 
-#include <osmocom/osmo-iuh/ranap/RANAP_ResetResourceList.h>
+#include <osmocom/ranap/RANAP_ResetResourceList.h>
 
 static int
 memb_resetResourceList_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

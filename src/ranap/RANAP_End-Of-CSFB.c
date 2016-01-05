@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_End-Of-CSFB.h>
+#include <osmocom/ranap/RANAP_End-Of-CSFB.h>
 
 int
 RANAP_End_Of_CSFB_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

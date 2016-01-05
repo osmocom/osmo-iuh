@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/rua/RUA_RUA-PDU.h>
+#include <osmocom/rua/RUA_RUA-PDU.h>
 
 static asn_per_constraints_t asn_PER_type_RUA_RUA_PDU_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  2,  2,  0l,  2l }	/* (0..2,...) */,

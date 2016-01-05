@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/rua/RUA_InitiatingMessage.h>
-#include <osmocom/osmo-iuh/rua/RUA_SuccessfulOutcome.h>
-#include <osmocom/osmo-iuh/rua/RUA_UnsuccessfulOutcome.h>
+#include <osmocom/rua/RUA_InitiatingMessage.h>
+#include <osmocom/rua/RUA_SuccessfulOutcome.h>
+#include <osmocom/rua/RUA_UnsuccessfulOutcome.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

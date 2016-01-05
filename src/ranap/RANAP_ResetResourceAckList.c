@@ -5,7 +5,7 @@
  */
 #include <constr_CHOICE.h>
 
-#include <osmocom/osmo-iuh/ranap/RANAP_ResetResourceAckList.h>
+#include <osmocom/ranap/RANAP_ResetResourceAckList.h>
 
 static int
 memb_resetResourceAckList_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

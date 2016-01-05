@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_UE-History-Information.h>
+#include <osmocom/ranap/RANAP_UE-History-Information.h>
 
 int
 RANAP_UE_History_Information_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

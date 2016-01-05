@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_IMEIList.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IMEISVList.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IMEIGroup.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IMEISVGroup.h>
+#include <osmocom/ranap/RANAP_IMEIList.h>
+#include <osmocom/ranap/RANAP_IMEISVList.h>
+#include <osmocom/ranap/RANAP_IMEIGroup.h>
+#include <osmocom/ranap/RANAP_IMEISVGroup.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

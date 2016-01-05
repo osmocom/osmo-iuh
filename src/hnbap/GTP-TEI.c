@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/GTP-TEI.h>
+#include <osmocom/hnbap/GTP-TEI.h>
 
 int
 GTP_TEI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

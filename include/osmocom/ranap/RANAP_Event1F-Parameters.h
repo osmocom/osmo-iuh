@@ -11,7 +11,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_MeasurementQuantity.h>
+#include <osmocom/ranap/RANAP_MeasurementQuantity.h>
 #include <NativeInteger.h>
 #include <constr_SEQUENCE.h>
 

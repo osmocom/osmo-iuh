@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/PSC.h>
+#include <osmocom/hnbap/PSC.h>
 
 int
 PSC_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

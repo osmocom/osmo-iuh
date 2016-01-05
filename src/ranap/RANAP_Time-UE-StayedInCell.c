@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_Time-UE-StayedInCell.h>
+#include <osmocom/ranap/RANAP_Time-UE-StayedInCell.h>
 
 int
 RANAP_Time_UE_StayedInCell_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

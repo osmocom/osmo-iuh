@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/Iurh-Signalling-TNL-AddressList.h>
+#include <osmocom/hnbap/Iurh-Signalling-TNL-AddressList.h>
 
 static asn_per_constraints_t asn_PER_type_Iurh_Signalling_TNL_AddressList_constr_1 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },

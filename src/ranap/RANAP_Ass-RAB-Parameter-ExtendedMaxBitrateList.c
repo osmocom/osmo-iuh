@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_Ass-RAB-Parameter-ExtendedMaxBitrateList.h>
+#include <osmocom/ranap/RANAP_Ass-RAB-Parameter-ExtendedMaxBitrateList.h>
 
 static asn_per_constraints_t asn_PER_type_RANAP_Ass_RAB_Parameter_ExtendedMaxBitrateList_constr_1 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },

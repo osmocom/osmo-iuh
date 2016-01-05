@@ -38,7 +38,7 @@ extern asn_TYPE_descriptor_t asn_DEF_Iurh_Signalling_TNL_AddressList;
 #endif
 
 /* Referred external types */
-#include <osmocom/osmo-iuh/hnbap/IP-Address.h>
+#include <osmocom/hnbap/IP-Address.h>
 
 #endif	/* _Iurh_Signalling_TNL_AddressList_H_ */
 #include <asn_internal.h>

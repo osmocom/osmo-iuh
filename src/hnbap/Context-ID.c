@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/Context-ID.h>
+#include <osmocom/hnbap/Context-ID.h>
 
 int
 Context_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/rua/RUA_CN-DomainIndicator.h>
+#include <osmocom/rua/RUA_CN-DomainIndicator.h>
 
 int
 RUA_CN_DomainIndicator_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

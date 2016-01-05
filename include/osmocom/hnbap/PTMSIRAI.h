@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/hnbap/PTMSI.h>
-#include <osmocom/osmo-iuh/hnbap/RAI.h>
+#include <osmocom/hnbap/PTMSI.h>
+#include <osmocom/hnbap/RAI.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-CommonDataTypes.asn"
  */
 
-#include <osmocom/osmo-iuh/rua/RUA_TriggeringMessage.h>
+#include <osmocom/rua/RUA_TriggeringMessage.h>
 
 int
 RUA_TriggeringMessage_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

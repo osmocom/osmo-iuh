@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RepetitionNumber0.h>
+#include <osmocom/ranap/RANAP_RepetitionNumber0.h>
 
 int
 RANAP_RepetitionNumber0_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

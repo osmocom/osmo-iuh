@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_OMC-ID.h>
+#include <osmocom/ranap/RANAP_OMC-ID.h>
 
 int
 RANAP_OMC_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

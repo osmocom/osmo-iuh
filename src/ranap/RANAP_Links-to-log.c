@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_Links-to-log.h>
+#include <osmocom/ranap/RANAP_Links-to-log.h>
 
 int
 RANAP_Links_to_log_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

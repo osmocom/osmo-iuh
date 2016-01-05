@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/hnbap/GeographicalCoordinates.h>
-#include <osmocom/osmo-iuh/hnbap/AltitudeAndDirection.h>
+#include <osmocom/hnbap/GeographicalCoordinates.h>
+#include <osmocom/hnbap/AltitudeAndDirection.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus
@@ -45,7 +45,7 @@ extern asn_TYPE_descriptor_t asn_DEF_GeographicalLocation;
 #endif
 
 /* Referred external types */
-#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
+#include <osmocom/hnbap/IE-Extensions.h>
 
 #endif	/* _GeographicalLocation_H_ */
 #include <asn_internal.h>

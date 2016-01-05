@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-SetupItem-EnhRelocInfoReq.h>
+#include <osmocom/ranap/RANAP_RAB-SetupItem-EnhRelocInfoReq.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_RAB_SetupItem_EnhRelocInfoReq_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_RAB_SetupItem_EnhRelocInfoReq, rAB_ID),

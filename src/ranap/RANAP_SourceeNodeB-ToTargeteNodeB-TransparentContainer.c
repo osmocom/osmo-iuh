@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_SourceeNodeB-ToTargeteNodeB-TransparentContainer.h>
+#include <osmocom/ranap/RANAP_SourceeNodeB-ToTargeteNodeB-TransparentContainer.h>
 
 int
 RANAP_SourceeNodeB_ToTargeteNodeB_TransparentContainer_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

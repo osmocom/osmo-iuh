@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/CauseProtocol.h>
+#include <osmocom/hnbap/CauseProtocol.h>
 
 int
 CauseProtocol_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

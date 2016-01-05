@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-CommonDataTypes.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_PrivateIE-ID.h>
+#include <osmocom/ranap/RANAP_PrivateIE-ID.h>
 
 static int
 memb_local_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

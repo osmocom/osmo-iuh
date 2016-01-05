@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/CellIdentity.h>
+#include <osmocom/hnbap/CellIdentity.h>
 
 int
 CellIdentity_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

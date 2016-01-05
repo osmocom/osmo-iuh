@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_IuSignallingConnectionIdentifier.h>
+#include <osmocom/ranap/RANAP_IuSignallingConnectionIdentifier.h>
 
 int
 RANAP_IuSignallingConnectionIdentifier_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

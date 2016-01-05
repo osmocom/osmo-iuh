@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_Requested-RAB-Parameter-GuaranteedBitrateList.h>
+#include <osmocom/ranap/RANAP_Requested-RAB-Parameter-GuaranteedBitrateList.h>
 
 static asn_per_constraints_t asn_PER_type_RANAP_Requested_RAB_Parameter_GuaranteedBitrateList_constr_1 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },

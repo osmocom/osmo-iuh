@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/rua/RUA_IE.h>
+#include <osmocom/rua/RUA_IE.h>
 
 static asn_TYPE_member_t asn_MBR_RUA_IE_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RUA_IE, id),

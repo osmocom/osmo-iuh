@@ -11,7 +11,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_RIM-Transfer.h>
+#include <osmocom/ranap/RANAP_RIM-Transfer.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

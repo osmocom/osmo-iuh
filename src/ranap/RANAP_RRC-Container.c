@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RRC-Container.h>
+#include <osmocom/ranap/RANAP_RRC-Container.h>
 
 int
 RANAP_RRC_Container_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -13,9 +13,9 @@
 
 /* Including external dependencies */
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/osmo-iuh/hnbap/Criticality.h>
-#include <osmocom/osmo-iuh/hnbap/ProtocolIE-ID.h>
-#include <osmocom/osmo-iuh/hnbap/TypeOfError.h>
+#include <osmocom/hnbap/Criticality.h>
+#include <osmocom/hnbap/ProtocolIE-ID.h>
+#include <osmocom/hnbap/TypeOfError.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 
@@ -54,7 +54,7 @@ extern asn_TYPE_descriptor_t asn_DEF_CriticalityDiagnostics_IE_List;
 #endif
 
 /* Referred external types */
-#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
+#include <osmocom/hnbap/IE-Extensions.h>
 
 #endif	/* _CriticalityDiagnostics_IE_List_H_ */
 #include <asn_internal.h>

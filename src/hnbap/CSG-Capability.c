@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/CSG-Capability.h>
+#include <osmocom/hnbap/CSG-Capability.h>
 
 int
 CSG_Capability_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

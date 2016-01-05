@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_CSG-Id.h>
+#include <osmocom/ranap/RANAP_CSG-Id.h>
 
 int
 RANAP_CSG_Id_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

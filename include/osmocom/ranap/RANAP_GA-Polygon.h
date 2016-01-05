@@ -12,8 +12,8 @@
 
 /* Including external dependencies */
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_GeographicalCoordinates.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_GeographicalCoordinates.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 

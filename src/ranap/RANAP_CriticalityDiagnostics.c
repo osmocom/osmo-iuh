@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_CriticalityDiagnostics.h>
+#include <osmocom/ranap/RANAP_CriticalityDiagnostics.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_CriticalityDiagnostics_1[] = {
 	{ ATF_POINTER, 5, offsetof(struct RANAP_CriticalityDiagnostics, procedureCode),

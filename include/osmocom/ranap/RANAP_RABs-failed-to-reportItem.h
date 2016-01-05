@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ID.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_Cause.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
+#include <osmocom/ranap/RANAP_RAB-ID.h>
+#include <osmocom/ranap/RANAP_Cause.h>
+#include <osmocom/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

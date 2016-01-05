@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-DataVolumeReportRequestList.h>
+#include <osmocom/ranap/RANAP_RAB-DataVolumeReportRequestList.h>
 
 static int
 memb_raB_DataVolumeReportRequestList_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

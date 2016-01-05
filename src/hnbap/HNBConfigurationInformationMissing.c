@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/HNBConfigurationInformationMissing.h>
+#include <osmocom/hnbap/HNBConfigurationInformationMissing.h>
 
 static asn_TYPE_member_t asn_MBR_HNBConfigurationInformationMissing_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct HNBConfigurationInformationMissing, cause),

@@ -11,7 +11,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_Alt-RAB-Parameter-ExtendedMaxBitrateList.h>
+#include <osmocom/ranap/RANAP_Alt-RAB-Parameter-ExtendedMaxBitrateList.h>
 #include <asn_SEQUENCE_OF.h>
 #include <constr_SEQUENCE_OF.h>
 

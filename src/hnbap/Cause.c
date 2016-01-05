@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/Cause.h>
+#include <osmocom/hnbap/Cause.h>
 
 static asn_per_constraints_t asn_PER_type_Cause_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  2,  2,  0l,  3l }	/* (0..3,...) */,

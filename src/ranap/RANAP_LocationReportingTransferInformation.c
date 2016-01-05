@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_LocationReportingTransferInformation.h>
+#include <osmocom/ranap/RANAP_LocationReportingTransferInformation.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_LocationReportingTransferInformation_1[] = {
 	{ ATF_POINTER, 12, offsetof(struct RANAP_LocationReportingTransferInformation, reportChangeOfSAI),

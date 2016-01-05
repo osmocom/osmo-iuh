@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-SubflowCombinationBitRate.h>
+#include <osmocom/ranap/RANAP_RAB-SubflowCombinationBitRate.h>
 
 int
 RANAP_RAB_SubflowCombinationBitRate_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

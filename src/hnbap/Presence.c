@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/Presence.h>
+#include <osmocom/hnbap/Presence.h>
 
 int
 Presence_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

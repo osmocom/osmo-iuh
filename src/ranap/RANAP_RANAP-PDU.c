@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RANAP-PDU.h>
+#include <osmocom/ranap/RANAP_RANAP-PDU.h>
 
 static asn_per_constraints_t asn_PER_type_RANAP_RANAP_PDU_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  2,  2,  0l,  3l }	/* (0..3,...) */,

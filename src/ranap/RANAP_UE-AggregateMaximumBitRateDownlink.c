@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_UE-AggregateMaximumBitRateDownlink.h>
+#include <osmocom/ranap/RANAP_UE-AggregateMaximumBitRateDownlink.h>
 
 int
 RANAP_UE_AggregateMaximumBitRateDownlink_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

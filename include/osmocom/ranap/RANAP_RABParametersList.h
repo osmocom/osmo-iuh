@@ -12,11 +12,11 @@
 
 /* Including external dependencies */
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ID.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_CN-DomainIndicator.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RABDataVolumeReport.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_UPInformation.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_RAB-ID.h>
+#include <osmocom/ranap/RANAP_CN-DomainIndicator.h>
+#include <osmocom/ranap/RANAP_RABDataVolumeReport.h>
+#include <osmocom/ranap/RANAP_UPInformation.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 

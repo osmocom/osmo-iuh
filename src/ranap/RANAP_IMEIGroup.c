@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_IMEIGroup.h>
+#include <osmocom/ranap/RANAP_IMEIGroup.h>
 
 static int
 memb_iMEIMask_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -12,9 +12,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/hnbap/PLMNidentity.h>
-#include <osmocom/osmo-iuh/hnbap/LAC.h>
-#include <osmocom/osmo-iuh/hnbap/CI.h>
+#include <osmocom/hnbap/PLMNidentity.h>
+#include <osmocom/hnbap/LAC.h>
+#include <osmocom/hnbap/CI.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus
@@ -43,7 +43,7 @@ extern asn_TYPE_descriptor_t asn_DEF_CGI;
 #endif
 
 /* Referred external types */
-#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
+#include <osmocom/hnbap/IE-Extensions.h>
 
 #endif	/* _CGI_H_ */
 #include <asn_internal.h>

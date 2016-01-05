@@ -245,4 +245,4 @@ regenerate-from-asn1-source:
 #	remove the local copy of the runtime code
 	-rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
 #	change include style to `#include <dir/foo.h>'
-	../../move-asn1-header-files.sh osmocom/osmo-iuh/hnbap $(ASN_MODULE_INC)
+	../../move-asn1-header-files.sh osmocom/hnbap $(ASN_MODULE_INC)

@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_UTRAN-CellID.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_CellType.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_Time-UE-StayedInCell.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_UTRAN-CellID.h>
+#include <osmocom/ranap/RANAP_CellType.h>
+#include <osmocom/ranap/RANAP_Time-UE-StayedInCell.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

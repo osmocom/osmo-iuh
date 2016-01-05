@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/HNBAP-PDU.h>
+#include <osmocom/hnbap/HNBAP-PDU.h>
 
 static asn_per_constraints_t asn_PER_type_HNBAP_PDU_constr_1 GCC_NOTUSED = {
 	{ APC_CONSTRAINED | APC_EXTENSIBLE,  2,  2,  0l,  2l }	/* (0..2,...) */,

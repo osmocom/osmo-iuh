@@ -11,16 +11,16 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_ReportChangeOfSAI.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_PeriodicReportingIndicator.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_DirectReportingIndicator.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_VerticalAccuracyCode.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_PositioningPriority.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_ClientType.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_ResponseTime.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IncludeVelocity.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_PeriodicLocationInfo.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_ReportChangeOfSAI.h>
+#include <osmocom/ranap/RANAP_PeriodicReportingIndicator.h>
+#include <osmocom/ranap/RANAP_DirectReportingIndicator.h>
+#include <osmocom/ranap/RANAP_VerticalAccuracyCode.h>
+#include <osmocom/ranap/RANAP_PositioningPriority.h>
+#include <osmocom/ranap/RANAP_ClientType.h>
+#include <osmocom/ranap/RANAP_ResponseTime.h>
+#include <osmocom/ranap/RANAP_IncludeVelocity.h>
+#include <osmocom/ranap/RANAP_PeriodicLocationInfo.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

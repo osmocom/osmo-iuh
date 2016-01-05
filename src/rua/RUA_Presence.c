@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-CommonDataTypes.asn"
  */
 
-#include <osmocom/osmo-iuh/rua/RUA_Presence.h>
+#include <osmocom/rua/RUA_Presence.h>
 
 int
 RUA_Presence_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

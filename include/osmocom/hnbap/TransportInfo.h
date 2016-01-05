@@ -12,9 +12,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/hnbap/TransportLayerAddress.h>
-#include <osmocom/osmo-iuh/hnbap/GTP-TEI.h>
-#include <osmocom/osmo-iuh/hnbap/BindingID.h>
+#include <osmocom/hnbap/TransportLayerAddress.h>
+#include <osmocom/hnbap/GTP-TEI.h>
+#include <osmocom/hnbap/BindingID.h>
 #include <constr_CHOICE.h>
 #include <constr_SEQUENCE.h>
 
@@ -69,7 +69,7 @@ extern asn_TYPE_descriptor_t asn_DEF_TransportInfo;
 #endif
 
 /* Referred external types */
-#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
+#include <osmocom/hnbap/IE-Extensions.h>
 
 #endif	/* _TransportInfo_H_ */
 #include <asn_internal.h>

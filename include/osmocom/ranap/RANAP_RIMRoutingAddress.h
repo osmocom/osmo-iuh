@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_TargetRNC-ID.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_GERAN-Cell-ID.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_TargetENB-ID.h>
+#include <osmocom/ranap/RANAP_TargetRNC-ID.h>
+#include <osmocom/ranap/RANAP_GERAN-Cell-ID.h>
+#include <osmocom/ranap/RANAP_TargetENB-ID.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

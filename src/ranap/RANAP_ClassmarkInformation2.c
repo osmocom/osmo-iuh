@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_ClassmarkInformation2.h>
+#include <osmocom/ranap/RANAP_ClassmarkInformation2.h>
 
 int
 RANAP_ClassmarkInformation2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

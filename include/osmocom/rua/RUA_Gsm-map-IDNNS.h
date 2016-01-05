@@ -12,7 +12,7 @@
 
 /* Including external dependencies */
 #include <BOOLEAN.h>
-#include <osmocom/osmo-iuh/rua/RUA_RoutingParameter.h>
+#include <osmocom/rua/RUA_RoutingParameter.h>
 #include <constr_SEQUENCE.h>
 #include <constr_CHOICE.h>
 

@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolIE-ID.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_Criticality.h>
+#include <osmocom/ranap/RANAP_ProtocolIE-ID.h>
+#include <osmocom/ranap/RANAP_Criticality.h>
 #include <ANY.h>
 #include <constr_SEQUENCE.h>
 

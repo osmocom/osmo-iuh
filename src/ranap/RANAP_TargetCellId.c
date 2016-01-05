@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_TargetCellId.h>
+#include <osmocom/ranap/RANAP_TargetCellId.h>
 
 int
 RANAP_TargetCellId_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

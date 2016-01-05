@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_TraceReference.h>
+#include <osmocom/ranap/RANAP_TraceReference.h>
 #include <NativeEnumerated.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_EquipmentsToBeTraced.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_EquipmentsToBeTraced.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

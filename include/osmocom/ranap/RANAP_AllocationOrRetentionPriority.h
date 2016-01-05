@@ -11,11 +11,11 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_PriorityLevel.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_Pre-emptionCapability.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_Pre-emptionVulnerability.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_QueuingAllowed.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_PriorityLevel.h>
+#include <osmocom/ranap/RANAP_Pre-emptionCapability.h>
+#include <osmocom/ranap/RANAP_Pre-emptionVulnerability.h>
+#include <osmocom/ranap/RANAP_QueuingAllowed.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/rua/RUA_Gsm-map-IDNNS.h>
-#include <osmocom/osmo-iuh/rua/RUA_Ansi-41-IDNNS.h>
+#include <osmocom/rua/RUA_Gsm-map-IDNNS.h>
+#include <osmocom/rua/RUA_Ansi-41-IDNNS.h>
 #include <constr_CHOICE.h>
 #include <constr_SEQUENCE.h>
 #include <BIT_STRING.h>

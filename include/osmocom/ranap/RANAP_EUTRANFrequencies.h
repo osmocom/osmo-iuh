@@ -13,8 +13,8 @@
 /* Including external dependencies */
 #include <asn_SEQUENCE_OF.h>
 #include <NativeInteger.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_MeasBand.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_MeasBand.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 

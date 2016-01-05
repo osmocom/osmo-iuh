@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_SourceUTRANCellID.h>
+#include <osmocom/ranap/RANAP_SourceUTRANCellID.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_SourceUTRANCellID_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_SourceUTRANCellID, pLMNidentity),

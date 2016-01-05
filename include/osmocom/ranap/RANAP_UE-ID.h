@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_IMSI.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IMEI.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IMEISV.h>
+#include <osmocom/ranap/RANAP_IMSI.h>
+#include <osmocom/ranap/RANAP_IMEI.h>
+#include <osmocom/ranap/RANAP_IMEISV.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

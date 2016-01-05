@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_NewRAListofIdleModeUEs.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RAListwithNoIdleModeUEsAnyMore.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_NewRAListofIdleModeUEs.h>
+#include <osmocom/ranap/RANAP_RAListwithNoIdleModeUEsAnyMore.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

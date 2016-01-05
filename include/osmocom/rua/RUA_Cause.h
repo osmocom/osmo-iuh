@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/rua/RUA_CauseRadioNetwork.h>
-#include <osmocom/osmo-iuh/rua/RUA_CauseTransport.h>
-#include <osmocom/osmo-iuh/rua/RUA_CauseProtocol.h>
-#include <osmocom/osmo-iuh/rua/RUA_CauseMisc.h>
+#include <osmocom/rua/RUA_CauseRadioNetwork.h>
+#include <osmocom/rua/RUA_CauseTransport.h>
+#include <osmocom/rua/RUA_CauseProtocol.h>
+#include <osmocom/rua/RUA_CauseMisc.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

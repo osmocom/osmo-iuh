@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_LAI.h>
+#include <osmocom/ranap/RANAP_LAI.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_LAI_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_LAI, pLMNidentity),

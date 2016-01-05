@@ -11,8 +11,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_GTP-TEI.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_BindingID.h>
+#include <osmocom/ranap/RANAP_GTP-TEI.h>
+#include <osmocom/ranap/RANAP_BindingID.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

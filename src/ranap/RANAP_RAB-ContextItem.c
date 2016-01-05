@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ContextItem.h>
+#include <osmocom/ranap/RANAP_RAB-ContextItem.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_RAB_ContextItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_RAB_ContextItem, rAB_ID),

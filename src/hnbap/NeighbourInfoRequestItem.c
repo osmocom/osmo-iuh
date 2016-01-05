@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/NeighbourInfoRequestItem.h>
+#include <osmocom/hnbap/NeighbourInfoRequestItem.h>
 
 static asn_TYPE_member_t asn_MBR_NeighbourInfoRequestItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct NeighbourInfoRequestItem, hnb_RNL_Identity),

@@ -12,7 +12,7 @@
 
 /* Including external dependencies */
 #include <NativeInteger.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_VerticalSpeedDirection.h>
+#include <osmocom/ranap/RANAP_VerticalSpeedDirection.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

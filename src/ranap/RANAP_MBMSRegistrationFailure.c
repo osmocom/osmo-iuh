@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_MBMSRegistrationFailure.h>
+#include <osmocom/ranap/RANAP_MBMSRegistrationFailure.h>
 
 static int
 memb_mbmsRegistrationFailure_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -12,8 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/hnbap/Access-stratum-release-indicator.h>
-#include <osmocom/osmo-iuh/hnbap/CSG-Capability.h>
+#include <osmocom/hnbap/Access-stratum-release-indicator.h>
+#include <osmocom/hnbap/CSG-Capability.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus
@@ -45,7 +45,7 @@ extern asn_TYPE_descriptor_t asn_DEF_UE_Capabilities;
 #endif
 
 /* Referred external types */
-#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
+#include <osmocom/hnbap/IE-Extensions.h>
 
 #endif	/* _UE_Capabilities_H_ */
 #include <asn_internal.h>

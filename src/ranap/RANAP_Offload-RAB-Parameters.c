@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_Offload-RAB-Parameters.h>
+#include <osmocom/ranap/RANAP_Offload-RAB-Parameters.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_Offload_RAB_Parameters_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_Offload_RAB_Parameters, accessPointName),

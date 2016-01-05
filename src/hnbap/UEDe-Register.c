@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/UEDe-Register.h>
+#include <osmocom/hnbap/UEDe-Register.h>
 
 static int
 memb_ueDe_Register_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

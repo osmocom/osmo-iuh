@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_ForwardSRNS-Context.h>
+#include <osmocom/ranap/RANAP_ForwardSRNS-Context.h>
 
 static int
 memb_forwardSRNS_Context_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

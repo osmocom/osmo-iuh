@@ -12,9 +12,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/hnbap/ProcedureCode.h>
-#include <osmocom/osmo-iuh/hnbap/TriggeringMessage.h>
-#include <osmocom/osmo-iuh/hnbap/Criticality.h>
+#include <osmocom/hnbap/ProcedureCode.h>
+#include <osmocom/hnbap/TriggeringMessage.h>
+#include <osmocom/hnbap/Criticality.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus
@@ -49,8 +49,8 @@ extern asn_TYPE_descriptor_t asn_DEF_CriticalityDiagnostics;
 #endif
 
 /* Referred external types */
-#include <osmocom/osmo-iuh/hnbap/CriticalityDiagnostics-IE-List.h>
-#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
+#include <osmocom/hnbap/CriticalityDiagnostics-IE-List.h>
+#include <osmocom/hnbap/IE-Extensions.h>
 
 #endif	/* _CriticalityDiagnostics_H_ */
 #include <asn_internal.h>

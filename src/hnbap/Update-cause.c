@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/Update-cause.h>
+#include <osmocom/hnbap/Update-cause.h>
 
 int
 Update_cause_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

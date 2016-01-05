@@ -38,7 +38,7 @@ extern asn_TYPE_descriptor_t asn_DEF_AdditionalNeighbourInfoList;
 #endif
 
 /* Referred external types */
-#include <osmocom/osmo-iuh/hnbap/HNBConfigInfo.h>
+#include <osmocom/hnbap/HNBConfigInfo.h>
 
 #endif	/* _AdditionalNeighbourInfoList_H_ */
 #include <asn_internal.h>

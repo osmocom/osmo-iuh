@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_TMGI.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IPMulticastAddress.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_APN.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_TMGI.h>
+#include <osmocom/ranap/RANAP_IPMulticastAddress.h>
+#include <osmocom/ranap/RANAP_APN.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

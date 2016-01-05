@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_GlobalRNC-ID.h>
+#include <osmocom/ranap/RANAP_GlobalRNC-ID.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_GlobalRNC_ID_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_GlobalRNC_ID, pLMNidentity),

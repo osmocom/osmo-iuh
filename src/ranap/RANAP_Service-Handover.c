@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_Service-Handover.h>
+#include <osmocom/ranap/RANAP_Service-Handover.h>
 
 int
 RANAP_Service_Handover_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

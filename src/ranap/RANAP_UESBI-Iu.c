@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_UESBI-Iu.h>
+#include <osmocom/ranap/RANAP_UESBI-Iu.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_UESBI_Iu_1[] = {
 	{ ATF_POINTER, 3, offsetof(struct RANAP_UESBI_Iu, uESBI_IuA),

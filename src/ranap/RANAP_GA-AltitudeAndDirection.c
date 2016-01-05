@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_GA-AltitudeAndDirection.h>
+#include <osmocom/ranap/RANAP_GA-AltitudeAndDirection.h>
 
 static int
 directionOfAltitude_2_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

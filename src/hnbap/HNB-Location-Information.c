@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/HNB-Location-Information.h>
+#include <osmocom/hnbap/HNB-Location-Information.h>
 
 static asn_TYPE_member_t asn_MBR_HNB_Location_Information_1[] = {
 	{ ATF_POINTER, 3, offsetof(struct HNB_Location_Information, macroCoverageInfo),

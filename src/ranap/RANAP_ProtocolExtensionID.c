@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-CommonDataTypes.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionID.h>
+#include <osmocom/ranap/RANAP_ProtocolExtensionID.h>
 
 int
 RANAP_ProtocolExtensionID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

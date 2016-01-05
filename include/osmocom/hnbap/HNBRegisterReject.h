@@ -48,7 +48,7 @@ extern asn_TYPE_descriptor_t asn_DEF_HNBRegisterReject;
 #endif
 
 /* Referred external types */
-#include <osmocom/osmo-iuh/hnbap/IE.h>
+#include <osmocom/hnbap/IE.h>
 
 #endif	/* _HNBRegisterReject_H_ */
 #include <asn_internal.h>

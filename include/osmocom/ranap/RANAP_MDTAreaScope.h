@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_CellBased.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_LABased.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RABased.h>
+#include <osmocom/ranap/RANAP_CellBased.h>
+#include <osmocom/ranap/RANAP_LABased.h>
+#include <osmocom/ranap/RANAP_RABased.h>
 #include <NULL.h>
 #include <constr_CHOICE.h>
 

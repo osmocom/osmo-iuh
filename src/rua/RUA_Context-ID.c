@@ -4,7 +4,7 @@
  * 	found in "../../asn1/rua/RUA-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/rua/RUA_Context-ID.h>
+#include <osmocom/rua/RUA_Context-ID.h>
 
 int
 RUA_Context_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

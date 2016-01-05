@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_LHN-ID.h>
+#include <osmocom/ranap/RANAP_LHN-ID.h>
 
 int
 RANAP_LHN_ID_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

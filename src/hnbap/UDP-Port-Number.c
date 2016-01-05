@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/UDP-Port-Number.h>
+#include <osmocom/hnbap/UDP-Port-Number.h>
 
 int
 UDP_Port_Number_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

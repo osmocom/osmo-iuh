@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_SRB-TrCH-MappingItem.h>
+#include <osmocom/ranap/RANAP_SRB-TrCH-MappingItem.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_SRB_TrCH_MappingItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_SRB_TrCH_MappingItem, sRB_ID),

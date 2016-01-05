@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RNCTraceInformation.h>
+#include <osmocom/ranap/RANAP_RNCTraceInformation.h>
 
 static int
 traceActivationIndicato_3_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

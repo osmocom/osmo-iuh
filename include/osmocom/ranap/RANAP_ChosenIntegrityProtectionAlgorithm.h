@@ -12,7 +12,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_IntegrityProtectionAlgorithm.h>
+#include <osmocom/ranap/RANAP_IntegrityProtectionAlgorithm.h>
 
 #ifdef __cplusplus
 extern "C" {

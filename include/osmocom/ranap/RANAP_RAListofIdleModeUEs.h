@@ -11,7 +11,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_NotEmptyRAListofIdleModeUEs.h>
+#include <osmocom/ranap/RANAP_NotEmptyRAListofIdleModeUEs.h>
 #include <NativeEnumerated.h>
 #include <constr_CHOICE.h>
 

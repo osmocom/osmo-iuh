@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/IE-Extensions.h>
+#include <osmocom/hnbap/IE-Extensions.h>
 
 static asn_per_constraints_t asn_PER_type_IE_Extensions_constr_1 GCC_NOTUSED = {
 	{ APC_UNCONSTRAINED,	-1, -1,  0,  0 },

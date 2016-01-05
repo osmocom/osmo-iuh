@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_SubscriberProfileIDforRFP.h>
+#include <osmocom/ranap/RANAP_SubscriberProfileIDforRFP.h>
 
 int
 RANAP_SubscriberProfileIDforRFP_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

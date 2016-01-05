@@ -11,16 +11,16 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ID.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_CN-DomainIndicator.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-Parameters.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_DataVolumeReportingIndication.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_PDP-TypeInformation.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_UserPlaneInformation.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_TNLInformationEnhRelInfoReq.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_Service-Handover.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_Alt-RAB-Parameters.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
+#include <osmocom/ranap/RANAP_RAB-ID.h>
+#include <osmocom/ranap/RANAP_CN-DomainIndicator.h>
+#include <osmocom/ranap/RANAP_RAB-Parameters.h>
+#include <osmocom/ranap/RANAP_DataVolumeReportingIndication.h>
+#include <osmocom/ranap/RANAP_PDP-TypeInformation.h>
+#include <osmocom/ranap/RANAP_UserPlaneInformation.h>
+#include <osmocom/ranap/RANAP_TNLInformationEnhRelInfoReq.h>
+#include <osmocom/ranap/RANAP_Service-Handover.h>
+#include <osmocom/ranap/RANAP_Alt-RAB-Parameters.h>
+#include <osmocom/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

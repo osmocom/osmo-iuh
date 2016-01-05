@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-CommonDataTypes.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_ProcedureCode.h>
+#include <osmocom/ranap/RANAP_ProcedureCode.h>
 
 int
 RANAP_ProcedureCode_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -12,10 +12,10 @@
 
 /* Including external dependencies */
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/osmo-iuh/rua/RUA_Criticality.h>
-#include <osmocom/osmo-iuh/rua/RUA_ProtocolIE-ID.h>
-#include <osmocom/osmo-iuh/rua/RUA_TypeOfError.h>
-#include <osmocom/osmo-iuh/rua/RUA_IE-Extensions.h>
+#include <osmocom/rua/RUA_Criticality.h>
+#include <osmocom/rua/RUA_ProtocolIE-ID.h>
+#include <osmocom/rua/RUA_TypeOfError.h>
+#include <osmocom/rua/RUA_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 

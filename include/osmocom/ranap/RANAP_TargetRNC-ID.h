@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_LAI.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RAC.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RNC-ID.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_LAI.h>
+#include <osmocom/ranap/RANAP_RAC.h>
+#include <osmocom/ranap/RANAP_RNC-ID.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

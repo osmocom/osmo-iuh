@@ -11,19 +11,19 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_TrafficClass.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-AsymmetryIndicator.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-Parameter-MaxBitrateList.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-Parameter-GuaranteedBitrateList.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_DeliveryOrder.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_MaxSDU-Size.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_SDU-Parameters.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_TransferDelay.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_TrafficHandlingPriority.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_AllocationOrRetentionPriority.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_SourceStatisticsDescriptor.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RelocationRequirement.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_TrafficClass.h>
+#include <osmocom/ranap/RANAP_RAB-AsymmetryIndicator.h>
+#include <osmocom/ranap/RANAP_RAB-Parameter-MaxBitrateList.h>
+#include <osmocom/ranap/RANAP_RAB-Parameter-GuaranteedBitrateList.h>
+#include <osmocom/ranap/RANAP_DeliveryOrder.h>
+#include <osmocom/ranap/RANAP_MaxSDU-Size.h>
+#include <osmocom/ranap/RANAP_SDU-Parameters.h>
+#include <osmocom/ranap/RANAP_TransferDelay.h>
+#include <osmocom/ranap/RANAP_TrafficHandlingPriority.h>
+#include <osmocom/ranap/RANAP_AllocationOrRetentionPriority.h>
+#include <osmocom/ranap/RANAP_SourceStatisticsDescriptor.h>
+#include <osmocom/ranap/RANAP_RelocationRequirement.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

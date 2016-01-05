@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RSRVCC-HO-Indication.h>
+#include <osmocom/ranap/RANAP_RSRVCC-HO-Indication.h>
 
 int
 RANAP_RSRVCC_HO_Indication_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_Alt-RAB-Parameter-SupportedGuaranteedBitrateInf.h>
+#include <osmocom/ranap/RANAP_Alt-RAB-Parameter-SupportedGuaranteedBitrateInf.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_Alt_RAB_Parameter_SupportedGuaranteedBitrateInf_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_Alt_RAB_Parameter_SupportedGuaranteedBitrateInf, altSupportedGuaranteedBitrateType),

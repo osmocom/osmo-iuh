@@ -11,13 +11,13 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ID.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-Parameters.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_UserPlaneInformation.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_TransportLayerAddress.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IuTransportAssociation.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-ToBeReleasedList-EnhancedRelocCompleteRes.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_ProtocolExtensionContainer.h>
+#include <osmocom/ranap/RANAP_RAB-ID.h>
+#include <osmocom/ranap/RANAP_RAB-Parameters.h>
+#include <osmocom/ranap/RANAP_UserPlaneInformation.h>
+#include <osmocom/ranap/RANAP_TransportLayerAddress.h>
+#include <osmocom/ranap/RANAP_IuTransportAssociation.h>
+#include <osmocom/ranap/RANAP_RAB-ToBeReleasedList-EnhancedRelocCompleteRes.h>
+#include <osmocom/ranap/RANAP_ProtocolExtensionContainer.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

@@ -12,7 +12,7 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/hnbap/HNB-Cell-Identifier.h>
+#include <osmocom/hnbap/HNB-Cell-Identifier.h>
 #include <constr_CHOICE.h>
 
 #ifdef __cplusplus

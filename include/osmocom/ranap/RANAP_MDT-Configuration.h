@@ -11,10 +11,10 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_MDT-Activation.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_MDTAreaScope.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_MDTMode.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_MDT-Activation.h>
+#include <osmocom/ranap/RANAP_MDTAreaScope.h>
+#include <osmocom/ranap/RANAP_MDTMode.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

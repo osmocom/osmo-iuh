@@ -11,9 +11,9 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
-#include <osmocom/osmo-iuh/ranap/RANAP_Offload-RAB-Parameters-APN.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_Offload-RAB-Parameters-ChargingCharacteristics.h>
-#include <osmocom/osmo-iuh/ranap/RANAP_IE-Extensions.h>
+#include <osmocom/ranap/RANAP_Offload-RAB-Parameters-APN.h>
+#include <osmocom/ranap/RANAP_Offload-RAB-Parameters-ChargingCharacteristics.h>
+#include <osmocom/ranap/RANAP_IE-Extensions.h>
 #include <constr_SEQUENCE.h>
 
 #ifdef __cplusplus

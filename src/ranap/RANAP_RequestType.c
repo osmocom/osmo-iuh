@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-IEs.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RequestType.h>
+#include <osmocom/ranap/RANAP_RequestType.h>
 
 static int
 memb_accuracyCode_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

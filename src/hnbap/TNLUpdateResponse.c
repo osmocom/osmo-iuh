@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/TNLUpdateResponse.h>
+#include <osmocom/hnbap/TNLUpdateResponse.h>
 
 static int
 memb_tnlUpdateResponse_ies_constraint_1(asn_TYPE_descriptor_t *td, const void *sptr,

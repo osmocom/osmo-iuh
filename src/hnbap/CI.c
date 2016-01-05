@@ -5,7 +5,7 @@
  * 	`asn1c -gen-PER`
  */
 
-#include <osmocom/osmo-iuh/hnbap/CI.h>
+#include <osmocom/hnbap/CI.h>
 
 int
 CI_constraint(asn_TYPE_descriptor_t *td, const void *sptr,

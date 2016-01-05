@@ -4,7 +4,7 @@
  * 	found in "../../asn1/ranap/RANAP-PDU.asn"
  */
 
-#include <osmocom/osmo-iuh/ranap/RANAP_RAB-RelocationReleaseItem.h>
+#include <osmocom/ranap/RANAP_RAB-RelocationReleaseItem.h>
 
 static asn_TYPE_member_t asn_MBR_RANAP_RAB_RelocationReleaseItem_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct RANAP_RAB_RelocationReleaseItem, rAB_ID),
