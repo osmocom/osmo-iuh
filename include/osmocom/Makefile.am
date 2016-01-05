@@ -1,2 +1,2 @@
-SUBDIRS = osmo-iuh
+SUBDIRS = hnbap ranap rua
 
