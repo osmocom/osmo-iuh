@@ -22,12 +22,14 @@ Makefile.in
 Makefile
 Makefile.am.sample
 src/tests/atconfig
+src/tests/dummy-cn
 src/tests/hnb-test
 src/tests/package.m4
 src/tests/test-helpers
 src/tests/test-hnbap
 src/tests/test-ranap
 src/tests/testsuite
+src/tests/testsuite.dir
 src/tests/testsuite.log
 src/osmo-hnbgw
 tags
