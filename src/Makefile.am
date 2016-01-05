@@ -5,13 +5,13 @@ ASN1_ROOT = $(top_builddir)/asn1/
 ASN1TOSTRUCT = $(ASN1_ROOT)/utils/asn1tostruct.py
 BUILT_SOURCES = hnbap_decoder.c hnbap_encoder.c rua_decoder.c rua_encoder.c ranap_decoder.c ranap_encoder.c
 
-hnbap_encoder.c hnbap_decoder.c hnbap_ies_defs.h: $(ASN1_ROOT)/hnbap/HNBAP-PDU-Contents.asn
+hnbap_encoder.c hnbap_decoder.c hnbap_ies_defs.h: $(ASN1_ROOT)/hnbap/HNBAP-PDU-Contents.asn $(ASN1TOSTRUCT)
 	$(ASN1TOSTRUCT) -f $<
 
-rua_encoder.c rua_decoder.c rua_ies_defs.h: $(ASN1_ROOT)/rua/RUA-PDU-Contents.asn
+rua_encoder.c rua_decoder.c rua_ies_defs.h: $(ASN1_ROOT)/rua/RUA-PDU-Contents.asn $(ASN1TOSTRUCT)
 	$(ASN1TOSTRUCT) -p RUA_ -f $<
 
-ranap_encoder.c ranap_decoder.c ranap_ies_defs.h: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn
+ranap_encoder.c ranap_decoder.c ranap_ies_defs.h: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN1TOSTRUCT)
 	$(ASN1TOSTRUCT) -p RANAP_ -f $<
 
 
