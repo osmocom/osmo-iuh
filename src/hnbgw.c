@@ -102,6 +102,16 @@ struct ue_context *ue_context_by_imsi(struct hnb_gw *gw, const char *imsi)
 	return NULL;
 }
 
+void ue_context_free_by_hnb(struct hnb_gw *gw, const struct hnb_context *hnb)
+{
+	struct ue_context *ue, *tmp;
+
+	llist_for_each_entry_safe(ue, tmp, &gw->ue_list, list) {
+		if (ue->hnb == hnb)
+			ue_context_free(ue);
+	}
+}
+
 static uint32_t get_next_ue_ctx_id(struct hnb_gw *gw)
 {
 	uint32_t id;
@@ -249,6 +259,7 @@ void hnb_context_release(struct hnb_context *ctx)
 		llist_del(&map->hnb_list);
 		context_map_deactivate(map);
 	}
+	ue_context_free_by_hnb(ctx->gw, ctx);
 	osmo_stream_srv_destroy(ctx->conn);
 
 	talloc_free(ctx);
