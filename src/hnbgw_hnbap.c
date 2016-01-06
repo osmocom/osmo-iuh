@@ -114,6 +114,23 @@ static int hnbgw_tx_ue_register_acc(struct ue_context *ue)
 	return hnbgw_hnbap_tx(ue->hnb, msg);
 }
 
+static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
+{
+	HNBDe_RegisterIEs_t ies;
+	int rc;
+
+	rc = hnbap_decode_hnbde_registeries(&ies, in);
+	if (rc < 0)
+		return rc;
+
+	DEBUGP(DHNBAP, "HNB-DE-REGSITER cause=%ld\n",
+		ies.cause);
+
+	hnb_context_release(ctx);
+
+	return 0;
+}
+
 static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 {
 	HNBRegisterRequestIEs_t ies;
@@ -226,6 +243,7 @@ static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, InitiatingMessage_t 
 		rc = hnbgw_rx_hnb_register_req(hnb, &imsg->value);
 		break;
 	case ProcedureCode_id_HNBDe_Register:	/* 8.3 */
+		rc = hnbgw_rx_hnb_deregister(hnb, &imsg->value);
 		break;
 	case ProcedureCode_id_UERegister: 	/* 8.4 */
 		rc = hnbgw_rx_ue_register_req(hnb, &imsg->value);
