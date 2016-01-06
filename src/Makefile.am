@@ -13,12 +13,12 @@ rua_encoder.c rua_decoder.c rua_ies_defs.h: $(ASN1_ROOT)/rua/RUA-PDU-Contents.as
 
 ranap_encoder.c ranap_decoder.c: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN1TOSTRUCT)
 	$(ASN1TOSTRUCT) -p RANAP_ -f $<
-	mv ranap_ies_defs.h $(includedir)/osmocom/ranap/
-#	this is ugly ^. ranap_ies_defs.h is generated from asn1tostruct.py here, but
-#	it should live in include/osmocom/ranap/.
 #	We also need to replace the include in the newly generated .c files:
 	sed -i 's,^#include "ranap_ies_defs.h",#include <osmocom/ranap/ranap_ies_defs.h>,' ranap_encoder.c ranap_decoder.c
-	sed -i 's,^#include "ranap_common.h",#include <osmocom/ranap/ranap_common.h>,' ranap_encoder.c ranap_decoder.c
+	sed -i 's,^#include "ranap_common.h",#include <osmocom/ranap/ranap_common.h>,' ranap_encoder.c ranap_decoder.c ranap_ies_defs.h
+	mv ranap_ies_defs.h $(top_srcdir)/include/osmocom/ranap/
+#	this is ugly ^. ranap_ies_defs.h is generated from asn1tostruct.py here, but
+#	it should live in include/osmocom/ranap/.
 
 AM_CFLAGS = $(OSMOCORE_CFLAGS) $(OSMOVTY_CFLAGS) $(OSMOGSM_CFLAGS) $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS) -I../include
 COMMON_LDADD = -lsctp
