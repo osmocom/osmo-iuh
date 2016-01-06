@@ -43,7 +43,9 @@ static int hnbgw_hnbap_tx(struct hnb_context *ctx, struct msgb *msg)
 		return -EINVAL;
 
 	msgb_sctp_ppid(msg) = IUH_PPI_HNBAP;
-	return osmo_wqueue_enqueue(&ctx->wqueue, msg);
+	osmo_stream_srv_send(ctx->conn, msg);
+
+	return 0;
 }
 
 static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)

@@ -80,7 +80,7 @@ struct hnb_context {
 	/*! HNB-GW we are part of */
 	struct hnb_gw *gw;
 	/*! SCTP socket + write queue for Iuh to this specific HNB */
-	struct osmo_wqueue wqueue;
+	struct osmo_stream_srv *conn;
 	/*! copied from HNB-Identity-Info IE */
 	char identity_info[256];
 	/*! copied from Cell Identity IE */
@@ -115,7 +115,7 @@ struct hnb_gw {
 		uint16_t rnc_id;
 	} config;
 	/*! SCTP listen socket for incoming connections */
-	struct osmo_fd listen_fd;
+	struct osmo_stream_srv_link *iuh;
 	/* list of struct hnb_context */
 	struct llist_head hnb_list;
 	/* list of struct ue_context */
@@ -135,5 +135,5 @@ struct ue_context *ue_context_by_imsi(struct hnb_gw *gw, const char *imsi);
 struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi);
 void ue_context_free(struct ue_context *ue);
 
-struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, int new_fd);
+struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_link *link, int new_fd);
 void hnb_context_release(struct hnb_context *ctx);

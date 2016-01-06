@@ -69,9 +69,6 @@ static struct hnb_gw *hnb_gw_create(void *ctx)
 
 	gw->config.iuh_listen_port = IUH_DEFAULT_SCTP_PORT;
 
-	gw->listen_fd.cb = listen_fd_cb;
-	gw->listen_fd.when = BSC_FD_READ;
-	gw->listen_fd.data = gw;
 	gw->next_ue_ctx_id = 23;
 	INIT_LLIST_HEAD(&gw->hnb_list);
 	INIT_LLIST_HEAD(&gw->ue_list);
@@ -137,13 +134,13 @@ void ue_context_free(struct ue_context *ue)
 	llist_del(&ue->list);
 	talloc_free(ue);
 }
-
-
-
-static int hnb_read_cb(struct osmo_fd *fd)
+static int hnb_close_cb(struct osmo_stream_srv *conn)
 {
-	struct hnb_context *hnb = fd->data;
-	struct sctp_sndrcvinfo sinfo;
+}
+
+static int hnb_read_cb(struct osmo_stream_srv *conn)
+{
+	struct hnb_context *hnb = osmo_stream_srv_get_data(conn);
 	struct msgb *msg = msgb_alloc(IUH_MSGB_SIZE, "Iuh rx");
 	int flags = 0;
 	int rc;
@@ -155,20 +152,18 @@ static int hnb_read_cb(struct osmo_fd *fd)
 	 * benefit of varoius downstream processing functions */
 	msg->dst = hnb;
 
-	rc = sctp_recvmsg(fd->fd, msgb_data(msg), msgb_tailroom(msg),
-			  NULL, NULL, &sinfo, &flags);
-	if (rc < 0) {
+	rc = osmo_stream_srv_recv(conn, msg);
+	if (rc == -EAGAIN) {
+		/* Notification received */
+		msgb_free(msg);
+		return 0;
+	} else if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error during sctp_recvmsg()\n");
 		/* FIXME: clean up after disappeared HNB */
-		close(fd->fd);
-		osmo_fd_unregister(fd);
+		hnb_context_release(hnb);
 		goto out;
 	} else if (rc == 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Connection to HNB closed\n");
-		/* TODO: Remove all UEs from that connection */
-		close(fd->fd);
-		osmo_fd_unregister(fd);
-		fd->fd = -1;
+		hnb_context_release(hnb);
 		rc = -1;
 
 		goto out;
@@ -176,33 +171,25 @@ static int hnb_read_cb(struct osmo_fd *fd)
 		msgb_put(msg, rc);
 	}
 
-	if (flags & MSG_NOTIFICATION) {
-		LOGP(DMAIN, LOGL_DEBUG, "Ignoring SCTP notification\n");
-		msgb_free(msg);
-		return 0;
-	}
-
-	sinfo.sinfo_ppid = ntohl(sinfo.sinfo_ppid);
-
-	switch (sinfo.sinfo_ppid) {
+	switch (msgb_sctp_ppid(msg)) {
 	case IUH_PPI_HNBAP:
-		hnb->hnbap_stream = sinfo.sinfo_stream;
+		hnb->hnbap_stream = msgb_sctp_stream(msg);
 		rc = hnbgw_hnbap_rx(hnb, msg);
 		break;
 	case IUH_PPI_RUA:
-		hnb->rua_stream = sinfo.sinfo_stream;
+		hnb->rua_stream = msgb_sctp_stream(msg);
 		rc = hnbgw_rua_rx(hnb, msg);
 		break;
 	case IUH_PPI_SABP:
 	case IUH_PPI_RNA:
 	case IUH_PPI_PUA:
 		LOGP(DMAIN, LOGL_ERROR, "Unimplemented SCTP PPID=%u received\n",
-		     sinfo.sinfo_ppid);
+		     msgb_sctp_ppid(msg));
 		rc = 0;
 		break;
 	default:
 		LOGP(DMAIN, LOGL_ERROR, "Unknown SCTP PPID=%u received\n",
-		     sinfo.sinfo_ppid);
+		     msgb_sctp_ppid(msg));
 		rc = 0;
 		break;
 	}
@@ -227,7 +214,7 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 	return rc;
 }
 
-struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, int new_fd)
+struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_link *link, int new_fd)
 {
 	struct hnb_context *ctx;
 
@@ -236,13 +223,12 @@ struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, int new_fd)
 		return NULL;
 
 	ctx->gw = gw;
-	osmo_wqueue_init(&ctx->wqueue, 16);
-	ctx->wqueue.bfd.data = ctx;
-	ctx->wqueue.bfd.fd = new_fd;
-	ctx->wqueue.bfd.when = BSC_FD_READ;
-	ctx->wqueue.read_cb = hnb_read_cb;
-	ctx->wqueue.write_cb = hnb_write_cb;
-	osmo_fd_register(&ctx->wqueue.bfd);
+	ctx->conn = osmo_stream_srv_create(tall_hnb_ctx, link, new_fd, hnb_read_cb, hnb_close_cb, ctx);
+	if (!ctx->conn) {
+		LOGP(DMAIN, LOGL_INFO, "error while creating connection\n");
+		return -1;
+	}
+
 	INIT_LLIST_HEAD(&ctx->map_list);
 
 	llist_add_tail(&ctx->list, &gw->hnb_list);
@@ -263,29 +249,18 @@ void hnb_context_release(struct hnb_context *ctx)
 		llist_del(&map->hnb_list);
 		context_map_deactivate(map);
 	}
-	/* FIXME: flush write queue items */
-	osmo_fd_unregister(&ctx->wqueue.bfd);
+	osmo_stream_srv_destroy(ctx->conn);
 
 	talloc_free(ctx);
 }
 
 /*! call-back when the listen FD has something to read */
-static int listen_fd_cb(struct osmo_fd *fd, unsigned int what)
+static int accept_cb(struct osmo_stream_srv_link *srv, int fd)
 {
-	struct hnb_gw *gw = fd->data;
+	struct hnb_gw *gw = osmo_stream_srv_link_get_data(srv);
 	struct hnb_context *ctx;
-	struct sockaddr_storage sockaddr;
-	socklen_t len = sizeof(sockaddr);
 
-	int new_fd = accept(fd->fd, (struct sockaddr *)&sockaddr, &len);
-	if (new_fd < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Iuh accept() failed\n");
-		return new_fd;
-	}
-
-	LOGP(DMAIN, LOGL_INFO, "SCTP Connection accept()ed\n");
-
-	ctx = hnb_context_alloc(gw, new_fd);
+	ctx = hnb_context_alloc(gw, srv, fd);
 	if (!ctx)
 		return -ENOMEM;
 
@@ -346,19 +321,6 @@ static struct vty_app_info vty_info = {
 
 static int daemonize = 0;
 
-static int sctp_sock_init(int fd)
-{
-	struct sctp_event_subscribe event;
-	int rc;
-
-	/* subscribe for all events */
-	memset((uint8_t *)&event, 1, sizeof(event));
-	rc = setsockopt(fd, IPPROTO_SCTP, SCTP_EVENTS,
-			&event, sizeof(event));
-
-	return rc;
-}
-
 static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
 {
 	vty_out(vty, "HNB \"%s\" MCC %u MNC %u LAC %u RAC %u SAC %u CID %u%s", hnb->identity_info,
@@ -413,6 +375,7 @@ int main(int argc, char **argv)
 {
 	struct osmo_sua_user *sua_user;
 	struct osmo_sua_link *sua_link;
+	struct osmo_stream_srv_link *srv;
 	int rc;
 
 	tall_hnb_ctx = talloc_named_const(NULL, 0, "hnb_context");
@@ -439,14 +402,22 @@ int main(int argc, char **argv)
 	g_hnb_gw->cnlink_cs = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.1", SUA_PORT);
 	g_hnb_gw->cnlink_ps = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.2", SUA_PORT);
 
-	rc = osmo_sock_init_ofd(&g_hnb_gw->listen_fd, AF_INET, SOCK_STREAM,
-			   IPPROTO_SCTP, NULL,
-			   g_hnb_gw->config.iuh_listen_port, OSMO_SOCK_F_BIND);
-	if (rc < 0) {
-		perror("Error binding Iuh port");
+	srv = osmo_stream_srv_link_create(tall_hnb_ctx);
+	if (!srv) {
+		perror("cannot create server");
 		exit(1);
 	}
-	sctp_sock_init(g_hnb_gw->listen_fd.fd);
+	osmo_stream_srv_link_set_data(srv, g_hnb_gw);
+	osmo_stream_srv_link_set_proto(srv, IPPROTO_SCTP);
+	osmo_stream_srv_link_set_addr(srv, "0.0.0.0");
+	osmo_stream_srv_link_set_port(srv, g_hnb_gw->config.iuh_listen_port);
+	osmo_stream_srv_link_set_accept_cb(srv, accept_cb);
+
+	if (osmo_stream_srv_link_open(srv) < 0) {
+		perror("Cannot oper server");
+		exit(1);
+	}
+	g_hnb_gw->iuh = srv;
 
 	if (daemonize) {
 		rc = osmo_daemonize();

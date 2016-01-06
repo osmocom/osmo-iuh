@@ -44,7 +44,9 @@ static int hnbgw_rua_tx(struct hnb_context *ctx, struct msgb *msg)
 		return -EINVAL;
 
 	msgb_sctp_ppid(msg) = IUH_PPI_RUA;
-	return osmo_wqueue_enqueue(&ctx->wqueue, msg);
+	osmo_stream_srv_send(ctx->conn, msg);
+
+	return 0;
 }
 
 int rua_tx_udt(struct hnb_context *hnb, const uint8_t *data, unsigned int len)
