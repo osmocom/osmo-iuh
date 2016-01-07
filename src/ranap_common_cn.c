@@ -242,6 +242,40 @@ static int cn_ranap_rx_initiating_msg_cl(void *ctx, RANAP_InitiatingMessage_t *i
 	}
 }
 
+static void cn_ranap_free_initiating_msg_cl(ranap_message *message)
+{
+
+	switch (message->procedureCode) {
+	case RANAP_ProcedureCode_id_Reset:
+		/* Reset request */
+		ranap_free_reseties(&message->msg.resetIEs);
+		break;
+	case RANAP_ProcedureCode_id_OverloadControl: /* Overload ind */
+		ranap_free_overloadies(&message->msg.overloadIEs);
+		break;
+	case RANAP_ProcedureCode_id_ErrorIndication: /* Error ind */
+		ranap_free_errorindicationies(&message->msg.errorIndicationIEs);
+		break;
+	case RANAP_ProcedureCode_id_ResetResource: /* request */
+		ranap_free_resetresourceies(&message->msg.resetResourceIEs);
+		break;
+	case RANAP_ProcedureCode_id_InformationTransfer:
+		ranap_free_informationtransferindicationies(&message->msg.informationTransferIndicationIEs);
+		break;
+	case RANAP_ProcedureCode_id_DirectInformationTransfer:
+		ranap_free_directinformationtransferies(&message->msg.directInformationTransferIEs);
+		break;
+	case RANAP_ProcedureCode_id_UplinkInformationExchange:
+		ranap_free_uplinkinformationexchangerequesties(&message->msg.uplinkInformationExchangeRequestIEs);
+		break;
+	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Not freeing suspicious RANAP "
+		     "Procedure %s (CL, IM)\n",
+		     get_value_string(ranap_procedure_code_vals, message->procedureCode));
+		break;
+	}
+}
+
 static int cn_ranap_rx_successful_msg_cl(void *ctx, RANAP_SuccessfulOutcome_t *imsg,
 					 ranap_message *message)
 {
@@ -277,9 +311,37 @@ static int cn_ranap_rx_successful_msg_cl(void *ctx, RANAP_SuccessfulOutcome_t *i
 	}
 }
 
+static void cn_ranap_free_successful_msg_cl(ranap_message *message)
+{
+	switch (message->procedureCode) {
+	case RANAP_ProcedureCode_id_Reset: /* Reset acknowledge */
+		ranap_free_resetacknowledgeies(&message->msg.resetAcknowledgeIEs);
+		break;
+	case RANAP_ProcedureCode_id_ResetResource: /* response */
+		ranap_free_resetresourceacknowledgeies(&message->msg.resetResourceAcknowledgeIEs);
+		break;
+	case RANAP_ProcedureCode_id_InformationTransfer:
+		ranap_free_resetresourceacknowledgeies(&message->msg.resetResourceAcknowledgeIEs);
+		break;
+	case RANAP_ProcedureCode_id_DirectInformationTransfer:
+		ranap_free_informationtransferconfirmationies(&message->msg.informationTransferConfirmationIEs);
+		break;
+	case RANAP_ProcedureCode_id_UplinkInformationExchange:
+		ranap_free_uplinkinformationexchangeresponseies(&message->msg.uplinkInformationExchangeResponseIEs);
+		break;
+	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Not freeing suspicious RANAP "
+		     "Procedure %s (CL, SO)\n",
+		     get_value_string(ranap_procedure_code_vals, message->procedureCode));
+		break;
+	}
+}
+
 static int _cn_ranap_rx_cl(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *message)
 {
 	int rc;
+
+	/* Extend _cn_ranap_free_cl as well when extending this function */
 
 	switch (pdu->present) {
 	case RANAP_RANAP_PDU_PR_initiatingMessage:
@@ -304,7 +366,27 @@ static int _cn_ranap_rx_cl(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *mes
 	}
 }
 
-/* receive a connection-oriented RANAP message and call
+static void _cn_ranap_free_cl(ranap_message *message)
+{
+	switch (message->direction) {
+	case RANAP_RANAP_PDU_PR_initiatingMessage:
+		cn_ranap_free_initiating_msg_cl(message);
+		break;
+	case RANAP_RANAP_PDU_PR_successfulOutcome:
+		cn_ranap_free_successful_msg_cl(message);
+		break;
+	case RANAP_RANAP_PDU_PR_unsuccessfulOutcome:
+		LOGP(DRANAP, LOGL_NOTICE, "Not freeing unsupported RANAP "
+		     "unsuccessful outcome procedure from RNC\n");
+		break;
+	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Suspicious RANAP "
+		     "presence %s (CL) from RNC, ignoring\n", message->direction);
+		break;
+	}
+}
+
+/* receive a connection-less RANAP message and call
  * cn_ranap_handle_co() with the resulting ranap_message struct */
 int ranap_cn_rx_cl(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 {
@@ -330,6 +412,9 @@ int ranap_cn_rx_cl(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 		(*cb)(ctx, &message);
 	else
 		LOGP(DRANAP, LOGL_ERROR, "Not calling cn_ranap_handle_cl() due to rc=%d\n", rc);
+
+	/* Free the asn1 structs in message */
+	_cn_ranap_free_cl(&message);
 
 	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
 
