@@ -102,6 +102,8 @@ static int cn_ranap_rx_reset_cmd(struct hnbgw_cnlink *cnlink,
 
 	rc = ranap_decode_reseties(&ies, &imsg->value);
 	/* FIXME: reset resources and return reset ack */
+
+	ranap_free_reseties(&ies);
 	return rc;
 }
 
@@ -115,6 +117,7 @@ static int cn_ranap_rx_reset_ack(struct hnbgw_cnlink *cnlink,
 
 	hnbgw_cnlink_change_state(cnlink, CNLINK_S_EST_ACTIVE);
 
+	ranap_free_resetacknowledgeies(&ies);
 	return rc;
 }
 
@@ -134,6 +137,8 @@ static int cn_ranap_rx_paging_cmd(struct hnbgw_cnlink *cnlink,
 	llist_for_each_entry(hnb, &gw->hnb_list, list) {
 		rc = rua_tx_udt(hnb, data, len);
 	}
+
+	ranap_free_pagingies(&ies);
 	return 0;
 }
 

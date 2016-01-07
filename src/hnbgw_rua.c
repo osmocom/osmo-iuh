@@ -301,6 +301,7 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 	default:
 		LOGP(DRUA, LOGL_ERROR, "Unsupported Domain %u\n",
 			ies.cN_DomainIndicator);
+		rua_free_connecties(&ies);
 		return -1;
 	}
 
@@ -312,6 +313,7 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 			context_id, 0, ies.ranaP_Message.buf,
 			ies.ranaP_Message.size);
 	/* FIXME: what to do with the asn1c-allocated memory */
+	rua_free_connecties(&ies);
 
 	return rc;
 }
@@ -355,6 +357,7 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 	rc = rua_to_scu(hnb, cn, OSMO_SCU_PRIM_N_DISCONNECT,
 			context_id, scu_cause, ranap_data, ranap_len);
 	/* FIXME: what to do with the asn1c-allocated memory */
+	rua_free_disconnecties(&ies);
 
 	return rc;
 }
@@ -389,6 +392,7 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 			context_id, 0, ies.ranaP_Message.buf,
 			ies.ranaP_Message.size);
 	/* FIXME: what to do with the asn1c-allocated memory */
+	rua_free_directtransferies(&ies);
 
 	return rc;
 
@@ -414,6 +418,7 @@ static int rua_rx_init_udt(struct msgb *msg, ANY_t *in)
 	 * can ignore.  In either case, it is RANAP that we need to
 	 * decode... */
 	rc = hnbgw_ranap_rx(msg, ies.ranaP_Message.buf, ies.ranaP_Message.size);
+	rua_free_connectionlesstransferies(&ies);
 
 	return rc;
 }
@@ -431,6 +436,7 @@ static int rua_rx_init_err_ind(struct msgb *msg, ANY_t *in)
 	LOGP(DRUA, LOGL_ERROR, "RUA UData.ErrorInd(%s)\n",
 		rua_cause_str(&ies.cause));
 
+	rua_free_errorindicationies(&ies);
 	return rc;
 }
 

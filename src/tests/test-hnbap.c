@@ -120,6 +120,8 @@ void test_asn1_decoding(void)
 	ASSERT(!strcmp((char *) hnb_ies.hnB_Identity.hNB_Identity_Info.buf, "10005B9-0010942050@"));
 
 	printf("HNBAP register request for HNB %s\n", (char *) hnb_ies.hnB_Identity.hNB_Identity_Info.buf);
+	hnbap_free_hnbregisterrequesties(&hnb_ies);
+
 	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
 			hnbap_ue_reg_req, sizeof(hnbap_ue_reg_req), 0, 0);
 
@@ -138,6 +140,7 @@ void test_asn1_decoding(void)
 			ue_req_ies.uE_Identity.choice.iMSI.size);
 
 	printf("HNBAP UE Register request from IMSI %s\n", imsi);
+	hnbap_free_ueregisterrequesties(&ue_req_ies);
 
 	memset(pdu, 0, sizeof(*pdu));
 	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
@@ -158,6 +161,7 @@ void test_asn1_decoding(void)
 			ue_acc_ies.uE_Identity.choice.iMSI.size);
 
 	printf("HNBAP UE Register accept to IMSI %s\n", imsi);
+	hnbap_free_ueregisteraccepties(&ue_acc_ies);
 
 }
 

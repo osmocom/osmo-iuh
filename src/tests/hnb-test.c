@@ -140,6 +140,7 @@ static int hnb_test_rx_hnb_register_acc(struct hnb_test *hnb, ANY_t *in)
 	hnb->rnc_id = accept.rnc_id;
 	printf("HNB Register accept with RNC ID %u\n", hnb->rnc_id);
 
+	hnbap_free_hnbregisteraccepties(&accept);
 	return 0;
 }
 
@@ -167,6 +168,7 @@ static int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
 	printf("UE Register accept for IMSI %s, context %u\n", imsi, ctx_id);
 
 	hnb->ctx_id = ctx_id;
+	hnbap_free_ueregisteraccepties(&accept);
 
 	return 0;
 }
