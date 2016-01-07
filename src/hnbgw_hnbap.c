@@ -126,6 +126,7 @@ static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 	DEBUGP(DHNBAP, "HNB-DE-REGSITER cause=%ld\n",
 		ies.cause);
 
+	hnbap_free_hnbde_registeries(&ies);
 	hnb_context_release(ctx);
 
 	return 0;
@@ -153,7 +154,9 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 	DEBUGP(DHNBAP, "HNB-REGISTER-REQ from %s\n", ctx->identity_info);
 
 	/* Send HNBRegisterAccept */
-	return hnbgw_tx_hnb_register_acc(ctx);
+	rc = hnbgw_tx_hnb_register_acc(ctx);
+	hnbap_free_hnbregisterrequesties(&ies);
+	return rc;
 }
 
 static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
@@ -192,6 +195,7 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 	if (!ue)
 		ue = ue_context_alloc(ctx, imsi);
 
+	hnbap_free_ueregisterrequesties(&ies);
 	/* Send UERegisterAccept */
 	return hnbgw_tx_ue_register_acc(ue);
 }
@@ -216,6 +220,7 @@ static int hnbgw_rx_ue_deregister(struct hnb_context *ctx, ANY_t *in)
 	if (ue)
 		ue_context_free(ue);
 
+	hnbap_free_uede_registeries(&ies);
 	return 0;
 }
 
@@ -231,6 +236,7 @@ static int hnbgw_rx_err_ind(struct hnb_context *hnb, ANY_t *in)
 	LOGP(DHNBAP, LOGL_NOTICE, "HNBAP ERROR.ind, cause: %s\n",
 		hnbap_cause_str(&ies.cause));
 
+	hnbap_free_errorindicationies(&ies);
 	return 0;
 }
 

@@ -333,7 +333,7 @@ for key in iesDefs:
             f.write("                    ASN_STRUCT_FREE(asn_DEF_%s, %s_p);\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst)))
         else:
             f.write("                memcpy(&%s->%s, %s_p, sizeof(%s_t));\n" % (lowerFirstCamelWord(re.sub('-', '_', key)), ienameunderscore, lowerFirstCamelWord(ietypesubst), ietypeunderscore))
-            f.write("                ASN_STRUCT_FREE(asn_DEF_%s, %s_p);\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst)))
+            f.write("                FREEMEM(%s_p);\n" % (lowerFirstCamelWord(ietypesubst)))
         f.write("            } break;\n")
     f.write("            default:\n")
     f.write("                %s_DEBUG(\"Unknown protocol IE id (%%d) for message %s\\n\", (int)ie_p->id);\n" % (fileprefix.upper(), re.sub('-', '_', structName.lower())))
@@ -342,6 +342,35 @@ for key in iesDefs:
     f.write("    }\n")
     f.write("    ASN_STRUCT_FREE(asn_DEF_%s, %s_p);\n" % (asn1cStruct, asn1cStructfirstlower))
     f.write("    return decoded;\n")
+    f.write("}\n\n")
+
+for key in iesDefs:
+    keyupperunderscore = re.sub('-', '_', key.upper())
+    keylowerunderscore = re.sub('-', '_', key.lower())
+    structName = re.sub('ies', '', key)
+
+    if len(iesDefs[key]["ies"]) == 0:
+       continue
+
+    f.write("int %s_free_%s(\n" % (fileprefix, re.sub('-', '_', structName.lower())))
+    if len(iesDefs[key]["ies"]) != 0:
+        f.write("    %s_t *%s) {\n\n" % (prefix + re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
+
+    for ie in iesDefs[key]["ies"]:
+        ietypeunderscore = prefix + re.sub('-', '_', ie[2])
+        ieupperunderscore = prefix + re.sub('-', '_', ie[2]).upper()
+        if ie[3] != "mandatory":
+            if ie[3] == "optional":
+                f.write("    /* Optional field */\n")
+            elif ie[3] == "conditional":
+                f.write("    /* Conditional field */\n")
+            f.write("    if ((%s->presenceMask & %s_%s_PRESENT)\n" % (lowerFirstCamelWord(re.sub('-', '_', key)), keyupperunderscore, ieupperunderscore))
+            f.write("        == %s_%s_PRESENT) \n    " % (keyupperunderscore, ieupperunderscore))
+
+        ieunderscore = prefix + re.sub('-', '_', ie[2])
+        iename = re.sub('id-', '', ie[0])
+        ienameunderscore = lowerFirstCamelWord(re.sub('-', '_', iename))
+        f.write("    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_%s, &%s->%s);\n" % (ietypeunderscore, lowerFirstCamelWord(re.sub('-', '_', key)), ienameunderscore))
     f.write("}\n\n")
 
 for key in iesDefs:
