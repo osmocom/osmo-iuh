@@ -155,7 +155,7 @@ static int _cn_ranap_rx_co(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *mes
 		rc = -1;
 		break;
 	case RANAP_RANAP_PDU_PR_outcome:
-		rc = cn_ranap_rx_outcome_msg_co(ctx, &pdu->choice.successfulOutcome, message);
+		rc = cn_ranap_rx_outcome_msg_co(ctx, &pdu->choice.outcome, message);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
