@@ -259,6 +259,7 @@ static int cn_ranap_rx_successful_msg_cl(void *ctx, RANAP_SuccessfulOutcome_t *i
 		break;
 	case RANAP_ProcedureCode_id_ResetResource: /* response */
 		rc = ranap_decode_resetresourceacknowledgeies(&message->msg.resetResourceAcknowledgeIEs, &imsg->value);
+		break;
 	case RANAP_ProcedureCode_id_InformationTransfer:
 		rc = ranap_decode_resetresourceacknowledgeies(&message->msg.resetResourceAcknowledgeIEs, &imsg->value);
 		break;
