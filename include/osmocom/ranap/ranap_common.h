@@ -632,3 +632,5 @@ RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
 				asn_TYPE_descriptor_t *type2, void *sptr2);
 
 void ranap_set_log_area(int log_area);
+
+int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai);
