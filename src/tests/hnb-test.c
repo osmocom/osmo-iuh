@@ -56,6 +56,8 @@
 
 #include <osmocom/ranap/ranap_msg_factory.h>
 
+#include <osmocom/rua/RUA_RUA-PDU.h>
+
 static void *tall_hnb_ctx;
 
 struct hnb_test g_hnb_test = {
@@ -206,6 +208,65 @@ int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 	return rc;
 }
 
+int hnb_test_rua_rx(struct hnb_test *hnb, struct msgb *msg)
+{
+	RUA_RUA_PDU_t _pdu, *pdu = &_pdu;
+	asn_dec_rval_t dec_ret;
+	int rc;
+
+	memset(pdu, 0, sizeof(*pdu));
+	dec_ret = aper_decode(NULL, &asn_DEF_RUA_RUA_PDU, (void **) &pdu,
+			      msg->data, msgb_length(msg), 0, 0);
+	if (dec_ret.code != RC_OK) {
+		LOGP(DMAIN, LOGL_ERROR, "Error in ASN.1 decode\n");
+		return rc;
+	}
+
+	switch (pdu->present) {
+	case RUA_RUA_PDU_PR_successfulOutcome:
+		printf("RUA_RUA_PDU_PR_successfulOutcome\n");
+		break;
+	case RUA_RUA_PDU_PR_initiatingMessage:
+		printf("RUA_RUA_PDU_PR_initiatingMessage\n");
+		break;
+	case RUA_RUA_PDU_PR_NOTHING:
+		printf("RUA_RUA_PDU_PR_NOTHING\n");
+		break;
+	case RUA_RUA_PDU_PR_unsuccessfulOutcome:
+		printf("RUA_RUA_PDU_PR_unsuccessfulOutcome\n");
+		break;
+	default:
+		printf("Unexpected RUA message received\n");
+		break;
+	}
+
+	switch (pdu->choice.successfulOutcome.procedureCode) {
+	case RUA_ProcedureCode_id_ConnectionlessTransfer:
+		printf("RUA rx Connectionless Transfer\n");
+		break;
+	case RUA_ProcedureCode_id_Connect:
+		printf("RUA rx Connect\n");
+		break;
+	case RUA_ProcedureCode_id_DirectTransfer:
+		printf("RUA rx DirectTransfer\n");
+		break;
+	case RUA_ProcedureCode_id_Disconnect:
+		printf("RUA rx Disconnect\n");
+		break;
+	case RUA_ProcedureCode_id_ErrorIndication:
+		printf("RUA rx ErrorIndication\n");
+		break;
+	case RUA_ProcedureCode_id_privateMessage:
+		printf("RUA rx privateMessage\n");
+		break;
+	default:
+		printf("RUA rx unknown message\n");
+		break;
+	}
+
+	return rc;
+}
+
 static int hnb_read_cb(struct osmo_fd *fd)
 {
 	struct hnb_test *hnb_test = fd->data;
@@ -246,12 +307,12 @@ static int hnb_read_cb(struct osmo_fd *fd)
 
 	switch (sinfo.sinfo_ppid) {
 	case IUH_PPI_HNBAP:
-		printf("HNBAP mesage received\n");
+		printf("HNBAP message received\n");
 		rc = hnb_test_hnbap_rx(hnb_test, msg);
 		break;
 	case IUH_PPI_RUA:
-		printf("RUA mesage received\n");
-//		rc = hnbgw_rua_rx(hnb, msg);
+		printf("RUA message received\n");
+		rc = hnb_test_rua_rx(hnb_test, msg);
 		break;
 	case IUH_PPI_SABP:
 	case IUH_PPI_RNA:

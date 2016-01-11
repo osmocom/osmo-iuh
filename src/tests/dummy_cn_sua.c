@@ -192,6 +192,8 @@ static void cn_ranap_handle_co(void *ctx, ranap_message *message)
 static int ranap_handle_cl_reset_req(void *ctx, RANAP_ResetIEs_t *ies)
 {
 	/* FIXME: send reset response */
+
+	LOGP(DRANAP, LOGL_ERROR, "Rx Reset Request\n");
 }
 
 static int ranap_handle_cl_err_ind(void *ctx, RANAP_ErrorIndicationIEs_t *ies)
