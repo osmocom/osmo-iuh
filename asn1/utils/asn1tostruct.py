@@ -296,6 +296,7 @@ for key in iesDefs:
     f.write("    assert(any_p != NULL);\n")
     if len(iesDefs[key]["ies"]) != 0:
         f.write("    assert(%s != NULL);\n\n" % (lowerFirstCamelWord(re.sub('-', '_', key))))
+        f.write("    memset(%s, 0, sizeof(%s_t));\n" % (lowerFirstCamelWord(re.sub('-', '_', key)), prefix + re.sub('-', '_', key)))
 
     f.write("    %s_DEBUG(\"Decoding message %s (%%s:%%d)\\n\", __FILE__, __LINE__);\n\n" % (fileprefix.upper(), prefix + re.sub('-', '_', keyName)))
     f.write("    ANY_to_type_aper(any_p, &asn_DEF_%s, (void**)&%s_p);\n\n" % (asn1cStruct, asn1cStructfirstlower))
