@@ -119,7 +119,6 @@ static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 	HNBDe_RegisterIEs_t ies;
 	int rc;
 
-	memset(&ies, 0, sizeof(ies));
 	rc = hnbap_decode_hnbde_registeries(&ies, in);
 	if (rc < 0)
 		return rc;
@@ -138,7 +137,6 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 	HNBRegisterRequestIEs_t ies;
 	int rc;
 
-	memset(&ies, 0, sizeof(ies));
 	rc = hnbap_decode_hnbregisterrequesties(&ies, in);
 	if (rc < 0)
 		return rc;
@@ -168,7 +166,6 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 	char imsi[16];
 	int rc;
 
-	memset(&ies, 0, sizeof(ies));
 	rc = hnbap_decode_ueregisterrequesties(&ies, in);
 	if (rc < 0)
 		return rc;
@@ -210,7 +207,6 @@ static int hnbgw_rx_ue_deregister(struct hnb_context *ctx, ANY_t *in)
 	int rc;
 	uint32_t ctxid;
 
-	memset(&ies, 0, sizeof(ies));
 	rc = hnbap_decode_uede_registeries(&ies, in);
 	if (rc < 0)
 		return rc;
@@ -233,7 +229,6 @@ static int hnbgw_rx_err_ind(struct hnb_context *hnb, ANY_t *in)
 	ErrorIndicationIEs_t ies;
 	int rc;
 
-	memset(&ies, 0, sizeof(ies));
 	rc = hnbap_decode_errorindicationies(&ies, in);
 	if (rc < 0)
 		return rc;
