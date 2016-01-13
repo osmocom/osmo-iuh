@@ -20,6 +20,7 @@
 
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_common_cn.h>
+#include <osmocom/ranap/ranap_msg_factory.h>
 #include "hnbgw.h"
 
 int asn1_xer_print = 1;
