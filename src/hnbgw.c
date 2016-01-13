@@ -436,7 +436,7 @@ int main(int argc, char **argv)
 	osmo_stream_srv_link_set_accept_cb(srv, accept_cb);
 
 	if (osmo_stream_srv_link_open(srv) < 0) {
-		perror("Cannot oper server");
+		perror("Cannot open server");
 		exit(1);
 	}
 	g_hnb_gw->iuh = srv;
