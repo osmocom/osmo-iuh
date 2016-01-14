@@ -507,12 +507,14 @@ DEFUN(chan, chan_cmd,
 {
 	struct hnbtest_chan *chan;
 	struct msgb *msg, *rua;
+	static uint16_t conn_id = 42;
 
 	chan = talloc_zero(tall_hnb_ctx, struct hnbtest_chan);
 	if (!strcmp(argv[0], "ps"))
 		chan->is_ps = 1;
 	chan->imsi = talloc_strdup(chan, argv[1]);
-	chan->conn_id = 42;
+	chan->conn_id = conn_id;
+	conn_id++;
 
 	msg = gen_initue_lu(chan->is_ps, chan->conn_id, chan->imsi);
 	rua = rua_new_conn(chan->is_ps, chan->conn_id, msg);
