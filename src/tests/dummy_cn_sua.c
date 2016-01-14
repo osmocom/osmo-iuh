@@ -58,21 +58,33 @@ struct ue_conn_ctx *ue_conn_ctx_find(struct osmo_sua_link *link, uint32_t conn_i
  * RANAP handling
  ***********************************************************************/
 
-static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *ies)
+static int ranap_handle_co_initial_ue(struct ue_conn_ctx *ctx, RANAP_InitialUE_MessageIEs_t *ies)
 {
 	struct gprs_ra_id ra_id;
 	uint16_t sai;
 	struct msgb *msg = msgb_alloc(256, "RANAP->NAS");
 	uint8_t *cur;
+	struct osmo_scu_prim *prim;
 
 	ranap_parse_lai(&ra_id, &ies->lai);
 	sai = asn1str_to_u16(&ies->sai.sAC);
 	cur = msgb_put(msg, ies->nas_pdu.size);
 	memcpy(msg, ies->nas_pdu.buf, ies->nas_pdu.size);
+	msgb_free(msg);
 	/* FIXME: set msgb_gmmh() */
 
 	/* FIXME: Feed into the MM layer */
 	//rc = gsm0408_gprs_rcvmsg_iu(msg, ra_id, sai, conn_id);
+
+	msg = ranap_new_msg_dt(0, NULL, 0);
+
+	msg->l2h = msg->data;
+	prim = (struct osmo_scu_prim *) msgb_push(msg, sizeof(*prim));
+	prim->u.data.conn_id = ctx->conn_id;
+	osmo_prim_init(&prim->oph, SCCP_SAP_USER, OSMO_SCU_PRIM_N_DATA,
+			PRIM_OP_REQUEST, msg);
+
+	osmo_sua_user_link_down(ctx->link, &prim->oph);
 
 	return 0;
 }
