@@ -66,6 +66,9 @@ context_map_alloc_by_hnb(struct hnb_context *hnb, uint32_t rua_ctx_id,
 	llist_for_each_entry(map, &hnb->map_list, hnb_list) {
 		if (map->state != MAP_S_ACTIVE)
 			continue;
+		if (map->cn_link != cn_if_new) {
+			continue;
+		}
 		if (map->rua_ctx_id == rua_ctx_id) {
 			return map;
 		}
