@@ -334,10 +334,18 @@ static int daemonize = 0;
 
 static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
 {
+	struct hnbgw_context_map *map;
+
 	vty_out(vty, "HNB \"%s\" MCC %u MNC %u LAC %u RAC %u SAC %u CID %u%s", hnb->identity_info,
 			hnb->id.mcc, hnb->id.mnc, hnb->id.lac, hnb->id.rac, hnb->id.sac, hnb->id.cid,
 			VTY_NEWLINE);
 	vty_out(vty, "   HNBAP ID %u RUA ID %u%s", hnb->hnbap_stream, hnb->rua_stream, VTY_NEWLINE);
+
+	llist_for_each_entry(map, &hnb->map_list, hnb_list) {
+		vty_out(vty, " Map %u->%u (RUA->SUA) cnlink=%p state=%u%s", map->rua_ctx_id, map->scu_conn_id,
+			map->cn_link, map->state, VTY_NEWLINE);
+
+	}
 }
 
 static void vty_dump_ue_info(struct vty *vty, struct ue_context *ue)
