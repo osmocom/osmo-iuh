@@ -554,6 +554,19 @@ static struct msgb *gen_initue_lu(int is_ps, uint32_t conn_id, const char *imsi)
 	struct msgb *msg;
 
 	/* FIXME: patch imsi */
+	/* Note: the Mobile Identitiy IE's IMSI data has the identity type and
+	 * an even/odd indicator bit encoded in the first octet. So the first
+	 * octet looks like this:
+	 *
+	 *   8  7  6  5 | 4        | 3 2 1
+	 *   IMSI-digit | even/odd | type
+	 *
+	 * followed by the remaining IMSI digits.
+	 * If digit count is even (bit 4 == 0), that first high-nibble is 0xf.
+	 * (derived from Iu pcap Location Update Request msg and TS 25.413)
+	 *
+	 * TODO I'm only 90% sure about this
+	 */
 
 	return ranap_new_msg_initial_ue(conn_id, is_ps, &rnc_id, lu, sizeof(lu));
 }
