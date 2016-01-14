@@ -410,8 +410,8 @@ int main(int argc, char **argv)
 	osmo_sua_set_log_area(DSUA);
 	ranap_set_log_area(DRANAP);
 
-	g_hnb_gw->cnlink_cs = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.1", SUA_PORT);
-	g_hnb_gw->cnlink_ps = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.2", SUA_PORT);
+	g_hnb_gw->cnlink_cs = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.1", SUA_PORT, 0);
+	g_hnb_gw->cnlink_ps = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.2", SUA_PORT, 1);
 
 	srv = osmo_stream_srv_link_create(tall_hnb_ctx);
 	if (!srv) {

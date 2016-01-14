@@ -346,7 +346,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *slink)
 }
 
 
-struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint16_t port)
+struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint16_t port, int is_ps)
 {
 	struct hnbgw_cnlink *cnlink = talloc_zero(gw, struct hnbgw_cnlink);
 	int rc;
@@ -355,6 +355,7 @@ struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint
 	cnlink->T_RafC.cb = cnlink_trafc_cb;
 	cnlink->T_RafC.data = cnlink;
 	cnlink->next_conn_id = 1000;
+	cnlink->is_ps = is_ps;
 	sccp_make_addr_pc_ssn(&cnlink->local_addr, 2, OSMO_SCCP_SSN_RANAP);
 	sccp_make_addr_pc_ssn(&cnlink->remote_addr, 1, OSMO_SCCP_SSN_RANAP);
 
