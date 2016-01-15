@@ -494,7 +494,7 @@ static struct msgb *gen_initue_lu(int is_ps, uint32_t conn_id, const char *imsi)
 
 	/* FIXME: patch imsi */
 
-	return ranap_new_msg_initial_ue(is_ps, conn_id, &rnc_id, lu, sizeof(lu));
+	return ranap_new_msg_initial_ue(conn_id, is_ps, &rnc_id, lu, sizeof(lu));
 }
 
 DEFUN(chan, chan_cmd,
