@@ -616,7 +616,7 @@ static RANAP_UserPlaneInformation_t *new_upi(long mode, uint8_t mode_versions)
 	RANAP_UserPlaneInformation_t *upi = CALLOC(1, sizeof(*upi));
 	uint16_t *buf = CALLOC(1, sizeof(*buf));
 
-	*buf = mode_versions;
+	*buf = ntohs(mode_versions);
 
 	upi->userPlaneMode = mode;
 	upi->uP_ModeVersions.buf = (uint8_t *) buf;
