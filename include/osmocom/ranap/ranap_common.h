@@ -634,3 +634,4 @@ RANAP_ProtocolIE_FieldPair_t *ranap_new_ie_pair(RANAP_ProtocolIE_ID_t id,
 void ranap_set_log_area(int log_area);
 
 int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai);
+int ranap_ip_from_transp_layer_addr(const BIT_STRING_t *in, uint32_t *ip);

@@ -523,3 +523,20 @@ void ranap_set_log_area(int log_area)
 {
 	_ranap_DRANAP = log_area;
 }
+
+int ranap_ip_from_transp_layer_addr(const BIT_STRING_t *in, uint32_t *ip)
+{
+	uint32_t addr;
+	uint8_t x213[] = {0x35, 0x00, 0x01};
+
+	/* Only support IPv4 for now - plain and with x213 encapsulation */
+	if (in->size == 4)
+		*ip = *(uint32_t *)in->buf;
+	else if ((in->size == 7) && !memcmp(in->buf, x213, sizeof(x213)))
+		*ip = htonl(*(uint32_t *)&in->buf[3]);
+	else
+		return -1;
+
+	return 0;
+
+}
