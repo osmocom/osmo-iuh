@@ -389,6 +389,8 @@ static void hnbgw_vty_init(void)
 	install_element_ve(&show_hnb_cmd);
 	install_element_ve(&show_ue_cmd);
 	install_element_ve(&show_talloc_cmd);
+
+	logging_vty_add_cmds(&hnbgw_log_info);
 }
 
 int main(int argc, char **argv)
