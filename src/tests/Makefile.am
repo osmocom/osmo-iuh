@@ -13,7 +13,7 @@ test_helpers_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 test_hnbap_SOURCES = $(top_srcdir)/src/hnbap_common.c $(top_srcdir)/src/hnbap_decoder.c test-hnbap.c test_common.c
 test_hnbap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a $(top_builddir)/src/libosmo-ranap.la
 
-hnb_test_SOURCES = $(HNBAP_FILES) $(RUA_FILES) hnb-test.c test_common.c
+hnb_test_SOURCES = $(HNBAP_FILES) $(RUA_FILES) hnb-test.c test_common.c hnb-test-ranap.c hnb-test-rua.c
 hnb_test_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a $(top_builddir)/src/rua/libosmo-asn1-rua.a $(top_builddir)/src/libosmo-ranap.la
 
 test_ranap_SOURCES = $(RANAP_FILES) test-ranap.c test_common.c

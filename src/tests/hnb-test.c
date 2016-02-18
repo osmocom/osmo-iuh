@@ -208,6 +208,8 @@ int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 	return rc;
 }
 
+extern void direct_transfer_nas_pdu_print(ANY_t *in);
+
 int hnb_test_rua_rx(struct hnb_test *hnb, struct msgb *msg)
 {
 	RUA_RUA_PDU_t _pdu, *pdu = &_pdu;
@@ -249,6 +251,15 @@ int hnb_test_rua_rx(struct hnb_test *hnb, struct msgb *msg)
 		break;
 	case RUA_ProcedureCode_id_DirectTransfer:
 		printf("RUA rx DirectTransfer\n");
+		{
+			struct msgb *m = msgb_alloc(1500, "direct_transfer_nas_pdu");
+			direct_transfer_nas_pdu_get(&pdu->choice.successfulOutcome.value, m);
+
+			// evaluate
+
+			printf("got %s\n", osmo_hexdump(m->data, m->len));
+			msgb_free(m);
+		}
 		break;
 	case RUA_ProcedureCode_id_Disconnect:
 		printf("RUA rx Disconnect\n");
