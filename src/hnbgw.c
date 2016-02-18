@@ -231,17 +231,18 @@ struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_
 	ctx = talloc_zero(tall_hnb_ctx, struct hnb_context);
 	if (!ctx)
 		return NULL;
+	INIT_LLIST_HEAD(&ctx->map_list);
 
 	ctx->gw = gw;
 	ctx->conn = osmo_stream_srv_create(tall_hnb_ctx, link, new_fd, hnb_read_cb, hnb_close_cb, ctx);
 	if (!ctx->conn) {
 		LOGP(DMAIN, LOGL_INFO, "error while creating connection\n");
-		return -1;
+		talloc_free(ctx);
+		return NULL;
 	}
 
-	INIT_LLIST_HEAD(&ctx->map_list);
-
 	llist_add_tail(&ctx->list, &gw->hnb_list);
+	return ctx;
 }
 
 void hnb_context_release(struct hnb_context *ctx)
