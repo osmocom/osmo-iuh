@@ -589,6 +589,8 @@
 
 #include <osmocom/core/logging.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/ranap/ranap_ies_defs.h>
+
 
 #define RANAP_DEBUG(x, args ...) DEBUGP(_ranap_DRANAP, x, ## args)
 extern int _ranap_DRANAP;
@@ -635,3 +637,8 @@ void ranap_set_log_area(int log_area);
 
 int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai);
 int ranap_ip_from_transp_layer_addr(const BIT_STRING_t *in, uint32_t *ip);
+
+/* The generated version does not work, this is a custom one */
+int ranap_decode_rab_setupormodifieditemies_fromlist(
+    RANAP_RAB_SetupOrModifiedItemIEs_t *raB_SetupOrModifiedItemIEs,
+    ANY_t *any_p);

@@ -540,3 +540,28 @@ int ranap_ip_from_transp_layer_addr(const BIT_STRING_t *in, uint32_t *ip)
 	return 0;
 
 }
+
+int ranap_decode_rab_setupormodifieditemies_fromlist(
+		RANAP_RAB_SetupOrModifiedItemIEs_t *raB_SetupOrModifiedItemIEs,
+		ANY_t *any_p) {
+
+	RANAP_RAB_SetupOrModifiedItem_t *ranaP_RABSetupOrModifiedItem_p = NULL;
+	int decoded = 0;
+	assert(any_p != NULL);
+	assert(raB_SetupOrModifiedItemIEs != NULL);
+
+	memset(raB_SetupOrModifiedItemIEs, 0, sizeof(RANAP_RAB_SetupOrModifiedItemIEs_t));
+	RANAP_DEBUG("Decoding message RANAP_RAB_SetupOrModifiedItemIEs (%s:%d)\n", __FILE__, __LINE__);
+	decoded = ANY_to_type_aper(any_p, &asn_DEF_RANAP_RAB_SetupOrModifiedItem, (void**)&ranaP_RABSetupOrModifiedItem_p);
+	if (decoded < 0) {
+		RANAP_DEBUG("Decoding of IE raB_SetupOrModifiedItem failed\n");
+		return -1;
+	}
+	if (asn1_xer_print)
+		xer_fprint(stdout, &asn_DEF_RANAP_RAB_SetupOrModifiedItem, ranaP_RABSetupOrModifiedItem_p);
+	memcpy(&raB_SetupOrModifiedItemIEs->raB_SetupOrModifiedItem, ranaP_RABSetupOrModifiedItem_p, sizeof(RANAP_RAB_SetupOrModifiedItem_t));
+	FREEMEM(ranaP_RABSetupOrModifiedItem_p);
+
+	return decoded;
+}
+
