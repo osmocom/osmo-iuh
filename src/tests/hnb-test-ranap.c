@@ -18,8 +18,6 @@ void ranap_msg_dt_print(void *ctx, ranap_message *ranap_msg)
 	printf("rx DirectTransfer: presence = %hx\n", ranap_msg->msg.directTransferIEs.presenceMask);
 	PP(ranap_msg->msg.directTransferIEs.nas_pdu);
 	
-	// nas_pdu == '05 08 12' ==> IMEI Identity request
-	//            '05 04 0d' ==> LU reject
 /*
 typedef struct RANAP_DirectTransferIEs_s {
     uint16_t  presenceMask;
@@ -44,5 +42,6 @@ void ranap_msg_dt_get(void *ctx, ranap_message *ranap_msg)
 	int len = ranap_msg->msg.directTransferIEs.nas_pdu.size;
 	char *data = ranap_msg->msg.directTransferIEs.nas_pdu.buf;
 
+	m->l3h = m->data;
 	memcpy(msgb_put(m, len), data, len);
 }

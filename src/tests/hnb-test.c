@@ -58,6 +58,12 @@
 
 #include <osmocom/rua/RUA_RUA-PDU.h>
 
+#include <osmocom/gsm/protocol/gsm_04_08.h>
+
+#include <osmocom/ranap/RANAP_ProcedureCode.h>
+#include <osmocom/ranap/RANAP_Criticality.h>
+#include <osmocom/ranap/RANAP_DirectTransfer.h>
+
 static void *tall_hnb_ctx;
 
 struct hnb_test g_hnb_test = {
@@ -175,6 +181,93 @@ static int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
 	return 0;
 }
 
+static struct msgb *gen_nas_id_resp()
+{
+	uint8_t id_resp[] = {
+		0x05, /* MM discr */
+		0x19, /* DTAP */
+		/* IMEISV */
+		0x09, /* len */
+		0x03, /* first digit (0000) + even (0) + id IMEISV (011) */
+		0x31, 0x91, 0x06, 0x00, 0x28, 0x47, 0x11, /* digits */
+		0xf2, /* filler (1111) + last digit (0010) */
+	};
+
+	return ranap_generate_initiating_message(RANAP_ProcedureCode_id_DirectTransfer,
+						 RANAP_Criticality_ignore,
+						 &asn_DEF_RANAP_DirectTransfer,
+						 &id_resp);
+}
+
+
+static int hnb_test_nas_tx_id_resp(struct hnb_test *hnb)
+{
+	struct hnbtest_chan *chan;
+	struct msgb *txm, *rua;
+
+	chan = hnb->cs.chan;
+	if (!chan) {
+		printf("hnb_test_nas_tx_id_resp(): No CS channel established yet.\n");
+		return -1;
+	}
+
+	txm = gen_nas_id_resp();
+	rua = rua_new_dt(chan->is_ps, chan->conn_id, txm);
+
+	osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
+
+	return 0;
+}
+
+static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
+{
+	struct hnbtest_chan *chan;
+
+	chan = hnb->cs.chan;
+	if (!chan) {
+		printf("hnb_test_nas_rx_mm(): No CS channel established yet.\n");
+		return -1;
+	}
+
+	OSMO_ASSERT(!chan->is_ps);
+
+	struct gsm48_hdr *gh = msgb_l3(rxm);
+	uint8_t msg_type = gh->msg_type & 0xbf;
+
+	switch (msg_type) {
+	case GSM48_MT_MM_ID_REQ:
+
+		return hnb_test_nas_tx_id_resp(hnb);
+	default:
+		printf("04.08 message type not handled by hnb-test: %d\n",
+		       msg_type);
+		return 0;
+	}
+
+}
+
+static int hnb_test_nas_rx_dtap(struct hnb_test *hnb, struct msgb *msg)
+{
+	printf("got %s\n", osmo_hexdump(msg->data, msg->len));
+
+	// nas_pdu == '05 08 12' ==> IMEI Identity request
+	//            '05 04 0d' ==> LU reject
+
+	struct gsm48_hdr *gh = msgb_l3(msg);
+	uint8_t pdisc = gh->proto_discr & 0x0f;
+
+	switch (pdisc) {
+	case GSM48_PDISC_MM:
+		return hnb_test_nas_rx_mm(hnb, msg);
+	default:
+		printf("04.08 discriminator not handled by hnb-test: %d\n",
+		       pdisc);
+		return 0;
+	}
+
+
+}
+
 int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 {
 	HNBAP_PDU_t _pdu, *pdu = &_pdu;
@@ -255,9 +348,8 @@ int hnb_test_rua_rx(struct hnb_test *hnb, struct msgb *msg)
 			struct msgb *m = msgb_alloc(1500, "direct_transfer_nas_pdu");
 			direct_transfer_nas_pdu_get(&pdu->choice.successfulOutcome.value, m);
 
-			// evaluate
+			hnb_test_nas_rx_dtap(hnb, m);
 
-			printf("got %s\n", osmo_hexdump(m->data, m->len));
 			msgb_free(m);
 		}
 		break;
@@ -544,12 +636,6 @@ static struct cmd_node chan_node = {
 };
 
 
-struct hnbtest_chan {
-	int is_ps;
-	uint32_t conn_id;
-	char *imsi;
-};
-
 static struct msgb *gen_initue_lu(int is_ps, uint32_t conn_id, const char *imsi)
 {
 	uint8_t lu[] = { 0x05, 0x08, 0x70, 0x62, 0xf2, 0x30, 0xff, 0xf3, 0x57,
@@ -562,7 +648,6 @@ static struct msgb *gen_initue_lu(int is_ps, uint32_t conn_id, const char *imsi)
 		.pLMNidentity.buf = plmn_id,
 		.pLMNidentity.size = sizeof(plmn_id),
 	};
-	struct msgb *msg;
 
 	/* FIXME: patch imsi */
 	/* Note: the Mobile Identitiy IE's IMSI data has the identity type and
@@ -608,6 +693,10 @@ DEFUN(chan, chan_cmd,
 
 	vty->index = chan;
 	vty->node = CHAN_NODE;
+
+	if (!chan->is_ps)
+		g_hnb_test.cs.chan = chan;
+
 
 	return CMD_SUCCESS;
 }

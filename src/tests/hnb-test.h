@@ -42,6 +42,12 @@ struct ue_context {
 	char imsi[16+1];
 };
 
+struct hnbtest_chan {
+	int is_ps;
+	uint32_t conn_id;
+	char *imsi;
+};
+
 struct hnb_test {
 	uint16_t gw_port;
 	/*! SCTP listen socket for incoming connections */
@@ -64,6 +70,10 @@ struct hnb_test {
 	uint32_t ctx_id;
 
 	int ues;
+
+	struct {
+		struct hnbtest_chan *chan;
+	} cs;
 };
 
 extern struct hnb_test g_hnb_test;
