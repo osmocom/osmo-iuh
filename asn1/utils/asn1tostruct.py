@@ -260,6 +260,18 @@ for key in iesDefs:
     f.write("int %s_decode_%s(\n" % (fileprefix, firstlower.lower()))
     f.write("    %sIEs_t *%sIEs,\n" % (asn1cStruct, firstlower))
     f.write("    %s_t *%s);\n\n" % (asn1cStruct, lowerFirstCamelWord(asn1cStruct)))
+
+for key in iesDefs:
+    keyupperunderscore = re.sub('-', '_', key.upper())
+    keylowerunderscore = re.sub('-', '_', key.lower())
+    structName = re.sub('ies', '', key)
+
+    if len(iesDefs[key]["ies"]) == 0:
+       continue
+
+    f.write("int %s_free_%s(\n" % (fileprefix, re.sub('-', '_', structName.lower())))
+    if len(iesDefs[key]["ies"]) != 0:
+        f.write("    %s_t *%s);\n\n" % (prefix + re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
 f.write("#endif /* %s_IES_DEFS_H_ */\n\n" % (fileprefix.upper()))
 
 #Generate Decode functions

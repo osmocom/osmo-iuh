@@ -1,7 +1,7 @@
 /*******************************************************************************
  * This file had been created by asn1tostruct.py script v0.5osmo1
  * Please do not modify this file but regenerate it via script.
- * Created on: 2016-01-11 12:45:00.144035 by neels
+ * Created on: 2016-02-19 16:51:41.625903 by daniel
  * from ['../asn1//ranap/RANAP-PDU-Contents.asn']
  ******************************************************************************/
 #include <osmocom/ranap/ranap_common.h>
@@ -2646,6 +2646,321 @@ int ranap_decode_rab_setupormodifieditemies(
  **/
 int ranap_encode_rab_setupormodifieditemies(
     RANAP_RAB_SetupOrModifiedList_t *ranaP_RAB_SetupOrModifiedList,
+    RANAP_RAB_SetupOrModifiedItemIEs_t *raB_SetupOrModifiedItemIEs);
+
+int ranap_free_rab_releaseditemies(
+    RANAP_RAB_ReleasedItemIEs_t *raB_ReleasedItemIEs);
+
+int ranap_free_iu_releaserequesties(
+    RANAP_Iu_ReleaseRequestIEs_t *iu_ReleaseRequestIEs);
+
+int ranap_free_uespecificinformationindicationies(
+    RANAP_UESpecificInformationIndicationIEs_t *ueSpecificInformationIndicationIEs);
+
+int ranap_free_enhancedrelocationcompletefailureies(
+    RANAP_EnhancedRelocationCompleteFailureIEs_t *enhancedRelocationCompleteFailureIEs);
+
+int ranap_free_mbmscnde_registrationresponseies(
+    RANAP_MBMSCNDe_RegistrationResponseIEs_t *mbmscnDe_RegistrationResponseIEs);
+
+int ranap_free_securitymoderejecties(
+    RANAP_SecurityModeRejectIEs_t *securityModeRejectIEs);
+
+int ranap_free_ranap_relocationinformationies(
+    RANAP_RANAP_RelocationInformationIEs_t *ranaP_RelocationInformationIEs);
+
+int ranap_free_resetacknowledgeies(
+    RANAP_ResetAcknowledgeIEs_t *resetAcknowledgeIEs);
+
+int ranap_free_relocationcancelacknowledgeies(
+    RANAP_RelocationCancelAcknowledgeIEs_t *relocationCancelAcknowledgeIEs);
+
+int ranap_free_srvcc_cskeysresponseies(
+    RANAP_SRVCC_CSKeysResponseIEs_t *srvcC_CSKeysResponseIEs);
+
+int ranap_free_mbmscnde_registrationrequesties(
+    RANAP_MBMSCNDe_RegistrationRequestIEs_t *mbmscnDe_RegistrationRequestIEs);
+
+int ranap_free_pagingies(
+    RANAP_PagingIEs_t *pagingIEs);
+
+int ranap_free_geran_iumode_rab_failed_rabassgntresponse_itemies(
+    RANAP_GERAN_Iumode_RAB_Failed_RABAssgntResponse_ItemIEs_t *geraN_Iumode_RAB_Failed_RABAssgntResponse_ItemIEs);
+
+int ranap_free_resetresourceitemies(
+    RANAP_ResetResourceItemIEs_t *resetResourceItemIEs);
+
+int ranap_free_locationreportingcontrolies(
+    RANAP_LocationReportingControlIEs_t *locationReportingControlIEs);
+
+int ranap_free_enhancedrelocationcompleterequesties(
+    RANAP_EnhancedRelocationCompleteRequestIEs_t *enhancedRelocationCompleteRequestIEs);
+
+int ranap_free_rab_faileditemies(
+    RANAP_RAB_FailedItemIEs_t *raB_FailedItemIEs);
+
+int ranap_free_mbmsuelinkingresponseies(
+    RANAP_MBMSUELinkingResponseIEs_t *mbmsueLinkingResponseIEs);
+
+int ranap_free_rab_queueditemies(
+    RANAP_RAB_QueuedItemIEs_t *raB_QueuedItemIEs);
+
+int ranap_free_cn_invoketraceies(
+    RANAP_CN_InvokeTraceIEs_t *cN_InvokeTraceIEs);
+
+int ranap_free_iu_releasecommandies(
+    RANAP_Iu_ReleaseCommandIEs_t *iu_ReleaseCommandIEs);
+
+int ranap_free_relocationrequestacknowledgeies(
+    RANAP_RelocationRequestAcknowledgeIEs_t *relocationRequestAcknowledgeIEs);
+
+int ranap_free_relocationfailureies(
+    RANAP_RelocationFailureIEs_t *relocationFailureIEs);
+
+int ranap_free_rabs_failed_to_reportitemies(
+    RANAP_RABs_failed_to_reportItemIEs_t *raBs_failed_to_reportItemIEs);
+
+int ranap_free_relocationpreparationfailureies(
+    RANAP_RelocationPreparationFailureIEs_t *relocationPreparationFailureIEs);
+
+int ranap_free_rab_tobereleaseditem_enhancedreloccompleteres_ies(
+    RANAP_RAB_ToBeReleasedItem_EnhancedRelocCompleteRes_IEs_t *raB_ToBeReleasedItem_EnhancedRelocCompleteRes_IEs);
+
+int ranap_free_rabs_contextfailedtotransferitemies(
+    RANAP_RABs_ContextFailedtoTransferItemIEs_t *raBs_ContextFailedtoTransferItemIEs);
+
+int ranap_free_relocationrequiredies(
+    RANAP_RelocationRequiredIEs_t *relocationRequiredIEs);
+
+int ranap_free_mbmssessionstopies(
+    RANAP_MBMSSessionStopIEs_t *mbmsSessionStopIEs);
+
+int ranap_free_mbmssessionupdatefailureies(
+    RANAP_MBMSSessionUpdateFailureIEs_t *mbmsSessionUpdateFailureIEs);
+
+int ranap_free_reseties(
+    RANAP_ResetIEs_t *resetIEs);
+
+int ranap_free_locationrelateddatafailureies(
+    RANAP_LocationRelatedDataFailureIEs_t *locationRelatedDataFailureIEs);
+
+int ranap_free_resetresourceacknowledgeies(
+    RANAP_ResetResourceAcknowledgeIEs_t *resetResourceAcknowledgeIEs);
+
+int ranap_free_mbmsregistrationrequesties(
+    RANAP_MBMSRegistrationRequestIEs_t *mbmsRegistrationRequestIEs);
+
+int ranap_free_uplinkinformationexchangerequesties(
+    RANAP_UplinkInformationExchangeRequestIEs_t *uplinkInformationExchangeRequestIEs);
+
+int ranap_free_mbmssessionstopresponseies(
+    RANAP_MBMSSessionStopResponseIEs_t *mbmsSessionStopResponseIEs);
+
+int ranap_free_rab_contextitemies_ranap_relocinf(
+    RANAP_RAB_ContextItemIEs_RANAP_RelocInf_t *raB_ContextItemIEs_RANAP_RelocInf);
+
+int ranap_free_locationrelateddatarequesties(
+    RANAP_LocationRelatedDataRequestIEs_t *locationRelatedDataRequestIEs);
+
+int ranap_free_rab_dataforwardingitem_srns_ctxreq_ies(
+    RANAP_RAB_DataForwardingItem_SRNS_CtxReq_IEs_t *raB_DataForwardingItem_SRNS_CtxReq_IEs);
+
+int ranap_free_rab_releaseitemies(
+    RANAP_RAB_ReleaseItemIEs_t *raB_ReleaseItemIEs);
+
+int ranap_free_rab_datavolumereportrequestitemies(
+    RANAP_RAB_DataVolumeReportRequestItemIEs_t *raB_DataVolumeReportRequestItemIEs);
+
+int ranap_free_informationtransferconfirmationies(
+    RANAP_InformationTransferConfirmationIEs_t *informationTransferConfirmationIEs);
+
+int ranap_free_initialue_messageies(
+    RANAP_InitialUE_MessageIEs_t *initialUE_MessageIEs);
+
+int ranap_free_srns_contextresponseies(
+    RANAP_SRNS_ContextResponseIEs_t *srnS_ContextResponseIEs);
+
+int ranap_free_resetresourceackitemies(
+    RANAP_ResetResourceAckItemIEs_t *resetResourceAckItemIEs);
+
+int ranap_free_srns_dataforwardcommandies(
+    RANAP_SRNS_DataForwardCommandIEs_t *srnS_DataForwardCommandIEs);
+
+int ranap_free_relocationrequesties(
+    RANAP_RelocationRequestIEs_t *relocationRequestIEs);
+
+int ranap_free_srns_contextrequesties(
+    RANAP_SRNS_ContextRequestIEs_t *srnS_ContextRequestIEs);
+
+int ranap_free_mbmssessionstartresponseies(
+    RANAP_MBMSSessionStartResponseIEs_t *mbmsSessionStartResponseIEs);
+
+int ranap_free_directtransferies(
+    RANAP_DirectTransferIEs_t *directTransferIEs);
+
+int ranap_free_resetresourceies(
+    RANAP_ResetResourceIEs_t *resetResourceIEs);
+
+int ranap_free_ranap_enhancedrelocationinformationresponseies(
+    RANAP_RANAP_EnhancedRelocationInformationResponseIEs_t *ranaP_EnhancedRelocationInformationResponseIEs);
+
+int ranap_free_rab_setupitem_enhancedreloccompleteres_ies(
+    RANAP_RAB_SetupItem_EnhancedRelocCompleteRes_IEs_t *raB_SetupItem_EnhancedRelocCompleteRes_IEs);
+
+int ranap_free_ranap_enhancedrelocationinformationrequesties(
+    RANAP_RANAP_EnhancedRelocationInformationRequestIEs_t *ranaP_EnhancedRelocationInformationRequestIEs);
+
+int ranap_free_securitymodecommandies(
+    RANAP_SecurityModeCommandIEs_t *securityModeCommandIEs);
+
+int ranap_free_relocationcancelies(
+    RANAP_RelocationCancelIEs_t *relocationCancelIEs);
+
+int ranap_free_rab_setupitem_relocreqack_ies(
+    RANAP_RAB_SetupItem_RelocReqAck_IEs_t *raB_SetupItem_RelocReqAck_IEs);
+
+int ranap_free_mbmsregistrationfailureies(
+    RANAP_MBMSRegistrationFailureIEs_t *mbmsRegistrationFailureIEs);
+
+int ranap_free_mbmsrabestablishmentindicationies(
+    RANAP_MBMSRABEstablishmentIndicationIEs_t *mbmsrabEstablishmentIndicationIEs);
+
+int ranap_free_mbmssessionstartfailureies(
+    RANAP_MBMSSessionStartFailureIEs_t *mbmsSessionStartFailureIEs);
+
+int ranap_free_iu_releasecompleteies(
+    RANAP_Iu_ReleaseCompleteIEs_t *iu_ReleaseCompleteIEs);
+
+int ranap_free_cn_deactivatetraceies(
+    RANAP_CN_DeactivateTraceIEs_t *cN_DeactivateTraceIEs);
+
+int ranap_free_datavolumereportrequesties(
+    RANAP_DataVolumeReportRequestIEs_t *dataVolumeReportRequestIEs);
+
+int ranap_free_rab_relocationreleaseitemies(
+    RANAP_RAB_RelocationReleaseItemIEs_t *raB_RelocationReleaseItemIEs);
+
+int ranap_free_rab_modifyrequesties(
+    RANAP_RAB_ModifyRequestIEs_t *raB_ModifyRequestIEs);
+
+int ranap_free_securitymodecompleteies(
+    RANAP_SecurityModeCompleteIEs_t *securityModeCompleteIEs);
+
+int ranap_free_mbmsrabreleaseies(
+    RANAP_MBMSRABReleaseIEs_t *mbmsrabReleaseIEs);
+
+int ranap_free_overloadies(
+    RANAP_OverloadIEs_t *overloadIEs);
+
+int ranap_free_rab_setupitem_relocreq_ies(
+    RANAP_RAB_SetupItem_RelocReq_IEs_t *raB_SetupItem_RelocReq_IEs);
+
+int ranap_free_rab_modifyitemies(
+    RANAP_RAB_ModifyItemIEs_t *raB_ModifyItemIEs);
+
+int ranap_free_mbmsregistrationresponseies(
+    RANAP_MBMSRegistrationResponseIEs_t *mbmsRegistrationResponseIEs);
+
+int ranap_free_forwardsrns_contexties(
+    RANAP_ForwardSRNS_ContextIEs_t *forwardSRNS_ContextIEs);
+
+int ranap_free_uplinkinformationexchangefailureies(
+    RANAP_UplinkInformationExchangeFailureIEs_t *uplinkInformationExchangeFailureIEs);
+
+int ranap_free_rab_setupitem_enhrelocinfores_ies(
+    RANAP_RAB_SetupItem_EnhRelocInfoRes_IEs_t *raB_SetupItem_EnhRelocInfoRes_IEs);
+
+int ranap_free_datavolumereporties(
+    RANAP_DataVolumeReportIEs_t *dataVolumeReportIEs);
+
+int ranap_free_informationtransferindicationies(
+    RANAP_InformationTransferIndicationIEs_t *informationTransferIndicationIEs);
+
+int ranap_free_rab_faileditem_enhrelocinfores_ies(
+    RANAP_RAB_FailedItem_EnhRelocInfoRes_IEs_t *raB_FailedItem_EnhRelocInfoRes_IEs);
+
+int ranap_free_informationtransferfailureies(
+    RANAP_InformationTransferFailureIEs_t *informationTransferFailureIEs);
+
+int ranap_free_commonid_ies(
+    RANAP_CommonID_IEs_t *commonID_IEs);
+
+int ranap_free_mbmsuelinkingrequesties(
+    RANAP_MBMSUELinkingRequestIEs_t *mbmsueLinkingRequestIEs);
+
+int ranap_free_errorindicationies(
+    RANAP_ErrorIndicationIEs_t *errorIndicationIEs);
+
+int ranap_free_redirectionindication_ies(
+    RANAP_RedirectionIndication_IEs_t *redirectionIndication_IEs);
+
+int ranap_free_rab_dataforwardingitemies(
+    RANAP_RAB_DataForwardingItemIEs_t *raB_DataForwardingItemIEs);
+
+int ranap_free_rab_setupitem_enhrelocinforeq_ies(
+    RANAP_RAB_SetupItem_EnhRelocInfoReq_IEs_t *raB_SetupItem_EnhRelocInfoReq_IEs);
+
+int ranap_free_mbmsrabreleasefailureies(
+    RANAP_MBMSRABReleaseFailureIEs_t *mbmsrabReleaseFailureIEs);
+
+int ranap_free_rab_datavolumereportitemies(
+    RANAP_RAB_DataVolumeReportItemIEs_t *raB_DataVolumeReportItemIEs);
+
+int ranap_free_directinformationtransferies(
+    RANAP_DirectInformationTransferIEs_t *directInformationTransferIEs);
+
+int ranap_free_relocationcommandies(
+    RANAP_RelocationCommandIEs_t *relocationCommandIEs);
+
+int ranap_free_uplinkinformationexchangeresponseies(
+    RANAP_UplinkInformationExchangeResponseIEs_t *uplinkInformationExchangeResponseIEs);
+
+int ranap_free_mbmsrabreleaserequesties(
+    RANAP_MBMSRABReleaseRequestIEs_t *mbmsrabReleaseRequestIEs);
+
+int ranap_free_rab_assignmentrequesties(
+    RANAP_RAB_AssignmentRequestIEs_t *raB_AssignmentRequestIEs);
+
+int ranap_free_rab_releaseditem_iurelcomp_ies(
+    RANAP_RAB_ReleasedItem_IuRelComp_IEs_t *raB_ReleasedItem_IuRelComp_IEs);
+
+int ranap_free_enhancedrelocationcompleteresponseies(
+    RANAP_EnhancedRelocationCompleteResponseIEs_t *enhancedRelocationCompleteResponseIEs);
+
+int ranap_free_locationreporties(
+    RANAP_LocationReportIEs_t *locationReportIEs);
+
+int ranap_free_rab_setupitem_enhancedreloccompletereq_ies(
+    RANAP_RAB_SetupItem_EnhancedRelocCompleteReq_IEs_t *raB_SetupItem_EnhancedRelocCompleteReq_IEs);
+
+int ranap_free_rab_assignmentresponseies(
+    RANAP_RAB_AssignmentResponseIEs_t *raB_AssignmentResponseIEs);
+
+int ranap_free_rab_contextitemies(
+    RANAP_RAB_ContextItemIEs_t *raB_ContextItemIEs);
+
+int ranap_free_mbmssessionupdateresponseies(
+    RANAP_MBMSSessionUpdateResponseIEs_t *mbmsSessionUpdateResponseIEs);
+
+int ranap_free_ueradiocapabilitymatchresponseies(
+    RANAP_UeRadioCapabilityMatchResponseIEs_t *ueRadioCapabilityMatchResponseIEs);
+
+int ranap_free_rab_releaserequesties(
+    RANAP_RAB_ReleaseRequestIEs_t *raB_ReleaseRequestIEs);
+
+int ranap_free_enhancedrelocationcompleteconfirmies(
+    RANAP_EnhancedRelocationCompleteConfirmIEs_t *enhancedRelocationCompleteConfirmIEs);
+
+int ranap_free_mbmssessionupdateies(
+    RANAP_MBMSSessionUpdateIEs_t *mbmsSessionUpdateIEs);
+
+int ranap_free_mbmssessionstarties(
+    RANAP_MBMSSessionStartIEs_t *mbmsSessionStartIEs);
+
+int ranap_free_locationrelateddataresponseies(
+    RANAP_LocationRelatedDataResponseIEs_t *locationRelatedDataResponseIEs);
+
+int ranap_free_rab_setupormodifieditemies(
     RANAP_RAB_SetupOrModifiedItemIEs_t *raB_SetupOrModifiedItemIEs);
 
 #endif /* RANAP_IES_DEFS_H_ */
