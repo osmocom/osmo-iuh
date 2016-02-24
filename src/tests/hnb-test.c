@@ -573,7 +573,8 @@ int main(int argc, char **argv)
 	vty_init(&vty_info);
 	hnbtest_vty_init();
 
-	rc = telnet_init(NULL, NULL, 2324);
+	printf("VTY at %s %d\n", vty_get_bind_addr(), 2324);
+	rc = telnet_init_dynif(NULL, NULL, vty_get_bind_addr(), 2324);
 	if (rc < 0) {
 		perror("Error binding VTY port");
 		exit(1);

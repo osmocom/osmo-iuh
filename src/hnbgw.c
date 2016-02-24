@@ -412,7 +412,11 @@ int main(int argc, char **argv)
 	vty_init(&vty_info);
 	hnbgw_vty_init();
 
-	rc = telnet_init(NULL, g_hnb_gw, 2323);
+	/* NOTE: if we add a config file, read the config before
+	 * fetching the telnet address with vty_get_bind_addr() */
+	LOGP(DMAIN, LOGL_NOTICE, "VTY at %s %d\n",
+	     vty_get_bind_addr(), 2323);
+	rc = telnet_init_dynif(NULL, g_hnb_gw, vty_get_bind_addr(), 2323);
 	if (rc < 0) {
 		perror("Error binding VTY port");
 		exit(1);
