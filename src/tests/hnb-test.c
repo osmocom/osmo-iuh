@@ -193,12 +193,8 @@ static struct msgb *gen_nas_id_resp()
 		0xf2, /* filler (1111) + last digit (0010) */
 	};
 
-	return ranap_generate_initiating_message(RANAP_ProcedureCode_id_DirectTransfer,
-						 RANAP_Criticality_ignore,
-						 &asn_DEF_RANAP_DirectTransfer,
-						 &id_resp);
+	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
 }
-
 
 static int hnb_test_nas_tx_id_resp(struct hnb_test *hnb)
 {
