@@ -591,6 +591,7 @@
 #include <osmocom/core/utils.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
 
+struct gprs_ra_id;
 
 #define RANAP_DEBUG(x, args ...) DEBUGP(_ranap_DRANAP, x, ## args)
 extern int _ranap_DRANAP;
