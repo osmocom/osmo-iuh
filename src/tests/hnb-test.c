@@ -41,6 +41,8 @@
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/write_queue.h>
 #include <osmocom/netif/stream.h>
+#include <osmocom/gsm/tlv.h>
+#include <osmocom/gsm/gsm48.h>
 
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
@@ -196,23 +198,86 @@ static struct msgb *gen_nas_id_resp()
 	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
 }
 
-static int hnb_test_nas_tx_id_resp(struct hnb_test *hnb)
+static struct msgb *gen_nas_tmsi_realloc_compl()
+{
+	uint8_t id_resp[] = {
+		GSM48_PDISC_MM,
+		GSM48_MT_MM_TMSI_REALL_COMPL,
+	};
+
+	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
+}
+
+static int hnb_test_nas_tx_dt(struct hnb_test *hnb, struct msgb *txm)
 {
 	struct hnbtest_chan *chan;
-	struct msgb *txm, *rua;
+	struct msgb *rua;
 
 	chan = hnb->cs.chan;
 	if (!chan) {
-		printf("hnb_test_nas_tx_id_resp(): No CS channel established yet.\n");
+		printf("hnb_test_nas_tx_tmsi_realloc_compl(): No CS channel established yet.\n");
 		return -1;
 	}
 
-	txm = gen_nas_id_resp();
 	rua = rua_new_dt(chan->is_ps, chan->conn_id, txm);
-
 	osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
-
 	return 0;
+}
+
+void hnb_test_nas_rx_lu_accept(struct msgb *rxm)
+{
+	printf(" :D Location Update Accept :D\n");
+	struct gsm48_hdr *gh;
+	struct gsm48_loc_area_id *lai;
+	gh = (struct gsm48_hdr *)msgb_l3(rxm);
+	lai = (struct gsm48_loc_area_id *)&gh->data[0];
+
+	uint16_t mcc, mnc, lac;
+	gsm48_decode_lai(lai, &mcc, &mnc, &lac);
+	printf("LU: mcc %hd  mnc %hd  lac %hd\n",
+	       mcc, mnc, lac);
+
+}
+
+void hnb_test_nas_rx_mm_info(struct msgb *rxm)
+{
+	printf(" :) MM Info :)\n");
+	struct gsm48_hdr *gh;
+	struct tlv_parsed tp;
+	int parse_res;
+	int length = msgb_l3len(rxm);
+
+	if (length < sizeof(*gh)) {
+		printf("GSM48 header does not fit.\n");
+		return;
+	}
+
+	gh = (struct gsm48_hdr *) msgb_l3(rxm);
+	length -= (const char *)&gh->data[0] - (const char *)gh;
+
+	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], length, 0, 0);
+	if (parse_res <= 0) {
+		printf("Error parsing MM Info message: %d\n", parse_res);
+		return;
+	}
+
+	if (TLVP_PRESENT(&tp, GSM48_IE_NAME_SHORT)) {
+		char name[128] = {0};
+		gsm_7bit_decode_n(name, 127,
+				  TLVP_VAL(&tp, GSM48_IE_NAME_SHORT)+1,
+				  (TLVP_LEN(&tp, GSM48_IE_NAME_SHORT)-1)*8/7);
+		printf("Info: Short Network Name: %s\n", name);
+	}
+
+	if (TLVP_PRESENT(&tp, GSM48_IE_NAME_LONG)) {
+		char name[128] = {0};
+		gsm_7bit_decode_n(name, 127,
+				  TLVP_VAL(&tp, GSM48_IE_NAME_LONG)+1,
+				  (TLVP_LEN(&tp, GSM48_IE_NAME_LONG)-1)*8/7);
+		printf("Info: Long Network Name: %s\n", name);
+	}
+
+	return;
 }
 
 static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
@@ -232,10 +297,18 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 
 	switch (msg_type) {
 	case GSM48_MT_MM_ID_REQ:
+		return hnb_test_nas_tx_dt(hnb, gen_nas_id_resp());
 
-		return hnb_test_nas_tx_id_resp(hnb);
+	case GSM48_MT_MM_LOC_UPD_ACCEPT:
+		hnb_test_nas_rx_lu_accept(rxm);
+		return hnb_test_nas_tx_dt(hnb, gen_nas_tmsi_realloc_compl());
+
+	case GSM48_MT_MM_INFO:
+		hnb_test_nas_rx_mm_info(rxm);
+		return 0;
+
 	default:
-		printf("04.08 message type not handled by hnb-test: %d\n",
+		printf("04.08 message type not handled by hnb-test: 0x%x\n",
 		       msg_type);
 		return 0;
 	}
