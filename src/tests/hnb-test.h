@@ -49,6 +49,7 @@ struct hnbtest_chan {
 };
 
 struct hnb_test {
+	const char *gw_addr;
 	uint16_t gw_port;
 	/*! SCTP listen socket for incoming connections */
 	struct osmo_fd conn_fd;

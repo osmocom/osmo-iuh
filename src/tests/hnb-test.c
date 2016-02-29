@@ -69,6 +69,7 @@
 static void *tall_hnb_ctx;
 
 struct hnb_test g_hnb_test = {
+	.gw_addr = "127.0.0.1",
 	.gw_port = IUH_DEFAULT_SCTP_PORT,
 };
 
@@ -790,10 +791,11 @@ static void handle_options(int argc, char **argv)
 		int idx = 0, c;
 		static const struct option long_options[] = {
 			{ "ues", 1, 0, 'u' },
+			{ "gw-addr", 1, 0, 'g' },
 			{ 0, 0, 0, 0 },
 		};
 
-		c = getopt_long(argc, argv, "u:", long_options, &idx);
+		c = getopt_long(argc, argv, "u:g:", long_options, &idx);
 
 		if (c == -1)
 			break;
@@ -801,6 +803,9 @@ static void handle_options(int argc, char **argv)
 		switch (c) {
 		case 'u':
 			g_hnb_test.ues = atoi(optarg);
+			break;
+		case 'g':
+			g_hnb_test.gw_addr = optarg;
 			break;
 		}
 	}
@@ -832,7 +837,7 @@ int main(int argc, char **argv)
 	g_hnb_test.wqueue.write_cb = hnb_write_cb;
 
 	rc = osmo_sock_init_ofd(&g_hnb_test.wqueue.bfd, AF_INET, SOCK_STREAM,
-			   IPPROTO_SCTP, "127.0.0.1",
+			   IPPROTO_SCTP, g_hnb_test.gw_addr,
 			   g_hnb_test.gw_port, OSMO_SOCK_F_CONNECT);
 	if (rc < 0) {
 		perror("Error connecting to Iuh port");
