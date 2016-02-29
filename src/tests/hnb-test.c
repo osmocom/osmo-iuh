@@ -184,8 +184,8 @@ static int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
 static struct msgb *gen_nas_id_resp()
 {
 	uint8_t id_resp[] = {
-		0x05, /* MM discr */
-		0x19, /* DTAP */
+		GSM48_PDISC_MM,
+		GSM48_MT_MM_ID_RESP,
 		/* IMEISV */
 		0x09, /* len */
 		0x03, /* first digit (0000) + even (0) + id IMEISV (011) */
@@ -634,7 +634,8 @@ static struct cmd_node chan_node = {
 
 static struct msgb *gen_initue_lu(int is_ps, uint32_t conn_id, const char *imsi)
 {
-	uint8_t lu[] = { 0x05, 0x08, 0x70, 0x62, 0xf2, 0x30, 0xff, 0xf3, 0x57,
+	uint8_t lu[] = { GSM48_PDISC_MM, GSM48_MT_MM_LOC_UPD_REQUEST,
+		         0x70, 0x62, 0xf2, 0x30, 0xff, 0xf3, 0x57,
 		/*	 len, IMSI/type, IMSI-------------------------------- */
 			 0x08, 0x29, 0x26, 0x24, 0x10, 0x32, 0x54, 0x76, 0x98,
 			 0x33, 0x03, 0x57, 0x18 , 0xb2 };
