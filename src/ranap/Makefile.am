@@ -1160,7 +1160,7 @@ ASN_MODULE_INC=	\
 	RANAP_LeftMBMSBearerService-IEs.h	\
 	RANAP_UnsuccessfulLinking-IEs.h
 
-AM_CFLAGS = -I../../include $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS)
+AM_CFLAGS = -I$(top_srcdir)/include $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS)
 
 noinst_LTLIBRARIES=libosmo-asn1-ranap.la
 libosmo_asn1_ranap_la_SOURCES=$(ASN_MODULE_SRC)
@@ -1169,7 +1169,7 @@ libosmo_asn1_ranap_la_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	ASN1C_PREFIX="RANAP_" asn1c -gen-PER ../../asn1/ranap/RANAP-CommonDataTypes.asn ../../asn1/ranap/RANAP-Constants.asn ../../asn1/ranap/RANAP-IEs.asn ../../asn1/ranap/RANAP-PDU.asn
+	ASN1C_PREFIX="RANAP_" asn1c -gen-PER $(top_srcdir)/asn1/ranap/RANAP-CommonDataTypes.asn $(top_srcdir)/asn1/ranap/RANAP-Constants.asn $(top_srcdir)/asn1/ranap/RANAP-IEs.asn $(top_srcdir)/asn1/ranap/RANAP-PDU.asn
 	@rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* NULL.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
 # 	some fixups in erroneous code that asn1c generates
 	sed -i '6i#include <constr_CHOICE.h>' RANAP_ChosenEncryptionAlgorithm.h RANAP_ChosenIntegrityProtectionAlgorithm.h RANAP_IMSI.h RANAP_PLMNidentity.h RANAP_RAB-ReleaseFailedList.c RANAP_RAB-ReleaseList.c RANAP_RAB-SetupOrModifyList.c RANAP_ResetResourceList.c RANAP_ResetResourceAckList.c
@@ -1187,5 +1187,5 @@ regenerate-from-asn1-source:
 	sed -i 's/Member/MemberM/' RANAP_PLMNs-in-shared-network.[ch]
 	sed -i 's/Member/MemberN/' RANAP_RABDataVolumeReport.[ch]
 #	change include style to `#include <dir/foo.h>'
-	../../move-asn1-header-files.sh osmocom/ranap $(ASN_MODULE_INC)
+	$(top_srcdir)/move-asn1-header-files.sh osmocom/ranap $(ASN_MODULE_INC)
 

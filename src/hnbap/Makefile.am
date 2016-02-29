@@ -232,7 +232,7 @@ ASN_MODULE_INC=	\
 	PrivateMessage.h	\
 	IE.h
 
-AM_CFLAGS = -I../../include $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS)
+AM_CFLAGS = -I$(top_srcdir)/include $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS)
 
 noinst_LIBRARIES=libosmo-asn1-hnbap.a
 libosmo_asn1_hnbap_a_SOURCES=$(ASN_MODULE_SOURCES)
@@ -241,8 +241,8 @@ libosmo_asn1_hnbap_a_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	asn1c -gen-PER -fnative-types ../../asn1/hnbap/HNBAP-CommonDataTypes.asn ../../asn1/hnbap/HNBAP-Constants.asn ../../asn1/hnbap/HNBAP-IEs.asn ../../asn1/hnbap/HNBAP-PDU.asn
+	asn1c -gen-PER -fnative-types $(top_srcdir)/asn1/hnbap/HNBAP-CommonDataTypes.asn $(top_srcdir)/asn1/hnbap/HNBAP-Constants.asn $(top_srcdir)/asn1/hnbap/HNBAP-IEs.asn $(top_srcdir)/asn1/hnbap/HNBAP-PDU.asn
 #	remove the local copy of the runtime code
 	-rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
 #	change include style to `#include <dir/foo.h>'
-	../../move-asn1-header-files.sh osmocom/hnbap $(ASN_MODULE_INC)
+	$(top_srcdir)/move-asn1-header-files.sh osmocom/hnbap $(ASN_MODULE_INC)

@@ -72,7 +72,7 @@ ASN_MODULE_INC=	\
 	RUA_PrivateMessage.h	\
 	RUA_IE.h
 
-AM_CFLAGS = -I../../include $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS)
+AM_CFLAGS = -I$(top_srcdir)/include $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS)
 
 noinst_LIBRARIES=libosmo-asn1-rua.a
 libosmo_asn1_rua_a_SOURCES=$(ASN_MODULE_SOURCES)
@@ -81,9 +81,9 @@ libosmo_asn1_rua_a_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	ASN1C_PREFIX="RUA_" asn1c -gen-PER ../../asn1/rua/RUA-CommonDataTypes.asn ../../asn1/rua/RUA-Constants.asn ../../asn1/rua/RUA-IEs.asn ../../asn1/rua/RUA-PDU.asn
+	ASN1C_PREFIX="RUA_" asn1c -gen-PER $(top_srcdir)/asn1/rua/RUA-CommonDataTypes.asn $(top_srcdir)/asn1/rua/RUA-Constants.asn $(top_srcdir)/asn1/rua/RUA-IEs.asn $(top_srcdir)/asn1/rua/RUA-PDU.asn
 #	remove the local copy of the runtime code
 	@rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
 #	change include style to `#include <dir/foo.h>'
-	../../move-asn1-header-files.sh osmocom/rua $(ASN_MODULE_INC)
+	$(top_srcdir)/move-asn1-header-files.sh osmocom/rua $(ASN_MODULE_INC)
 
