@@ -232,7 +232,7 @@ ASN_MODULE_INC=	\
 	PrivateMessage.h	\
 	IE.h
 
-AM_CFLAGS = $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS) -I../../include
+AM_CFLAGS = -I../../include $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS)
 
 noinst_LIBRARIES=libosmo-asn1-hnbap.a
 libosmo_asn1_hnbap_a_SOURCES=$(ASN_MODULE_SOURCES)

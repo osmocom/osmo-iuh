@@ -1160,7 +1160,7 @@ ASN_MODULE_INC=	\
 	RANAP_LeftMBMSBearerService-IEs.h	\
 	RANAP_UnsuccessfulLinking-IEs.h
 
-AM_CFLAGS = $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS) -I../../include
+AM_CFLAGS = -I../../include $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS)
 
 noinst_LTLIBRARIES=libosmo-asn1-ranap.la
 libosmo_asn1_ranap_la_SOURCES=$(ASN_MODULE_SRC)

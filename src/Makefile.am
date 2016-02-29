@@ -20,7 +20,7 @@ ranap_encoder.c ranap_decoder.c: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN
 #	this is ugly ^. ranap_ies_defs.h is generated from asn1tostruct.py here, but
 #	it should live in include/osmocom/ranap/.
 
-AM_CFLAGS = $(OSMOCORE_CFLAGS) $(OSMOVTY_CFLAGS) $(OSMOGSM_CFLAGS) $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS) -I../include
+AM_CFLAGS = -I../include $(OSMOCORE_CFLAGS) $(OSMOVTY_CFLAGS) $(OSMOGSM_CFLAGS) $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS)
 COMMON_LDADD = -lsctp
 
 # build the shared RANAP library
