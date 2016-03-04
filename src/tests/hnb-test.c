@@ -597,6 +597,7 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 	};
 	int rc;
 
+	printf("Sending: %s\n", osmo_hexdump(msgb_data(msg), msgb_length(msg)));
 	rc = sctp_send(fd->fd, msgb_data(msg), msgb_length(msg),
 			&sinfo, 0);
 	/* we don't need to msgb_free(), write_queue does this for us */
