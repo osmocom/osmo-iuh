@@ -225,11 +225,18 @@ static int hnb_test_nas_tx_dt(struct hnb_test *hnb, struct msgb *txm)
 	return 0;
 }
 
-void hnb_test_nas_rx_lu_accept(struct msgb *rxm)
+int hnb_test_nas_rx_lu_accept(struct msgb *rxm, int *sent_tmsi)
 {
 	printf(" :D Location Update Accept :D\n");
 	struct gsm48_hdr *gh;
 	struct gsm48_loc_area_id *lai;
+	int length = msgb_l3len(rxm);
+
+	if (length < sizeof(*gh)) {
+		printf("GSM48 header does not fit.\n");
+		return -1;
+	}
+
 	gh = (struct gsm48_hdr *)msgb_l3(rxm);
 	lai = (struct gsm48_loc_area_id *)&gh->data[0];
 
@@ -238,6 +245,23 @@ void hnb_test_nas_rx_lu_accept(struct msgb *rxm)
 	printf("LU: mcc %hd  mnc %hd  lac %hd\n",
 	       mcc, mnc, lac);
 
+	struct tlv_parsed tp;
+	int parse_res;
+
+	length -= (const char *)&gh->data[0] - (const char *)gh;
+	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], length, 0, 0);
+	if (parse_res <= 0) {
+		printf("Error parsing Location Update Accept message: %d\n", parse_res);
+		return -1;
+	}
+
+	if (TLVP_PRESENT(&tp, GSM48_IE_MOBILE_ID)) {
+		uint8_t type = TLVP_VAL(&tp, GSM48_IE_NAME_SHORT)[0] & 0x0f;
+		if (type == GSM_MI_TYPE_TMSI)
+			*sent_tmsi = 1;
+		else *sent_tmsi = 0;
+	}
+	return 0;
 }
 
 void hnb_test_nas_rx_mm_info(struct msgb *rxm)
@@ -295,14 +319,19 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 
 	struct gsm48_hdr *gh = msgb_l3(rxm);
 	uint8_t msg_type = gh->msg_type & 0xbf;
+	int sent_tmsi;
 
 	switch (msg_type) {
 	case GSM48_MT_MM_ID_REQ:
 		return hnb_test_nas_tx_dt(hnb, gen_nas_id_resp());
 
 	case GSM48_MT_MM_LOC_UPD_ACCEPT:
-		hnb_test_nas_rx_lu_accept(rxm);
-		return hnb_test_nas_tx_dt(hnb, gen_nas_tmsi_realloc_compl());
+		if (hnb_test_nas_rx_lu_accept(rxm, &sent_tmsi))
+			return -1;
+		if (sent_tmsi)
+			return hnb_test_nas_tx_dt(hnb, gen_nas_tmsi_realloc_compl());
+		else
+			return 0;
 
 	case GSM48_MT_MM_INFO:
 		hnb_test_nas_rx_mm_info(rxm);
