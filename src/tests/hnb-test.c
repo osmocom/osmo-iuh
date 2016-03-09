@@ -341,6 +341,10 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 		else
 			return 0;
 
+	case GSM48_MT_MM_LOC_UPD_REJECT:
+		printf("Received Location Update Reject\n");
+		return 0;
+
 	case GSM48_MT_MM_INFO:
 		hnb_test_nas_rx_mm_info(rxm);
 		return 0;
