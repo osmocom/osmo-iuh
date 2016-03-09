@@ -209,6 +209,17 @@ static struct msgb *gen_nas_tmsi_realloc_compl()
 	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
 }
 
+static struct msgb *gen_nas_auth_resp()
+{
+	uint8_t id_resp[] = {
+		GSM48_PDISC_MM,
+		GSM48_MT_MM_AUTH_RESP,
+		0x61, 0xb5, 0x69, 0xf5 /* hardcoded SRES */
+	};
+
+	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
+}
+
 static int hnb_test_nas_tx_dt(struct hnb_test *hnb, struct msgb *txm)
 {
 	struct hnbtest_chan *chan;
@@ -313,6 +324,33 @@ void hnb_test_nas_rx_mm_info(struct msgb *rxm)
 	}
 }
 
+static void hnb_test_nas_rx_auth_req(struct msgb *rxm)
+{
+	struct gsm48_hdr *gh;
+	struct gsm48_auth_req *ar;
+	int parse_res;
+	int length = msgb_l3len(rxm);
+
+	if (length < sizeof(*gh)) {
+		printf("GSM48 header does not fit.\n");
+		return;
+	}
+
+	gh = (struct gsm48_hdr *) msgb_l3(rxm);
+	length -= (const char *)&gh->data[0] - (const char *)gh;
+
+	if (length < sizeof(*ar)) {
+		printf("GSM48 Auth Req does not fit.\n");
+		return;
+	}
+
+	printf(" :) Authentication Request :)\n");
+
+	ar = (struct gsm48_auth_req*) &gh->data[0];
+	int seq = ar->key_seq;
+	printf("seq %d rand %s\n", seq, osmo_hexdump(ar->rand, sizeof(ar->rand)));
+}
+
 static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 {
 	struct hnbtest_chan *chan;
@@ -348,6 +386,10 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 	case GSM48_MT_MM_INFO:
 		hnb_test_nas_rx_mm_info(rxm);
 		return 0;
+
+	case GSM48_MT_MM_AUTH_REQ:
+		hnb_test_nas_rx_auth_req(rxm);
+		return hnb_test_nas_tx_dt(hnb, gen_nas_auth_resp());
 
 	default:
 		printf("04.08 message type not handled by hnb-test: 0x%x\n",
