@@ -225,6 +225,31 @@ static int hnb_test_nas_tx_dt(struct hnb_test *hnb, struct msgb *txm)
 	return 0;
 }
 
+static struct tlv_parsed *parse_mm(struct msgb *rxm)
+{
+	static struct tlv_parsed tp;
+	struct gsm48_hdr *gh;
+	int parse_res;
+	int length = msgb_l3len(rxm);
+
+	if (length < sizeof(*gh)) {
+		printf("GSM48 header does not fit.\n");
+		return NULL;
+	}
+
+	gh = (struct gsm48_hdr *) msgb_l3(rxm);
+	length -= (const char *)&gh->data[0] - (const char *)gh;
+
+	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], length, 0, 0);
+	if (parse_res <= 0) {
+		uint8_t msg_type = gh->msg_type & 0xbf;
+		printf("Error parsing MM message 0x%hhx: %d\n", msg_type, parse_res);
+		return NULL;
+	}
+
+	return &tp;
+}
+
 int hnb_test_nas_rx_lu_accept(struct msgb *rxm, int *sent_tmsi)
 {
 	printf(" :D Location Update Accept :D\n");
@@ -267,42 +292,25 @@ int hnb_test_nas_rx_lu_accept(struct msgb *rxm, int *sent_tmsi)
 void hnb_test_nas_rx_mm_info(struct msgb *rxm)
 {
 	printf(" :) MM Info :)\n");
-	struct gsm48_hdr *gh;
-	struct tlv_parsed tp;
-	int parse_res;
-	int length = msgb_l3len(rxm);
-
-	if (length < sizeof(*gh)) {
-		printf("GSM48 header does not fit.\n");
+	struct tlv_parsed *tp = parse_mm(rxm);
+	if (!tp)
 		return;
-	}
 
-	gh = (struct gsm48_hdr *) msgb_l3(rxm);
-	length -= (const char *)&gh->data[0] - (const char *)gh;
-
-	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], length, 0, 0);
-	if (parse_res <= 0) {
-		printf("Error parsing MM Info message: %d\n", parse_res);
-		return;
-	}
-
-	if (TLVP_PRESENT(&tp, GSM48_IE_NAME_SHORT)) {
+	if (TLVP_PRESENT(tp, GSM48_IE_NAME_SHORT)) {
 		char name[128] = {0};
 		gsm_7bit_decode_n(name, 127,
-				  TLVP_VAL(&tp, GSM48_IE_NAME_SHORT)+1,
-				  (TLVP_LEN(&tp, GSM48_IE_NAME_SHORT)-1)*8/7);
+				  TLVP_VAL(tp, GSM48_IE_NAME_SHORT)+1,
+				  (TLVP_LEN(tp, GSM48_IE_NAME_SHORT)-1)*8/7);
 		printf("Info: Short Network Name: %s\n", name);
 	}
 
-	if (TLVP_PRESENT(&tp, GSM48_IE_NAME_LONG)) {
+	if (TLVP_PRESENT(tp, GSM48_IE_NAME_LONG)) {
 		char name[128] = {0};
 		gsm_7bit_decode_n(name, 127,
-				  TLVP_VAL(&tp, GSM48_IE_NAME_LONG)+1,
-				  (TLVP_LEN(&tp, GSM48_IE_NAME_LONG)-1)*8/7);
+				  TLVP_VAL(tp, GSM48_IE_NAME_LONG)+1,
+				  (TLVP_LEN(tp, GSM48_IE_NAME_LONG)-1)*8/7);
 		printf("Info: Long Network Name: %s\n", name);
 	}
-
-	return;
 }
 
 static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
