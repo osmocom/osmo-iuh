@@ -56,8 +56,8 @@ static int transmit_rst(struct hnbgw_cnlink *cnlink)
 
 	msg = ranap_new_msg_reset(domain, &cause);
 
-	return sccp_tx_unitdata_msg(cnlink->sua_link, &cnlink->local_addr,
-				    &cnlink->remote_addr, msg);
+	return osmo_sccp_tx_unitdata_msg(cnlink->sua_link, &cnlink->local_addr,
+					 &cnlink->remote_addr, msg);
 }
 
 /* Timer callback once T_RafC expires */
@@ -356,8 +356,10 @@ struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint
 	cnlink->T_RafC.data = cnlink;
 	cnlink->next_conn_id = 1000;
 	cnlink->is_ps = is_ps;
-	sccp_make_addr_pc_ssn(&cnlink->local_addr, 2, OSMO_SCCP_SSN_RANAP);
-	sccp_make_addr_pc_ssn(&cnlink->remote_addr, 1, OSMO_SCCP_SSN_RANAP);
+	osmo_sccp_make_addr_pc_ssn(&cnlink->local_addr, 2,
+				   OSMO_SCCP_SSN_RANAP);
+	osmo_sccp_make_addr_pc_ssn(&cnlink->remote_addr, 1,
+				   OSMO_SCCP_SSN_RANAP);
 
 	cnlink->sua_user = osmo_sua_user_create(cnlink, sccp_sap_up, cnlink);
 	if (!cnlink->sua_user) {
