@@ -303,6 +303,11 @@ static int handle_cn_disc_ind(void *slink,
 	struct hnbgw_context_map *map;
 	struct hnbgw_cnlink *cnlink = osmo_sua_link_get_user_priv(slink);
 
+	LOGP(DMAIN, LOGL_DEBUG, "handle_cn_disc_ind() conn_id=%d originator=%d\n",
+	     param->conn_id, param->originator);
+	LOGP(DMAIN, LOGL_DEBUG, "handle_cn_disc_ind() responding_addr=%s\n",
+	     inet_ntoa(param->responding_addr.ip.v4));
+
 	RUA_Cause_t rua_cause = {
 		.present = RUA_Cause_PR_NOTHING,
 		/* FIXME: Convert incoming SCCP cause to RUA cause */
