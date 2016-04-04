@@ -295,7 +295,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *link)
 
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
-		.name = "DMAIN", .loglevel = LOGL_INFO, .enabled = 1,
+		.name = "DMAIN", .loglevel = LOGL_DEBUG, .enabled = 1,
 		.color = "",
 		.description = "Main program",
 	},
