@@ -249,6 +249,10 @@ static struct tlv_parsed *parse_mm(struct msgb *rxm)
 	}
 
 	gh = (struct gsm48_hdr *) msgb_l3(rxm);
+	if (!gh) {
+		printf("received msg buffer with invalid layer 3. Ignoring.\n");
+		return -1;
+	}
 	length -= (const char *)&gh->data[0] - (const char *)gh;
 
 	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], length, 0, 0);
@@ -274,6 +278,10 @@ int hnb_test_nas_rx_lu_accept(struct msgb *rxm, int *sent_tmsi)
 	}
 
 	gh = (struct gsm48_hdr *)msgb_l3(rxm);
+	if (!gh) {
+		printf("received msg buffer with invalid layer 3. Ignoring.\n");
+		return -1;
+	}
 	lai = (struct gsm48_loc_area_id *)&gh->data[0];
 
 	uint16_t mcc, mnc, lac;
@@ -337,6 +345,10 @@ static void hnb_test_nas_rx_auth_req(struct msgb *rxm)
 	}
 
 	gh = (struct gsm48_hdr *) msgb_l3(rxm);
+	if (!gh) {
+		printf("received msg buffer with invalid layer 3. Ignoring.\n");
+		return -1;
+	}
 	length -= (const char *)&gh->data[0] - (const char *)gh;
 
 	if (length < sizeof(*ar)) {
@@ -364,6 +376,10 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 	OSMO_ASSERT(!chan->is_ps);
 
 	struct gsm48_hdr *gh = msgb_l3(rxm);
+	if (!gh) {
+		printf("received msg buffer with invalid layer 3. Ignoring.\n");
+		return -1;
+	}
 	uint8_t msg_type = gsm48_hdr_msg_type(gh);
 	int sent_tmsi;
 
@@ -407,6 +423,10 @@ static int hnb_test_nas_rx_dtap(struct hnb_test *hnb, struct msgb *msg)
 	//            '05 04 0d' ==> LU reject
 
 	struct gsm48_hdr *gh = msgb_l3(msg);
+	if (!gh) {
+		printf("received msg buffer with invalid layer 3. Ignoring.\n");
+		return -1;
+	}
 	uint8_t pdisc = gsm48_hdr_pdisc(gh);
 
 	switch (pdisc) {
