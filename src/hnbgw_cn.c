@@ -263,6 +263,15 @@ static int handle_cn_conn_conf(void *slink,
 	 * doesn't seem to know any confirmations to its CONNECT
 	 * operation */
 
+	LOGP(DMAIN, LOGL_DEBUG, "handle_cn_conn_conf() conn_id=%d\n",
+	     param->conn_id);
+	LOGP(DMAIN, LOGL_DEBUG, "handle_cn_conn_conf() called_addr=%s\n",
+	     inet_ntoa(param->called_addr.ip.v4));
+	LOGP(DMAIN, LOGL_DEBUG, "handle_cn_conn_conf() calling_addr=%s\n",
+	     inet_ntoa(param->calling_addr.ip.v4));
+	LOGP(DMAIN, LOGL_DEBUG, "handle_cn_conn_conf() responding_addr=%s\n",
+	     inet_ntoa(param->responding_addr.ip.v4));
+
 	return 0;
 }
 
