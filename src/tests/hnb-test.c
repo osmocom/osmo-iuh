@@ -417,7 +417,7 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 
 static int hnb_test_nas_rx_dtap(struct hnb_test *hnb, struct msgb *msg)
 {
-	printf("got %s\n", osmo_hexdump(msg->data, msg->len));
+	printf("got %d bytes: %s\n", msg->len, osmo_hexdump(msg->data, msg->len));
 
 	// nas_pdu == '05 08 12' ==> IMEI Identity request
 	//            '05 04 0d' ==> LU reject
