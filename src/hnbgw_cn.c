@@ -346,6 +346,8 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *slink)
 }
 
 
+/* Set up a link towards the core network for the circuit switched (is_ps == 0)
+ * or packet switched (is_ps != 0) domain. */
 struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint16_t port, int is_ps)
 {
 	struct hnbgw_cnlink *cnlink = talloc_zero(gw, struct hnbgw_cnlink);
