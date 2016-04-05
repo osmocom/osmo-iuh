@@ -255,6 +255,8 @@ static struct tlv_parsed *parse_mm(struct msgb *rxm)
 	}
 	length -= (const char *)&gh->data[0] - (const char *)gh;
 
+	OSMO_ASSERT(gsm48_hdr_pdisc(gh) == GSM48_PDISC_MM);
+
 	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], length, 0, 0);
 	if (parse_res <= 0) {
 		uint8_t msg_type = gsm48_hdr_msg_type(gh);
