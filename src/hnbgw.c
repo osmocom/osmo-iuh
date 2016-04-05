@@ -404,6 +404,7 @@ int main(int argc, char **argv)
 	talloc_asn1_ctx = talloc_named_const(NULL, 0, "asn1_context");
 
 	g_hnb_gw = hnb_gw_create(tall_hnb_ctx);
+	g_hnb_gw->config.rnc_id = 23;
 
 	rc = osmo_init_logging(&hnbgw_log_info);
 	if (rc < 0)
