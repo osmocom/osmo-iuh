@@ -213,7 +213,7 @@ static struct msgb *gen_nas_auth_resp()
 {
 	uint8_t id_resp[] = {
 		GSM48_PDISC_MM,
-		GSM48_MT_MM_AUTH_RESP,
+		0x80 | GSM48_MT_MM_AUTH_RESP, /* simulate sequence nr 2 */
 		0x61, 0xb5, 0x69, 0xf5 /* hardcoded SRES */
 	};
 
