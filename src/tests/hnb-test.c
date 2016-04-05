@@ -253,7 +253,7 @@ static struct tlv_parsed *parse_mm(struct msgb *rxm)
 
 	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], length, 0, 0);
 	if (parse_res <= 0) {
-		uint8_t msg_type = gh->msg_type & 0xbf;
+		uint8_t msg_type = gsm48_hdr_msg_type(gh);
 		printf("Error parsing MM message 0x%hhx: %d\n", msg_type, parse_res);
 		return NULL;
 	}
@@ -364,7 +364,7 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 	OSMO_ASSERT(!chan->is_ps);
 
 	struct gsm48_hdr *gh = msgb_l3(rxm);
-	uint8_t msg_type = gh->msg_type & 0xbf;
+	uint8_t msg_type = gsm48_hdr_msg_type(gh);
 	int sent_tmsi;
 
 	switch (msg_type) {
@@ -407,7 +407,7 @@ static int hnb_test_nas_rx_dtap(struct hnb_test *hnb, struct msgb *msg)
 	//            '05 04 0d' ==> LU reject
 
 	struct gsm48_hdr *gh = msgb_l3(msg);
-	uint8_t pdisc = gh->proto_discr & 0x0f;
+	uint8_t pdisc = gsm48_hdr_pdisc(gh);
 
 	switch (pdisc) {
 	case GSM48_PDISC_MM:
