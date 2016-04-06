@@ -18,14 +18,19 @@
  *
  */
 
+#include "test_common.h"
 
 #include <osmocom/ranap/iu_helpers.h>
+#include <osmocom/ranap/ranap_common.h>
 #include "asn1helpers.h"
 
 #include <assert.h>
 #define ASSERT(x)	assert(x)
 
 #include <osmocom/core/utils.h>
+#include <osmocom/gsm/gsm48.h>
+
+#include <osmocom/ranap/RANAP_LAI.h>
 
 int asn1_xer_print = 0;
 void *talloc_asn1_ctx;
@@ -93,7 +98,8 @@ void test_asn1_helpers(void)
 	printf("Decoding back to uint32_t: 0x%x\n", res);
 	ASSERT(res == val1);
 
-	printf("Encoding %s to 24-bit asn.1 bitstring\n", osmo_hexdump_nospc(&val1, 3));
+	printf("Encoding %s to 24-bit asn.1 bitstring\n",
+	       osmo_hexdump_nospc((unsigned char*)&val1, 3));
 	asn1_u24_to_bitstring(&enc, &tmpval, val1);
 
 	ASSERT(enc.size == 24/8);
@@ -114,10 +120,96 @@ void test_asn1_helpers(void)
 
 }
 
+void test_ranap_common(void)
+{
+	uint8_t plmnid_buf[] = { 0x21, 0xf3, 0x54 };
+	uint8_t lac_buf[] = { 0xab, 0xcd };
+
+	struct gprs_ra_id ra_id = {0};
+
+	int rc;
+	
+	RANAP_LAI_t lai = {
+		.pLMNidentity = {
+			.buf = plmnid_buf,
+			.size = 3
+		},
+		.lAC = {
+			.buf = lac_buf,
+			.size = 2
+		}
+	};
+
+	printf("Testing ranap common functions\n");
+
+	printf("PLMN-Id [ %s]", osmo_hexdump((char*)lai.pLMNidentity.buf,
+					     lai.pLMNidentity.size));
+	printf(", LAC [ %s]\n", osmo_hexdump((char*)lai.lAC.buf,
+					     lai.lAC.size));
+
+	rc = ranap_parse_lai(&ra_id, &lai);
+	printf(" rc == %d\n", rc);
+	OSMO_ASSERT(rc == 0);
+	printf(" mcc == %d mnc == %d\n", ra_id.mcc, ra_id.mnc);
+	OSMO_ASSERT(ra_id.mcc == 123);
+	OSMO_ASSERT(ra_id.mnc == 45);
+	printf(" lac == 0x%x\n", ra_id.lac);
+	OSMO_ASSERT(ra_id.lac == 0xabcd);
+
+
+	/* three digit MNC */
+	uint8_t plmnid_buf_mnc3[] = { 0x21, 0x43, 0x65 };
+	lai.pLMNidentity.buf = plmnid_buf_mnc3;
+
+	printf("PLMN-Id [ %s]", osmo_hexdump((char*)lai.pLMNidentity.buf,
+					     lai.pLMNidentity.size));
+	printf(", LAC [ %s]\n", osmo_hexdump((char*)lai.lAC.buf,
+					     lai.lAC.size));
+
+	rc = ranap_parse_lai(&ra_id, &lai);
+	printf(" rc == %d\n", rc);
+	OSMO_ASSERT(rc == 0);
+	printf(" mcc == %d mnc == %d\n", ra_id.mcc, ra_id.mnc);
+	OSMO_ASSERT(ra_id.mcc == 123);
+	OSMO_ASSERT(ra_id.mnc == 456);
+	printf(" lac == 0x%x\n", ra_id.lac);
+	OSMO_ASSERT(ra_id.lac == 0xabcd);
+
+
+	/* wrong PLMN-Id size */
+	lai.pLMNidentity.size = 2;
+
+	printf("PLMN-Id [ %s]", osmo_hexdump((char*)lai.pLMNidentity.buf,
+					     lai.pLMNidentity.size));
+	printf(", LAC [ %s]\n", osmo_hexdump((char*)lai.lAC.buf,
+					     lai.lAC.size));
+
+	rc = ranap_parse_lai(&ra_id, &lai);
+	printf(" rc == %d\n", rc);
+	OSMO_ASSERT(rc == -1);
+
+
+	/* wrong LAC size */
+	lai.pLMNidentity.size = 3;
+	lai.lAC.size = 1;
+
+	printf("PLMN-Id [ %s]", osmo_hexdump((char*)lai.pLMNidentity.buf,
+					  lai.pLMNidentity.size));
+	printf(", LAC [ %s]\n", osmo_hexdump((char*)lai.lAC.buf,
+					     lai.lAC.size));
+
+	rc = ranap_parse_lai(&ra_id, &lai);
+	printf(" rc == %d\n", rc);
+	OSMO_ASSERT(rc == -1);
+}
+
 int main(int argc, char **argv)
 {
+	test_common_init();
+
 	test_iu_helpers();
 	test_asn1_helpers();
+	test_ranap_common();
 
 	return 0;
 }

@@ -508,8 +508,8 @@ int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai)
 	ra_id->mcc = (ptr[0] & 0xF) * 100 +
 		     (ptr[0] >> 4) * 10 +
 		     (ptr[1] & 0xF);
-	ra_id->mnc = (ptr[2] & 0xF) +
-		     (ptr[2] >> 4) * 10;
+	ra_id->mnc = (ptr[2] & 0xF) * 10 +
+		     (ptr[2] >> 4);
 	if ((ptr[1] >> 4) != 0xF)
 		ra_id->mnc += (ptr[1] >> 4) * 100;
 

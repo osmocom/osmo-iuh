@@ -5,7 +5,8 @@ AT_BANNER([Regression tests.])
 AT_SETUP([helpers])
 AT_KEYWORDS([helpers])
 cat $abs_srcdir/test-helpers.ok > expout
-AT_CHECK([$abs_top_builddir/src/tests/test-helpers], [0], [expout])
+cat $abs_srcdir/test-helpers.err > experr
+AT_CHECK([$abs_top_builddir/src/tests/test-helpers], [0], [expout], [experr])
 AT_CLEANUP
 
 AT_SETUP([hnbap])

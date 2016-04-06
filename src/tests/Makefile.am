@@ -7,7 +7,7 @@ check_PROGRAMS = test-ranap test-helpers test-hnbap hnb-test dummy-cn
 HNBAP_FILES = $(top_srcdir)/src/hnbap_common.c $(top_srcdir)/src/hnbap_decoder.c $(top_srcdir)/src/hnbap_encoder.c
 RUA_FILES = $(top_srcdir)/src/rua_common.c $(top_srcdir)/src/rua_decoder.c $(top_srcdir)/src/rua_encoder.c $(top_srcdir)/src/rua_msg_factory.c
 
-test_helpers_SOURCES = test-helpers.c
+test_helpers_SOURCES = test-helpers.c test_common.c
 test_helpers_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 
 test_hnbap_SOURCES = $(top_srcdir)/src/hnbap_common.c $(top_srcdir)/src/hnbap_decoder.c test-hnbap.c test_common.c
