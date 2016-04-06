@@ -499,8 +499,11 @@ int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai)
 	uint8_t *ptr = lai->pLMNidentity.buf;
 
 	/* TS 25.413 9.2.3.55 */
-	if (lai->pLMNidentity.size != 3)
+	if (lai->pLMNidentity.size != 3) {
+		LOGP(DRANAP, LOGL_ERROR, "Invalid PLMN Identity size:"
+		     " should be 3, is %d\n", lai->pLMNidentity.size);
 		return -1;
+	}
 
 	ra_id->mcc = (ptr[0] & 0xF) * 100 +
 		     (ptr[0] >> 4) * 10 +
@@ -510,11 +513,20 @@ int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai)
 	if ((ptr[1] >> 4) != 0xF)
 		ra_id->mnc += (ptr[1] >> 4) * 100;
 
+	if (lai->lAC.size != 2) {
+		LOGP(DRANAP, LOGL_ERROR, "Invalid LAC size:"
+		     " should be 2, is %d\n", lai->lAC.size);
+		return -1;
+	}
+
 	ra_id->lac = asn1str_to_u16(&lai->lAC);
 
 	/* TS 25.413 9.2.3.6 */
-	if (ra_id->lac == 0 || ra_id->lac == 0xfffe)
+	if (ra_id->lac == 0 || ra_id->lac == 0xfffe) {
+		LOGP(DRANAP, LOGL_ERROR, "Invalid LAC: 0x%hx\n",
+		     ra_id->lac);
 		return -1;
+	}
 
 	return 0;
 }
