@@ -12,6 +12,8 @@ As external library dependencies, you will need
 * libosmocore from git://git.osmocom.org/libosmocore
 * libasn1c from git://git.osmocom.org/libasn1c
 * libsctp-dev (this is the package name in Debian)
+* libosmo-netif from git://git.osmocom.org/libosmo-netif (sysmocom/sctp branch)
+* libosmo-sccp from git://git.osmocom.org/libosmo-sccp (sysmocom/iu branch)
 
 To bootstrap the build, in the root directory, run:
 
