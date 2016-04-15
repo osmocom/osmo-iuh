@@ -18,6 +18,8 @@
  *
  */
 
+#include <arpa/inet.h>
+
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/core/timer.h>
