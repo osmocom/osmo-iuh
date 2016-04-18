@@ -225,7 +225,7 @@ static struct msgb *gen_nas_auth_resp(uint8_t *sres)
 	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
 }
 
-static int hnb_test_nas_tx_dt(struct hnb_test *hnb, struct msgb *txm)
+static int hnb_test_tx_dt(struct hnb_test *hnb, struct msgb *txm)
 {
 	struct hnbtest_chan *chan;
 	struct msgb *rua;
@@ -354,7 +354,7 @@ static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct gsm48_hdr *gh,
 	printf(" --> sres %s\n",
 	       osmo_hexdump(vec.sres, 4));
 
-	return hnb_test_nas_tx_dt(hnb, gen_nas_auth_resp(vec.sres));
+	return hnb_test_tx_dt(hnb, gen_nas_auth_resp(vec.sres));
 }
 
 static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct gsm48_hdr *gh, int len)
@@ -374,13 +374,13 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct gsm48_hdr *gh, int le
 
 	switch (msg_type) {
 	case GSM48_MT_MM_ID_REQ:
-		return hnb_test_nas_tx_dt(hnb, gen_nas_id_resp());
+		return hnb_test_tx_dt(hnb, gen_nas_id_resp());
 
 	case GSM48_MT_MM_LOC_UPD_ACCEPT:
 		if (hnb_test_nas_rx_lu_accept(gh, len, &sent_tmsi))
 			return -1;
 		if (sent_tmsi)
-			return hnb_test_nas_tx_dt(hnb, gen_nas_tmsi_realloc_compl());
+			return hnb_test_tx_dt(hnb, gen_nas_tmsi_realloc_compl());
 		else
 			return 0;
 
