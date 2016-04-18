@@ -48,6 +48,8 @@
 #include <osmocom/vty/logging.h>
 #include <osmocom/vty/command.h>
 
+#include <osmocom/crypt/auth.h>
+
 #include "hnb-test.h"
 #include "hnbap_common.h"
 #include "hnbap_ies_defs.h"
@@ -209,13 +211,15 @@ static struct msgb *gen_nas_tmsi_realloc_compl()
 	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
 }
 
-static struct msgb *gen_nas_auth_resp()
+static struct msgb *gen_nas_auth_resp(uint8_t *sres)
 {
 	uint8_t id_resp[] = {
 		GSM48_PDISC_MM,
 		0x80 | GSM48_MT_MM_AUTH_RESP, /* simulate sequence nr 2 */
 		0x61, 0xb5, 0x69, 0xf5 /* hardcoded SRES */
 	};
+
+	memcpy(id_resp + 2, sres, 4);
 
 	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
 }
@@ -334,7 +338,7 @@ void hnb_test_nas_rx_mm_info(struct msgb *rxm)
 	}
 }
 
-static void hnb_test_nas_rx_auth_req(struct msgb *rxm)
+static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct msgb *rxm)
 {
 	struct gsm48_hdr *gh;
 	struct gsm48_auth_req *ar;
@@ -362,7 +366,29 @@ static void hnb_test_nas_rx_auth_req(struct msgb *rxm)
 
 	ar = (struct gsm48_auth_req*) &gh->data[0];
 	int seq = ar->key_seq;
-	printf("seq %d rand %s\n", seq, osmo_hexdump(ar->rand, sizeof(ar->rand)));
+
+	/* Generate SRES from *HARDCODED* Ki for Iuh testing */
+	struct osmo_auth_vector vec;
+	/* Ki 000102030405060708090a0b0c0d0e0f */
+	struct osmo_sub_auth_data auth = {
+		.type	= OSMO_AUTH_TYPE_GSM,
+		.algo	= OSMO_AUTH_ALG_COMP128v1,
+		.u.gsm.ki = {
+			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+			0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d,
+			0x0e, 0x0f
+		},
+	};
+
+	memset(&vec, 0, sizeof(vec));
+	osmo_auth_gen_vec(&vec, &auth, ar->rand);
+
+	printf("seq %d rand %s",
+	       seq, osmo_hexdump(ar->rand, sizeof(ar->rand)));
+	printf(" --> sres %s\n",
+	       osmo_hexdump(vec.sres, 4));
+
+	return hnb_test_nas_tx_dt(hnb, gen_nas_auth_resp(vec.sres));
 }
 
 static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
@@ -406,8 +432,7 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 		return 0;
 
 	case GSM48_MT_MM_AUTH_REQ:
-		hnb_test_nas_rx_auth_req(rxm);
-		return hnb_test_nas_tx_dt(hnb, gen_nas_auth_resp());
+		return hnb_test_nas_rx_auth_req(hnb, rxm);
 
 	default:
 		printf("04.08 message type not handled by hnb-test: 0x%x\n",
