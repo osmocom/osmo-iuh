@@ -1,0 +1,15 @@
+#pragma once
+
+struct ANY;
+struct ranap_message_s;
+struct hnb_test;
+
+/* main calls RUA */
+void hnb_test_rua_dt_handle(struct hnb_test *hnb, struct ANY *in);
+
+/* RUA calls RANAP */
+void hnb_test_rua_dt_handle_ranap(struct hnb_test *hnb,
+				  struct ranap_message_s *ranap_msg);
+
+/* RANAP calls main with actual payload*/
+void hnb_test_nas_rx_dtap(struct hnb_test *hnb, void *data, int len);

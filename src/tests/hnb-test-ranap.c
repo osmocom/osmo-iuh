@@ -1,6 +1,8 @@
 #include <osmocom/core/msgb.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
 
+#include "hnb-test-layers.h"
+
 static const char *printstr(OCTET_STRING_t *s)
 {
 	return osmo_hexdump((char*)s->buf, s->size);
@@ -10,38 +12,25 @@ static const char *printstr(OCTET_STRING_t *s)
 	printf(#octet_string_t " = %s\n",\
 	       printstr(&octet_string_t))
 
-void ranap_msg_dt_print(void *ctx, ranap_message *ranap_msg)
+void hnb_test_rua_dt_handle_ranap(struct hnb_test *hnb,
+				  struct ranap_message_s *ranap_msg)
 {
-	OSMO_ASSERT(ranap_msg->procedureCode ==
-		    RANAP_ProcedureCode_id_DirectTransfer);
+	int len;
+	char *data;
 
-	printf("rx DirectTransfer: presence = %hx\n", ranap_msg->msg.directTransferIEs.presenceMask);
-	PP(ranap_msg->msg.directTransferIEs.nas_pdu);
-	
-/*
-typedef struct RANAP_DirectTransferIEs_s {
-    uint16_t  presenceMask;
-    RANAP_NAS_PDU_t nas_pdu;
-    RANAP_LAI_t lai; ///< Optional field
-    RANAP_RAC_t rac; ///< Optional field
-    RANAP_SAI_t sai; ///< Optional field
-    RANAP_SAPI_t sapi; ///< Optional field
-} RANAP_DirectTransferIEs_t;
-*/
-}
+	printf("rx ranap_msg->procedureCode %d\n",
+	       ranap_msg->procedureCode);
 
-void ranap_msg_dt_get(void *ctx, ranap_message *ranap_msg)
-{
-	struct msgb *m = ctx;
-	OSMO_ASSERT(ranap_msg->procedureCode ==
-		    RANAP_ProcedureCode_id_DirectTransfer);
+	switch (ranap_msg->procedureCode) {
+	case RANAP_ProcedureCode_id_DirectTransfer:
+		printf("rx DirectTransfer: presence = %hx\n",
+		       ranap_msg->msg.directTransferIEs.presenceMask);
+		PP(ranap_msg->msg.directTransferIEs.nas_pdu);
 
-	printf("rx DirectTransfer: presence = %hx\n", ranap_msg->msg.directTransferIEs.presenceMask);
-	PP(ranap_msg->msg.directTransferIEs.nas_pdu);
+		len = ranap_msg->msg.directTransferIEs.nas_pdu.size;
+		data = ranap_msg->msg.directTransferIEs.nas_pdu.buf;
 
-	int len = ranap_msg->msg.directTransferIEs.nas_pdu.size;
-	char *data = ranap_msg->msg.directTransferIEs.nas_pdu.buf;
-
-	m->l3h = m->data;
-	memcpy(msgb_put(m, len), data, len);
+		hnb_test_nas_rx_dtap(hnb, data, len);
+		return;
+	}
 }

@@ -51,6 +51,7 @@
 #include <osmocom/crypt/auth.h>
 
 #include "hnb-test.h"
+#include "hnb-test-layers.h"
 #include "hnbap_common.h"
 #include "hnbap_ies_defs.h"
 #include "rua_msg_factory.h"
@@ -240,28 +241,16 @@ static int hnb_test_nas_tx_dt(struct hnb_test *hnb, struct msgb *txm)
 	return 0;
 }
 
-static struct tlv_parsed *parse_mm(struct msgb *rxm)
+static struct tlv_parsed *parse_mm(struct gsm48_hdr *gh, int len)
 {
 	static struct tlv_parsed tp;
-	struct gsm48_hdr *gh;
 	int parse_res;
-	int length = msgb_l3len(rxm);
 
-	if (length < sizeof(*gh)) {
-		printf("GSM48 header does not fit.\n");
-		return NULL;
-	}
-
-	gh = (struct gsm48_hdr *) msgb_l3(rxm);
-	if (!gh) {
-		printf("received msg buffer with invalid layer 3. Ignoring.\n");
-		return -1;
-	}
-	length -= (const char *)&gh->data[0] - (const char *)gh;
+	len -= (const char *)&gh->data[0] - (const char *)gh;
 
 	OSMO_ASSERT(gsm48_hdr_pdisc(gh) == GSM48_PDISC_MM);
 
-	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], length, 0, 0);
+	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], len, 0, 0);
 	if (parse_res <= 0) {
 		uint8_t msg_type = gsm48_hdr_msg_type(gh);
 		printf("Error parsing MM message 0x%hhx: %d\n", msg_type, parse_res);
@@ -271,23 +260,11 @@ static struct tlv_parsed *parse_mm(struct msgb *rxm)
 	return &tp;
 }
 
-int hnb_test_nas_rx_lu_accept(struct msgb *rxm, int *sent_tmsi)
+int hnb_test_nas_rx_lu_accept(struct gsm48_hdr *gh, int len, int *sent_tmsi)
 {
 	printf(" :D Location Update Accept :D\n");
-	struct gsm48_hdr *gh;
 	struct gsm48_loc_area_id *lai;
-	int length = msgb_l3len(rxm);
 
-	if (length < sizeof(*gh)) {
-		printf("GSM48 header does not fit.\n");
-		return -1;
-	}
-
-	gh = (struct gsm48_hdr *)msgb_l3(rxm);
-	if (!gh) {
-		printf("received msg buffer with invalid layer 3. Ignoring.\n");
-		return -1;
-	}
 	lai = (struct gsm48_loc_area_id *)&gh->data[0];
 
 	uint16_t mcc, mnc, lac;
@@ -298,8 +275,8 @@ int hnb_test_nas_rx_lu_accept(struct msgb *rxm, int *sent_tmsi)
 	struct tlv_parsed tp;
 	int parse_res;
 
-	length -= (const char *)&gh->data[0] - (const char *)gh;
-	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], length, 0, 0);
+	len -= (const char *)&gh->data[0] - (const char *)gh;
+	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], len, 0, 0);
 	if (parse_res <= 0) {
 		printf("Error parsing Location Update Accept message: %d\n", parse_res);
 		return -1;
@@ -314,10 +291,10 @@ int hnb_test_nas_rx_lu_accept(struct msgb *rxm, int *sent_tmsi)
 	return 0;
 }
 
-void hnb_test_nas_rx_mm_info(struct msgb *rxm)
+void hnb_test_nas_rx_mm_info(struct gsm48_hdr *gh, int len)
 {
 	printf(" :) MM Info :)\n");
-	struct tlv_parsed *tp = parse_mm(rxm);
+	struct tlv_parsed *tp = parse_mm(gh, len);
 	if (!tp)
 		return;
 
@@ -338,26 +315,15 @@ void hnb_test_nas_rx_mm_info(struct msgb *rxm)
 	}
 }
 
-static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct msgb *rxm)
+static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct gsm48_hdr *gh,
+				    int len)
 {
-	struct gsm48_hdr *gh;
 	struct gsm48_auth_req *ar;
 	int parse_res;
-	int length = msgb_l3len(rxm);
 
-	if (length < sizeof(*gh)) {
-		printf("GSM48 header does not fit.\n");
-		return;
-	}
+	len -= (const char *)&gh->data[0] - (const char *)gh;
 
-	gh = (struct gsm48_hdr *) msgb_l3(rxm);
-	if (!gh) {
-		printf("received msg buffer with invalid layer 3. Ignoring.\n");
-		return -1;
-	}
-	length -= (const char *)&gh->data[0] - (const char *)gh;
-
-	if (length < sizeof(*ar)) {
+	if (len < sizeof(*ar)) {
 		printf("GSM48 Auth Req does not fit.\n");
 		return;
 	}
@@ -391,7 +357,7 @@ static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct msgb *rxm)
 	return hnb_test_nas_tx_dt(hnb, gen_nas_auth_resp(vec.sres));
 }
 
-static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
+static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct gsm48_hdr *gh, int len)
 {
 	struct hnbtest_chan *chan;
 
@@ -403,11 +369,6 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 
 	OSMO_ASSERT(!chan->is_ps);
 
-	struct gsm48_hdr *gh = msgb_l3(rxm);
-	if (!gh) {
-		printf("received msg buffer with invalid layer 3. Ignoring.\n");
-		return -1;
-	}
 	uint8_t msg_type = gsm48_hdr_msg_type(gh);
 	int sent_tmsi;
 
@@ -416,7 +377,7 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 		return hnb_test_nas_tx_dt(hnb, gen_nas_id_resp());
 
 	case GSM48_MT_MM_LOC_UPD_ACCEPT:
-		if (hnb_test_nas_rx_lu_accept(rxm, &sent_tmsi))
+		if (hnb_test_nas_rx_lu_accept(gh, len, &sent_tmsi))
 			return -1;
 		if (sent_tmsi)
 			return hnb_test_nas_tx_dt(hnb, gen_nas_tmsi_realloc_compl());
@@ -428,11 +389,11 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 		return 0;
 
 	case GSM48_MT_MM_INFO:
-		hnb_test_nas_rx_mm_info(rxm);
+		hnb_test_nas_rx_mm_info(gh, len);
 		return 0;
 
 	case GSM48_MT_MM_AUTH_REQ:
-		return hnb_test_nas_rx_auth_req(hnb, rxm);
+		return hnb_test_nas_rx_auth_req(hnb, gh, len);
 
 	default:
 		printf("04.08 message type not handled by hnb-test: 0x%x\n",
@@ -442,30 +403,33 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct msgb *rxm)
 
 }
 
-static int hnb_test_nas_rx_dtap(struct hnb_test *hnb, struct msgb *msg)
+void hnb_test_nas_rx_dtap(struct hnb_test *hnb, void *data, int len)
 {
-	printf("got %d bytes: %s\n", msg->len, osmo_hexdump(msg->data, msg->len));
+	int rc;
+	printf("got %d bytes: %s\n", len, osmo_hexdump(data, len));
 
 	// nas_pdu == '05 08 12' ==> IMEI Identity request
 	//            '05 04 0d' ==> LU reject
 
-	struct gsm48_hdr *gh = msgb_l3(msg);
-	if (!gh) {
-		printf("received msg buffer with invalid layer 3. Ignoring.\n");
-		return -1;
+	struct gsm48_hdr *gh = data;
+	if (len < sizeof(*gh)) {
+		printf("hnb_test_nas_rx_dtap(): NAS PDU is too short: %d. Ignoring.\n",
+		       len);
+		return;
 	}
 	uint8_t pdisc = gsm48_hdr_pdisc(gh);
 
 	switch (pdisc) {
 	case GSM48_PDISC_MM:
-		return hnb_test_nas_rx_mm(hnb, msg);
+		rc = hnb_test_nas_rx_mm(hnb, gh, len);
+		if (rc != 0)
+			printf("Error receiving MM message: %d\n", rc);
+		return;
 	default:
 		printf("04.08 discriminator not handled by hnb-test: %d\n",
 		       pdisc);
-		return 0;
+		return;
 	}
-
-
 }
 
 int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
@@ -544,14 +508,7 @@ int hnb_test_rua_rx(struct hnb_test *hnb, struct msgb *msg)
 		break;
 	case RUA_ProcedureCode_id_DirectTransfer:
 		printf("RUA rx DirectTransfer\n");
-		{
-			struct msgb *m = msgb_alloc(1500, "direct_transfer_nas_pdu");
-			direct_transfer_nas_pdu_get(&pdu->choice.successfulOutcome.value, m);
-
-			hnb_test_nas_rx_dtap(hnb, m);
-
-			msgb_free(m);
-		}
+		hnb_test_rua_dt_handle(hnb, &pdu->choice.successfulOutcome.value);
 		break;
 	case RUA_ProcedureCode_id_Disconnect:
 		printf("RUA rx Disconnect\n");
