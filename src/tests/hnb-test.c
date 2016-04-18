@@ -432,6 +432,13 @@ void hnb_test_nas_rx_dtap(struct hnb_test *hnb, void *data, int len)
 	}
 }
 
+void hnb_test_rx_secmode_cmd(struct hnb_test *hnb, long ip_alg)
+{
+	printf(" :) Security Mode Command :)\n");
+	/* not caring about encryption yet, just pass 0 for No Encryption. */
+	hnb_test_tx_dt(hnb, ranap_new_msg_sec_mod_compl(ip_alg, 0));
+}
+
 int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 {
 	HNBAP_PDU_t _pdu, *pdu = &_pdu;
