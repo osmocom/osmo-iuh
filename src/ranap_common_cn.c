@@ -63,6 +63,11 @@ static int cn_ranap_rx_initiating_msg_co(void *ctx, RANAP_InitiatingMessage_t *i
 	case RANAP_ProcedureCode_id_RAB_ModifyRequest:
 		rc = ranap_decode_rab_modifyrequesties(&message->msg.raB_ModifyRequestIEs, &imsg->value);
 		break;
+	case RANAP_ProcedureCode_id_SecurityModeControl:
+		/* Only an RNC will receive a Security Mode Control as
+		 * Initiating Message, in other words: only hnb-test. */
+		rc = ranap_decode_securitymodecommandies(&message->msg.securityModeCommandIEs, &imsg->value);
+		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
 		     "Procedure %s (CO, IM) from RNC, ignoring\n",
@@ -96,6 +101,11 @@ static void cn_ranap_free_initiating_msg_co(ranap_message *message)
 		break;
 	case RANAP_ProcedureCode_id_RAB_ModifyRequest:
 		ranap_free_rab_modifyrequesties(&message->msg.raB_ModifyRequestIEs);
+		break;
+	case RANAP_ProcedureCode_id_SecurityModeControl:
+		/* Only an RNC will receive a Security Mode Control as
+		 * Initiating Message, in other words: only hnb-test. */
+		ranap_free_securitymodecommandies(&message->msg.securityModeCommandIEs);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Not freeing suspicious RANAP "
