@@ -263,6 +263,7 @@ struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck)
 	return msg;
 }
 
+/*! \brief generate RANAP SECURITY MODE COMPLETE message */
 struct msgb *ranap_new_msg_sec_mod_compl(
 	RANAP_ChosenIntegrityProtectionAlgorithm_t chosen_ip_alg,
 	RANAP_ChosenEncryptionAlgorithm_t chosen_enc_alg)
