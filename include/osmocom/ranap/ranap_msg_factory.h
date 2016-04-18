@@ -4,12 +4,19 @@
 #include <osmocom/ranap/RANAP_Cause.h>
 #include <osmocom/ranap/RANAP_CN-DomainIndicator.h>
 #include <osmocom/ranap/RANAP_GlobalRNC-ID.h>
+#include <osmocom/ranap/RANAP_ChosenIntegrityProtectionAlgorithm.h>
+#include <osmocom/ranap/RANAP_ChosenEncryptionAlgorithm.h>
 
 /*! \brief generate RANAP DIRECT TRANSFER message */
 struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas_len);
 
 /*! \brief generate RANAP SECURITY MODE COMMAND message */
 struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck);
+
+/*! \brief generate RANAP SECURITY MODE COMPLETE message */
+struct msgb *ranap_new_msg_sec_mod_compl(
+	RANAP_ChosenIntegrityProtectionAlgorithm_t chosen_ip_alg,
+	RANAP_ChosenEncryptionAlgorithm_t chosen_enc_alg);
 
 /*! \brief generate RANAP COMMON ID message */
 struct msgb *ranap_new_msg_common_id(const char *imsi);

@@ -263,6 +263,37 @@ struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck)
 	return msg;
 }
 
+struct msgb *ranap_new_msg_sec_mod_compl(
+	RANAP_ChosenIntegrityProtectionAlgorithm_t chosen_ip_alg,
+	RANAP_ChosenEncryptionAlgorithm_t chosen_enc_alg)
+{
+	RANAP_SecurityModeCompleteIEs_t ies;
+	RANAP_SecurityModeComplete_t out;
+	struct msgb *msg;
+	int i, rc;
+
+	memset(&ies, 0, sizeof(ies));
+	memset(&out, 0, sizeof(out));
+
+	ies.presenceMask = SECURITYMODECOMPLETEIES_RANAP_CHOSENENCRYPTIONALGORITHM_PRESENT;
+	ies.chosenIntegrityProtectionAlgorithm = chosen_ip_alg;
+	ies.chosenEncryptionAlgorithm = chosen_enc_alg;
+
+	/* ies -> out */
+	rc = ranap_encode_securitymodecompleteies(&out, &ies);
+
+	/* out -> msg */
+	msg = ranap_generate_successful_outcome(RANAP_ProcedureCode_id_SecurityModeControl,
+						RANAP_Criticality_reject,
+						&asn_DEF_RANAP_SecurityModeComplete,
+						&out);
+
+	/* release dynamic allocations attached to out */
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_SecurityModeComplete, &out);
+
+	return msg;
+}
+
 /*! \brief generate RANAP COMMON ID message */
 struct msgb *ranap_new_msg_common_id(const char *imsi)
 {
