@@ -64,9 +64,14 @@ static int cn_ranap_rx_initiating_msg_co(void *ctx, RANAP_InitiatingMessage_t *i
 		rc = ranap_decode_rab_modifyrequesties(&message->msg.raB_ModifyRequestIEs, &imsg->value);
 		break;
 	case RANAP_ProcedureCode_id_SecurityModeControl:
+		/* FIXME this is not a message received by CN (used by hnb-test) */
 		/* Only an RNC will receive a Security Mode Control as
 		 * Initiating Message, in other words: only hnb-test. */
 		rc = ranap_decode_securitymodecommandies(&message->msg.securityModeCommandIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_Iu_Release:
+		/* FIXME this is not a message received by CN (used by hnb-test) */
+		rc = ranap_decode_iu_releasecommandies(&message->msg.iu_ReleaseCommandIEs, &imsg->value);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
@@ -103,9 +108,14 @@ static void cn_ranap_free_initiating_msg_co(ranap_message *message)
 		ranap_free_rab_modifyrequesties(&message->msg.raB_ModifyRequestIEs);
 		break;
 	case RANAP_ProcedureCode_id_SecurityModeControl:
+		/* FIXME this is not a message received by CN (used by hnb-test) */
 		/* Only an RNC will receive a Security Mode Control as
 		 * Initiating Message, in other words: only hnb-test. */
 		ranap_free_securitymodecommandies(&message->msg.securityModeCommandIEs);
+		break;
+	case RANAP_ProcedureCode_id_Iu_Release:
+		/* FIXME this is not a message received by CN (used by hnb-test) */
+		ranap_free_iu_releasecommandies(&message->msg.iu_ReleaseCommandIEs);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Not freeing suspicious RANAP "
@@ -340,6 +350,10 @@ static int cn_ranap_rx_initiating_msg_cl(void *ctx, RANAP_InitiatingMessage_t *i
 	case RANAP_ProcedureCode_id_UplinkInformationExchange:
 		rc = ranap_decode_uplinkinformationexchangerequesties(&message->msg.uplinkInformationExchangeRequestIEs, &imsg->value);
 		break;
+	case RANAP_ProcedureCode_id_Paging:
+		/* FIXME this is not a message received by CN (used by hnb-test) */
+		rc = ranap_decode_pagingies(&message->msg.pagingIEs, &imsg->value);
+		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
 		     "Procedure %s (CL, IM) from RNC, ignoring\n",
@@ -373,6 +387,10 @@ static void cn_ranap_free_initiating_msg_cl(ranap_message *message)
 		break;
 	case RANAP_ProcedureCode_id_UplinkInformationExchange:
 		ranap_free_uplinkinformationexchangerequesties(&message->msg.uplinkInformationExchangeRequestIEs);
+		break;
+	case RANAP_ProcedureCode_id_Paging:
+		/* FIXME this is not a message received by CN (used by hnb-test) */
+		ranap_free_pagingies(&message->msg.pagingIEs);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Not freeing suspicious RANAP "
