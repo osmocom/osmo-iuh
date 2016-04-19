@@ -56,3 +56,30 @@ void hnb_test_rua_dt_handle_ranap(struct hnb_test *hnb,
 		return;
 	}
 }
+
+void hnb_test_rua_cl_handle_ranap(struct hnb_test *hnb,
+				  struct ranap_message_s *ranap_msg)
+{
+	char imsi[16];
+
+	printf("rx ranap_msg->procedureCode %d\n",
+	       ranap_msg->procedureCode);
+
+	switch (ranap_msg->procedureCode) {
+	case RANAP_ProcedureCode_id_Paging:
+		if (ranap_msg->msg.pagingIEs.permanentNAS_UE_ID.present == RANAP_PermanentNAS_UE_ID_PR_iMSI) {
+			ranap_bcd_decode(imsi, sizeof(imsi),
+					 ranap_msg->msg.pagingIEs.permanentNAS_UE_ID.choice.iMSI.buf,
+					 ranap_msg->msg.pagingIEs.permanentNAS_UE_ID.choice.iMSI.size);
+		} else imsi[0] = '\0';
+
+		printf("rx Paging: presence=%hx  domain=%d  IMSI=%s\n",
+		       ranap_msg->msg.pagingIEs.presenceMask,
+		       ranap_msg->msg.pagingIEs.cN_DomainIndicator,
+		       imsi
+		       );
+
+		hnb_test_rx_paging(hnb, imsi);
+		return;
+	}
+}

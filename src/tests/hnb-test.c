@@ -459,6 +459,12 @@ void hnb_test_rx_iu_release(struct hnb_test *hnb)
 	hnb_test_tx_iu_release_compl(hnb);
 }
 
+void hnb_test_rx_paging(struct hnb_test *hnb, const char *imsi)
+{
+	printf(" :) Paging Request for %s :)\n", imsi);
+	/* TODO reply */
+}
+
 int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 {
 	HNBAP_PDU_t _pdu, *pdu = &_pdu;
@@ -529,6 +535,7 @@ int hnb_test_rua_rx(struct hnb_test *hnb, struct msgb *msg)
 	switch (pdu->choice.successfulOutcome.procedureCode) {
 	case RUA_ProcedureCode_id_ConnectionlessTransfer:
 		printf("RUA rx Connectionless Transfer\n");
+		hnb_test_rua_cl_handle(hnb, &pdu->choice.successfulOutcome.value);
 		break;
 	case RUA_ProcedureCode_id_Connect:
 		printf("RUA rx Connect\n");
