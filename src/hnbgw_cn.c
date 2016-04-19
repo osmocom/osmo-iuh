@@ -127,7 +127,7 @@ static int cn_ranap_rx_paging_cmd(struct hnbgw_cnlink *cnlink,
 				  RANAP_InitiatingMessage_t *imsg,
 				  const uint8_t *data, unsigned int len)
 {
-	struct hnb_gw *gw;
+	struct hnb_gw *gw = cnlink->gw;
 	struct hnb_context *hnb;
 	RANAP_PagingIEs_t ies;
 	int rc = 0;
@@ -368,6 +368,7 @@ struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint
 	struct hnbgw_cnlink *cnlink = talloc_zero(gw, struct hnbgw_cnlink);
 	int rc;
 
+	cnlink->gw = gw;
 	INIT_LLIST_HEAD(&cnlink->map_list);
 	cnlink->T_RafC.cb = cnlink_trafc_cb;
 	cnlink->T_RafC.data = cnlink;
