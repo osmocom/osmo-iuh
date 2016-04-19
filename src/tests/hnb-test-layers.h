@@ -14,3 +14,4 @@ void hnb_test_rua_dt_handle_ranap(struct hnb_test *hnb,
 /* RANAP calls main with actual payload*/
 void hnb_test_nas_rx_dtap(struct hnb_test *hnb, void *data, int len);
 void hnb_test_rx_secmode_cmd(struct hnb_test *hnb, long ip_alg);
+void hnb_test_rx_iu_release(struct hnb_test *hnb);

@@ -50,5 +50,9 @@ void hnb_test_rua_dt_handle_ranap(struct hnb_test *hnb,
 
 		hnb_test_rx_secmode_cmd(hnb, *first_alg);
 		return;
+
+	case RANAP_ProcedureCode_id_Iu_Release:
+		hnb_test_rx_iu_release(hnb);
+		return;
 	}
 }

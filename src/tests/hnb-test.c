@@ -357,6 +357,20 @@ static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct gsm48_hdr *gh,
 	return hnb_test_tx_dt(hnb, gen_nas_auth_resp(vec.sres));
 }
 
+void hnb_test_tx_iu_release_req(struct hnb_test *hnb)
+{
+	RANAP_Cause_t cause = {
+		.present = RANAP_Cause_PR_radioNetwork,
+		.choice.transmissionNetwork = RANAP_CauseRadioNetwork_release_due_to_UE_generated_signalling_connection_release,
+	};
+	hnb_test_tx_dt(hnb, ranap_new_msg_iu_rel_req(&cause));
+}
+
+void hnb_test_tx_iu_release_compl(struct hnb_test *hnb)
+{
+	hnb_test_tx_dt(hnb, ranap_new_msg_iu_rel_compl());
+}
+
 static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct gsm48_hdr *gh, int len)
 {
 	struct hnbtest_chan *chan;
@@ -390,6 +404,7 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct gsm48_hdr *gh, int le
 
 	case GSM48_MT_MM_INFO:
 		hnb_test_nas_rx_mm_info(gh, len);
+		hnb_test_tx_iu_release_req(hnb);
 		return 0;
 
 	case GSM48_MT_MM_AUTH_REQ:
@@ -437,6 +452,11 @@ void hnb_test_rx_secmode_cmd(struct hnb_test *hnb, long ip_alg)
 	printf(" :) Security Mode Command :)\n");
 	/* not caring about encryption yet, just pass 0 for No Encryption. */
 	hnb_test_tx_dt(hnb, ranap_new_msg_sec_mod_compl(ip_alg, 0));
+}
+
+void hnb_test_rx_iu_release(struct hnb_test *hnb)
+{
+	hnb_test_tx_iu_release_compl(hnb);
 }
 
 int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
