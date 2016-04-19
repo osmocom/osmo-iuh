@@ -7,7 +7,7 @@
 
 typedef void (*ranap_handle_cb)(void *ctx, ranap_message *ranap_msg);
 
-/* receive a connections-liess RANAP message */
+/* receive a connection-less RANAP message */
 int ranap_cn_rx_cl(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len);
 
 /* receive a connection-oriented RANAP message */

@@ -255,8 +255,8 @@ void hnb_context_release(struct hnb_context *ctx)
 	/* deactivate all context maps */
 	llist_for_each_entry_safe(map, map2, &ctx->map_list, hnb_list) {
 		/* remove it from list, as HNB context will soon be
-		 * gone.  Let's hope the seccond osmo_llist_del in the
-		 * map garbage collector wors fine? */
+		 * gone.  Let's hope the second osmo_llist_del in the
+		 * map garbage collector works fine? */
 		llist_del(&map->hnb_list);
 		context_map_deactivate(map);
 	}
