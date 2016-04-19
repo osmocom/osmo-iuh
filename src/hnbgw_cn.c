@@ -257,7 +257,7 @@ static int handle_cn_unitdata(struct hnbgw_cnlink *cnlink,
 	return handle_cn_ranap(cnlink, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 }
 
-static int handle_cn_conn_conf(void *slink,
+static int handle_cn_conn_conf(struct hnbgw_cnlink *cnlink,
 			      const struct osmo_scu_connect_param *param,
 			      struct osmo_prim_hdr *oph)
 {
@@ -277,12 +277,11 @@ static int handle_cn_conn_conf(void *slink,
 	return 0;
 }
 
-static int handle_cn_data_ind(void *slink,
+static int handle_cn_data_ind(struct hnbgw_cnlink *cnlink,
 			      const struct osmo_scu_data_param *param,
 			      struct osmo_prim_hdr *oph)
 {
 	struct hnbgw_context_map *map;
-	struct hnbgw_cnlink *cnlink = osmo_sua_link_get_user_priv(slink);
 
 	/* connection-oriented data is always passed transparently
 	 * towards the specific HNB, via a RUA connection identified by
@@ -298,12 +297,11 @@ static int handle_cn_data_ind(void *slink,
 			 msgb_l2(oph->msg), msgb_l2len(oph->msg));
 }
 
-static int handle_cn_disc_ind(void *slink,
+static int handle_cn_disc_ind(struct hnbgw_cnlink *cnlink,
 			      const struct osmo_scu_disconn_param *param,
 			      struct osmo_prim_hdr *oph)
 {
 	struct hnbgw_context_map *map;
-	struct hnbgw_cnlink *cnlink = osmo_sua_link_get_user_priv(slink);
 
 	LOGP(DMAIN, LOGL_DEBUG, "handle_cn_disc_ind() conn_id=%d originator=%d\n",
 	     param->conn_id, param->originator);
@@ -329,8 +327,9 @@ static int handle_cn_disc_ind(void *slink,
 }
 
 /* Entry point for primitives coming up from SCCP User SAP */
-static int sccp_sap_up(struct osmo_prim_hdr *oph, void *slink)
+static int sccp_sap_up(struct osmo_prim_hdr *oph, struct osmo_sua_link *slink)
 {
+	struct hnbgw_cnlink *cnlink = osmo_sua_link_get_user_priv(slink);
 	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) oph;
 	int rc;
 
@@ -338,16 +337,16 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *slink)
 
 	switch (OSMO_PRIM_HDR(oph)) {
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_UNITDATA, PRIM_OP_INDICATION):
-		rc = handle_cn_unitdata(slink, &prim->u.unitdata, oph);
+		rc = handle_cn_unitdata(cnlink, &prim->u.unitdata, oph);
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_CONNECT, PRIM_OP_CONFIRM):
-		rc = handle_cn_conn_conf(slink, &prim->u.connect, oph);
+		rc = handle_cn_conn_conf(cnlink, &prim->u.connect, oph);
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DATA, PRIM_OP_INDICATION):
-		rc = handle_cn_data_ind(slink, &prim->u.data, oph);
+		rc = handle_cn_data_ind(cnlink, &prim->u.data, oph);
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DISCONNECT, PRIM_OP_INDICATION):
-		rc = handle_cn_disc_ind(slink, &prim->u.disconnect, oph);
+		rc = handle_cn_disc_ind(cnlink, &prim->u.disconnect, oph);
 		break;
 	defualt:
 		LOGP(DMAIN, LOGL_ERROR,
