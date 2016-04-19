@@ -24,6 +24,9 @@ struct msgb *ranap_new_msg_common_id(const char *imsi);
 /*! \brief generate RANAP IU RELEASE COMMAND message */
 struct msgb *ranap_new_msg_iu_rel_cmd(const RANAP_Cause_t *cause_in);
 
+/*! \brief generate RAPAP IU RELEASE COMPLETE message */
+struct msgb *ranap_new_msg_iu_rel_compl(void);
+
 /*! \brief generate RANAP PAGING COMMAND message */
 struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, int is_ps, uint32_t cause);
 

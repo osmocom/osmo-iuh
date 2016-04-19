@@ -364,6 +364,34 @@ struct msgb *ranap_new_msg_iu_rel_cmd(const RANAP_Cause_t *cause_in)
 	return msg;
 }
 
+/*! \brief generate RAPAP IU RELEASE COMPLETE message */
+struct msgb *ranap_new_msg_iu_rel_compl(void)
+{
+	RANAP_Iu_ReleaseCompleteIEs_t ies;
+	RANAP_Iu_ReleaseComplete_t out;
+	struct msgb *msg;
+	int rc;
+
+	memset(&ies, 0, sizeof(ies));
+	memset(&out, 0, sizeof(out));
+
+	/* ies -> out */
+	rc = ranap_encode_iu_releasecompleteies(&out, &ies);
+	if (rc < 0)
+		return NULL;
+
+	/* out -> msg */
+	msg = ranap_generate_successful_outcome(RANAP_ProcedureCode_id_Iu_Release,
+						RANAP_Criticality_reject,
+						&asn_DEF_RANAP_Iu_ReleaseComplete,
+						&out);
+
+	/* release dynamic allocations attached to out */
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_Iu_ReleaseComplete, &out);
+
+	return msg;
+}
+
 /*! \brief generate RANAP PAGING COMMAND message */
 struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, int is_ps, uint32_t cause)
 {
