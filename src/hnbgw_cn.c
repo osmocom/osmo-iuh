@@ -379,6 +379,9 @@ struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint
 	osmo_sccp_make_addr_pc_ssn(&cnlink->remote_addr, 1,
 				   OSMO_SCCP_SSN_RANAP);
 
+	LOGP(DRUA, LOGL_DEBUG, "New hnbgw_cnlink %p (gw %p): %s %d %s\n",
+	     cnlink, cnlink->gw, host, port, is_ps? "PS" : "CS");
+
 	cnlink->sua_user = osmo_sua_user_create(cnlink, sccp_sap_up, cnlink);
 	if (!cnlink->sua_user) {
 		LOGP(DMAIN, LOGL_ERROR, "Failed to init SUA\n");
