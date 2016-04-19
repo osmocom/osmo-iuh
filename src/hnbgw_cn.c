@@ -258,8 +258,8 @@ static int handle_cn_unitdata(struct hnbgw_cnlink *cnlink,
 }
 
 static int handle_cn_conn_conf(struct hnbgw_cnlink *cnlink,
-			      const struct osmo_scu_connect_param *param,
-			      struct osmo_prim_hdr *oph)
+			       const struct osmo_scu_connect_param *param,
+			       struct osmo_prim_hdr *oph)
 {
 	/* we don't actually need to do anything, as RUA towards the HNB
 	 * doesn't seem to know any confirmations to its CONNECT
