@@ -209,7 +209,7 @@ static const RANAP_EncryptionAlgorithm_t enc_alg[2] = {
 };
 
 /*! \brief generate RANAP SECURITY MODE COMMAND message */
-struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck)
+struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck, enum RANAP_KeyStatus status)
 {
 	RANAP_SecurityModeCommandIEs_t ies;
 	RANAP_SecurityModeCommand_t out;
@@ -241,7 +241,7 @@ struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck)
 		BIT_STRING_fromBuf(&ies.encryptionInformation.key, ck, 16*8);
 	}
 
-	ies.keyStatus = RANAP_KeyStatus_new;	/* FIXME */
+	ies.keyStatus = status;
 
 	/* ies -> out */
 	rc = ranap_encode_securitymodecommandies(&out, &ies);

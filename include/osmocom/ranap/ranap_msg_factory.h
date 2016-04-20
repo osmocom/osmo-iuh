@@ -11,7 +11,7 @@
 struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas_len);
 
 /*! \brief generate RANAP SECURITY MODE COMMAND message */
-struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck);
+struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck, enum RANAP_KeyStatus status);
 
 /*! \brief generate RANAP SECURITY MODE COMPLETE message */
 struct msgb *ranap_new_msg_sec_mod_compl(

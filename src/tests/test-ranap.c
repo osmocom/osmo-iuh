@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 		msgb_free(msg);
 
 		printf("\n==> SECURITY MODE COMMAND\n");
-		msg = ranap_new_msg_sec_mod_cmd(ik, ck);
+		msg = ranap_new_msg_sec_mod_cmd(ik, ck, RANAP_KeyStatus_new);
 		if (msg)
 			printf("%s\n", msgb_hexdump(msg));
 		msgb_free(msg);

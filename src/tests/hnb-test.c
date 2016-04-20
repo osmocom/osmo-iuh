@@ -980,7 +980,7 @@ int main(int argc, char **argv)
 		rua = rua_new_udt(msg);
 		osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
 
-		msg = ranap_new_msg_sec_mod_cmd(ik, ik);
+		msg = ranap_new_msg_sec_mod_cmd(ik, ik, RANAP_KeyStatus_new);
 		rua = rua_new_udt(msg);
 		osmo_wqueue_enqueue(&g_hnb_test.wqueue, rua);
 
