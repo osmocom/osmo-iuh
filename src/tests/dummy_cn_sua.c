@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#define _GNU_SOURCE
+#include <getopt.h>
+
 #include <osmocom/core/select.h>
 #include <osmocom/core/prim.h>
 #include <osmocom/core/talloc.h>
@@ -24,6 +27,7 @@
 #include "hnbgw.h"
 
 int asn1_xer_print = 1;
+const char *cmdline_bind_addr = "127.0.0.1";
 
 struct ue_conn_ctx {
 	struct llist_head list;
@@ -311,23 +315,70 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *link)
 	return 0;
 }
 
+static void print_usage()
+{
+	printf("Usage: dummy-cn\n");
+}
+
+static void print_help()
+{
+	printf("  -h --help       This text.\n");
+	printf("  -b --bind addr  Bind to local IP address (default 127.0.0.1)\n");
+}
+
+static void handle_options(int argc, char **argv)
+{
+	while (1) {
+		int option_index = 0, c;
+		static struct option long_options[] = {
+			{"help", 0, 0, 'h'},
+			{"bind", 1, 0, 'b'},
+			{0, 0, 0, 0}
+		};
+
+		c = getopt_long(argc, argv, "hb:V",
+				long_options, &option_index);
+		if (c == -1)
+			break;
+
+		switch (c) {
+		case 'h':
+			print_usage();
+			print_help();
+			exit(0);
+		case 'b':
+			cmdline_bind_addr = optarg;
+			break;
+		default:
+			printf("Unknown cmdline argument (-h shows help)\n");
+			exit(1);
+			break;
+		}
+	}
+}
+
 int main(int argc, char **argv)
 {
 	struct osmo_sua_user *user;
 	void *ctx = talloc_named_const(NULL, 1, "root");
 	int rc;
+	int port = 14001;
 
 	osmo_sua_set_log_area(DSUA);
 	ranap_set_log_area(DRANAP);
 
 	test_common_init();
 
+	handle_options(argc, argv);
+
 	user = osmo_sua_user_create(ctx, sccp_sap_up, ctx);
 
-	rc = osmo_sua_server_listen(user, "127.0.0.1", 14001);
+	rc = osmo_sua_server_listen(user, cmdline_bind_addr, port);
 	if (rc < 0) {
 		exit(1);
 	}
+
+	printf("dummy-cn listening on %s %d\n", cmdline_bind_addr, port);
 
 	while (1) {
 		osmo_select_main(0);
