@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 		msgb_free(msg);
 
 		printf("\n==> RAB ASSIGNMENT COMMAND (DATA)\n");
-		msg = ranap_new_msg_rab_assign_data(2, gtp_ip, gtp_tei);
+		msg = ranap_new_msg_rab_assign_data(2, gtp_ip, gtp_tei, 1);
 		if (msg)
 			printf("%s\n", msgb_hexdump(msg));
 		msgb_free(msg);

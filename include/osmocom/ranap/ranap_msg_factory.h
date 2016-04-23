@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <osmocom/ranap/RANAP_Cause.h>
 #include <osmocom/ranap/RANAP_CN-DomainIndicator.h>
 #include <osmocom/ranap/RANAP_GlobalRNC-ID.h>
@@ -34,7 +35,8 @@ struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, in
 struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip, uint16_t rtp_port);
 
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for PS (data) */
-struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip, uint32_t gtp_tei);
+struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
+					   uint32_t gtp_tei, bool use_x213_nsap);
 
 /*! \brief generate RANAP RESET message */
 struct msgb *ranap_new_msg_reset(RANAP_CN_DomainIndicator_t domain,

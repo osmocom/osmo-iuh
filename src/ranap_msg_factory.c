@@ -614,7 +614,7 @@ static RANAP_RAB_Parameters_t *new_rab_par_data(uint32_t dl_max_bitrate, uint32_
 	return rab;
 }
 
-static void new_transp_layer_addr(BIT_STRING_t *out, uint32_t ip, int use_x213_nsap)
+static void new_transp_layer_addr(BIT_STRING_t *out, uint32_t ip, bool use_x213_nsap)
 {
 	uint8_t *buf;
 	unsigned int len;
@@ -658,12 +658,13 @@ static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint1
 	return tli;
 }
 
-static RANAP_TransportLayerInformation_t *new_transp_info_gtp(uint32_t ip, uint32_t tei)
+static RANAP_TransportLayerInformation_t *new_transp_info_gtp(uint32_t ip, uint32_t tei,
+							      bool use_x213_nsap)
 {
 	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
 	uint32_t binding_buf = htonl(tei);
 
-	new_transp_layer_addr(&tli->transportLayerAddress, ip, 1);
+	new_transp_layer_addr(&tli->transportLayerAddress, ip, use_x213_nsap);
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_gTP_TEI;
 	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.gTP_TEI,
 			     (const char *) &binding_buf, sizeof(binding_buf));
@@ -763,7 +764,8 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip, uin
 }
 
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for PS (data) */
-struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip, uint32_t gtp_tei)
+struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
+					   uint32_t gtp_tei, bool use_x213_nsap)
 {
 	RANAP_ProtocolIE_FieldPair_t *pair;
 	RANAP_RAB_AssignmentRequestIEs_t ies;
@@ -786,7 +788,8 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip, uint
 
 	first.rAB_Parameters = new_rab_par_data(1600000, 800000);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_transparent_mode, 1);
-	first.transportLayerInformation = new_transp_info_gtp(gtp_ip, gtp_tei);
+	first.transportLayerInformation = new_transp_info_gtp(gtp_ip, gtp_tei,
+							      use_x213_nsap);
 
 	/* put together the 'Second' part */
 	RANAP_RAB_SetupOrModifyItemSecond_t second;
