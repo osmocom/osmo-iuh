@@ -279,20 +279,6 @@ static int accept_cb(struct osmo_stream_srv_link *srv, int fd)
 	return 0;
 }
 
-/* Entry point for primitives coming up from SCCP User SAP */
-static int sccp_sap_up(struct osmo_prim_hdr *oph, void *link)
-{
-	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) oph;
-
-	LOGP(DMAIN, LOGL_DEBUG, "sccp_sap_up(%s)\n", osmo_scu_prim_name(oph));
-
-	/* FIXME: Do something */
-
-	msgb_free(oph->msg);
-
-	return 0;
-}
-
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
 		.name = "DMAIN", .loglevel = LOGL_DEBUG, .enabled = 1,
