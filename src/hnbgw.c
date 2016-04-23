@@ -258,6 +258,7 @@ void hnb_context_release(struct hnb_context *ctx)
 		 * gone.  Let's hope the second osmo_llist_del in the
 		 * map garbage collector works fine? */
 		llist_del(&map->hnb_list);
+		llist_del(&map->cn_list);
 		context_map_deactivate(map);
 	}
 	ue_context_free_by_hnb(ctx->gw, ctx);
