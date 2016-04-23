@@ -629,7 +629,7 @@ static void new_transp_layer_addr(BIT_STRING_t *out, uint32_t ip, bool use_x213_
 	} else {
 		len = 4;
 		buf = CALLOC(len, sizeof(uint8_t));
-		*(uint32_t *)buf = ip;
+		*(uint32_t *)buf = ntohl(ip);
 	}
 	out->buf = buf;
 	out->size = len;
