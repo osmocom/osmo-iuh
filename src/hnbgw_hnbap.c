@@ -114,6 +114,69 @@ static int hnbgw_tx_ue_register_acc(struct ue_context *ue)
 	return hnbgw_hnbap_tx(ue->hnb, msg);
 }
 
+static int hnbgw_tx_ue_register_rej_tmsi(struct hnb_context *hnb, UE_Identity_t *ue_id)
+{
+	UERegisterReject_t reject_out;
+	UERegisterRejectIEs_t reject;
+	struct msgb *msg;
+	int rc;
+
+	memset(&reject, 0, sizeof(reject));
+	reject.uE_Identity.present = ue_id->present;
+
+	if (ue_id->present != UE_Identity_PR_tMSILAI) {
+		LOGP(DHNBAP, LOGL_ERROR, "Trying to reject UE Register without IMSI: only rejects of UE_Identity_PR_tMSILAI supported so far.\n");
+		return -1;
+	}
+
+	LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id tMSI %d %s\n",
+	     ue_id->choice.tMSILAI.tMSI.size,
+	     osmo_hexdump(ue_id->choice.tMSILAI.tMSI.buf,
+			  ue_id->choice.tMSILAI.tMSI.size));
+
+	LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id pLMNID %d %s\n",
+	     ue_id->choice.tMSILAI.lAI.pLMNID.size,
+	     osmo_hexdump(ue_id->choice.tMSILAI.lAI.pLMNID.buf,
+			  ue_id->choice.tMSILAI.lAI.pLMNID.size));
+
+	LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id lAC %d %s\n",
+	     ue_id->choice.tMSILAI.lAI.lAC.size,
+	     osmo_hexdump(ue_id->choice.tMSILAI.lAI.lAC.buf,
+			  ue_id->choice.tMSILAI.lAI.lAC.size));
+
+	BIT_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.tMSI,
+			   ue_id->choice.tMSILAI.tMSI.buf,
+			   ue_id->choice.tMSILAI.tMSI.size * 8
+			   - ue_id->choice.tMSILAI.tMSI.bits_unused);
+	OCTET_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.lAI.pLMNID,
+			     ue_id->choice.tMSILAI.lAI.pLMNID.buf,
+			     ue_id->choice.tMSILAI.lAI.pLMNID.size);
+	OCTET_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.lAI.lAC,
+			     ue_id->choice.tMSILAI.lAI.lAC.buf,
+			     ue_id->choice.tMSILAI.lAI.lAC.size);
+
+	reject.cause.present = Cause_PR_radioNetwork;
+	reject.cause.choice.radioNetwork = CauseRadioNetwork_invalid_UE_identity;
+
+	memset(&reject_out, 0, sizeof(reject_out));
+	rc = hnbap_encode_ueregisterrejecties(&reject_out, &reject);
+	if (rc < 0) {
+		return rc;
+	}
+
+	msg = hnbap_generate_unsuccessful_outcome(ProcedureCode_id_UERegister,
+						  Criticality_reject,
+						  &asn_DEF_UERegisterReject,
+						  &reject_out);
+
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_BIT_STRING, &reject.uE_Identity.choice.tMSILAI.tMSI);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING, &reject.uE_Identity.choice.tMSILAI.lAI.pLMNID);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING, &reject.uE_Identity.choice.tMSILAI.lAI.lAC);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_UERegisterReject, &reject_out);
+
+	return hnbgw_hnbap_tx(hnb, msg);
+}
+
 static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 {
 	HNBDe_RegisterIEs_t ies;
@@ -187,8 +250,9 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 		LOGP(DHNBAP, LOGL_NOTICE, "UE-REGISTER-REQ without IMSI\n");
 		/* TODO: this is probably a TMSI registration. Store TMSIs
 		 * and look them up to accept UE Registration. */
+		rc = hnbgw_tx_ue_register_rej_tmsi(ctx, &ies.uE_Identity);
 		hnbap_free_ueregisterrequesties(&ies);
-		return -1;
+		return rc;
 	}
 
 	DEBUGP(DHNBAP, "UE-REGISTER-REQ ID_type=%d imsi=%s cause=%ld\n",
