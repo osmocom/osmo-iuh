@@ -187,6 +187,7 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 		LOGP(DHNBAP, LOGL_NOTICE, "UE-REGISTER-REQ without IMSI\n");
 		/* TODO: this is probably a TMSI registration. Store TMSIs
 		 * and look them up to accept UE Registration. */
+		hnbap_free_ueregisterrequesties(&ies);
 		return -1;
 	}
 
