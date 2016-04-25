@@ -33,6 +33,7 @@
 #include "hnbgw_rua.h"
 #include <osmocom/ranap/ranap_common.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
+#include <osmocom/ranap/ranap_msg_factory.h>
 
 static int ranap_tx_reset_ack(struct hnb_context *hnb,
 				RANAP_CN_DomainIndicator_t domain)
