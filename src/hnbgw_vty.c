@@ -114,6 +114,16 @@ DEFUN(cfg_hnbgw_iuh_bind, cfg_hnbgw_iuh_bind_cmd, "bind A.B.C.D",
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_hnbgw_iuh_hnbap_allow_tmsi, cfg_hnbgw_iuh_hnbap_allow_tmsi_cmd,
+      "hnbap-allow-tmsi (0|1)",
+      "Allow HNBAP UE Register messages with TMSI or PTMSI identity\n"
+      "Only accept IMSI identity, reject TMSI or PTMSI\n"
+      "Accept IMSI, TMSI or PTMSI as UE identity\n")
+{
+	g_hnb_gw->config.hnbap_allow_tmsi = (*argv[0] == '1');
+	return CMD_SUCCESS;
+}
+
 static int config_write_hnbgw(struct vty *vty)
 {
 	vty_out(vty, "hnbgw%s", VTY_NEWLINE);
@@ -130,6 +140,9 @@ static int config_write_hnbgw_iuh(struct vty *vty)
 	if (addr && (strcmp(addr, HNBGW_IUH_BIND_ADDR_DEFAULT) != 0))
 		vty_out(vty, "  bind %s%s", addr, VTY_NEWLINE);
 
+	if (g_hnb_gw->config.hnbap_allow_tmsi)
+		vty_out(vty, "  hnbap-allow-tmsi 1%s", VTY_NEWLINE);
+
 	return CMD_SUCCESS;
 }
 
@@ -145,7 +158,9 @@ void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 	install_element(HNBGW_NODE, &cfg_hnbgw_iuh_cmd);
 	install_node(&iuh_node, config_write_hnbgw_iuh);
 	vty_install_default(IUH_NODE);
+
 	install_element(IUH_NODE, &cfg_hnbgw_iuh_bind_cmd);
+	install_element(IUH_NODE, &cfg_hnbgw_iuh_hnbap_allow_tmsi_cmd);
 
 	install_element_ve(&show_hnb_cmd);
 	install_element_ve(&show_ue_cmd);

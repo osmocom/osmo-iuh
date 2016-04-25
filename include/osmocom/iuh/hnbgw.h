@@ -117,6 +117,7 @@ struct hnb_gw {
 		 * plane traffic from HNBs */
 		uint16_t iuh_cs_mux_port;
 		uint16_t rnc_id;
+		bool hnbap_allow_tmsi;
 	} config;
 	/*! SCTP listen socket for incoming connections */
 	struct osmo_stream_srv_link *iuh;

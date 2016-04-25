@@ -244,6 +244,108 @@ static int hnbgw_tx_ue_register_rej_tmsi(struct hnb_context *hnb, UE_Identity_t 
 	return hnbgw_hnbap_tx(hnb, msg);
 }
 
+static int hnbgw_tx_ue_register_acc_tmsi(struct hnb_context *hnb, UE_Identity_t *ue_id)
+{
+	UERegisterAccept_t accept_out;
+	UERegisterAcceptIEs_t accept;
+	struct msgb *msg;
+	uint32_t ctx_id;
+	uint32_t tmsi = 0;
+	struct ue_context *ue;
+	int rc;
+
+	memset(&accept, 0, sizeof(accept));
+	accept.uE_Identity.present = ue_id->present;
+
+	switch (ue_id->present) {
+	case UE_Identity_PR_tMSILAI:
+		BIT_STRING_fromBuf(&accept.uE_Identity.choice.tMSILAI.tMSI,
+				   ue_id->choice.tMSILAI.tMSI.buf,
+				   ue_id->choice.tMSILAI.tMSI.size * 8
+				   - ue_id->choice.tMSILAI.tMSI.bits_unused);
+		tmsi = *(uint32_t*)accept.uE_Identity.choice.tMSILAI.tMSI.buf;
+		OCTET_STRING_fromBuf(&accept.uE_Identity.choice.tMSILAI.lAI.pLMNID,
+				     ue_id->choice.tMSILAI.lAI.pLMNID.buf,
+				     ue_id->choice.tMSILAI.lAI.pLMNID.size);
+		OCTET_STRING_fromBuf(&accept.uE_Identity.choice.tMSILAI.lAI.lAC,
+				     ue_id->choice.tMSILAI.lAI.lAC.buf,
+				     ue_id->choice.tMSILAI.lAI.lAC.size);
+		break;
+
+	case UE_Identity_PR_pTMSIRAI:
+		BIT_STRING_fromBuf(&accept.uE_Identity.choice.pTMSIRAI.pTMSI,
+				   ue_id->choice.pTMSIRAI.pTMSI.buf,
+				   ue_id->choice.pTMSIRAI.pTMSI.size * 8
+				   - ue_id->choice.pTMSIRAI.pTMSI.bits_unused);
+		tmsi = *(uint32_t*)accept.uE_Identity.choice.pTMSIRAI.pTMSI.buf;
+		OCTET_STRING_fromBuf(&accept.uE_Identity.choice.pTMSIRAI.rAI.lAI.pLMNID,
+				     ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.buf,
+				     ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.size);
+		OCTET_STRING_fromBuf(&accept.uE_Identity.choice.pTMSIRAI.rAI.lAI.lAC,
+				     ue_id->choice.pTMSIRAI.rAI.lAI.lAC.buf,
+				     ue_id->choice.pTMSIRAI.rAI.lAI.lAC.size);
+		OCTET_STRING_fromBuf(&accept.uE_Identity.choice.pTMSIRAI.rAI.rAC,
+				     ue_id->choice.pTMSIRAI.rAI.rAC.buf,
+				     ue_id->choice.pTMSIRAI.rAI.rAC.size);
+		break;
+
+	default:
+		LOGP(DHNBAP, LOGL_ERROR, "Unsupportedccept UE ID (present=%d)\n",
+			ue_id->present);
+		return -1;
+	}
+
+	tmsi = ntohl(tmsi);
+	LOGP(DHNBAP, LOGL_DEBUG, "HNBAP register with TMSI %x\n",
+	     tmsi);
+
+	ue = ue_context_by_tmsi(hnb->gw, tmsi);
+	if (!ue)
+		ue = ue_context_alloc(hnb, NULL, tmsi);
+
+	asn1_u24_to_bitstring(&accept.context_ID, &ctx_id, ue->context_id);
+
+	memset(&accept_out, 0, sizeof(accept_out));
+	rc = hnbap_encode_ueregisteraccepties(&accept_out, &accept);
+	if (rc < 0)
+		return rc;
+
+	msg = hnbap_generate_successful_outcome(ProcedureCode_id_UERegister,
+						Criticality_reject,
+						&asn_DEF_UERegisterAccept,
+						&accept_out);
+
+	switch (ue_id->present) {
+	case UE_Identity_PR_tMSILAI:
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_BIT_STRING,
+					      &accept.uE_Identity.choice.tMSILAI.tMSI);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING,
+					      &accept.uE_Identity.choice.tMSILAI.lAI.pLMNID);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING,
+					      &accept.uE_Identity.choice.tMSILAI.lAI.lAC);
+		break;
+
+	case UE_Identity_PR_pTMSIRAI:
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_BIT_STRING,
+					      &accept.uE_Identity.choice.pTMSIRAI.pTMSI);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING,
+					      &accept.uE_Identity.choice.pTMSIRAI.rAI.lAI.pLMNID);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING,
+					      &accept.uE_Identity.choice.pTMSIRAI.rAI.lAI.lAC);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING,
+					      &accept.uE_Identity.choice.pTMSIRAI.rAI.rAC);
+		break;
+
+	default:
+		/* should never happen after above switch() */
+		break;
+	}
+
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_UERegisterAccept, &accept_out);
+
+	return hnbgw_hnbap_tx(hnb, msg);
+}
+
 static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 {
 	HNBDe_RegisterIEs_t ies;
@@ -313,11 +415,19 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 		ranap_bcd_decode(imsi, sizeof(imsi), ies.uE_Identity.choice.iMSIESN.iMSIDS41.buf,
 			      ies.uE_Identity.choice.iMSIESN.iMSIDS41.size);
 		break;
+	case UE_Identity_PR_tMSILAI:
+	case UE_Identity_PR_pTMSIRAI:
+		if (ctx->gw->config.hnbap_allow_tmsi)
+			rc = hnbgw_tx_ue_register_acc_tmsi(ctx, &ies.uE_Identity);
+		else
+			rc = hnbgw_tx_ue_register_rej_tmsi(ctx, &ies.uE_Identity);
+		/* all has been handled by TMSI, skip the IMSI code below */
+		hnbap_free_ueregisterrequesties(&ies);
+		return rc;
 	default:
-		LOGP(DHNBAP, LOGL_NOTICE, "UE-REGISTER-REQ without IMSI\n");
-		/* TODO: this is probably a TMSI registration. Store TMSIs
-		 * and look them up to accept UE Registration. */
-		rc = hnbgw_tx_ue_register_rej_tmsi(ctx, &ies.uE_Identity);
+		LOGP(DHNBAP, LOGL_NOTICE,
+		     "UE-REGISTER-REQ with unsupported UE Id type %d\n",
+		     ies.uE_Identity.present);
 		hnbap_free_ueregisterrequesties(&ies);
 		return rc;
 	}
