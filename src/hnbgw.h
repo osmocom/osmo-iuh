@@ -101,6 +101,8 @@ struct ue_context {
 	/*! Unique Context ID for this UE */
 	uint32_t context_id;
 	char imsi[16+1];
+	/* TODO: track TMSI, for HNBAP UE Register Request with TMSI,
+	 * seen with ip.access nano3G femto cell */
 	/*! UE is serviced via this HNB */
 	struct hnb_context *hnb;
 };

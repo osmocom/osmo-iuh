@@ -814,7 +814,7 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip, uint
 
 	RANAP_ProtocolIE_ContainerPair_t *container_pair = CALLOC(1, sizeof(*container_pair));
 	/* Add the pair to the list of IEs of the RAB ass.req */
-	ASN_SEQUENCE_ADD(container_pair, pair);
+	ASN_SEQUENCE_ADD(&container_pair->list, pair);
 	/* Add the pair to the list of IEs of the RAB ass.req */
 	ASN_SEQUENCE_ADD(&ies.raB_SetupOrModifyList.list, container_pair);
 

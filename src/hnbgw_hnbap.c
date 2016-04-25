@@ -123,7 +123,7 @@ static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	DEBUGP(DHNBAP, "HNB-DE-REGSITER cause=%ld\n",
+	DEBUGP(DHNBAP, "HNB-DE-REGISTER cause=%ld\n",
 		ies.cause);
 
 	hnbap_free_hnbde_registeries(&ies);
@@ -184,7 +184,9 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 			      ies.uE_Identity.choice.iMSIESN.iMSIDS41.size);
 		break;
 	default:
-		LOGP(DHNBAP, LOGL_NOTICE, "UE-REGISTER-REQ without IMSI?!?\n");
+		LOGP(DHNBAP, LOGL_NOTICE, "UE-REGISTER-REQ without IMSI\n");
+		/* TODO: this is probably a TMSI registration. Store TMSIs
+		 * and look them up to accept UE Registration. */
 		return -1;
 	}
 
