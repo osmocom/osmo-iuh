@@ -498,6 +498,10 @@ int ranap_parse_lai(struct gprs_ra_id *ra_id, const RANAP_LAI_t *lai)
 {
 	uint8_t *ptr = lai->pLMNidentity.buf;
 
+	/* Avoid unitialized mem for parse failures, and set rac to zero (which
+	 * isn't being parsed). */
+	*ra_id = (struct gprs_ra_id){ .lac = 0xfffe };
+
 	/* TS 25.413 9.2.3.55 */
 	if (lai->pLMNidentity.size != 3) {
 		LOGP(DRANAP, LOGL_ERROR, "Invalid PLMN Identity size:"
