@@ -27,6 +27,7 @@
 #include <osmocom/ranap/ranap_common.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_msg_factory.h>
+#include <osmocom/ranap/RANAP_MaxBitrate.h>
 
 #include "test_common.h"
 
@@ -35,6 +36,22 @@
 int asn1_xer_print = 1;
 
 extern void *tall_msgb_ctx;
+
+static void test_aper_int(uint32_t inp)
+{
+	RANAP_MaxBitrate_t mbr = inp;
+	asn_enc_rval_t rv;
+	uint8_t buf[32];
+
+	memset(buf, 0, sizeof(buf));
+
+	rv = aper_encode_to_buffer(&asn_DEF_RANAP_MaxBitrate, &mbr, buf, sizeof(buf));
+	if (rv.encoded == -1) {
+		fprintf(stderr, "Failed\n");
+		return;
+	}
+	printf("Encoded MaxBitRate %u to %s\n", mbr, osmo_hexdump(buf, rv.encoded/8));
+}
 
 int main(int argc, char **argv)
 {
@@ -55,6 +72,18 @@ int main(int argc, char **argv)
 	msgb_set_talloc_ctx(talloc_named_const(NULL, 1, "msgb"));
 
 	test_common_init();
+
+	test_aper_int(1);
+	test_aper_int(2);
+	test_aper_int(3);
+	test_aper_int(255);
+	test_aper_int(256);
+	test_aper_int(257);
+	test_aper_int(64000);
+	test_aper_int(0xffff);
+	test_aper_int(0xffff+1);
+	test_aper_int(0xffff+2);
+	test_aper_int(16000000);
 
 	for (i = 0; i < 1; i++) {
 		printf("\n==> DIRECT TRANSFER\n");
