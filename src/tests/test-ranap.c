@@ -28,6 +28,7 @@
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_msg_factory.h>
 #include <osmocom/ranap/RANAP_MaxBitrate.h>
+#include <osmocom/ranap/RANAP_CauseMisc.h>
 
 #include "test_common.h"
 
@@ -51,6 +52,32 @@ static void test_aper_int(uint32_t inp)
 		return;
 	}
 	printf("Encoded MaxBitRate %u to %s\n", mbr, osmo_hexdump(buf, rv.encoded/8));
+}
+
+static void test_aper_causemisc(uint32_t inp, uint8_t exp_enc)
+{
+	RANAP_Cause_t c = { .present = RANAP_Cause_PR_misc, .choice.misc = inp };
+	RANAP_Cause_t *c_dec;
+	asn_enc_rval_t rv;
+	uint8_t buf[32];
+
+	memset(buf, 0, sizeof(buf));
+
+	rv = aper_encode_to_buffer(&asn_DEF_RANAP_Cause, &c, buf, sizeof(buf));
+	if (rv.encoded == -1) {
+		fprintf(stderr, "Failed\n");
+		return;
+	}
+	/* test encoding */
+	printf("Encoded Cause Misc=%u to %s\n", inp, osmo_hexdump(buf, rv.encoded/8));
+	OSMO_ASSERT(buf[0] == exp_enc);
+	OSMO_ASSERT(rv.encoded == 8);
+
+	/* test re-decoding */
+	aper_decode(NULL, &asn_DEF_RANAP_Cause, &c_dec, buf, 1, 0, 0);
+	printf("Decoded Cause Misc=%u\n", c_dec->choice.misc);
+	OSMO_ASSERT(c_dec->present == RANAP_Cause_PR_misc);
+	OSMO_ASSERT(c_dec->choice.misc == inp);
 }
 
 int main(int argc, char **argv)
@@ -84,6 +111,7 @@ int main(int argc, char **argv)
 	test_aper_int(0xffff+1);
 	test_aper_int(0xffff+2);
 	test_aper_int(16000000);
+	test_aper_causemisc(RANAP_CauseMisc_unspecified_failure, 0x42);
 
 	for (i = 0; i < 1; i++) {
 		printf("\n==> DIRECT TRANSFER\n");

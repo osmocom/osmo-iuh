@@ -9,6 +9,8 @@ Encoded MaxBitRate 65535 to 40 ff fe
 Encoded MaxBitRate 65536 to 40 ff ff 
 Encoded MaxBitRate 65537 to 80 01 00 00 
 Encoded MaxBitRate 16000000 to 80 f4 23 ff 
+Encoded Cause Misc=115 to 42 
+Decoded Cause Misc=115
 
 ==> DIRECT TRANSFER
 <RANAP_IE>
