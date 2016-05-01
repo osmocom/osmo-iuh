@@ -609,7 +609,21 @@ static RANAP_RAB_Parameters_t *new_rab_par_data(uint32_t dl_max_bitrate, uint32_
 
 	rab->allocationOrRetentionPriority = new_alloc_ret_prio(RANAP_PriorityLevel_no_priority, 0, 0, 0);
 
-	/* FIXME: RAB-Parameter-ExtendedMaxBitrateList for 42Mbps? */
+	RANAP_ProtocolExtensionField_t *pxf = CALLOC(1, sizeof(*pxf));
+	pxf->id = RANAP_ProtocolIE_ID_id_RAB_Parameter_ExtendedMaxBitrateList;
+	pxf->criticality = RANAP_Criticality_ignore;
+
+	RANAP_RAB_Parameter_ExtendedMaxBitrateList_t *rab_mbrlist = CALLOC(1, sizeof(*rab_mbrlist));
+	RANAP_ExtendedMaxBitrate_t *xmbr = CALLOC(1, sizeof(*xmbr));
+	*xmbr = 42000000;
+	ASN_SEQUENCE_ADD(&rab_mbrlist->list, xmbr);
+
+	ANY_fromType_aper(&pxf->value, &asn_DEF_RANAP_RAB_Parameter_ExtendedMaxBitrateList, rab_mbrlist);
+
+	ASN_STRUCT_FREE(asn_DEF_RANAP_RAB_Parameter_ExtendedMaxBitrateList, rab_mbrlist);
+
+	rab->iE_Extensions = CALLOC(1, sizeof(*rab->iE_Extensions));
+	ASN_SEQUENCE_ADD(&rab->iE_Extensions->list, pxf);
 
 	return rab;
 }
