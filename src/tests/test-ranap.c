@@ -78,6 +78,7 @@ static void test_aper_causemisc(uint32_t inp, uint8_t exp_enc)
 	printf("Decoded Cause Misc=%u\n", c_dec->choice.misc);
 	OSMO_ASSERT(c_dec->present == RANAP_Cause_PR_misc);
 	OSMO_ASSERT(c_dec->choice.misc == inp);
+	ASN_STRUCT_FREE(asn_DEF_RANAP_Cause, c_dec);
 }
 
 int main(int argc, char **argv)
