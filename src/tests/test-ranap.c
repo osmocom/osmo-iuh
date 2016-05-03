@@ -57,7 +57,7 @@ static void test_aper_int(uint32_t inp)
 static void test_aper_causemisc(uint32_t inp, uint8_t exp_enc)
 {
 	RANAP_Cause_t c = { .present = RANAP_Cause_PR_misc, .choice.misc = inp };
-	RANAP_Cause_t *c_dec;
+	RANAP_Cause_t *c_dec = NULL;
 	asn_enc_rval_t rv;
 	uint8_t buf[32];
 
