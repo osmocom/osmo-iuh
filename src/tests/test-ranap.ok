@@ -79,9 +79,9 @@ Decoded Cause Misc=115
 <RANAP_IE>
     <id>64</id>
     <criticality><ignore/></criticality>
-    <value>00 67 45 23 01</value>
+    <value>00 01 23 45 67</value>
 </RANAP_IE>
-00 0e 00 1e 00 00 03 00 03 40 01 00 00 17 40 09 50 09 71 00 21 43 65 87 f9 00 40 40 05 00 67 45 23 01 
+00 0e 00 1e 00 00 03 00 03 40 01 00 00 17 40 09 50 09 71 00 21 43 65 87 f9 00 40 40 05 00 01 23 45 67 
 
 ==> RAB ASSIGNMENT COMMAND (VOICE)
 <RANAP_ProtocolIE-FieldPair>
