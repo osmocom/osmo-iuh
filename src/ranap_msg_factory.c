@@ -417,16 +417,13 @@ struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, in
 
 	if (tmsi) {
 		uint32_t *tmsi_buf = CALLOC(1, sizeof(*tmsi_buf));
-		*tmsi_buf = *tmsi;
 		ies.presenceMask |= PAGINGIES_RANAP_TEMPORARYUE_ID_PRESENT;
 		if (is_ps) {
 			ies.temporaryUE_ID.present = RANAP_TemporaryUE_ID_PR_p_TMSI;
-			ies.temporaryUE_ID.choice.tMSI.buf = (uint8_t *) tmsi_buf;
-			ies.temporaryUE_ID.choice.tMSI.size = sizeof(*tmsi_buf);
+			asn1_u32_to_str(&ies.temporaryUE_ID.choice.tMSI, tmsi_buf, *tmsi);
 		} else {
 			ies.temporaryUE_ID.present = RANAP_TemporaryUE_ID_PR_tMSI;
-			ies.temporaryUE_ID.choice.p_TMSI.buf = (uint8_t *) tmsi_buf;
-			ies.temporaryUE_ID.choice.p_TMSI.size = sizeof(*tmsi_buf);
+			asn1_u32_to_str(&ies.temporaryUE_ID.choice.p_TMSI, tmsi_buf, *tmsi);
 		}
 	}
 
