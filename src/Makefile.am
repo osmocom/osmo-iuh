@@ -3,7 +3,7 @@ SUBDIRS = hnbap rua ranap tests
 # Build {hnbap,rua,ranap}_{encoder,decoder}.c using asn1tostruct
 ASN1_ROOT = $(top_builddir)/asn1/
 ASN1TOSTRUCT = $(ASN1_ROOT)/utils/asn1tostruct.py
-BUILT_SOURCES = hnbap_decoder.c hnbap_encoder.c rua_decoder.c rua_encoder.c ranap_decoder.c ranap_encoder.c
+BUILT_SOURCES = hnbap_decoder.c hnbap_encoder.c rua_decoder.c rua_encoder.c gen_ranap.stamp
 
 hnbap_encoder.c hnbap_decoder.c hnbap_ies_defs.h: $(ASN1_ROOT)/hnbap/HNBAP-PDU-Contents.asn $(ASN1TOSTRUCT)
 	$(ASN1TOSTRUCT) -f $<
@@ -11,7 +11,7 @@ hnbap_encoder.c hnbap_decoder.c hnbap_ies_defs.h: $(ASN1_ROOT)/hnbap/HNBAP-PDU-C
 rua_encoder.c rua_decoder.c rua_ies_defs.h: $(ASN1_ROOT)/rua/RUA-PDU-Contents.asn $(ASN1TOSTRUCT)
 	$(ASN1TOSTRUCT) -p RUA_ -f $<
 
-ranap_encoder.c ranap_decoder.c: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN1TOSTRUCT)
+gen_ranap.stamp: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN1TOSTRUCT)
 	$(ASN1TOSTRUCT) -p RANAP_ -f $<
 #	We also need to replace the include in the newly generated .c files:
 	sed -i 's,^#include "ranap_ies_defs.h",#include <osmocom/ranap/ranap_ies_defs.h>,' ranap_encoder.c ranap_decoder.c
@@ -19,6 +19,7 @@ ranap_encoder.c ranap_decoder.c: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN
 	mv ranap_ies_defs.h $(top_srcdir)/include/osmocom/ranap/
 #	this is ugly ^. ranap_ies_defs.h is generated from asn1tostruct.py here, but
 #	it should live in include/osmocom/ranap/.
+	touch $(top_builddir)/$@
 
 AM_CFLAGS = -I$(top_srcdir)/include $(OSMOCORE_CFLAGS) $(OSMOVTY_CFLAGS) $(OSMOGSM_CFLAGS) $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS)
 COMMON_LDADD = -lsctp
