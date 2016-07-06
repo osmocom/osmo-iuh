@@ -382,8 +382,8 @@ static void hnbgw_vty_init(void)
 
 int main(int argc, char **argv)
 {
-	struct osmo_sua_user *sua_user;
-	struct osmo_sua_link *sua_link;
+	struct osmo_sccp_user *sua_user;
+	struct osmo_sccp_link *sua_link;
 	struct osmo_stream_srv_link *srv;
 	int rc;
 

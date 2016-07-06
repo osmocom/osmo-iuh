@@ -64,8 +64,8 @@ struct hnbgw_cnlink {
 	/* timer for re-transmitting the RANAP Reset */
 	struct osmo_timer_list T_RafC;
 	/* reference to the SCCP User SAP by which we communicate */
-	struct osmo_sua_user *sua_user;
-	struct osmo_sua_link *sua_link;
+	struct osmo_sccp_user *sua_user;
+	struct osmo_sccp_link *sua_link;
 	struct osmo_sccp_addr local_addr;
 	struct osmo_sccp_addr remote_addr;
 	uint32_t next_conn_id;

@@ -31,13 +31,13 @@ const char *cmdline_bind_addr = "127.0.0.1";
 
 struct ue_conn_ctx {
 	struct llist_head list;
-	struct osmo_sua_link *link;
+	struct osmo_sccp_link *link;
 	uint32_t conn_id;
 };
 
 static LLIST_HEAD(conn_ctx_list);
 
-struct ue_conn_ctx *ue_conn_ctx_alloc(struct osmo_sua_link *link, uint32_t conn_id)
+struct ue_conn_ctx *ue_conn_ctx_alloc(struct osmo_sccp_link *link, uint32_t conn_id)
 {
 	struct ue_conn_ctx *ctx = talloc_zero(NULL, struct ue_conn_ctx);
 
@@ -48,7 +48,7 @@ struct ue_conn_ctx *ue_conn_ctx_alloc(struct osmo_sua_link *link, uint32_t conn_
 	return ctx;
 }
 
-struct ue_conn_ctx *ue_conn_ctx_find(struct osmo_sua_link *link, uint32_t conn_id)
+struct ue_conn_ctx *ue_conn_ctx_find(struct osmo_sccp_link *link, uint32_t conn_id)
 {
 	struct ue_conn_ctx *ctx;
 
@@ -240,8 +240,8 @@ static void cn_ranap_handle_cl(void *ctx, ranap_message *message)
  *
  ***********************************************************************/
 
-int tx_unitdata(struct osmo_sua_link *link);
-int tx_conn_req(struct osmo_sua_link *link, uint32_t conn_id);
+int tx_unitdata(struct osmo_sccp_link *link);
+int tx_conn_req(struct osmo_sccp_link *link, uint32_t conn_id);
 
 struct osmo_prim_hdr *make_conn_req(uint32_t conn_id);
 struct osmo_prim_hdr *make_dt1_req(uint32_t conn_id, const uint8_t *data, unsigned int len);
@@ -359,7 +359,7 @@ static void handle_options(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-	struct osmo_sua_user *user;
+	struct osmo_sccp_user *user;
 	void *ctx = talloc_named_const(NULL, 1, "root");
 	int rc;
 	int port = 14001;

@@ -327,7 +327,7 @@ static int handle_cn_disc_ind(struct hnbgw_cnlink *cnlink,
 }
 
 /* Entry point for primitives coming up from SCCP User SAP */
-static int sccp_sap_up(struct osmo_prim_hdr *oph, struct osmo_sua_link *slink)
+static int sccp_sap_up(struct osmo_prim_hdr *oph, struct osmo_sccp_link *slink)
 {
 	struct hnbgw_cnlink *cnlink = osmo_sua_link_get_user_priv(slink);
 	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) oph;
