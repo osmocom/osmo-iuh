@@ -50,6 +50,16 @@ build_dep libasn1c
 build_dep asn1c aper-prefix
 
 cd "$base"
+# Build using the checked-in asn1 code
+autoreconf --install --force
+./configure
+$MAKE $PARALLEL_MAKE
+LD_LIBRARY_PATH="$inst/lib" $MAKE check
+# distcheck is broken
+#LD_LIBRARY_PATH=$PWD/deps/install/lib $MAKE distcheck
+make clean
+
+# Build with regenerated asn1 code
 autoreconf --install --force
 ./configure
 PATH="$inst/bin:$PATH" $MAKE $PARALLEL_MAKE -C src regen
