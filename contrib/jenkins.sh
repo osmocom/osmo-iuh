@@ -12,6 +12,13 @@ rm -rf "$inst"
 build_dep() {
 	project="$1"
 	branch="$2"
+	set +x
+	echo
+	echo
+	echo
+	echo " =============================== $project ==============================="
+	echo
+	set -x
 	if [ -z "$project" ]; then
 		echo "internal failure"
 		exit 1
@@ -23,6 +30,7 @@ build_dep() {
 	if [ -n "$branch" ]; then
 		git checkout "$branch"
 	fi
+	git rev-parse HEAD
 	autoreconf --install --force
 	./configure --prefix="$inst"
 	$MAKE $PARALLEL_MAKE install
