@@ -58,6 +58,6 @@ osmo_hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOVTY_LIBS) $(OSMOGSM_LIBS) \
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	make -C hnbap regen
-	make -C ranap regen
-	make -C rua regen
+	$(MAKE) -C hnbap regen
+	$(MAKE) -C ranap regen
+	$(MAKE) -C rua regen
