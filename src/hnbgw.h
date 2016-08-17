@@ -132,6 +132,8 @@ struct hnb_gw {
 	struct hnbgw_cnlink *cnlink_ps;
 };
 
+extern void *talloc_asn1_ctx;
+
 struct ue_context *ue_context_by_id(struct hnb_gw *gw, uint32_t id);
 struct ue_context *ue_context_by_imsi(struct hnb_gw *gw, const char *imsi);
 struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi);
@@ -139,3 +141,5 @@ void ue_context_free(struct ue_context *ue);
 
 struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_link *link, int new_fd);
 void hnb_context_release(struct hnb_context *ctx);
+
+void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx);

@@ -1,6 +1,7 @@
 /* main application for hnb-gw part of osmo-iuh */
 
 /* (C) 2015 by Harald Welte <laforge@gnumonks.org>
+ * (C) 2016 by sysmocom s.f.m.c. GmbH <info@sysmocom.de>
  * All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,7 +44,6 @@
 
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
-#include <osmocom/vty/command.h>
 
 #include <osmocom/netif/stream.h>
 
@@ -327,67 +327,6 @@ static struct vty_app_info vty_info = {
 	.version	= "0",
 };
 
-static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
-{
-	struct hnbgw_context_map *map;
-
-	vty_out(vty, "HNB \"%s\" MCC %u MNC %u LAC %u RAC %u SAC %u CID %u%s", hnb->identity_info,
-			hnb->id.mcc, hnb->id.mnc, hnb->id.lac, hnb->id.rac, hnb->id.sac, hnb->id.cid,
-			VTY_NEWLINE);
-	vty_out(vty, "   HNBAP ID %u RUA ID %u%s", hnb->hnbap_stream, hnb->rua_stream, VTY_NEWLINE);
-
-	llist_for_each_entry(map, &hnb->map_list, hnb_list) {
-		vty_out(vty, " Map %u->%u (RUA->SUA) cnlink=%p state=%u%s", map->rua_ctx_id, map->scu_conn_id,
-			map->cn_link, map->state, VTY_NEWLINE);
-
-	}
-}
-
-static void vty_dump_ue_info(struct vty *vty, struct ue_context *ue)
-{
-	vty_out(vty, "UE IMSI \"%s\" context ID %u%s", ue->imsi, ue->context_id, VTY_NEWLINE);
-}
-
-DEFUN(show_hnb, show_hnb_cmd, "show hnb all", SHOW_STR "Display information about a HNB")
-{
-	struct hnb_context *hnb;
-
-	llist_for_each_entry(hnb, &g_hnb_gw->hnb_list, list) {
-		vty_dump_hnb_info(vty, hnb);
-	}
-
-	return CMD_SUCCESS;
-}
-
-DEFUN(show_ue, show_ue_cmd, "show ue all", SHOW_STR "Display information about a UE")
-{
-	struct ue_context *ue;
-
-	llist_for_each_entry(ue, &g_hnb_gw->ue_list, list) {
-		vty_dump_ue_info(vty, ue);
-	}
-
-	return CMD_SUCCESS;
-}
-
-DEFUN(show_talloc, show_talloc_cmd, "show talloc", SHOW_STR "Display talloc info")
-{
-	talloc_report_full(tall_hnb_ctx, stderr);
-	talloc_report_full(talloc_asn1_ctx, stderr);
-
-	return CMD_SUCCESS;
-}
-
-static void hnbgw_vty_init(void)
-{
-	install_element_ve(&show_hnb_cmd);
-	install_element_ve(&show_ue_cmd);
-	install_element_ve(&show_talloc_cmd);
-
-	logging_vty_add_cmds(&hnbgw_log_info);
-}
-
-
 static struct {
 	int daemonize;
 	const char *config_file;
@@ -499,7 +438,8 @@ int main(int argc, char **argv)
 	vty_info.copyright = osmo_hnbgw_copyright;
 	vty_init(&vty_info);
 
-	hnbgw_vty_init();
+	hnbgw_vty_init(g_hnb_gw, tall_hnb_ctx);
+	logging_vty_add_cmds(&hnbgw_log_info);
 
 	/* Handle options after vty_init(), for --version */
 	handle_options(argc, argv);

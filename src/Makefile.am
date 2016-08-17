@@ -46,6 +46,7 @@ osmo_hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c hnbap_common.c \
 		     rua_encoder.c rua_decoder.c rua_common.c \
 		     rua_msg_factory.c \
 		     hnbgw.c hnbgw_hnbap.c hnbgw_rua.c hnbgw_ranap.c \
+		     hnbgw_vty.c \
 		     context_map.c hnbgw_cn.c
 
 osmo_hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOVTY_LIBS) $(OSMOGSM_LIBS) \
