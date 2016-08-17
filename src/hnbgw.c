@@ -326,8 +326,6 @@ static struct vty_app_info vty_info = {
 	.version	= "0",
 };
 
-static int daemonize = 0;
-
 static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
 {
 	struct hnbgw_context_map *map;
@@ -388,6 +386,83 @@ static void hnbgw_vty_init(void)
 	logging_vty_add_cmds(&hnbgw_log_info);
 }
 
+
+static struct {
+	int daemonize;
+} hnbgw_cmdline_config = {
+	0
+};
+
+static void print_usage()
+{
+	printf("Usage: osmo-hnbgw\n");
+}
+
+static void print_help()
+{
+	printf("  -h --help                  This text.\n");
+	printf("  -d option --debug=DHNBAP:DSUA:DRUA:DRANAP:DMAIN  Enable debugging.\n");
+	printf("  -D --daemonize             Fork the process into a background daemon.\n");
+	printf("  -s --disable-color\n");
+	printf("  -T --timestamp             Prefix every log line with a timestamp.\n");
+	printf("  -V --version               Print the version of OsmoHNBGW.\n");
+	printf("  -e --log-level number      Set a global loglevel.\n");
+}
+
+static void handle_options(int argc, char **argv)
+{
+	while (1) {
+		int option_index = 0, c;
+		static struct option long_options[] = {
+			{"help", 0, 0, 'h'},
+			{"debug", 1, 0, 'd'},
+			{"daemonize", 0, 0, 'D'},
+			{"disable-color", 0, 0, 's'},
+			{"timestamp", 0, 0, 'T'},
+			{"version", 0, 0, 'V' },
+			{"log-level", 1, 0, 'e'},
+			{0, 0, 0, 0}
+		};
+
+		c = getopt_long(argc, argv, "hd:DsTVe:",
+				long_options, &option_index);
+		if (c == -1)
+			break;
+
+		switch (c) {
+		case 'h':
+			print_usage();
+			print_help();
+			exit(0);
+		case 's':
+			log_set_use_color(osmo_stderr_target, 0);
+			break;
+		case 'd':
+			log_parse_category_mask(osmo_stderr_target, optarg);
+			break;
+		case 'D':
+			hnbgw_cmdline_config.daemonize = 1;
+			break;
+		case 'T':
+			log_set_print_timestamp(osmo_stderr_target, 1);
+			break;
+		case 'e':
+			log_set_log_level(osmo_stderr_target, atoi(optarg));
+			break;
+		case 'V':
+			print_version(1);
+			exit(0);
+			break;
+		default:
+			/* catch unknown options *as well as* missing arguments. */
+			fprintf(stderr, "Error in command line options. Exiting.\n");
+			exit(-1);
+			break;
+		}
+	}
+}
+
+
 int main(int argc, char **argv)
 {
 	struct osmo_sccp_user *sua_user;
@@ -409,6 +484,9 @@ int main(int argc, char **argv)
 	vty_init(&vty_info);
 
 	hnbgw_vty_init();
+
+	/* Handle options after vty_init(), for --version */
+	handle_options(argc, argv);
 
 	/* NOTE: if we add a config file, read the config before
 	 * fetching the telnet address with vty_get_bind_addr() */
@@ -443,7 +521,7 @@ int main(int argc, char **argv)
 	}
 	g_hnb_gw->iuh = srv;
 
-	if (daemonize) {
+	if (hnbgw_cmdline_config.daemonize) {
 		rc = osmo_daemonize();
 		if (rc < 0) {
 			perror("Error during daemonize");
