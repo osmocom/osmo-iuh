@@ -389,8 +389,10 @@ static void hnbgw_vty_init(void)
 
 static struct {
 	int daemonize;
+	const char *config_file;
 } hnbgw_cmdline_config = {
-	0
+	0,
+	"osmo-hnbgw.cfg"
 };
 
 static void print_usage()
@@ -403,6 +405,7 @@ static void print_help()
 	printf("  -h --help                  This text.\n");
 	printf("  -d option --debug=DHNBAP:DSUA:DRUA:DRANAP:DMAIN  Enable debugging.\n");
 	printf("  -D --daemonize             Fork the process into a background daemon.\n");
+	printf("  -c --config-file filename  The config file to use.\n");
 	printf("  -s --disable-color\n");
 	printf("  -T --timestamp             Prefix every log line with a timestamp.\n");
 	printf("  -V --version               Print the version of OsmoHNBGW.\n");
@@ -417,6 +420,7 @@ static void handle_options(int argc, char **argv)
 			{"help", 0, 0, 'h'},
 			{"debug", 1, 0, 'd'},
 			{"daemonize", 0, 0, 'D'},
+			{"config-file", 1, 0, 'c'},
 			{"disable-color", 0, 0, 's'},
 			{"timestamp", 0, 0, 'T'},
 			{"version", 0, 0, 'V' },
@@ -424,7 +428,7 @@ static void handle_options(int argc, char **argv)
 			{0, 0, 0, 0}
 		};
 
-		c = getopt_long(argc, argv, "hd:DsTVe:",
+		c = getopt_long(argc, argv, "hd:Dc:sTVe:",
 				long_options, &option_index);
 		if (c == -1)
 			break;
@@ -442,6 +446,9 @@ static void handle_options(int argc, char **argv)
 			break;
 		case 'D':
 			hnbgw_cmdline_config.daemonize = 1;
+			break;
+		case 'c':
+			hnbgw_cmdline_config.config_file = optarg;
 			break;
 		case 'T':
 			log_set_print_timestamp(osmo_stderr_target, 1);
@@ -488,8 +495,13 @@ int main(int argc, char **argv)
 	/* Handle options after vty_init(), for --version */
 	handle_options(argc, argv);
 
-	/* NOTE: if we add a config file, read the config before
-	 * fetching the telnet address with vty_get_bind_addr() */
+	rc = vty_read_config_file(hnbgw_cmdline_config.config_file, NULL);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_FATAL, "Failed to parse the config file: '%s'\n",
+		     hnbgw_cmdline_config.config_file);
+		return 1;
+	}
+
 	LOGP(DMAIN, LOGL_NOTICE, "VTY at %s %d\n",
 	     vty_get_bind_addr(), 2323);
 	rc = telnet_init_dynif(NULL, g_hnb_gw, vty_get_bind_addr(), 2323);
