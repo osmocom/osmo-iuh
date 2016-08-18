@@ -25,6 +25,7 @@
 #include <getopt.h>
 #include <errno.h>
 #include <signal.h>
+#include <stdbool.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -390,9 +391,17 @@ static void hnbgw_vty_init(void)
 static struct {
 	int daemonize;
 	const char *config_file;
+	bool log_disable_color;
+	bool log_enable_timestamp;
+	int log_level;
+	const char *log_category_mask;
 } hnbgw_cmdline_config = {
 	0,
-	"osmo-hnbgw.cfg"
+	"osmo-hnbgw.cfg",
+	true,
+	false,
+	0,
+	NULL,
 };
 
 static void print_usage()
@@ -439,10 +448,10 @@ static void handle_options(int argc, char **argv)
 			print_help();
 			exit(0);
 		case 's':
-			log_set_use_color(osmo_stderr_target, 0);
+			hnbgw_cmdline_config.log_disable_color = true;
 			break;
 		case 'd':
-			log_parse_category_mask(osmo_stderr_target, optarg);
+			hnbgw_cmdline_config.log_category_mask = optarg;
 			break;
 		case 'D':
 			hnbgw_cmdline_config.daemonize = 1;
@@ -451,10 +460,10 @@ static void handle_options(int argc, char **argv)
 			hnbgw_cmdline_config.config_file = optarg;
 			break;
 		case 'T':
-			log_set_print_timestamp(osmo_stderr_target, 1);
+			hnbgw_cmdline_config.log_enable_timestamp = true;
 			break;
 		case 'e':
-			log_set_log_level(osmo_stderr_target, atoi(optarg));
+			hnbgw_cmdline_config.log_level = atoi(optarg);
 			break;
 		case 'V':
 			print_version(1);
@@ -501,6 +510,21 @@ int main(int argc, char **argv)
 		     hnbgw_cmdline_config.config_file);
 		return 1;
 	}
+
+	/*
+	 * cmdline options take precedence over config file, but if no options
+	 * were passed we must not override the config file.
+	 */
+	if (hnbgw_cmdline_config.log_disable_color)
+		log_set_use_color(osmo_stderr_target, 0);
+	if (hnbgw_cmdline_config.log_category_mask)
+		log_parse_category_mask(osmo_stderr_target,
+					hnbgw_cmdline_config.log_category_mask);
+	if (hnbgw_cmdline_config.log_enable_timestamp)
+		log_set_print_timestamp(osmo_stderr_target, 1);
+	if (hnbgw_cmdline_config.log_level)
+		log_set_log_level(osmo_stderr_target,
+				  hnbgw_cmdline_config.log_level);
 
 	LOGP(DMAIN, LOGL_NOTICE, "VTY at %s %d\n",
 	     vty_get_bind_addr(), 2323);
