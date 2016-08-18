@@ -1,3 +1,5 @@
+SUBDIRS = examples
+
 EXTRA_DIST = \
   hnb_cs_lu.msc \
   hnb_cs_mo_call.msc \

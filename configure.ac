@@ -43,4 +43,5 @@ AC_OUTPUT(
 	include/osmocom/rua/Makefile
 	include/osmocom/iuh/Makefile
 	doc/Makefile
+	doc/examples/Makefile
 	)
