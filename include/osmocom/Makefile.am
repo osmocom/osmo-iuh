@@ -1,2 +1,2 @@
-SUBDIRS = hnbap ranap rua
+SUBDIRS = hnbap ranap rua iuh
 

@@ -41,4 +41,5 @@ AC_OUTPUT(
 	include/osmocom/hnbap/Makefile
 	include/osmocom/ranap/Makefile
 	include/osmocom/rua/Makefile
+	include/osmocom/iuh/Makefile
 	)

@@ -20,11 +20,39 @@
 
 #include <osmocom/vty/command.h>
 
+#include <osmocom/iuh/vty.h>
+
 #include "hnbgw.h"
 #include "context_map.h"
 
 static void *tall_hnb_ctx = NULL;
 static struct hnb_gw *g_hnb_gw = NULL;
+
+static struct cmd_node hnbgw_node = {
+	HNBGW_NODE,
+	"%s(config-hnbgw)# ",
+	1,
+};
+
+DEFUN(cfg_hnbgw, cfg_hnbgw_cmd,
+      "hnbgw", "Configure HNBGW options")
+{
+	vty->node = HNBGW_NODE;
+	return CMD_SUCCESS;
+}
+
+static struct cmd_node iuh_node = {
+	IUH_NODE,
+	"%s(config-hnbgw-iuh)# ",
+	1,
+};
+
+DEFUN(cfg_hnbgw_iuh, cfg_hnbgw_iuh_cmd,
+      "iuh", "Configure Iuh options")
+{
+	vty->node = IUH_NODE;
+	return CMD_SUCCESS;
+}
 
 static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
 {
@@ -77,10 +105,31 @@ DEFUN(show_talloc, show_talloc_cmd, "show talloc", SHOW_STR "Display talloc info
 	return CMD_SUCCESS;
 }
 
+static int config_write_hnbgw(struct vty *vty)
+{
+	vty_out(vty, "hnbgw%s", VTY_NEWLINE);
+	return CMD_SUCCESS;
+}
+
+static int config_write_hnbgw_iuh(struct vty *vty)
+{
+	vty_out(vty, " iuh%s", VTY_NEWLINE);
+	return CMD_SUCCESS;
+}
+
 void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 {
 	g_hnb_gw = gw;
 	tall_hnb_ctx = tall_ctx;
+
+	install_element(CONFIG_NODE, &cfg_hnbgw_cmd);
+	install_node(&hnbgw_node, config_write_hnbgw);
+	vty_install_default(HNBGW_NODE);
+
+	install_element(HNBGW_NODE, &cfg_hnbgw_iuh_cmd);
+	install_node(&iuh_node, config_write_hnbgw_iuh);
+	vty_install_default(IUH_NODE);
+
 	install_element_ve(&show_hnb_cmd);
 	install_element_ve(&show_ue_cmd);
 	install_element_ve(&show_talloc_cmd);
