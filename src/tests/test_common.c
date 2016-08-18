@@ -37,7 +37,7 @@
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/logging.h>
 
-#include "hnbgw.h"
+#include <osmocom/iuh/hnbgw.h>
 
 void *talloc_asn1_ctx;
 

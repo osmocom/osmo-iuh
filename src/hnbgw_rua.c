@@ -32,11 +32,11 @@
 
 #include "asn1helpers.h"
 
-#include "hnbgw.h"
-#include "hnbgw_ranap.h"
+#include <osmocom/iuh/hnbgw.h>
+#include <osmocom/iuh/hnbgw_ranap.h>
 #include <osmocom/rua/rua_common.h>
 #include <osmocom/rua/rua_ies_defs.h>
-#include "context_map.h"
+#include <osmocom/iuh/context_map.h>
 
 static int hnbgw_rua_tx(struct hnb_context *ctx, struct msgb *msg)
 {

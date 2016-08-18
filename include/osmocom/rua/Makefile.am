@@ -1,5 +1,5 @@
 noinst_HEADERS = \
-	rua_common.h rua_ies_defs.h \
+	rua_common.h rua_ies_defs.h rua_msg_factory.h \
 	RUA_Ansi-41-IDNNS.h \
 	RUA_Cause.h \
 	RUA_CauseMisc.h \

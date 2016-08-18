@@ -32,7 +32,7 @@
 
 #include "test_common.h"
 
-#include "hnbgw.h"
+#include <osmocom/iuh/hnbgw.h>
 
 int asn1_xer_print = 1;
 

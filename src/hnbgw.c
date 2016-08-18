@@ -51,11 +51,11 @@
 #include <osmocom/sigtran/protocol/sua.h>
 #include <osmocom/sigtran/sccp_sap.h>
 
-#include "hnbgw.h"
-#include "hnbgw_hnbap.h"
-#include "hnbgw_rua.h"
-#include "hnbgw_cn.h"
-#include "context_map.h"
+#include <osmocom/iuh/hnbgw.h>
+#include <osmocom/iuh/hnbgw_hnbap.h>
+#include <osmocom/iuh/hnbgw_rua.h>
+#include <osmocom/iuh/hnbgw_cn.h>
+#include <osmocom/iuh/context_map.h>
 
 static const char * const osmo_hnbgw_copyright =
 	"OsmoHNBGW - Osmocom Home Node B Gateway implementation\r\n"

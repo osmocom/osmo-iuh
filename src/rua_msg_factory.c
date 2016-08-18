@@ -3,9 +3,9 @@
 
 #include <osmocom/rua/rua_common.h>
 #include <osmocom/rua/rua_ies_defs.h>
-#include "rua_msg_factory.h"
+#include <osmocom/rua/rua_msg_factory.h>
 #include "asn1helpers.h"
-#include "hnbgw.h"
+#include <osmocom/iuh/hnbgw.h>
 
 
 struct msgb *rua_new_udt(struct msgb *inmsg)

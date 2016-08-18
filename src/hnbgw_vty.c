@@ -22,8 +22,8 @@
 
 #include <osmocom/iuh/vty.h>
 
-#include "hnbgw.h"
-#include "context_map.h"
+#include <osmocom/iuh/hnbgw.h>
+#include <osmocom/iuh/context_map.h>
 
 static void *tall_hnb_ctx = NULL;
 static struct hnb_gw *g_hnb_gw = NULL;

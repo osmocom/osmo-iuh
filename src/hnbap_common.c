@@ -25,7 +25,7 @@
 
 #include <osmocom/hnbap/HNBAP-PDU.h>
 #include <osmocom/hnbap/hnbap_common.h>
-#include "hnbgw.h"
+#include <osmocom/iuh/hnbgw.h>
 
 static const struct value_string hnbap_cause_radio_vals[] = {
 	{ CauseRadioNetwork_overload,		    "overload" },

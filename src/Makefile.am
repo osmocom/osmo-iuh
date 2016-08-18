@@ -60,9 +60,6 @@ libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_
 #
 bin_PROGRAMS = osmo-hnbgw
 
-noinst_HEADERS = context_map.h hnbgw.h hnbgw_cn.h \
-		 hnbgw_hnbap.h hnbgw_rua.h hnbgw_ranap.h
-
 osmo_hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c hnbap_common.c \
 		     rua_encoder.c rua_decoder.c rua_common.c \
 		     rua_msg_factory.c \

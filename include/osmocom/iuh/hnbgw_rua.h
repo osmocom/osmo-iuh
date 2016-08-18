@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hnbgw.h"
+#include <osmocom/iuh/hnbgw.h>
 #include <osmocom/rua/RUA_Cause.h>
 
 int hnbgw_rua_rx(struct hnb_context *hnb, struct msgb *msg);

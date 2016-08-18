@@ -29,11 +29,11 @@
 #include <osmocom/sigtran/sccp_sap.h>
 #include <osmocom/sigtran/sccp_helpers.h>
 
-#include "hnbgw.h"
-#include "hnbgw_rua.h"
+#include <osmocom/iuh/hnbgw.h>
+#include <osmocom/iuh/hnbgw_rua.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_msg_factory.h>
-#include "context_map.h"
+#include <osmocom/iuh/context_map.h>
 
 /***********************************************************************
  * Outbound RANAP RESET to CN

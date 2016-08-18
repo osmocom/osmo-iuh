@@ -31,7 +31,7 @@
 #include <osmocom/hnbap/hnbap_common.h>
 #include <osmocom/ranap/iu_helpers.h>
 
-#include "hnbgw.h"
+#include <osmocom/iuh/hnbgw.h>
 #include <osmocom/hnbap/hnbap_ies_defs.h>
 
 #define IU_MSG_NUM_IES		32

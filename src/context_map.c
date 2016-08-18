@@ -24,8 +24,8 @@
 
 #include <osmocom/core/timer.h>
 
-#include "hnbgw.h"
-#include "context_map.h"
+#include <osmocom/iuh/hnbgw.h>
+#include <osmocom/iuh/context_map.h>
 
 /* is a given SCCP USER SAP Connection ID in use for a given CN link? */
 static int cn_id_in_use(struct hnbgw_cnlink *cn, uint32_t id)

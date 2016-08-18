@@ -24,7 +24,7 @@
 #include <osmocom/core/msgb.h>
 
 #include <osmocom/rua/rua_common.h>
-#include "hnbgw.h"
+#include <osmocom/iuh/hnbgw.h>
 
 extern int asn1_xer_print;
 

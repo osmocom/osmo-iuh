@@ -24,7 +24,7 @@
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_common_cn.h>
 #include <osmocom/ranap/ranap_msg_factory.h>
-#include "hnbgw.h"
+#include <osmocom/iuh/hnbgw.h>
 
 int asn1_xer_print = 1;
 const char *cmdline_bind_addr = "127.0.0.1";

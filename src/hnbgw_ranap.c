@@ -29,8 +29,8 @@
 
 #include "asn1helpers.h"
 
-#include "hnbgw.h"
-#include "hnbgw_rua.h"
+#include <osmocom/iuh/hnbgw.h>
+#include <osmocom/iuh/hnbgw_rua.h>
 #include <osmocom/ranap/ranap_common.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_msg_factory.h>
