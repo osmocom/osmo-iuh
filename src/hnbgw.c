@@ -56,6 +56,14 @@
 #include "hnbgw_cn.h"
 #include "context_map.h"
 
+static const char * const osmo_hnbgw_copyright =
+	"OsmoHNBGW - Osmocom Home Node B Gateway implementation\r\n"
+	"Copyright (C) 2016 by sysmocom s.f.m.c. GmbH <info@sysmocom.de>\r\n"
+	"Contributions by Daniel Willmann, Harald Welte, Neels Hofmeyr\r\n"
+	"License AGPLv3+: GNU AGPL version 3 or later <http://gnu.org/licenses/agpl-3.0.html>\r\n"
+	"This is free software: you are free to change and redistribute it.\r\n"
+	"There is NO WARRANTY, to the extent permitted by law.\r\n";
+
 static void *tall_hnb_ctx;
 void *talloc_asn1_ctx;
 
@@ -397,7 +405,9 @@ int main(int argc, char **argv)
 	if (rc < 0)
 		exit(1);
 
+	vty_info.copyright = osmo_hnbgw_copyright;
 	vty_init(&vty_info);
+
 	hnbgw_vty_init();
 
 	/* NOTE: if we add a config file, read the config before
