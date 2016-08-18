@@ -107,8 +107,11 @@ struct ue_context {
 	struct hnb_context *hnb;
 };
 
+#define HNBGW_IUH_BIND_ADDR_DEFAULT "0.0.0.0"
+
 struct hnb_gw {
 	struct {
+		const char *iuh_bind_addr;
 		/*! SCTP port for Iuh listening */
 		uint16_t iuh_listen_port;
 		/*! The UDP port where we receive multiplexed CS user
@@ -143,3 +146,9 @@ struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_
 void hnb_context_release(struct hnb_context *ctx);
 
 void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx);
+
+/*
+ * Return IP address passed to the hnbgw/iuh/bind command, or
+ * IUH_BIND_ADDR_DEFAULT
+ */
+const char *hnbgw_get_iuh_bind_addr(struct hnb_gw *gw);

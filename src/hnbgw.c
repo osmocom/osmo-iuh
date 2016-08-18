@@ -289,6 +289,14 @@ static int accept_cb(struct osmo_stream_srv_link *srv, int fd)
 	return 0;
 }
 
+const char *hnbgw_get_iuh_bind_addr(struct hnb_gw *gw)
+{
+	const char *addr = gw->config.iuh_bind_addr;
+	if (!addr)
+		addr = HNBGW_IUH_BIND_ADDR_DEFAULT;
+	return addr;
+}
+
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
 		.name = "DMAIN", .loglevel = LOGL_DEBUG, .enabled = 1,
@@ -480,6 +488,9 @@ int main(int argc, char **argv)
 	g_hnb_gw->cnlink_cs = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.1", SUA_PORT, 0);
 	g_hnb_gw->cnlink_ps = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.2", SUA_PORT, 1);
 
+	LOGP(DMAIN, LOGL_NOTICE, "Listening for Iuh at %s %d\n",
+	     hnbgw_get_iuh_bind_addr(g_hnb_gw),
+	     g_hnb_gw->config.iuh_listen_port);
 	srv = osmo_stream_srv_link_create(tall_hnb_ctx);
 	if (!srv) {
 		perror("cannot create server");
@@ -487,7 +498,7 @@ int main(int argc, char **argv)
 	}
 	osmo_stream_srv_link_set_data(srv, g_hnb_gw);
 	osmo_stream_srv_link_set_proto(srv, IPPROTO_SCTP);
-	osmo_stream_srv_link_set_addr(srv, "0.0.0.0");
+	osmo_stream_srv_link_set_addr(srv, hnbgw_get_iuh_bind_addr(g_hnb_gw));
 	osmo_stream_srv_link_set_port(srv, g_hnb_gw->config.iuh_listen_port);
 	osmo_stream_srv_link_set_accept_cb(srv, accept_cb);
 
