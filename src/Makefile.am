@@ -1,7 +1,7 @@
 SUBDIRS = hnbap rua ranap tests
 
 # Build {hnbap,rua,ranap}_{encoder,decoder}.c using asn1tostruct
-ASN1_ROOT = $(top_builddir)/asn1/
+ASN1_ROOT = $(top_srcdir)/asn1
 ASN1TOSTRUCT = $(ASN1_ROOT)/utils/asn1tostruct.py
 BUILT_SOURCES = hnbap_decoder.c hnbap_encoder.c rua_decoder.c rua_encoder.c \
 	gen_hnbap.stamp gen_rua.stamp gen_ranap.stamp
