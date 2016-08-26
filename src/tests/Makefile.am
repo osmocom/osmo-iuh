@@ -27,6 +27,9 @@ test_ranap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 dummy_cn_SOURCES = $(RANAP_FILES) test_common.c dummy_cn_sua.c
 dummy_cn_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 
+$(top_builddir)/src/libosmo-ranap.la:
+	$(MAKE) -C $(top_builddir)/src libosmo-ranap.la
+
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 	:;{ \
