@@ -593,3 +593,6 @@ ranap_HEADERS = \
 	RANAP_VoiceSupportMatchIndicator.h
 
 ranapdir = $(includedir)/osmocom/ranap
+
+DISTCLEANFILES = \
+	ranap_ies_defs.h

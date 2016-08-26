@@ -35,3 +35,6 @@ noinst_HEADERS = \
 	RUA_TriggeringMessage.h \
 	RUA_TypeOfError.h \
 	RUA_UnsuccessfulOutcome.h
+
+DISTCLEANFILES = \
+	rua_ies_defs.h

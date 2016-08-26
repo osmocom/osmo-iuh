@@ -42,6 +42,8 @@ $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 
 TESTSUITE = $(srcdir)/testsuite
 
+DISTCLEANFILES = atconfig
+
 check-local: atconfig $(TESTSUITE)
 	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 

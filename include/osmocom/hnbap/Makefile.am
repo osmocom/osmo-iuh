@@ -115,3 +115,6 @@ noinst_HEADERS = \
 	U-RNTIQueryRequest.h \
 	U-RNTIQueryResponse.h \
 	UTRANCellID.h
+
+DISTCLEANFILES = \
+	hnbap_ies_defs.h

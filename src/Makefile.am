@@ -83,3 +83,14 @@ regenerate-from-asn1-source:
 	$(MAKE) -C hnbap regen
 	$(MAKE) -C ranap regen
 	$(MAKE) -C rua regen
+
+DISTCLEANFILES = \
+	hnbap_decoder.c \
+	hnbap_encoder.c \
+	rua_decoder.c \
+	rua_encoder.c \
+	ranap_decoder.c \
+	ranap_encoder.c \
+	gen_hnbap.stamp \
+	gen_rua.stamp \
+	gen_ranap.stamp
