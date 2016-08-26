@@ -52,8 +52,8 @@
 
 #include "hnb-test.h"
 #include "hnb-test-layers.h"
-#include "hnbap_common.h"
-#include "hnbap_ies_defs.h"
+#include <osmocom/hnbap/hnbap_common.h>
+#include <osmocom/hnbap/hnbap_ies_defs.h>
 #include "rua_msg_factory.h"
 #include "asn1helpers.h"
 #include <osmocom/ranap/iu_helpers.h>

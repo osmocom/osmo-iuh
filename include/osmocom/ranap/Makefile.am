@@ -3,8 +3,8 @@
 # the build process wants this header file, it should first build
 # src/ranap_encoder.c and src/ranap_decoder.c.
 # This rule sucks:
-ranap_ies_defs.h: $(top_builddir)/src/ranap_encoder.c
-	make -C $(top_builddir)/src/ ranap_encoder.c
+ranap_ies_defs.h:
+	$(MAKE) -C $(top_builddir)/src/ gen_ranap.stamp
 
 ranap_HEADERS = \
 	ranap_ies_defs.h \

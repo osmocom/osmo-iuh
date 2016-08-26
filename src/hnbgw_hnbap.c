@@ -28,11 +28,11 @@
 #include <string.h>
 
 #include "asn1helpers.h"
+#include <osmocom/hnbap/hnbap_common.h>
 #include <osmocom/ranap/iu_helpers.h>
 
 #include "hnbgw.h"
-#include "hnbap_common.h"
-#include "hnbap_ies_defs.h"
+#include <osmocom/hnbap/hnbap_ies_defs.h>
 
 #define IU_MSG_NUM_IES		32
 #define IU_MSG_NUM_EXT_IES	32

@@ -24,7 +24,7 @@
 #include <osmocom/core/msgb.h>
 
 #include <osmocom/hnbap/HNBAP-PDU.h>
-#include "hnbap_common.h"
+#include <osmocom/hnbap/hnbap_common.h>
 #include "hnbgw.h"
 
 static const struct value_string hnbap_cause_radio_vals[] = {

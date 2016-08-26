@@ -22,8 +22,8 @@
 #include <osmocom/ranap/iu_helpers.h>
 #include "asn1helpers.h"
 
-#include "hnbap_common.h"
-#include "hnbap_ies_defs.h"
+#include <osmocom/hnbap/hnbap_common.h>
+#include <osmocom/hnbap/hnbap_ies_defs.h>
 #include "test_common.h"
 
 #include <assert.h>

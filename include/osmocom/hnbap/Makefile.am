@@ -1,4 +1,5 @@
 noinst_HEADERS = \
+	hnbap_common.h hnbap_ies_defs.h \
 	AccessResult.h \
 	Access-stratum-release-indicator.h \
 	AdditionalNeighbourInfoList.h \

@@ -1,6 +1,6 @@
 
 #include <asn1c/ANY.h>
-#include "../rua_ies_defs.h"
+#include <osmocom/rua/rua_ies_defs.h>
 
 #include "hnb-test-layers.h"
 

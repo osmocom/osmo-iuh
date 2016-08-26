@@ -1,8 +1,8 @@
 #include <stdint.h>
 #include <osmocom/netif/stream.h>
 
-#include "rua_common.h"
-#include "rua_ies_defs.h"
+#include <osmocom/rua/rua_common.h>
+#include <osmocom/rua/rua_ies_defs.h>
 #include "rua_msg_factory.h"
 #include "asn1helpers.h"
 #include "hnbgw.h"
