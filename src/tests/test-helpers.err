@@ -1,3 +1,2 @@
-<0004> ranap_common.c:508 Invalid PLMN Identity size: should be 3, is 2
-[0;m<0004> ranap_common.c:522 Invalid LAC size: should be 2, is 1
-[0;m
+Invalid PLMN Identity size: should be 3, is 2
+Invalid LAC size: should be 2, is 1

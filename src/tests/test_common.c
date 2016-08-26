@@ -85,4 +85,7 @@ int test_common_init(void)
 		exit(1);
 
 	ranap_set_log_area(DRANAP);
+
+	log_set_print_filename(osmo_stderr_target, 0);
+	log_set_use_color(osmo_stderr_target, 0);
 }
