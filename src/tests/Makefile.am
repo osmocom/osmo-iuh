@@ -41,11 +41,21 @@ $(srcdir)/package.m4: $(top_srcdir)/configure.ac
              } >'$(srcdir)/package.m4'
 
 TESTSUITE = $(srcdir)/testsuite
+EXTRA_DIST = testsuite.at $(TESTSUITE) $(srcdir)/package.m4 \
+	     test-helpers.err  test-helpers.ok  test-hnbap.ok  test-ranap.ok
 
 DISTCLEANFILES = atconfig
 
 check-local: atconfig $(TESTSUITE)
 	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
+
+installcheck-local: atconfig $(TESTSUITE)
+	$(SHELL) '$(TESTSUITE)' AUTOTEST_PATH='$(bindir)' \
+		$(TESTSUITEFLAGS)
+
+clean-local:
+	test ! -f '$(TESTSUITE)' || \
+                $(SHELL) '$(TESTSUITE)' --clean
 
 AUTOM4TE = $(SHELL) $(top_srcdir)/missing --run autom4te
 AUTOTEST = $(AUTOM4TE) --language=autotest
