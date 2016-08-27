@@ -75,5 +75,4 @@ fi
 
 $MAKE $PARALLEL_MAKE
 LD_LIBRARY_PATH="$inst/lib" $MAKE check
-# distcheck is broken
-#LD_LIBRARY_PATH=$PWD/deps/install/lib $MAKE distcheck
+LD_LIBRARY_PATH="$inst/lib" $MAKE distcheck
