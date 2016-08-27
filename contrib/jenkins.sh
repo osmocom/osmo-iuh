@@ -9,16 +9,20 @@ inst="$deps/install"
 mkdir "$deps" || true
 rm -rf "$inst"
 
-build_dep() {
-	project="$1"
-	branch="$2"
+marker() {
 	set +x
 	echo
 	echo
 	echo
-	echo " =============================== $project ==============================="
+	echo " =============================== $@ ==============================="
 	echo
 	set -x
+}
+
+build_dep() {
+	project="$1"
+	branch="$2"
+	marker $project
 	if [ -z "$project" ]; then
 		echo "internal failure"
 		exit 1
@@ -49,6 +53,7 @@ build_dep libasn1c
 # the asn1c binary is used by the 'regen' target below
 build_dep asn1c aper-prefix
 
+marker osmo-iuh
 cd "$base"
 # Build using the checked-in asn1 code
 autoreconf --install --force
