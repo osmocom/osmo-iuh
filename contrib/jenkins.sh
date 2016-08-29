@@ -55,19 +55,24 @@ build_dep asn1c aper-prefix
 
 marker osmo-iuh
 cd "$base"
-# Build using the checked-in asn1 code
-autoreconf --install --force
-./configure
-$MAKE $PARALLEL_MAKE
-LD_LIBRARY_PATH="$inst/lib" $MAKE check
-# distcheck is broken
-#LD_LIBRARY_PATH=$PWD/deps/install/lib $MAKE distcheck
-make clean
 
-# Build with regenerated asn1 code
 autoreconf --install --force
 ./configure
+
+# Verify that checked-in asn1 code is identical to regenerated asn1 code
 PATH="$inst/bin:$PATH" $MAKE $PARALLEL_MAKE -C src regen
+
+# attempt to settle the file system
+sleep 1
+
+git status
+git diff | cat
+
+if ! git diff-files --quiet ; then
+	echo "ERROR: 'make -C src regen' does not match committed asn1 code"
+	exit 1
+fi
+
 $MAKE $PARALLEL_MAKE
 LD_LIBRARY_PATH="$inst/lib" $MAKE check
 # distcheck is broken
