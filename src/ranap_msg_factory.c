@@ -653,14 +653,9 @@ static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint1
 	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
 	uint8_t binding_id[4];
 
-#if 0
 	binding_id[0] = port >> 8;
 	binding_id[1] = port & 0xff;
 	binding_id[2] = binding_id[3] = 0;
-#else
-	binding_id[0] = binding_id[1] = binding_id[2]  = 0;
-	binding_id[3] = 1;
-#endif
 
 	new_transp_layer_addr(&tli->transportLayerAddress, ip, use_x213_nsap);
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_bindingID;
