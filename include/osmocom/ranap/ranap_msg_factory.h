@@ -32,7 +32,9 @@ struct msgb *ranap_new_msg_iu_rel_compl(void);
 struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, int is_ps, uint32_t cause);
 
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for CS (voice) */
-struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip, uint16_t rtp_port);
+struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
+					    uint16_t rtp_port,
+					    bool use_x213_nsap);
 
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for PS (data) */
 struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,

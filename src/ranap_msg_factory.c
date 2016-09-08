@@ -647,7 +647,8 @@ static void new_transp_layer_addr(BIT_STRING_t *out, uint32_t ip, bool use_x213_
 	out->bits_unused = 0;
 }
 
-static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint16_t port)
+static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint16_t port,
+							      bool use_x213_nsap)
 {
 	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
 	uint8_t binding_id[4];
@@ -661,7 +662,7 @@ static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint1
 	binding_id[3] = 1;
 #endif
 
-	new_transp_layer_addr(&tli->transportLayerAddress, ip, 1);
+	new_transp_layer_addr(&tli->transportLayerAddress, ip, use_x213_nsap);
 	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_bindingID;
 	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.bindingID,
 				(const char *) binding_id, sizeof(binding_id));
@@ -710,7 +711,9 @@ static void assign_new_ra_id(RANAP_RAB_ID_t *id, uint8_t rab_id)
 }
 
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for CS (voice) */
-struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip, uint16_t rtp_port)
+struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
+					    uint16_t rtp_port,
+					    bool use_x213_nsap)
 {
 	RANAP_ProtocolIE_FieldPair_t *pair;
 	RANAP_RAB_AssignmentRequestIEs_t ies;
@@ -731,7 +734,8 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip, uin
 	//first.nAS_SynchronisationIndicator = FIXME;
 	first.rAB_Parameters = new_rab_par_voice();
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_support_mode_for_predefined_SDU_sizes, 1); /* 2? */
-	first.transportLayerInformation = new_transp_info_rtp(rtp_ip, rtp_port);
+	first.transportLayerInformation = new_transp_info_rtp(rtp_ip, rtp_port,
+							      use_x213_nsap);
 
 	/* put together the 'Second' part */
 	RANAP_RAB_SetupOrModifyItemSecond_t second;

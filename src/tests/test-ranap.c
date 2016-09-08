@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 		msgb_free(msg);
 
 		printf("\n==> RAB ASSIGNMENT COMMAND (VOICE)\n");
-		msg = ranap_new_msg_rab_assign_voice(1, rtp_ip, rtp_port);
+		msg = ranap_new_msg_rab_assign_voice(1, rtp_ip, rtp_port, 1);
 		if (msg)
 			printf("%s\n", msgb_hexdump(msg));
 		msgb_free(msg);
