@@ -78,6 +78,7 @@ int test_common_init(void)
 {
 	int rc;
 
+	msgb_talloc_ctx_init(NULL, 0);
 	talloc_asn1_ctx = talloc_named_const(NULL, 0, "asn1_context");
 
 	rc = osmo_init_logging(&test_log_info);

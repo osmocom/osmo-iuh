@@ -214,5 +214,5 @@ Decoded Cause Misc=115
 00 0a 00 11 00 00 01 00 29 40 0a 00 00 01 00 28 40 03 05 c2 d0 
 report
 talloc report on 'asn1_context' (total      0 bytes in   1 blocks)
-talloc report on 'msgb' (total      1 bytes in   1 blocks)
+talloc report on 'msgb' (total      0 bytes in   1 blocks)
 exit

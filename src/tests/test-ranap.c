@@ -97,8 +97,6 @@ int main(int argc, char **argv)
 
 	//asn_debug = 1;
 
-	msgb_set_talloc_ctx(talloc_named_const(NULL, 1, "msgb"));
-
 	test_common_init();
 
 	test_aper_int(1);
