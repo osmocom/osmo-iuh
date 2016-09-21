@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export PATH="$PATH:$HOME/osmo-ci/scripts"
 
 set -ex
 
@@ -74,5 +75,7 @@ if ! git diff-files --quiet ; then
 fi
 
 $MAKE $PARALLEL_MAKE
-LD_LIBRARY_PATH="$inst/lib" $MAKE check
-LD_LIBRARY_PATH="$inst/lib" $MAKE distcheck
+LD_LIBRARY_PATH="$inst/lib" $MAKE check \
+  || cat-testlogs.sh
+LD_LIBRARY_PATH="$inst/lib" $MAKE distcheck \
+  || cat-testlogs.sh
