@@ -161,6 +161,9 @@ struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi,
 	ue->context_id = get_next_ue_ctx_id(hnb->gw);
 	llist_add_tail(&ue->list, &hnb->gw->ue_list);
 
+	LOGP(DHNBAP, LOGL_INFO, "created UE context: id 0x%x, imsi %s, tmsi 0x%x\n",
+	     ue->context_id, imsi? imsi : "-", tmsi);
+
 	return ue;
 }
 
