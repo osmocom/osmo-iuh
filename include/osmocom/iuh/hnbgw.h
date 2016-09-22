@@ -101,8 +101,7 @@ struct ue_context {
 	/*! Unique Context ID for this UE */
 	uint32_t context_id;
 	char imsi[16+1];
-	/* TODO: track TMSI, for HNBAP UE Register Request with TMSI,
-	 * seen with ip.access nano3G femto cell */
+	uint32_t tmsi;
 	/*! UE is serviced via this HNB */
 	struct hnb_context *hnb;
 };
@@ -139,7 +138,9 @@ extern void *talloc_asn1_ctx;
 
 struct ue_context *ue_context_by_id(struct hnb_gw *gw, uint32_t id);
 struct ue_context *ue_context_by_imsi(struct hnb_gw *gw, const char *imsi);
-struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi);
+struct ue_context *ue_context_by_tmsi(struct hnb_gw *gw, uint32_t tmsi);
+struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi,
+				    uint32_t tmsi);
 void ue_context_free(struct ue_context *ue);
 
 struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_link *link, int new_fd);

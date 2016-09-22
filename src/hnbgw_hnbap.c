@@ -327,7 +327,7 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 
 	ue = ue_context_by_imsi(ctx->gw, imsi);
 	if (!ue)
-		ue = ue_context_alloc(ctx, imsi);
+		ue = ue_context_alloc(ctx, imsi, 0);
 
 	hnbap_free_ueregisterrequesties(&ies);
 	/* Send UERegisterAccept */

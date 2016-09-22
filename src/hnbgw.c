@@ -111,6 +111,17 @@ struct ue_context *ue_context_by_imsi(struct hnb_gw *gw, const char *imsi)
 	return NULL;
 }
 
+struct ue_context *ue_context_by_tmsi(struct hnb_gw *gw, uint32_t tmsi)
+{
+	struct ue_context *ue;
+
+	llist_for_each_entry(ue, &gw->ue_list, list) {
+		if (ue->tmsi == tmsi)
+			return ue;
+	}
+	return NULL;
+}
+
 void ue_context_free_by_hnb(struct hnb_gw *gw, const struct hnb_context *hnb)
 {
 	struct ue_context *ue, *tmp;
@@ -132,7 +143,8 @@ static uint32_t get_next_ue_ctx_id(struct hnb_gw *gw)
 	return id;
 }
 
-struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi)
+struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi,
+				    uint32_t tmsi)
 {
 	struct ue_context *ue;
 
@@ -141,7 +153,11 @@ struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi)
 		return NULL;
 
 	ue->hnb = hnb;
-	strncpy(ue->imsi, imsi, sizeof(ue->imsi));
+	if (imsi)
+		strncpy(ue->imsi, imsi, sizeof(ue->imsi));
+	else
+		ue->imsi[0] = '\0';
+	ue->tmsi = tmsi;
 	ue->context_id = get_next_ue_ctx_id(hnb->gw);
 	llist_add_tail(&ue->list, &hnb->gw->ue_list);
 
