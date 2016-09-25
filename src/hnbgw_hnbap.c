@@ -124,54 +124,121 @@ static int hnbgw_tx_ue_register_rej_tmsi(struct hnb_context *hnb, UE_Identity_t 
 	memset(&reject, 0, sizeof(reject));
 	reject.uE_Identity.present = ue_id->present;
 
-	if (ue_id->present != UE_Identity_PR_tMSILAI) {
-		LOGP(DHNBAP, LOGL_ERROR, "Trying to reject UE Register without IMSI: only rejects of UE_Identity_PR_tMSILAI supported so far.\n");
+	/* Copy the identity over to the reject message */
+	switch (ue_id->present) {
+	case UE_Identity_PR_tMSILAI:
+		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id tMSI %d %s\n",
+		     ue_id->choice.tMSILAI.tMSI.size,
+		     osmo_hexdump(ue_id->choice.tMSILAI.tMSI.buf,
+				  ue_id->choice.tMSILAI.tMSI.size));
+
+		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id pLMNID %d %s\n",
+		     ue_id->choice.tMSILAI.lAI.pLMNID.size,
+		     osmo_hexdump(ue_id->choice.tMSILAI.lAI.pLMNID.buf,
+				  ue_id->choice.tMSILAI.lAI.pLMNID.size));
+
+		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id lAC %d %s\n",
+		     ue_id->choice.tMSILAI.lAI.lAC.size,
+		     osmo_hexdump(ue_id->choice.tMSILAI.lAI.lAC.buf,
+				  ue_id->choice.tMSILAI.lAI.lAC.size));
+
+		BIT_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.tMSI,
+				   ue_id->choice.tMSILAI.tMSI.buf,
+				   ue_id->choice.tMSILAI.tMSI.size * 8
+				   - ue_id->choice.tMSILAI.tMSI.bits_unused);
+		OCTET_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.lAI.pLMNID,
+				     ue_id->choice.tMSILAI.lAI.pLMNID.buf,
+				     ue_id->choice.tMSILAI.lAI.pLMNID.size);
+		OCTET_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.lAI.lAC,
+				     ue_id->choice.tMSILAI.lAI.lAC.buf,
+				     ue_id->choice.tMSILAI.lAI.lAC.size);
+		break;
+
+	case UE_Identity_PR_pTMSIRAI:
+		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id pTMSI %d %s\n",
+		     ue_id->choice.pTMSIRAI.pTMSI.size,
+		     osmo_hexdump(ue_id->choice.pTMSIRAI.pTMSI.buf,
+				  ue_id->choice.pTMSIRAI.pTMSI.size));
+
+		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id pLMNID %d %s\n",
+		     ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.size,
+		     osmo_hexdump(ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.buf,
+				  ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.size));
+
+		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id lAC %d %s\n",
+		     ue_id->choice.pTMSIRAI.rAI.lAI.lAC.size,
+		     osmo_hexdump(ue_id->choice.pTMSIRAI.rAI.lAI.lAC.buf,
+				  ue_id->choice.pTMSIRAI.rAI.lAI.lAC.size));
+
+		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id rAC %d %s\n",
+		     ue_id->choice.pTMSIRAI.rAI.rAC.size,
+		     osmo_hexdump(ue_id->choice.pTMSIRAI.rAI.rAC.buf,
+				  ue_id->choice.pTMSIRAI.rAI.rAC.size));
+
+		BIT_STRING_fromBuf(&reject.uE_Identity.choice.pTMSIRAI.pTMSI,
+				   ue_id->choice.pTMSIRAI.pTMSI.buf,
+				   ue_id->choice.pTMSIRAI.pTMSI.size * 8
+				   - ue_id->choice.pTMSIRAI.pTMSI.bits_unused);
+		OCTET_STRING_fromBuf(&reject.uE_Identity.choice.pTMSIRAI.rAI.lAI.pLMNID,
+				     ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.buf,
+				     ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.size);
+		OCTET_STRING_fromBuf(&reject.uE_Identity.choice.pTMSIRAI.rAI.lAI.lAC,
+				     ue_id->choice.pTMSIRAI.rAI.lAI.lAC.buf,
+				     ue_id->choice.pTMSIRAI.rAI.lAI.lAC.size);
+		OCTET_STRING_fromBuf(&reject.uE_Identity.choice.pTMSIRAI.rAI.rAC,
+				     ue_id->choice.pTMSIRAI.rAI.rAC.buf,
+				     ue_id->choice.pTMSIRAI.rAI.rAC.size);
+		break;
+
+	default:
+		LOGP(DHNBAP, LOGL_ERROR, "Cannot compose UE Register Reject:"
+		     " unsupported UE ID (present=%d)\n", ue_id->present);
 		return -1;
 	}
 
-	LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id tMSI %d %s\n",
-	     ue_id->choice.tMSILAI.tMSI.size,
-	     osmo_hexdump(ue_id->choice.tMSILAI.tMSI.buf,
-			  ue_id->choice.tMSILAI.tMSI.size));
-
-	LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id pLMNID %d %s\n",
-	     ue_id->choice.tMSILAI.lAI.pLMNID.size,
-	     osmo_hexdump(ue_id->choice.tMSILAI.lAI.pLMNID.buf,
-			  ue_id->choice.tMSILAI.lAI.pLMNID.size));
-
-	LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id lAC %d %s\n",
-	     ue_id->choice.tMSILAI.lAI.lAC.size,
-	     osmo_hexdump(ue_id->choice.tMSILAI.lAI.lAC.buf,
-			  ue_id->choice.tMSILAI.lAI.lAC.size));
-
-	BIT_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.tMSI,
-			   ue_id->choice.tMSILAI.tMSI.buf,
-			   ue_id->choice.tMSILAI.tMSI.size * 8
-			   - ue_id->choice.tMSILAI.tMSI.bits_unused);
-	OCTET_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.lAI.pLMNID,
-			     ue_id->choice.tMSILAI.lAI.pLMNID.buf,
-			     ue_id->choice.tMSILAI.lAI.pLMNID.size);
-	OCTET_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.lAI.lAC,
-			     ue_id->choice.tMSILAI.lAI.lAC.buf,
-			     ue_id->choice.tMSILAI.lAI.lAC.size);
+	LOGP(DHNBAP, LOGL_ERROR, "Rejecting UE Register Request:"
+	     " TMSI identity registration is switched off\n");
 
 	reject.cause.present = Cause_PR_radioNetwork;
 	reject.cause.choice.radioNetwork = CauseRadioNetwork_invalid_UE_identity;
 
 	memset(&reject_out, 0, sizeof(reject_out));
 	rc = hnbap_encode_ueregisterrejecties(&reject_out, &reject);
-	if (rc < 0) {
+	if (rc < 0)
 		return rc;
-	}
 
 	msg = hnbap_generate_unsuccessful_outcome(ProcedureCode_id_UERegister,
 						  Criticality_reject,
 						  &asn_DEF_UERegisterReject,
 						  &reject_out);
 
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_BIT_STRING, &reject.uE_Identity.choice.tMSILAI.tMSI);
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING, &reject.uE_Identity.choice.tMSILAI.lAI.pLMNID);
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING, &reject.uE_Identity.choice.tMSILAI.lAI.lAC);
+	/* Free copied identity IEs */
+	switch (ue_id->present) {
+	case UE_Identity_PR_tMSILAI:
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_BIT_STRING,
+					      &reject.uE_Identity.choice.tMSILAI.tMSI);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING,
+					      &reject.uE_Identity.choice.tMSILAI.lAI.pLMNID);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING,
+					      &reject.uE_Identity.choice.tMSILAI.lAI.lAC);
+		break;
+
+	case UE_Identity_PR_pTMSIRAI:
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_BIT_STRING,
+					      &reject.uE_Identity.choice.pTMSIRAI.pTMSI);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING,
+					      &reject.uE_Identity.choice.pTMSIRAI.rAI.lAI.pLMNID);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING,
+					      &reject.uE_Identity.choice.pTMSIRAI.rAI.lAI.lAC);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_OCTET_STRING,
+					      &reject.uE_Identity.choice.pTMSIRAI.rAI.rAC);
+		break;
+
+	default:
+		/* should never happen after above switch() */
+		break;
+	}
+
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_UERegisterReject, &reject_out);
 
 	return hnbgw_hnbap_tx(hnb, msg);
