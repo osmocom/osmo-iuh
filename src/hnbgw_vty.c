@@ -105,9 +105,9 @@ DEFUN(show_talloc, show_talloc_cmd, "show talloc", SHOW_STR "Display talloc info
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_hnbgw_iuh_bind, cfg_hnbgw_iuh_bind_cmd, "bind A.B.C.D",
+DEFUN(cfg_hnbgw_iuh_local_ip, cfg_hnbgw_iuh_local_ip_cmd, "local-ip A.B.C.D",
       "Accept Iuh connections on local interface\n"
-      "Local interface IP address (default: " HNBGW_IUH_BIND_ADDR_DEFAULT ")")
+      "Local interface IP address (default: " HNBGW_IUH_LOCAL_IP_DEFAULT ")")
 {
 	talloc_free((void*)g_hnb_gw->config.iuh_bind_addr);
 	g_hnb_gw->config.iuh_bind_addr = talloc_strdup(tall_hnb_ctx, argv[0]);
@@ -137,8 +137,8 @@ static int config_write_hnbgw_iuh(struct vty *vty)
 	vty_out(vty, " iuh%s", VTY_NEWLINE);
 
 	addr = g_hnb_gw->config.iuh_bind_addr;
-	if (addr && (strcmp(addr, HNBGW_IUH_BIND_ADDR_DEFAULT) != 0))
-		vty_out(vty, "  bind %s%s", addr, VTY_NEWLINE);
+	if (addr && (strcmp(addr, HNBGW_IUH_LOCAL_IP_DEFAULT) != 0))
+		vty_out(vty, "  local-ip %s%s", addr, VTY_NEWLINE);
 
 	if (g_hnb_gw->config.hnbap_allow_tmsi)
 		vty_out(vty, "  hnbap-allow-tmsi 1%s", VTY_NEWLINE);
@@ -159,7 +159,7 @@ void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 	install_node(&iuh_node, config_write_hnbgw_iuh);
 	vty_install_default(IUH_NODE);
 
-	install_element(IUH_NODE, &cfg_hnbgw_iuh_bind_cmd);
+	install_element(IUH_NODE, &cfg_hnbgw_iuh_local_ip_cmd);
 	install_element(IUH_NODE, &cfg_hnbgw_iuh_hnbap_allow_tmsi_cmd);
 
 	install_element_ve(&show_hnb_cmd);

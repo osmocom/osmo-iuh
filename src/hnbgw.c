@@ -312,7 +312,7 @@ const char *hnbgw_get_iuh_bind_addr(struct hnb_gw *gw)
 {
 	const char *addr = gw->config.iuh_bind_addr;
 	if (!addr)
-		addr = HNBGW_IUH_BIND_ADDR_DEFAULT;
+		addr = HNBGW_IUH_LOCAL_IP_DEFAULT;
 	return addr;
 }
 

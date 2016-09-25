@@ -106,7 +106,7 @@ struct ue_context {
 	struct hnb_context *hnb;
 };
 
-#define HNBGW_IUH_BIND_ADDR_DEFAULT "0.0.0.0"
+#define HNBGW_IUH_LOCAL_IP_DEFAULT "0.0.0.0"
 
 struct hnb_gw {
 	struct {
