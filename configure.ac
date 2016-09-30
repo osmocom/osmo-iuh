@@ -2,6 +2,9 @@ AC_INIT([osmo-iuh],
 	m4_esyscmd([./git-version-gen .tarball-version]),
 	[openbsc@lists.osmocom.org])
 
+dnl *This* is the root dir, even if an install-sh exists in ../ or ../../
+AC_CONFIG_AUX_DIR([.])
+
 LT_INIT
 
 AM_INIT_AUTOMAKE([foreign dist-bzip2 no-dist-gzip 1.9 tar-ustar])
