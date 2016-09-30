@@ -22,6 +22,13 @@ AC_PROG_MKDIR_P
 AC_PROG_CC
 AC_PROG_INSTALL
 
+dnl check for pkg-config (explained in detail in libosmocore/configure.ac)
+AC_PATH_PROG(PKG_CONFIG_INSTALLED, pkg-config, no)
+if test "x$PKG_CONFIG_INSTALLED" = "xno"; then
+        AC_MSG_WARN([You need to install pkg-config])
+fi
+PKG_PROG_PKG_CONFIG([0.20])
+
 PKG_CHECK_MODULES(OSMOCORE, libosmocore)
 PKG_CHECK_MODULES(OSMOGSM, libosmogsm)
 PKG_CHECK_MODULES(OSMOVTY, libosmovty)
