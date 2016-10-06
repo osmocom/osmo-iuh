@@ -1,61 +1,35 @@
 #!/usr/bin/env bash
-export PATH="$PATH:$HOME/osmo-ci/scripts"
 
 set -ex
 
 base="$PWD"
 deps="$base/deps"
 inst="$deps/install"
+export deps inst
 
 mkdir "$deps" || true
 rm -rf "$inst"
 
-marker() {
-	set +x
-	echo
-	echo
-	echo
-	echo " =============================== $@ ==============================="
-	echo
-	set -x
-}
+osmo-build-dep.sh libosmocore
 
-build_dep() {
-	project="$1"
-	branch="$2"
-	marker $project
-	if [ -z "$project" ]; then
-		echo "internal failure"
-		exit 1
-	fi
-	cd "$deps"
-	rm -rf "$project"
-	osmo-deps.sh "$project"
-	cd "$project"
-	if [ -n "$branch" ]; then
-		git checkout "$branch"
-	fi
-	git rev-parse HEAD
-	autoreconf --install --force
-	./configure --prefix="$inst"
-	$MAKE $PARALLEL_MAKE install
-}
-
-build_dep libosmocore
-
-# All below builds want this PKG_CONFIG_PATH
 export PKG_CONFIG_PATH="$inst/lib/pkgconfig:$PKG_CONFIG_PATH"
+export LD_LIBRARY_PATH="$inst/lib"
 
-build_dep libosmo-abis
-build_dep libosmo-netif sysmocom/sctp
-build_dep libosmo-sccp sysmocom/iu
-build_dep libasn1c
+osmo-build-dep.sh libosmo-abis
+osmo-build-dep.sh libosmo-netif sysmocom/sctp
+osmo-build-dep.sh libosmo-sccp sysmocom/iu
+osmo-build-dep.sh libasn1c
 
 # the asn1c binary is used by the 'regen' target below
-build_dep asn1c aper-prefix
+osmo-build-dep.sh asn1c aper-prefix
 
-marker osmo-iuh
-cd "$base"
+set +x
+echo
+echo
+echo
+echo " =============================== osmo-iuh ==============================="
+echo
+set -x
 
 autoreconf --install --force
 ./configure
@@ -75,7 +49,7 @@ if ! git diff-files --quiet ; then
 fi
 
 $MAKE $PARALLEL_MAKE
-LD_LIBRARY_PATH="$inst/lib" $MAKE check \
+$MAKE check \
   || cat-testlogs.sh
-LD_LIBRARY_PATH="$inst/lib" $MAKE distcheck \
+$MAKE distcheck \
   || cat-testlogs.sh
