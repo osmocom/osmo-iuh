@@ -107,10 +107,10 @@ DEFUN(show_talloc, show_talloc_cmd, "show talloc", SHOW_STR "Display talloc info
 
 DEFUN(cfg_hnbgw_iuh_local_ip, cfg_hnbgw_iuh_local_ip_cmd, "local-ip A.B.C.D",
       "Accept Iuh connections on local interface\n"
-      "Local interface IP address (default: " HNBGW_IUH_LOCAL_IP_DEFAULT ")")
+      "Local interface IP address (default: " HNBGW_LOCAL_IP_DEFAULT ")")
 {
-	talloc_free((void*)g_hnb_gw->config.iuh_bind_addr);
-	g_hnb_gw->config.iuh_bind_addr = talloc_strdup(tall_hnb_ctx, argv[0]);
+	talloc_free((void*)g_hnb_gw->config.iuh_local_ip);
+	g_hnb_gw->config.iuh_local_ip = talloc_strdup(tall_hnb_ctx, argv[0]);
 	return CMD_SUCCESS;
 }
 
@@ -136,8 +136,8 @@ static int config_write_hnbgw_iuh(struct vty *vty)
 
 	vty_out(vty, " iuh%s", VTY_NEWLINE);
 
-	addr = g_hnb_gw->config.iuh_bind_addr;
-	if (addr && (strcmp(addr, HNBGW_IUH_LOCAL_IP_DEFAULT) != 0))
+	addr = g_hnb_gw->config.iuh_local_ip;
+	if (addr && (strcmp(addr, HNBGW_LOCAL_IP_DEFAULT) != 0))
 		vty_out(vty, "  local-ip %s%s", addr, VTY_NEWLINE);
 
 	if (g_hnb_gw->config.hnbap_allow_tmsi)

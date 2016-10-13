@@ -19,6 +19,8 @@ enum {
 };
 
 
+#define HNBGW_LOCAL_IP_DEFAULT "0.0.0.0"
+
 /* 25.467 Section 7.1 */
 #define IUH_DEFAULT_SCTP_PORT	29169
 #define RNA_DEFAULT_SCTP_PORT	25471
@@ -106,13 +108,11 @@ struct ue_context {
 	struct hnb_context *hnb;
 };
 
-#define HNBGW_IUH_LOCAL_IP_DEFAULT "0.0.0.0"
-
 struct hnb_gw {
 	struct {
-		const char *iuh_bind_addr;
+		const char *iuh_local_ip;
 		/*! SCTP port for Iuh listening */
-		uint16_t iuh_listen_port;
+		uint16_t iuh_local_port;
 		/*! The UDP port where we receive multiplexed CS user
 		 * plane traffic from HNBs */
 		uint16_t iuh_cs_mux_port;
@@ -149,8 +149,4 @@ void hnb_context_release(struct hnb_context *ctx);
 
 void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx);
 
-/*
- * Return IP address passed to the hnbgw/iuh/bind command, or
- * IUH_BIND_ADDR_DEFAULT
- */
-const char *hnbgw_get_iuh_bind_addr(struct hnb_gw *gw);
+const char *hnbgw_get_iuh_local_ip(struct hnb_gw *gw);
