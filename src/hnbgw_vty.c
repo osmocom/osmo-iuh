@@ -114,6 +114,14 @@ DEFUN(cfg_hnbgw_iuh_local_ip, cfg_hnbgw_iuh_local_ip_cmd, "local-ip A.B.C.D",
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_hnbgw_iuh_local_port, cfg_hnbgw_iuh_local_port_cmd, "local-port <1-65535>",
+      "Accept Iuh connections on local port\n"
+      "Local interface port (default: 29169)")
+{
+	g_hnb_gw->config.iuh_local_port = atoi(argv[0]);
+	return CMD_SUCCESS;
+}
+
 DEFUN(cfg_hnbgw_iuh_hnbap_allow_tmsi, cfg_hnbgw_iuh_hnbap_allow_tmsi_cmd,
       "hnbap-allow-tmsi (0|1)",
       "Allow HNBAP UE Register messages with TMSI or PTMSI identity\n"
@@ -133,12 +141,17 @@ static int config_write_hnbgw(struct vty *vty)
 static int config_write_hnbgw_iuh(struct vty *vty)
 {
 	const char *addr;
+	uint16_t port;
 
 	vty_out(vty, " iuh%s", VTY_NEWLINE);
 
 	addr = g_hnb_gw->config.iuh_local_ip;
 	if (addr && (strcmp(addr, HNBGW_LOCAL_IP_DEFAULT) != 0))
 		vty_out(vty, "  local-ip %s%s", addr, VTY_NEWLINE);
+
+	port = g_hnb_gw->config.iuh_local_port;
+	if (port && port != IUH_DEFAULT_SCTP_PORT)
+		vty_out(vty, "  local-port %u%s", port, VTY_NEWLINE);
 
 	if (g_hnb_gw->config.hnbap_allow_tmsi)
 		vty_out(vty, "  hnbap-allow-tmsi 1%s", VTY_NEWLINE);
@@ -160,6 +173,7 @@ void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 	vty_install_default(IUH_NODE);
 
 	install_element(IUH_NODE, &cfg_hnbgw_iuh_local_ip_cmd);
+	install_element(IUH_NODE, &cfg_hnbgw_iuh_local_port_cmd);
 	install_element(IUH_NODE, &cfg_hnbgw_iuh_hnbap_allow_tmsi_cmd);
 
 	install_element_ve(&show_hnb_cmd);
