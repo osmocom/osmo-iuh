@@ -54,6 +54,27 @@ DEFUN(cfg_hnbgw_iuh, cfg_hnbgw_iuh_cmd,
 	return CMD_SUCCESS;
 }
 
+int hnbgw_vty_go_parent(struct vty *vty)
+{
+	switch (vty->node) {
+	case IUH_NODE:
+		vty->node = HNBGW_NODE;
+		vty->index = NULL;
+		break;
+	default:
+	case HNBGW_NODE:
+		vty->node = CONFIG_NODE;
+		vty->index = NULL;
+		break;
+	case CONFIG_NODE:
+		vty->node = ENABLE_NODE;
+		vty->index = NULL;
+		break;
+	}
+
+	return vty->node;
+}
+
 static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
 {
 	struct hnbgw_context_map *map;

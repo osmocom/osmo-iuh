@@ -148,3 +148,4 @@ struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_
 void hnb_context_release(struct hnb_context *ctx);
 
 void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx);
+int hnbgw_vty_go_parent(struct vty *vty);
