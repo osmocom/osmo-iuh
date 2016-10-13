@@ -20,6 +20,8 @@ enum {
 
 
 #define HNBGW_LOCAL_IP_DEFAULT "0.0.0.0"
+#define HNBGW_IUCS_REMOTE_IP_DEFAULT "127.0.0.1"
+#define HNBGW_IUPS_REMOTE_IP_DEFAULT "127.0.0.2"
 
 /* 25.467 Section 7.1 */
 #define IUH_DEFAULT_SCTP_PORT	29169
@@ -116,6 +118,10 @@ struct hnb_gw {
 		/*! The UDP port where we receive multiplexed CS user
 		 * plane traffic from HNBs */
 		uint16_t iuh_cs_mux_port;
+		const char *iucs_remote_ip;
+		uint16_t iucs_remote_port;
+		const char *iups_remote_ip;
+		uint16_t iups_remote_port;
 		uint16_t rnc_id;
 		bool hnbap_allow_tmsi;
 	} config;

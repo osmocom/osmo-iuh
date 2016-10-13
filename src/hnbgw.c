@@ -80,6 +80,14 @@ static struct hnb_gw *hnb_gw_create(void *ctx)
 	gw->config.iuh_local_ip = talloc_strdup(gw, HNBGW_LOCAL_IP_DEFAULT);
 	gw->config.iuh_local_port = IUH_DEFAULT_SCTP_PORT;
 
+	gw->config.iucs_remote_ip = talloc_strdup(gw,
+						HNBGW_IUCS_REMOTE_IP_DEFAULT);
+	gw->config.iucs_remote_port = SUA_PORT;
+
+	gw->config.iups_remote_ip = talloc_strdup(gw,
+						HNBGW_IUPS_REMOTE_IP_DEFAULT);
+	gw->config.iups_remote_port = SUA_PORT;
+
 	gw->next_ue_ctx_id = 23;
 	INIT_LLIST_HEAD(&gw->hnb_list);
 	INIT_LLIST_HEAD(&gw->ue_list);
@@ -498,8 +506,16 @@ int main(int argc, char **argv)
 	osmo_sua_set_log_area(DSUA);
 	ranap_set_log_area(DRANAP);
 
-	g_hnb_gw->cnlink_cs = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.1", SUA_PORT, 0);
-	g_hnb_gw->cnlink_ps = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.2", SUA_PORT, 1);
+	OSMO_ASSERT(g_hnb_gw->config.iucs_remote_ip);
+	g_hnb_gw->cnlink_cs = hnbgw_cnlink_init(g_hnb_gw,
+						g_hnb_gw->config.iucs_remote_ip,
+						g_hnb_gw->config.iucs_remote_port,
+						0);
+	OSMO_ASSERT(g_hnb_gw->config.iups_remote_ip);
+	g_hnb_gw->cnlink_ps = hnbgw_cnlink_init(g_hnb_gw,
+						g_hnb_gw->config.iups_remote_ip,
+						g_hnb_gw->config.iups_remote_port,
+						1);
 
 	OSMO_ASSERT(g_hnb_gw->config.iuh_local_ip);
 	LOGP(DMAIN, LOGL_NOTICE, "Listening for Iuh at %s %d\n",
