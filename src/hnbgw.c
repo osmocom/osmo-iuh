@@ -76,6 +76,8 @@ static struct hnb_gw *hnb_gw_create(void *ctx)
 {
 	struct hnb_gw *gw = talloc_zero(ctx, struct hnb_gw);
 
+	/* strdup so we can easily talloc_free in the VTY code */
+	gw->config.iuh_local_ip = talloc_strdup(gw, HNBGW_LOCAL_IP_DEFAULT);
 	gw->config.iuh_local_port = IUH_DEFAULT_SCTP_PORT;
 
 	gw->next_ue_ctx_id = 23;
@@ -308,18 +310,6 @@ static int accept_cb(struct osmo_stream_srv_link *srv, int fd)
 	return 0;
 }
 
-/*
- * Return IP address passed to the hnbgw/iuh/local-ip command, or
- * HNBGW_LOCAL_IP_DEFAULT.
- */
-const char *hnbgw_get_iuh_local_ip(struct hnb_gw *gw)
-{
-	const char *addr = gw->config.iuh_local_ip;
-	if (!addr)
-		addr = HNBGW_LOCAL_IP_DEFAULT;
-	return addr;
-}
-
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
 		.name = "DMAIN", .loglevel = LOGL_DEBUG, .enabled = 1,
@@ -510,8 +500,9 @@ int main(int argc, char **argv)
 	g_hnb_gw->cnlink_cs = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.1", SUA_PORT, 0);
 	g_hnb_gw->cnlink_ps = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.2", SUA_PORT, 1);
 
+	OSMO_ASSERT(g_hnb_gw->config.iuh_local_ip);
 	LOGP(DMAIN, LOGL_NOTICE, "Listening for Iuh at %s %d\n",
-	     hnbgw_get_iuh_local_ip(g_hnb_gw),
+	     g_hnb_gw->config.iuh_local_ip,
 	     g_hnb_gw->config.iuh_local_port);
 	srv = osmo_stream_srv_link_create(tall_hnb_ctx);
 	if (!srv) {
@@ -520,7 +511,7 @@ int main(int argc, char **argv)
 	}
 	osmo_stream_srv_link_set_data(srv, g_hnb_gw);
 	osmo_stream_srv_link_set_proto(srv, IPPROTO_SCTP);
-	osmo_stream_srv_link_set_addr(srv, hnbgw_get_iuh_local_ip(g_hnb_gw));
+	osmo_stream_srv_link_set_addr(srv, g_hnb_gw->config.iuh_local_ip);
 	osmo_stream_srv_link_set_port(srv, g_hnb_gw->config.iuh_local_port);
 	osmo_stream_srv_link_set_accept_cb(srv, accept_cb);
 
