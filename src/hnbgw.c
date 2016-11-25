@@ -163,9 +163,10 @@ struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi,
 		return NULL;
 
 	ue->hnb = hnb;
-	if (imsi)
+	if (imsi) {
 		strncpy(ue->imsi, imsi, sizeof(ue->imsi));
-	else
+		ue->imsi[sizeof(ue->imsi)-1] = '\0';
+	} else
 		ue->imsi[0] = '\0';
 	ue->tmsi = tmsi;
 	ue->context_id = get_next_ue_ctx_id(hnb->gw);
