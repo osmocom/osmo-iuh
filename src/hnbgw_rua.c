@@ -347,6 +347,11 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 	case RUA_CN_DomainIndicator_ps_domain:
 		cn = hnb->gw->cnlink_ps;
 		break;
+	default:
+		LOGP(DRUA, LOGL_ERROR, "Invalid CN_DomainIndicator: %u\n",
+		     ies.cN_DomainIndicator);
+		rc = -1;
+		goto error_free;
 	}
 
 	if (ies.presenceMask & DISCONNECTIES_RUA_RANAP_MESSAGE_PRESENT) {
@@ -356,6 +361,8 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 
 	rc = rua_to_scu(hnb, cn, OSMO_SCU_PRIM_N_DISCONNECT,
 			context_id, scu_cause, ranap_data, ranap_len);
+
+error_free:
 	/* FIXME: what to do with the asn1c-allocated memory */
 	rua_free_disconnecties(&ies);
 
@@ -386,11 +393,18 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 	case RUA_CN_DomainIndicator_ps_domain:
 		cn = hnb->gw->cnlink_ps;
 		break;
+	default:
+		LOGP(DRUA, LOGL_ERROR, "Invalid CN_DomainIndicator: %u\n",
+		     ies.cN_DomainIndicator);
+		rc = -1;
+		goto error_free;
 	}
 
 	rc = rua_to_scu(hnb, cn, OSMO_SCU_PRIM_N_DATA,
 			context_id, 0, ies.ranaP_Message.buf,
 			ies.ranaP_Message.size);
+
+error_free:
 	/* FIXME: what to do with the asn1c-allocated memory */
 	rua_free_directtransferies(&ies);
 
