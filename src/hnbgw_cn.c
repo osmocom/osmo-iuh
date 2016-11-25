@@ -235,7 +235,7 @@ static int handle_cn_ranap(struct hnbgw_cnlink *cnlink, const uint8_t *data,
 			      data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DRANAP, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
-		return rc;
+		return -1;
 	}
 
 	rc = _cn_ranap_rx(cnlink, pdu, data, len);

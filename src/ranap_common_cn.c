@@ -296,7 +296,7 @@ int ranap_cn_rx_co(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 			      data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DRANAP, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
-		return rc;
+		return -1;
 	}
 
 	message.direction = pdu->present;
@@ -525,7 +525,7 @@ int ranap_cn_rx_cl(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 			      data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DRANAP, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
-		return rc;
+		return -1;
 	}
 
 	message.direction = pdu->present;

@@ -568,7 +568,7 @@ int hnbgw_hnbap_rx(struct hnb_context *hnb, struct msgb *msg)
 			      msg->data, msgb_length(msg), 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DHNBAP, LOGL_ERROR, "Error in ASN.1 decode\n");
-		return rc;
+		return -1;
 	}
 
 	rc = _hnbgw_hnbap_rx(hnb, pdu);

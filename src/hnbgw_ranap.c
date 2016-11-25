@@ -218,7 +218,7 @@ int hnbgw_ranap_rx(struct msgb *msg, uint8_t *data, size_t len)
 			      data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DRANAP, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
-		return rc;
+		return -1;
 	}
 
 	rc = _hnbgw_ranap_rx(msg->dst, pdu);
