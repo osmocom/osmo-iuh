@@ -475,6 +475,9 @@ static int rua_rx_initiating_msg(struct msgb *msg, RUA_InitiatingMessage_t *imsg
 		rc = rua_rx_init_err_ind(msg, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_privateMessage:
+		LOGP(DRUA, LOGL_NOTICE,
+		     "Unhandled: RUA Initiating Msg: Private Msg\n");
+		rc = 0;
 		break;
 	default:
 		LOGP(DRUA, LOGL_NOTICE, "Unknown RUA Procedure %u\n",
