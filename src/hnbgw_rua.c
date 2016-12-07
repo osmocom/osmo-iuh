@@ -348,7 +348,7 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 		cn = hnb->gw->cnlink_ps;
 		break;
 	default:
-		LOGP(DRUA, LOGL_ERROR, "Invalid CN_DomainIndicator: %u\n",
+		LOGP(DRUA, LOGL_ERROR, "Invalid CN_DomainIndicator: %l\n",
 		     ies.cN_DomainIndicator);
 		rc = -1;
 		goto error_free;
@@ -394,7 +394,7 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 		cn = hnb->gw->cnlink_ps;
 		break;
 	default:
-		LOGP(DRUA, LOGL_ERROR, "Invalid CN_DomainIndicator: %u\n",
+		LOGP(DRUA, LOGL_ERROR, "Invalid CN_DomainIndicator: %l\n",
 		     ies.cN_DomainIndicator);
 		rc = -1;
 		goto error_free;
