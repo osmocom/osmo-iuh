@@ -494,6 +494,14 @@ static RANAP_SDU_ParameterItem_t *new_sdu_par_item(enum sdu_par_profile profile)
 		sdui->sDU_FormatInformationParameters = fmtip;
 		fmti = new_format_info_pars(81);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(65);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(75);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(61);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(57);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		fmti = new_format_info_pars(39);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
 		/* FIXME: could be 10 SDU descriptors for AMR! */
@@ -505,6 +513,14 @@ static RANAP_SDU_ParameterItem_t *new_sdu_par_item(enum sdu_par_profile profile)
 		sdui->sDU_FormatInformationParameters = fmtip;
 		fmti = new_format_info_pars(103);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(99);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(84);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(87);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(76);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		fmti = new_format_info_pars(0);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
 		/* FIXME: could be 10 SDU descriptors for AMR! */
@@ -515,6 +531,14 @@ static RANAP_SDU_ParameterItem_t *new_sdu_par_item(enum sdu_par_profile profile)
 		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no_error_detection_consideration;
 		sdui->sDU_FormatInformationParameters = fmtip;
 		fmti = new_format_info_pars(60);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(40);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(0);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(0);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(0);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
 		fmti = new_format_info_pars(0);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
