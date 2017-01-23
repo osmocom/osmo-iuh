@@ -569,7 +569,7 @@ static RANAP_RAB_Parameters_t *new_rab_par_voice(void)
 
 	ASN_SEQUENCE_ADD(&rab->maxBitrate.list, new_long(12200));
 	rab->guaranteedBitRate = CALLOC(1, sizeof(*rab->guaranteedBitRate));
-	ASN_SEQUENCE_ADD(rab->guaranteedBitRate, new_long(12200));
+	ASN_SEQUENCE_ADD(rab->guaranteedBitRate, new_long(6700));
 	rab->deliveryOrder = RANAP_DeliveryOrder_delivery_order_requested;
 	rab->maxSDU_Size = 244;
 
