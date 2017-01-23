@@ -588,6 +588,14 @@ static RANAP_RAB_Parameters_t *new_rab_par_voice(void)
 	return rab;
 }
 
+static RANAP_NAS_SynchronisationIndicator_t *new_rab_nas_sync_ind(int val)
+{
+	uint8_t val_buf = (val / 10) << 4;
+	RANAP_NAS_SynchronisationIndicator_t *nsi = CALLOC(1, sizeof(*nsi));
+	BIT_STRING_fromBuf(nsi, &val_buf, 4);
+	return nsi;
+}
+
 static RANAP_RAB_Parameters_t *new_rab_par_data(uint32_t dl_max_bitrate, uint32_t ul_max_bitrate)
 {
 	RANAP_RAB_Parameters_t *rab = CALLOC(1, sizeof(*rab));
@@ -729,7 +737,7 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	RANAP_RAB_SetupOrModifyItemFirst_t first;
 	memset(&first, 0, sizeof(first));
 	assign_new_ra_id(&first.rAB_ID, rab_id);
-	//first.nAS_SynchronisationIndicator = FIXME;
+	first.nAS_SynchronisationIndicator = new_rab_nas_sync_ind(60);
 	first.rAB_Parameters = new_rab_par_voice();
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_support_mode_for_predefined_SDU_sizes, 1); /* 2? */
 	first.transportLayerInformation = new_transp_info_rtp(rtp_ip, rtp_port,
