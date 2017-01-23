@@ -559,7 +559,8 @@ new_alloc_ret_prio(RANAP_PriorityLevel_t level, int capability, int vulnerabilit
 }
 
 /* See Chapter 5 of TS 26.102 */
-static RANAP_RAB_Parameters_t *new_rab_par_voice(void)
+static RANAP_RAB_Parameters_t *new_rab_par_voice(long bitrate_guaranteed,
+						 long bitrate_max)
 {
 	RANAP_RAB_Parameters_t *rab = CALLOC(1, sizeof(*rab));
 	RANAP_SDU_ParameterItem_t *sdui;
@@ -567,9 +568,9 @@ static RANAP_RAB_Parameters_t *new_rab_par_voice(void)
 	rab->trafficClass = RANAP_TrafficClass_conversational;
 	rab->rAB_AsymmetryIndicator = RANAP_RAB_AsymmetryIndicator_symmetric_bidirectional;
 
-	ASN_SEQUENCE_ADD(&rab->maxBitrate.list, new_long(12200));
+	ASN_SEQUENCE_ADD(&rab->maxBitrate.list, new_long(bitrate_max));
 	rab->guaranteedBitRate = CALLOC(1, sizeof(*rab->guaranteedBitRate));
-	ASN_SEQUENCE_ADD(rab->guaranteedBitRate, new_long(12200));
+	ASN_SEQUENCE_ADD(rab->guaranteedBitRate, new_long(bitrate_guaranteed));
 	rab->deliveryOrder = RANAP_DeliveryOrder_delivery_order_requested;
 	rab->maxSDU_Size = 244;
 
@@ -738,7 +739,7 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	memset(&first, 0, sizeof(first));
 	assign_new_ra_id(&first.rAB_ID, rab_id);
 	first.nAS_SynchronisationIndicator = new_rab_nas_sync_ind(60);
-	first.rAB_Parameters = new_rab_par_voice();
+	first.rAB_Parameters = new_rab_par_voice(6700, 12200);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_support_mode_for_predefined_SDU_sizes, 1); /* 2? */
 	first.transportLayerInformation = new_transp_info_rtp(rtp_ip, rtp_port,
 							      use_x213_nsap);
