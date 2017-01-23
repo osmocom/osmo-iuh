@@ -581,7 +581,7 @@ static RANAP_RAB_Parameters_t *new_rab_par_voice(void)
 	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdui);
 
 	rab->transferDelay = new_long(80);
-	rab->allocationOrRetentionPriority = new_alloc_ret_prio(RANAP_PriorityLevel_lowest, 0, 1, 0);
+	rab->allocationOrRetentionPriority = new_alloc_ret_prio(RANAP_PriorityLevel_lowest, 0, 0, 0);
 
 	rab->sourceStatisticsDescriptor = new_long(RANAP_SourceStatisticsDescriptor_speech);
 
