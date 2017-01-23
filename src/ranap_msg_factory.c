@@ -639,7 +639,7 @@ static void new_transp_layer_addr(BIT_STRING_t *out, uint32_t ip, bool use_x213_
 	unsigned int len;
 
 	if (use_x213_nsap) {
-		len = 7;
+		len = 160/8;
 		buf = CALLOC(len, sizeof(uint8_t));
 		buf[0] = 0x35;	/* AFI For IANA ICP */
 		buf[1] = 0x00;	/* See A.5.2.1.2.7 of X.213 */
