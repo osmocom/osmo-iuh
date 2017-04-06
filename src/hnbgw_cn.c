@@ -409,4 +409,5 @@ out_user:
 	osmo_sua_user_destroy(cnlink->sua_user);
 out_free:
 	talloc_free(cnlink);
+	return NULL;
 }
