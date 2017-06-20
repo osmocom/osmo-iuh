@@ -327,11 +327,26 @@ static int handle_cn_disc_ind(struct hnbgw_cnlink *cnlink,
 static int sccp_sap_up(struct osmo_prim_hdr *oph, void *ctx)
 {
 	struct osmo_sccp_user *scu = ctx;
-	struct hnbgw_cnlink *cnlink = osmo_sccp_user_get_priv(scu);
+	struct hnbgw_cnlink *cnlink;
 	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) oph;
 	int rc;
 
 	LOGP(DMAIN, LOGL_DEBUG, "sccp_sap_up(%s)\n", osmo_scu_prim_name(oph));
+
+	if (!scu) {
+		LOGP(DMAIN, LOGL_ERROR,
+		     "sccp_sap_up(): NULL osmo_sccp_user, cannot send prim (sap %u prim %u op %d)\n",
+		     oph->sap, oph->primitive, oph->operation);
+		return -1;
+	}
+
+	cnlink = osmo_sccp_user_get_priv(scu);
+	if (!cnlink) {
+		LOGP(DMAIN, LOGL_ERROR,
+		     "sccp_sap_up(): NULL hnbgw_cnlink, cannot send prim (sap %u prim %u op %d)\n",
+		     oph->sap, oph->primitive, oph->operation);
+		return -1;
+	}
 
 	switch (OSMO_PRIM_HDR(oph)) {
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_UNITDATA, PRIM_OP_INDICATION):
