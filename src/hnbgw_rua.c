@@ -37,6 +37,7 @@
 #include <osmocom/rua/rua_common.h>
 #include <osmocom/rua/rua_ies_defs.h>
 #include <osmocom/iuh/context_map.h>
+#include <osmocom/hnbap/CN-DomainIndicator.h>
 
 static int hnbgw_rua_tx(struct hnb_context *ctx, struct msgb *msg)
 {
@@ -159,16 +160,31 @@ int rua_tx_disc(struct hnb_context *hnb, int is_ps, uint32_t context_id,
 
 
 
-/* forward a RUA message to the SCCP User API to SCCP/SUA */
-static int rua_to_scu(struct hnb_context *hnb, struct hnbgw_cnlink *cn,
+/* forward a RUA message to the SCCP User API to SCCP */
+static int rua_to_scu(struct hnb_context *hnb,
+		      CN_DomainIndicator_t cN_DomainIndicator,
 		      enum osmo_scu_prim_type type,
 		      uint32_t context_id, uint32_t cause,
 		      const uint8_t *data, unsigned int len)
 {
-	struct msgb *msg = msgb_alloc(1500, "rua_to_sua");
+	struct msgb *msg;
 	struct osmo_scu_prim *prim;
 	struct hnbgw_context_map *map;
+	struct hnbgw_cnlink *cn;
 	int rc;
+
+	switch (cN_DomainIndicator) {
+	case RUA_CN_DomainIndicator_cs_domain:
+		cn = hnb->gw->cnlink_cs;
+		break;
+	case RUA_CN_DomainIndicator_ps_domain:
+		cn = hnb->gw->cnlink_ps;
+		break;
+	default:
+		LOGP(DRUA, LOGL_ERROR, "Unsupported Domain %u\n",
+		     cN_DomainIndicator);
+		return -1;
+	}
 
 	if (!cn) {
 		DEBUGP(DRUA, "CN=NULL, discarding message\n");
@@ -280,7 +296,6 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 {
 	RUA_ConnectIEs_t ies;
 	struct hnb_context *hnb = msg->dst;
-	struct hnbgw_cnlink *cn;
 	uint32_t context_id;
 	int rc;
 
@@ -290,26 +305,11 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 
 	context_id = asn1bitstr_to_u24(&ies.context_ID);
 
-	/* route to CS (MSC) or PS (SGSN) domain */
-	switch (ies.cN_DomainIndicator) {
-	case RUA_CN_DomainIndicator_cs_domain:
-		cn = hnb->gw->cnlink_cs;
-		break;
-	case RUA_CN_DomainIndicator_ps_domain:
-		cn = hnb->gw->cnlink_ps;
-		break;
-	default:
-		LOGP(DRUA, LOGL_ERROR, "Unsupported Domain %u\n",
-			ies.cN_DomainIndicator);
-		rua_free_connecties(&ies);
-		return -1;
-	}
-
 	DEBUGP(DRUA, "RUA Connect.req(ctx=0x%x, %s)\n", context_id,
 		ies.establishment_Cause == RUA_Establishment_Cause_emergency_call
 		? "emergency" : "normal");
 
-	rc = rua_to_scu(hnb, cn, OSMO_SCU_PRIM_N_CONNECT,
+	rc = rua_to_scu(hnb, ies.cN_DomainIndicator, OSMO_SCU_PRIM_N_CONNECT,
 			context_id, 0, ies.ranaP_Message.buf,
 			ies.ranaP_Message.size);
 	/* FIXME: what to do with the asn1c-allocated memory */
@@ -322,7 +322,6 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 {
 	RUA_DisconnectIEs_t ies;
 	struct hnb_context *hnb = msg->dst;
-	struct hnbgw_cnlink *cn;
 	uint32_t context_id;
 	uint32_t scu_cause;
 	uint8_t *ranap_data = NULL;
@@ -339,30 +338,15 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 	DEBUGP(DRUA, "RUA Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
 		rua_cause_str(&ies.cause));
 
-	/* route to CS (MSC) or PS (SGSN) domain */
-	switch (ies.cN_DomainIndicator) {
-	case RUA_CN_DomainIndicator_cs_domain:
-		cn = hnb->gw->cnlink_cs;
-		break;
-	case RUA_CN_DomainIndicator_ps_domain:
-		cn = hnb->gw->cnlink_ps;
-		break;
-	default:
-		LOGP(DRUA, LOGL_ERROR, "Invalid CN_DomainIndicator: %l\n",
-		     ies.cN_DomainIndicator);
-		rc = -1;
-		goto error_free;
-	}
-
 	if (ies.presenceMask & DISCONNECTIES_RUA_RANAP_MESSAGE_PRESENT) {
 		ranap_data = ies.ranaP_Message.buf;
 		ranap_len = ies.ranaP_Message.size;
 	}
 
-	rc = rua_to_scu(hnb, cn, OSMO_SCU_PRIM_N_DISCONNECT,
+	rc = rua_to_scu(hnb, ies.cN_DomainIndicator,
+			OSMO_SCU_PRIM_N_DISCONNECT,
 			context_id, scu_cause, ranap_data, ranap_len);
 
-error_free:
 	/* FIXME: what to do with the asn1c-allocated memory */
 	rua_free_disconnecties(&ies);
 
@@ -373,7 +357,6 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 {
 	RUA_DirectTransferIEs_t ies;
 	struct hnb_context *hnb = msg->dst;
-	struct hnbgw_cnlink *cn;
 	uint32_t context_id;
 	int rc;
 
@@ -385,31 +368,16 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 
 	DEBUGP(DRUA, "RUA Data.req(ctx=0x%x)\n", context_id);
 
-	/* route to CS (MSC) or PS (SGSN) domain */
-	switch (ies.cN_DomainIndicator) {
-	case RUA_CN_DomainIndicator_cs_domain:
-		cn = hnb->gw->cnlink_cs;
-		break;
-	case RUA_CN_DomainIndicator_ps_domain:
-		cn = hnb->gw->cnlink_ps;
-		break;
-	default:
-		LOGP(DRUA, LOGL_ERROR, "Invalid CN_DomainIndicator: %l\n",
-		     ies.cN_DomainIndicator);
-		rc = -1;
-		goto error_free;
-	}
-
-	rc = rua_to_scu(hnb, cn, OSMO_SCU_PRIM_N_DATA,
+	rc = rua_to_scu(hnb,
+			ies.cN_DomainIndicator,
+			OSMO_SCU_PRIM_N_DATA,
 			context_id, 0, ies.ranaP_Message.buf,
 			ies.ranaP_Message.size);
 
-error_free:
 	/* FIXME: what to do with the asn1c-allocated memory */
 	rua_free_directtransferies(&ies);
 
 	return rc;
-
 }
 
 static int rua_rx_init_udt(struct msgb *msg, ANY_t *in)
