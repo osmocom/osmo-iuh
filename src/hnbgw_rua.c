@@ -226,6 +226,11 @@ static int rua_to_scu(struct hnb_context *hnb,
 		prim->u.connect.calling_addr = cn->gw->sccp.local_addr;
 		prim->u.connect.sccp_class = 2;
 		prim->u.connect.conn_id = map->scu_conn_id;
+		/* Two separate logs because of osmo_sccp_addr_dump(). */
+		DEBUGP(DRUA, "RUA to SCCP N_CONNECT: called_addr:%s\n",
+		       osmo_sccp_addr_dump(&prim->u.connect.called_addr));
+		DEBUGP(DRUA, "RUA to SCCP N_CONNECT: calling_addr:%s\n",
+		       osmo_sccp_addr_dump(&prim->u.connect.calling_addr));
 		break;
 	case OSMO_SCU_PRIM_N_DATA:
 		prim->u.data.conn_id = map->scu_conn_id;
@@ -237,6 +242,11 @@ static int rua_to_scu(struct hnb_context *hnb,
 	case OSMO_SCU_PRIM_N_UNITDATA:
 		prim->u.unitdata.called_addr = *remote_addr;
 		prim->u.unitdata.calling_addr = cn->gw->sccp.local_addr;
+		/* Two separate logs because of osmo_sccp_addr_dump(). */
+		DEBUGP(DRUA, "RUA to SCCP N_UNITDATA: called_addr:%s\n",
+		       osmo_sccp_addr_dump(&prim->u.unitdata.called_addr));
+		DEBUGP(DRUA, "RUA to SCCP N_UNITDATA: calling_addr:%s\n",
+		       osmo_sccp_addr_dump(&prim->u.unitdata.calling_addr));
 		break;
 	default:
 		return -EINVAL;
