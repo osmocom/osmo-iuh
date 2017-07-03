@@ -240,6 +240,31 @@ static int handle_cn_ranap(struct hnbgw_cnlink *cnlink, const uint8_t *data,
 	return rc;
 }
 
+static bool pc_and_ssn_match(const struct osmo_sccp_addr *a, const struct osmo_sccp_addr *b)
+{
+	return (a == b)
+	       || ((a->pc == b->pc)
+		   && (a->ssn == b->ssn));
+}
+
+static int classify_cn_remote_addr(const struct hnb_gw *gw,
+				   const struct osmo_sccp_addr *cn_remote_addr,
+				   bool *is_ps)
+{
+	if (pc_and_ssn_match(cn_remote_addr, &gw->sccp.remote_addr_cs)) {
+		if (is_ps)
+			*is_ps = false;
+		return 0;
+	}
+	if (pc_and_ssn_match(cn_remote_addr, &gw->sccp.remote_addr_ps)) {
+		if (is_ps)
+			*is_ps = true;
+		return 0;
+	}
+	LOGP(DMAIN, LOGL_ERROR, "Unexpected remote address, matches neither CS nor PS address: %s\n",
+	     osmo_sccp_addr_dump(cn_remote_addr));
+	return -1;
+}
 
 static int handle_cn_unitdata(struct hnbgw_cnlink *cnlink,
 			      const struct osmo_scu_unitdata_param *param,
@@ -250,6 +275,9 @@ static int handle_cn_unitdata(struct hnbgw_cnlink *cnlink,
 			param->called_addr.ssn);
 		return -1;
 	}
+
+	if (classify_cn_remote_addr(cnlink->gw, &param->calling_addr, NULL) < 0)
+		return -1;
 
 	return handle_cn_ranap(cnlink, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 }
