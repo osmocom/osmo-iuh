@@ -38,6 +38,18 @@
 #include <osmocom/iuh/context_map.h>
 #include <osmocom/hnbap/CN-DomainIndicator.h>
 
+static const char *cn_domain_indicator_to_str(CN_DomainIndicator_t cN_DomainIndicator)
+{
+	switch (cN_DomainIndicator) {
+	case RUA_CN_DomainIndicator_cs_domain:
+		return "IuCS";
+	case RUA_CN_DomainIndicator_ps_domain:
+		return "IuPS";
+	default:
+		return "(unknown-domain)";
+	}
+}
+
 static int hnbgw_rua_tx(struct hnb_context *ctx, struct msgb *msg)
 {
 	if (!msg)
@@ -202,6 +214,11 @@ static int rua_to_scu(struct hnb_context *hnb,
 	map = context_map_alloc_by_hnb(hnb, context_id, is_ps, cn);
 	OSMO_ASSERT(map);
 
+	DEBUGP(DRUA, "rua_to_scu() %s to %s, rua_ctx_id %u scu_conn_id %u\n",
+	       cn_domain_indicator_to_str(cN_DomainIndicator),
+	       osmo_sccp_addr_dump(remote_addr),
+	       map->rua_ctx_id, map->scu_conn_id);
+
 	/* add primitive header */
 	switch (type) {
 	case OSMO_SCU_PRIM_N_CONNECT:
@@ -311,8 +328,10 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 
 	context_id = asn1bitstr_to_u24(&ies.context_ID);
 
-	DEBUGP(DRUA, "RUA Connect.req(ctx=0x%x, %s)\n", context_id,
-		ies.establishment_Cause == RUA_Establishment_Cause_emergency_call
+	DEBUGP(DRUA, "RUA %s Connect.req(ctx=0x%x, %s)\n",
+	       cn_domain_indicator_to_str(ies.cN_DomainIndicator),
+	       context_id,
+	       ies.establishment_Cause == RUA_Establishment_Cause_emergency_call
 		? "emergency" : "normal");
 
 	rc = rua_to_scu(hnb, ies.cN_DomainIndicator, OSMO_SCU_PRIM_N_CONNECT,
