@@ -24,6 +24,8 @@ struct hnbgw_context_map {
 	struct hnbgw_cnlink *cn_link;
 	/* RUA contxt ID */
 	uint32_t rua_ctx_id;
+	/* False for CS, true for PS */
+	bool is_ps;
 	/* SCCP User SAP connection ID */
 	uint32_t scu_conn_id;
 
@@ -33,6 +35,7 @@ struct hnbgw_context_map {
 
 struct hnbgw_context_map *
 context_map_alloc_by_hnb(struct hnb_context *hnb, uint32_t rua_ctx_id,
+			 bool is_ps,
 			 struct hnbgw_cnlink *cn_if_new);
 
 struct hnbgw_context_map *

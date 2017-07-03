@@ -58,6 +58,7 @@ static int alloc_cn_conn_id(struct hnbgw_cnlink *cn, uint32_t *id_out)
 /* Map from a HNB + ContextID to the SCCP-side Connection ID */
 struct hnbgw_context_map *
 context_map_alloc_by_hnb(struct hnb_context *hnb, uint32_t rua_ctx_id,
+			 bool is_ps,
 			 struct hnbgw_cnlink *cn_if_new)
 {
 	struct hnbgw_context_map *map;
@@ -69,7 +70,8 @@ context_map_alloc_by_hnb(struct hnb_context *hnb, uint32_t rua_ctx_id,
 		if (map->cn_link != cn_if_new) {
 			continue;
 		}
-		if (map->rua_ctx_id == rua_ctx_id) {
+		if (map->rua_ctx_id == rua_ctx_id
+		    && map->is_ps == is_ps) {
 			return map;
 		}
 	}
@@ -88,6 +90,7 @@ context_map_alloc_by_hnb(struct hnb_context *hnb, uint32_t rua_ctx_id,
 	map->cn_link = cn_if_new;
 	map->hnb_ctx = hnb;
 	map->rua_ctx_id = rua_ctx_id;
+	map->is_ps = is_ps;
 	map->scu_conn_id = new_scu_conn_id;
 
 	/* put it into both lists */
@@ -134,31 +137,27 @@ static struct osmo_timer_list context_map_tmr;
 static void context_map_tmr_cb(void *data)
 {
 	struct hnb_gw *gw = data;
-	struct hnbgw_cnlink *cn;
+	struct hnbgw_cnlink *cn = gw->sccp.cnlink;
+	struct hnbgw_context_map *map;
 
 	DEBUGP(DMAIN, "Running context mapper garbage collection\n");
-	/* iterate over list of core network (links) */
-	llist_for_each_entry(cn, &gw->cn_list, list) {
-		struct hnbgw_context_map *map;
-
-		llist_for_each_entry(map, &cn->map_list, cn_list) {
-			switch (map->state) {
-			case MAP_S_RESERVED1:
-				/* first time we see this reserved
-				 * entry: mark it for stage 2 */
-				map->state = MAP_S_RESERVED2;
-				break;
-			case MAP_S_RESERVED2:
-				/* first time we see this reserved
-				 * entry: remove it */
-				map->state = MAP_S_NULL;
-				llist_del(&map->cn_list);
-				llist_del(&map->hnb_list);
-				talloc_free(map);
-				break;
-			default:
-				break;
-			}
+	llist_for_each_entry(map, &cn->map_list, cn_list) {
+		switch (map->state) {
+		case MAP_S_RESERVED1:
+			/* first time we see this reserved
+			 * entry: mark it for stage 2 */
+			map->state = MAP_S_RESERVED2;
+			break;
+		case MAP_S_RESERVED2:
+			/* first time we see this reserved
+			 * entry: remove it */
+			map->state = MAP_S_NULL;
+			llist_del(&map->cn_list);
+			llist_del(&map->hnb_list);
+			talloc_free(map);
+			break;
+		default:
+			break;
 		}
 	}
 	/* re-schedule this timer */

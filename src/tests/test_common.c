@@ -62,11 +62,6 @@ static const struct log_info_cat log_cat[] = {
 		.color = "",
 		.description = "RANAP User Adaptation",
 	},
-	[DSUA] = {
-		.name = "SUA", .loglevel = LOGL_DEBUG, .enabled = 1,
-		.color = "",
-		.description = "SCCP User Adaptation",
-	},
 };
 
 static const struct log_info test_log_info = {

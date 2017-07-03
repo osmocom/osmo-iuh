@@ -2,4 +2,5 @@
 
 #include <osmocom/iuh/hnbgw.h>
 
-struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint16_t port, int is_ps);
+int hnbgw_cnlink_init(struct hnb_gw *gw, const char *stp_host, uint16_t stp_port,
+		      const char *local_ip, uint32_t local_pc);

@@ -24,8 +24,7 @@
 #include <osmocom/core/utils.h>
 #include <osmocom/core/timer.h>
 
-#include <osmocom/sigtran/protocol/sua.h>
-#include <osmocom/sigtran/sua.h>
+#include <osmocom/sigtran/protocol/m3ua.h>
 #include <osmocom/sigtran/sccp_sap.h>
 #include <osmocom/sigtran/sccp_helpers.h>
 
@@ -41,34 +40,32 @@
 
 int hnbgw_cnlink_change_state(struct hnbgw_cnlink *cnlink, enum hnbgw_cnlink_state state);
 
-static int transmit_rst(struct hnbgw_cnlink *cnlink)
+static int transmit_rst(struct hnb_gw *gw, RANAP_CN_DomainIndicator_t domain,
+			struct osmo_sccp_addr *remote_addr)
 {
 	struct msgb *msg;
 	struct msgb *msgprim;
-	RANAP_CN_DomainIndicator_t domain;
 	RANAP_Cause_t cause = {
 		.present = RANAP_Cause_PR_transmissionNetwork,
 		.choice. transmissionNetwork = RANAP_CauseTransmissionNetwork_signalling_transport_resource_failure,
 	};
 
-	if (cnlink->is_ps)
-		domain = RANAP_CN_DomainIndicator_ps_domain;
-	else
-		domain = RANAP_CN_DomainIndicator_cs_domain;
-
 	msg = ranap_new_msg_reset(domain, &cause);
 
-	return osmo_sccp_tx_unitdata_msg(cnlink->sua_link, &cnlink->local_addr,
-					 &cnlink->remote_addr, msg);
+	return osmo_sccp_tx_unitdata_msg(gw->sccp.cnlink->sccp_user,
+					 &gw->sccp.local_addr,
+					 remote_addr,
+					 msg);
 }
 
 /* Timer callback once T_RafC expires */
 static void cnlink_trafc_cb(void *data)
 {
-	struct hnbgw_cnlink *cnlink = data;
+	struct hnb_gw *gw = data;
 
-	transmit_rst(cnlink);
-	hnbgw_cnlink_change_state(cnlink, CNLINK_S_EST_RST_TX_WAIT_ACK);
+	transmit_rst(gw, RANAP_CN_DomainIndicator_cs_domain, &gw->sccp.remote_addr_cs);
+	transmit_rst(gw, RANAP_CN_DomainIndicator_ps_domain, &gw->sccp.remote_addr_ps);
+	hnbgw_cnlink_change_state(gw->sccp.cnlink, CNLINK_S_EST_RST_TX_WAIT_ACK);
 	/* The spec states that we should abandon after a configurable
 	 * number of times.  We decide to simply continue trying */
 }
@@ -81,7 +78,7 @@ int hnbgw_cnlink_change_state(struct hnbgw_cnlink *cnlink, enum hnbgw_cnlink_sta
 	case CNLINK_S_EST_PEND:
 		break;
 	case CNLINK_S_EST_CONF:
-		cnlink_trafc_cb(cnlink);
+		cnlink_trafc_cb(cnlink->gw);
 		break;
 	case CNLINK_S_EST_RST_TX_WAIT_ACK:
 		osmo_timer_schedule(&cnlink->T_RafC, 5, 0);
@@ -293,7 +290,7 @@ static int handle_cn_data_ind(struct hnbgw_cnlink *cnlink,
 		return 0;
 	}
 
-	return rua_tx_dt(map->hnb_ctx, map->cn_link->is_ps, map->rua_ctx_id,
+	return rua_tx_dt(map->hnb_ctx, map->is_ps, map->rua_ctx_id,
 			 msgb_l2(oph->msg), msgb_l2len(oph->msg));
 }
 
@@ -322,15 +319,15 @@ static int handle_cn_disc_ind(struct hnbgw_cnlink *cnlink,
 		return 0;
 	}
 
-	return rua_tx_disc(map->hnb_ctx, map->cn_link->is_ps, map->rua_ctx_id,
+	return rua_tx_disc(map->hnb_ctx, map->is_ps, map->rua_ctx_id,
 			   &rua_cause, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 }
 
 /* Entry point for primitives coming up from SCCP User SAP */
 static int sccp_sap_up(struct osmo_prim_hdr *oph, void *ctx)
 {
-	struct osmo_sccp_link *slink = ctx;
-	struct hnbgw_cnlink *cnlink = osmo_sccp_link_get_user_priv(slink);
+	struct osmo_sccp_user *scu = ctx;
+	struct hnbgw_cnlink *cnlink = osmo_sccp_user_get_priv(scu);
 	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) oph;
 	int rc;
 
@@ -361,53 +358,48 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *ctx)
 	return 0;
 }
 
-
-/* Set up a link towards the core network for the circuit switched (is_ps == 0)
- * or packet switched (is_ps != 0) domain. */
-struct hnbgw_cnlink *hnbgw_cnlink_init(struct hnb_gw *gw, const char *host, uint16_t port, int is_ps)
+int hnbgw_cnlink_init(struct hnb_gw *gw, const char *stp_host, uint16_t stp_port,
+		      const char *local_ip, uint32_t local_pc)
 {
-	struct hnbgw_cnlink *cnlink = talloc_zero(gw, struct hnbgw_cnlink);
+	struct hnbgw_cnlink *cnlink;
 	int rc;
 
+	OSMO_ASSERT(!gw->sccp.instance);
+	OSMO_ASSERT(!gw->sccp.cnlink);
+
+	gw->sccp.instance = osmo_sccp_simple_client(gw, "OsmoHNBGW", local_pc,
+						    OSMO_SS7_ASP_PROT_M3UA, 0, local_ip,
+						    stp_port, stp_host);
+	if (!gw->sccp.instance) {
+		LOGP(DMAIN, LOGL_ERROR, "Failed to init SCCP Instance\n");
+		return -1;
+	}
+
+	LOGP(DRUA, LOGL_DEBUG, "SCCP uplink to STP: %s %u\n", stp_host, stp_port);
+
+	osmo_sccp_make_addr_pc_ssn(&gw->sccp.local_addr, local_pc,
+				   OSMO_SCCP_SSN_RANAP);
+
+	cnlink = talloc_zero(gw, struct hnbgw_cnlink);
 	cnlink->gw = gw;
 	INIT_LLIST_HEAD(&cnlink->map_list);
 	cnlink->T_RafC.cb = cnlink_trafc_cb;
-	cnlink->T_RafC.data = cnlink;
+	cnlink->T_RafC.data = gw;
 	cnlink->next_conn_id = 1000;
-	cnlink->is_ps = is_ps;
-	osmo_sccp_make_addr_pc_ssn(&cnlink->local_addr, 2,
-				   OSMO_SCCP_SSN_RANAP);
-	osmo_sccp_make_addr_pc_ssn(&cnlink->remote_addr, 1,
-				   OSMO_SCCP_SSN_RANAP);
 
-	LOGP(DRUA, LOGL_DEBUG, "New hnbgw_cnlink %p (gw %p): %s %d %s\n",
-	     cnlink, cnlink->gw, host, port, is_ps? "PS" : "CS");
-
-	cnlink->sua_user = osmo_sua_user_create(cnlink, sccp_sap_up, cnlink);
-	if (!cnlink->sua_user) {
-		LOGP(DMAIN, LOGL_ERROR, "Failed to init SUA\n");
-		goto out_free;
-	}
-	rc = osmo_sua_client_connect(cnlink->sua_user, host, port);
-	if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Failed to connect SUA\n");
-		goto out_user;
-	}
-	cnlink->sua_link = osmo_sua_client_get_link(cnlink->sua_user);
-	if (!cnlink->sua_link) {
-		LOGP(DMAIN, LOGL_ERROR, "Failed to get SUA link\n");
-		goto out_disconnect;
+	cnlink->sccp_user = osmo_sccp_user_bind_pc(gw->sccp.instance,
+						   "OsmoHNBGW",
+						   sccp_sap_up, OSMO_SCCP_SSN_RANAP,
+						   gw->sccp.local_addr.pc);
+	if (!cnlink->sccp_user) {
+		LOGP(DMAIN, LOGL_ERROR, "Failed to init SCCP User\n");
+		return -1;
 	}
 
-	llist_add_tail(&cnlink->list, &gw->cn_list);
+	/* In sccp_sap_up() we expect the cnlink in the user's priv. */
+	osmo_sccp_user_set_priv(cnlink->sccp_user, cnlink);
 
-	return cnlink;
+	gw->sccp.cnlink = cnlink;
 
-out_disconnect:
-	/* FIXME */
-out_user:
-	osmo_sua_user_destroy(cnlink->sua_user);
-out_free:
-	talloc_free(cnlink);
-	return NULL;
+	return 0;
 }

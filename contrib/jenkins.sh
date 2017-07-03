@@ -19,7 +19,7 @@ export LD_LIBRARY_PATH="$inst/lib"
 
 osmo-build-dep.sh libosmo-abis
 osmo-build-dep.sh libosmo-netif
-osmo-build-dep.sh libosmo-sccp sysmocom/iu
+osmo-build-dep.sh libosmo-sccp
 osmo-build-dep.sh libasn1c
 
 # the asn1c binary is used by the 'regen' target below

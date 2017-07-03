@@ -5,6 +5,7 @@
 #include <osmocom/core/write_queue.h>
 #include <osmocom/core/timer.h>
 #include <osmocom/sigtran/sccp_sap.h>
+#include <osmocom/sigtran/osmo_ss7.h>
 
 #define DEBUG
 #include <osmocom/core/logging.h>
@@ -13,15 +14,16 @@
 enum {
 	DMAIN,
 	DHNBAP,
-	DSUA,
 	DRUA,
 	DRANAP,
 };
 
 
 #define HNBGW_LOCAL_IP_DEFAULT "0.0.0.0"
+/* TODO: CS and PS now both connect to OsmoSTP, i.e. that's always going to be the same address. Drop the
+ * duplicity. */
 #define HNBGW_IUCS_REMOTE_IP_DEFAULT "127.0.0.1"
-#define HNBGW_IUPS_REMOTE_IP_DEFAULT "127.0.0.2"
+#define HNBGW_IUPS_REMOTE_IP_DEFAULT "127.0.0.1"
 
 /* 25.467 Section 7.1 */
 #define IUH_DEFAULT_SCTP_PORT	29169
@@ -63,15 +65,11 @@ struct hnbgw_cnlink {
 	struct llist_head list;
 	enum hnbgw_cnlink_state state;
 	struct hnb_gw *gw;
-	/* are we a PS connection (1) or CS (0) */
-	int is_ps;
 	/* timer for re-transmitting the RANAP Reset */
 	struct osmo_timer_list T_RafC;
 	/* reference to the SCCP User SAP by which we communicate */
-	struct osmo_sccp_user *sua_user;
-	struct osmo_sccp_link *sua_link;
-	struct osmo_sccp_addr local_addr;
-	struct osmo_sccp_addr remote_addr;
+	struct osmo_sccp_instance *sccp;
+	struct osmo_sccp_user *sccp_user;
 	uint32_t next_conn_id;
 
 	/* linked list of hnbgw_context_map */
@@ -131,14 +129,17 @@ struct hnb_gw {
 	struct llist_head hnb_list;
 	/* list of struct ue_context */
 	struct llist_head ue_list;
-	/* list of struct hnbgw_cnlink */
-	struct llist_head cn_list;
 	/* next availble UE Context ID */
 	uint32_t next_ue_ctx_id;
 
 	/* currently active CN links for CS and PS */
-	struct hnbgw_cnlink *cnlink_cs;
-	struct hnbgw_cnlink *cnlink_ps;
+	struct {
+		struct osmo_sccp_instance *instance;
+		struct hnbgw_cnlink *cnlink;
+		struct osmo_sccp_addr local_addr;
+		struct osmo_sccp_addr remote_addr_cs;
+		struct osmo_sccp_addr remote_addr_ps;
+	} sccp;
 };
 
 extern void *talloc_asn1_ctx;

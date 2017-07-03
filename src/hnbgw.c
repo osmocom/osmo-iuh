@@ -47,8 +47,7 @@
 
 #include <osmocom/netif/stream.h>
 
-#include <osmocom/sigtran/sua.h>
-#include <osmocom/sigtran/protocol/sua.h>
+#include <osmocom/sigtran/protocol/m3ua.h>
 #include <osmocom/sigtran/sccp_sap.h>
 
 #include <osmocom/iuh/hnbgw.h>
@@ -82,16 +81,15 @@ static struct hnb_gw *hnb_gw_create(void *ctx)
 
 	gw->config.iucs_remote_ip = talloc_strdup(gw,
 						HNBGW_IUCS_REMOTE_IP_DEFAULT);
-	gw->config.iucs_remote_port = SUA_PORT;
+	gw->config.iucs_remote_port = M3UA_PORT;
 
 	gw->config.iups_remote_ip = talloc_strdup(gw,
 						HNBGW_IUPS_REMOTE_IP_DEFAULT);
-	gw->config.iups_remote_port = SUA_PORT;
+	gw->config.iups_remote_port = M3UA_PORT;
 
 	gw->next_ue_ctx_id = 23;
 	INIT_LLIST_HEAD(&gw->hnb_list);
 	INIT_LLIST_HEAD(&gw->ue_list);
-	INIT_LLIST_HEAD(&gw->cn_list);
 
 	context_map_init(gw);
 
@@ -330,11 +328,6 @@ static const struct log_info_cat log_cat[] = {
 		.color = "",
 		.description = "Home Node B Application Part",
 	},
-	[DSUA] = {
-		.name = "DSUA", .loglevel = LOGL_DEBUG, .enabled = 1,
-		.color = "",
-		.description = "SCCP User Adaptation",
-	},
 	[DRUA] = {
 		.name = "DRUA", .loglevel = LOGL_DEBUG, .enabled = 1,
 		.color = "",
@@ -382,7 +375,7 @@ static void print_usage()
 static void print_help()
 {
 	printf("  -h --help                  This text.\n");
-	printf("  -d option --debug=DHNBAP:DSUA:DRUA:DRANAP:DMAIN  Enable debugging.\n");
+	printf("  -d option --debug=DHNBAP:DRUA:DRANAP:DMAIN  Enable debugging.\n");
 	printf("  -D --daemonize             Fork the process into a background daemon.\n");
 	printf("  -c --config-file filename  The config file to use.\n");
 	printf("  -s --disable-color\n");
@@ -451,7 +444,7 @@ static void handle_options(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-	struct osmo_sccp_user *sua_user;
+	struct osmo_sccp_user *sccp_user;
 	struct osmo_sccp_link *sua_link;
 	struct osmo_stream_srv_link *srv;
 	int rc;
@@ -466,6 +459,8 @@ int main(int argc, char **argv)
 	rc = osmo_init_logging(&hnbgw_log_info);
 	if (rc < 0)
 		exit(1);
+
+	osmo_ss7_init();
 
 	vty_info.copyright = osmo_hnbgw_copyright;
 	vty_init(&vty_info);
@@ -504,19 +499,25 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	osmo_sua_set_log_area(DSUA);
 	ranap_set_log_area(DRANAP);
 
 	OSMO_ASSERT(g_hnb_gw->config.iucs_remote_ip);
-	g_hnb_gw->cnlink_cs = hnbgw_cnlink_init(g_hnb_gw,
-						g_hnb_gw->config.iucs_remote_ip,
-						g_hnb_gw->config.iucs_remote_port,
-						0);
-	OSMO_ASSERT(g_hnb_gw->config.iups_remote_ip);
-	g_hnb_gw->cnlink_ps = hnbgw_cnlink_init(g_hnb_gw,
-						g_hnb_gw->config.iups_remote_ip,
-						g_hnb_gw->config.iups_remote_port,
-						1);
+	rc = hnbgw_cnlink_init(g_hnb_gw,
+			       g_hnb_gw->config.iucs_remote_ip,
+			       g_hnb_gw->config.iucs_remote_port,
+			       "127.0.0.5" /* FIXME: configurable */,
+			       23 /* FIXME: configurable */);
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_ERROR, "Failed to initialize SCCP link to CN\n");
+		exit(1);
+	}
+
+	osmo_sccp_make_addr_pc_ssn(&g_hnb_gw->sccp.remote_addr_cs,
+				   1 /* FIXME: configurable */,
+				   OSMO_SCCP_SSN_RANAP);
+	osmo_sccp_make_addr_pc_ssn(&g_hnb_gw->sccp.remote_addr_ps,
+				   2 /* FIXME: configurable */,
+				   OSMO_SCCP_SSN_RANAP);
 
 	OSMO_ASSERT(g_hnb_gw->config.iuh_local_ip);
 	LOGP(DMAIN, LOGL_NOTICE, "Listening for Iuh at %s %d\n",

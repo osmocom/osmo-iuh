@@ -5,7 +5,7 @@ AM_CFLAGS = -g -I$(top_srcdir)/src/tests \
 
 COMMON_LIBS = $(OSMOVTY_LIBS) $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) $(OSMOSIGTRAN_LIBS) -lsctp
 
-check_PROGRAMS = test-ranap test-helpers test-hnbap hnb-test dummy-cn
+check_PROGRAMS = test-ranap test-helpers test-hnbap hnb-test #dummy-cn
 
 noinst_HEADERS = test_common.h hnb-test.h hnb-test-layers.h
 
@@ -24,8 +24,9 @@ hnb_test_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a $
 test_ranap_SOURCES = $(RANAP_FILES) test-ranap.c test_common.c
 test_ranap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 
-dummy_cn_SOURCES = $(RANAP_FILES) test_common.c dummy_cn_sua.c
-dummy_cn_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
+# TODO: re-add using SCCP?
+#dummy_cn_SOURCES = $(RANAP_FILES) test_common.c dummy_cn_sua.c
+#dummy_cn_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 
 $(top_builddir)/src/libosmo-ranap.la:
 	$(MAKE) -C $(top_builddir)/src libosmo-ranap.la

@@ -24,7 +24,6 @@
 #include <osmocom/netif/stream.h>
 
 #include <osmocom/sigtran/sccp_sap.h>
-#include <osmocom/sigtran/sua.h>
 
 #include <unistd.h>
 #include <errno.h>
@@ -170,15 +169,19 @@ static int rua_to_scu(struct hnb_context *hnb,
 	struct msgb *msg;
 	struct osmo_scu_prim *prim;
 	struct hnbgw_context_map *map;
-	struct hnbgw_cnlink *cn;
+	struct hnbgw_cnlink *cn = hnb->gw->sccp.cnlink;
+	struct osmo_sccp_addr *remote_addr;
+	bool is_ps;
 	int rc;
 
 	switch (cN_DomainIndicator) {
 	case RUA_CN_DomainIndicator_cs_domain:
-		cn = hnb->gw->cnlink_cs;
+		remote_addr = &hnb->gw->sccp.remote_addr_cs;
+		is_ps = false;
 		break;
 	case RUA_CN_DomainIndicator_ps_domain:
-		cn = hnb->gw->cnlink_ps;
+		remote_addr = &hnb->gw->sccp.remote_addr_ps;
+		is_ps = true;
 		break;
 	default:
 		LOGP(DRUA, LOGL_ERROR, "Unsupported Domain %u\n",
@@ -191,16 +194,19 @@ static int rua_to_scu(struct hnb_context *hnb,
 		return 0;
 	}
 
+	msg = msgb_alloc(1500, "rua_to_sccp");
+
 	prim = (struct osmo_scu_prim *) msgb_put(msg, sizeof(*prim));
 	osmo_prim_init(&prim->oph, SCCP_SAP_USER, type, PRIM_OP_REQUEST, msg);
 
-	map = context_map_alloc_by_hnb(hnb, context_id, cn);
+	map = context_map_alloc_by_hnb(hnb, context_id, is_ps, cn);
+	OSMO_ASSERT(map);
 
 	/* add primitive header */
 	switch (type) {
 	case OSMO_SCU_PRIM_N_CONNECT:
-		prim->u.connect.called_addr;
-		prim->u.connect.calling_addr;
+		prim->u.connect.called_addr = *remote_addr;
+		prim->u.connect.calling_addr = cn->gw->sccp.local_addr;
 		prim->u.connect.sccp_class = 2;
 		prim->u.connect.conn_id = map->scu_conn_id;
 		break;
@@ -212,8 +218,8 @@ static int rua_to_scu(struct hnb_context *hnb,
 		prim->u.disconnect.cause = cause;
 		break;
 	case OSMO_SCU_PRIM_N_UNITDATA:
-		prim->u.unitdata.called_addr;
-		prim->u.unitdata.calling_addr;
+		prim->u.unitdata.called_addr = *remote_addr;
+		prim->u.unitdata.calling_addr = cn->gw->sccp.local_addr;
 		break;
 	default:
 		return -EINVAL;
@@ -225,7 +231,7 @@ static int rua_to_scu(struct hnb_context *hnb,
 		memcpy(msg->l2h, data, len);
 	}
 
-	rc = osmo_sua_user_link_down(cn->sua_link, &prim->oph);
+	rc = osmo_sccp_user_sap_down(cn->sccp_user, &prim->oph);
 
 	return rc;
 }
