@@ -12,6 +12,7 @@ ranap_HEADERS = \
 	ranap_common_cn.h \
 	ranap_msg_factory.h \
 	iu_helpers.h \
+	iu_client.h \
 	RANAP_AccuracyFulfilmentIndicator.h \
 	RANAP_AllocationOrRetentionPriority.h \
 	RANAP_AlternativeRABConfigurationRequest.h \
