@@ -1,6 +1,6 @@
 #pragma once
 
-#include <asn_application.h>
+#include <asn1c/asn_application.h>
 
 /* for f in ranap/RANAP_*.h; printf "#include \"$f\"\n" */
 #include <osmocom/ranap/RANAP_APN.h>
