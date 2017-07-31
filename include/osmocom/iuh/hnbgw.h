@@ -116,10 +116,8 @@ struct hnb_gw {
 		/*! The UDP port where we receive multiplexed CS user
 		 * plane traffic from HNBs */
 		uint16_t iuh_cs_mux_port;
-		const char *iucs_remote_ip;
-		uint16_t iucs_remote_port;
-		const char *iups_remote_ip;
-		uint16_t iups_remote_port;
+		const char *iucs_remote_addr_name;
+		const char *iups_remote_addr_name;
 		uint16_t rnc_id;
 		bool hnbap_allow_tmsi;
 	} config;
@@ -134,11 +132,11 @@ struct hnb_gw {
 
 	/* currently active CN links for CS and PS */
 	struct {
-		struct osmo_sccp_instance *instance;
+		struct osmo_sccp_instance *client;
 		struct hnbgw_cnlink *cnlink;
 		struct osmo_sccp_addr local_addr;
-		struct osmo_sccp_addr remote_addr_cs;
-		struct osmo_sccp_addr remote_addr_ps;
+		struct osmo_sccp_addr iucs_remote_addr;
+		struct osmo_sccp_addr iups_remote_addr;
 	} sccp;
 };
 

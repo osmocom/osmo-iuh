@@ -90,7 +90,6 @@ int hnbgw_vty_go_parent(struct vty *vty)
 		vty->node = HNBGW_NODE;
 		vty->index = NULL;
 		break;
-	default:
 	case HNBGW_NODE:
 		vty->node = CONFIG_NODE;
 		vty->index = NULL;
@@ -98,6 +97,9 @@ int hnbgw_vty_go_parent(struct vty *vty)
 	case CONFIG_NODE:
 		vty->node = ENABLE_NODE;
 		vty->index = NULL;
+		break;
+	default:
+		osmo_ss7_vty_go_parent(vty);
 		break;
 	}
 
@@ -182,37 +184,23 @@ DEFUN(cfg_hnbgw_iuh_hnbap_allow_tmsi, cfg_hnbgw_iuh_hnbap_allow_tmsi_cmd,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_hnbgw_iucs_remote_ip, cfg_hnbgw_iucs_remote_ip_cmd, "remote-ip A.B.C.D",
-      "Address to establish IuCS core network link to\n"
-      "Remote IuCS IP address (default: " HNBGW_IUCS_REMOTE_IP_DEFAULT ")")
+DEFUN(cfg_hnbgw_iucs_remote_addr,
+      cfg_hnbgw_iucs_remote_addr_cmd,
+      "remote-addr NAME",
+      "SCCP address to send IuCS to (MSC)\n"
+      "SCCP address book entry name (see 'cs7-instance')\n")
 {
-	talloc_free((void*)g_hnb_gw->config.iucs_remote_ip);
-	g_hnb_gw->config.iucs_remote_ip = talloc_strdup(tall_hnb_ctx, argv[0]);
+	g_hnb_gw->config.iucs_remote_addr_name = talloc_strdup(g_hnb_gw, argv[0]);
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_hnbgw_iucs_remote_port, cfg_hnbgw_iucs_remote_port_cmd, "remote-port <1-65535>",
-      "Remote port to establish IuCS core network link to\n"
-      "Remote IuCS port (default: 14001)")
+DEFUN(cfg_hnbgw_iups_remote_addr,
+      cfg_hnbgw_iups_remote_addr_cmd,
+      "remote-addr NAME",
+      "SCCP address to send IuPS to (SGSN)\n"
+      "SCCP address book entry name (see 'cs7-instance')\n")
 {
-	g_hnb_gw->config.iucs_remote_port = atoi(argv[0]);
-	return CMD_SUCCESS;
-}
-
-DEFUN(cfg_hnbgw_iups_remote_ip, cfg_hnbgw_iups_remote_ip_cmd, "remote-ip A.B.C.D",
-      "Address to establish IuPS core network link to\n"
-      "Remote IuPS IP address (default: " HNBGW_IUPS_REMOTE_IP_DEFAULT ")")
-{
-	talloc_free((void*)g_hnb_gw->config.iups_remote_ip);
-	g_hnb_gw->config.iups_remote_ip = talloc_strdup(tall_hnb_ctx, argv[0]);
-	return CMD_SUCCESS;
-}
-
-DEFUN(cfg_hnbgw_iups_remote_port, cfg_hnbgw_iups_remote_port_cmd, "remote-port <1-65535>",
-      "Remote port to establish IuPS core network link to\n"
-      "Remote IuPS port (default: 14001)")
-{
-	g_hnb_gw->config.iups_remote_port = atoi(argv[0]);
+	g_hnb_gw->config.iups_remote_addr_name = talloc_strdup(g_hnb_gw, argv[0]);
 	return CMD_SUCCESS;
 }
 
@@ -248,15 +236,12 @@ static int config_write_hnbgw_iucs(struct vty *vty)
 	const char *addr;
 	uint16_t port;
 
+	if (!g_hnb_gw->config.iucs_remote_addr_name)
+		return CMD_SUCCESS;
+
 	vty_out(vty, " iucs%s", VTY_NEWLINE);
-
-	addr = g_hnb_gw->config.iucs_remote_ip;
-	if (addr && (strcmp(addr, HNBGW_IUCS_REMOTE_IP_DEFAULT) != 0))
-		vty_out(vty, "  remote-ip %s%s", addr, VTY_NEWLINE);
-
-	port = g_hnb_gw->config.iucs_remote_port;
-	if (port && port != SUA_PORT)
-		vty_out(vty, "  remote-port %u%s", port, VTY_NEWLINE);
+	vty_out(vty, "  remote-addr %s%s", g_hnb_gw->config.iucs_remote_addr_name,
+		VTY_NEWLINE);
 
 	return CMD_SUCCESS;
 }
@@ -266,15 +251,12 @@ static int config_write_hnbgw_iups(struct vty *vty)
 	const char *addr;
 	uint16_t port;
 
+	if (!g_hnb_gw->config.iups_remote_addr_name)
+		return CMD_SUCCESS;
+
 	vty_out(vty, " iups%s", VTY_NEWLINE);
-
-	addr = g_hnb_gw->config.iups_remote_ip;
-	if (addr && (strcmp(addr, HNBGW_IUPS_REMOTE_IP_DEFAULT) != 0))
-		vty_out(vty, "  remote-ip %s%s", addr, VTY_NEWLINE);
-
-	port = g_hnb_gw->config.iups_remote_port;
-	if (port && port != SUA_PORT)
-		vty_out(vty, "  remote-port %u%s", port, VTY_NEWLINE);
+	vty_out(vty, "  remote-addr %s%s", g_hnb_gw->config.iups_remote_addr_name,
+		VTY_NEWLINE);
 
 	return CMD_SUCCESS;
 }
@@ -300,15 +282,13 @@ void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 	install_node(&iucs_node, config_write_hnbgw_iucs);
 	vty_install_default(IUCS_NODE);
 
-	install_element(IUCS_NODE, &cfg_hnbgw_iucs_remote_ip_cmd);
-	install_element(IUCS_NODE, &cfg_hnbgw_iucs_remote_port_cmd);
+	install_element(IUCS_NODE, &cfg_hnbgw_iucs_remote_addr_cmd);
 
 	install_element(HNBGW_NODE, &cfg_hnbgw_iups_cmd);
 	install_node(&iups_node, config_write_hnbgw_iups);
 	vty_install_default(IUPS_NODE);
 
-	install_element(IUPS_NODE, &cfg_hnbgw_iups_remote_ip_cmd);
-	install_element(IUPS_NODE, &cfg_hnbgw_iups_remote_port_cmd);
+	install_element(IUPS_NODE, &cfg_hnbgw_iups_remote_addr_cmd);
 
 	install_element_ve(&show_hnb_cmd);
 	install_element_ve(&show_ue_cmd);

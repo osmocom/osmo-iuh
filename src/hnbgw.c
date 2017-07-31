@@ -79,14 +79,6 @@ static struct hnb_gw *hnb_gw_create(void *ctx)
 	gw->config.iuh_local_ip = talloc_strdup(gw, HNBGW_LOCAL_IP_DEFAULT);
 	gw->config.iuh_local_port = IUH_DEFAULT_SCTP_PORT;
 
-	gw->config.iucs_remote_ip = talloc_strdup(gw,
-						HNBGW_IUCS_REMOTE_IP_DEFAULT);
-	gw->config.iucs_remote_port = M3UA_PORT;
-
-	gw->config.iups_remote_ip = talloc_strdup(gw,
-						HNBGW_IUPS_REMOTE_IP_DEFAULT);
-	gw->config.iups_remote_port = M3UA_PORT;
-
 	gw->next_ue_ctx_id = 23;
 	INIT_LLIST_HEAD(&gw->hnb_list);
 	INIT_LLIST_HEAD(&gw->ue_list);
@@ -465,6 +457,7 @@ int main(int argc, char **argv)
 	vty_info.copyright = osmo_hnbgw_copyright;
 	vty_init(&vty_info);
 
+	osmo_ss7_vty_init_asp(tall_hnb_ctx);
 	hnbgw_vty_init(g_hnb_gw, tall_hnb_ctx);
 	logging_vty_add_cmds(&hnbgw_log_info);
 
@@ -501,23 +494,12 @@ int main(int argc, char **argv)
 
 	ranap_set_log_area(DRANAP);
 
-	OSMO_ASSERT(g_hnb_gw->config.iucs_remote_ip);
 	rc = hnbgw_cnlink_init(g_hnb_gw,
-			       g_hnb_gw->config.iucs_remote_ip,
-			       g_hnb_gw->config.iucs_remote_port,
-			       "127.0.0.5" /* FIXME: configurable */,
-			       23 /* FIXME: configurable */);
+			       "127.0.0.1", M3UA_PORT, "127.0.0.5" /* FIXME: configurable */);
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Failed to initialize SCCP link to CN\n");
 		exit(1);
 	}
-
-	osmo_sccp_make_addr_pc_ssn(&g_hnb_gw->sccp.remote_addr_cs,
-				   1 /* FIXME: configurable */,
-				   OSMO_SCCP_SSN_RANAP);
-	osmo_sccp_make_addr_pc_ssn(&g_hnb_gw->sccp.remote_addr_ps,
-				   2 /* FIXME: configurable */,
-				   OSMO_SCCP_SSN_RANAP);
 
 	OSMO_ASSERT(g_hnb_gw->config.iuh_local_ip);
 	LOGP(DMAIN, LOGL_NOTICE, "Listening for Iuh at %s %d\n",

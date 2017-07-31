@@ -63,8 +63,8 @@ static void cnlink_trafc_cb(void *data)
 {
 	struct hnb_gw *gw = data;
 
-	transmit_rst(gw, RANAP_CN_DomainIndicator_cs_domain, &gw->sccp.remote_addr_cs);
-	transmit_rst(gw, RANAP_CN_DomainIndicator_ps_domain, &gw->sccp.remote_addr_ps);
+	transmit_rst(gw, RANAP_CN_DomainIndicator_cs_domain, &gw->sccp.iucs_remote_addr);
+	transmit_rst(gw, RANAP_CN_DomainIndicator_ps_domain, &gw->sccp.iups_remote_addr);
 	hnbgw_cnlink_change_state(gw->sccp.cnlink, CNLINK_S_EST_RST_TX_WAIT_ACK);
 	/* The spec states that we should abandon after a configurable
 	 * number of times.  We decide to simply continue trying */
@@ -251,12 +251,12 @@ static int classify_cn_remote_addr(const struct hnb_gw *gw,
 				   const struct osmo_sccp_addr *cn_remote_addr,
 				   bool *is_ps)
 {
-	if (pc_and_ssn_match(cn_remote_addr, &gw->sccp.remote_addr_cs)) {
+	if (pc_and_ssn_match(cn_remote_addr, &gw->sccp.iucs_remote_addr)) {
 		if (is_ps)
 			*is_ps = false;
 		return 0;
 	}
-	if (pc_and_ssn_match(cn_remote_addr, &gw->sccp.remote_addr_ps)) {
+	if (pc_and_ssn_match(cn_remote_addr, &gw->sccp.iups_remote_addr)) {
 		if (is_ps)
 			*is_ps = true;
 		return 0;
@@ -401,27 +401,90 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *ctx)
 	return 0;
 }
 
-int hnbgw_cnlink_init(struct hnb_gw *gw, const char *stp_host, uint16_t stp_port,
-		      const char *local_ip, uint32_t local_pc)
+static bool addr_has_pc_and_ssn(const struct osmo_sccp_addr *addr)
 {
-	struct hnbgw_cnlink *cnlink;
-	int rc;
+	if (!(addr->presence & OSMO_SCCP_ADDR_T_SSN))
+		return false;
+	if (!(addr->presence & OSMO_SCCP_ADDR_T_PC))
+		return false;
+	return true;
+}
 
-	OSMO_ASSERT(!gw->sccp.instance);
-	OSMO_ASSERT(!gw->sccp.cnlink);
+static int resolve_addr_name(struct osmo_sccp_addr *dest, struct osmo_ss7_instance **ss7,
+			      const char *addr_name, const char *label)
+{
+	struct osmo_ss7_instance *ss7_tmp;
 
-	gw->sccp.instance = osmo_sccp_simple_client(gw, "OsmoHNBGW", local_pc,
-						    OSMO_SS7_ASP_PROT_M3UA, 0, local_ip,
-						    stp_port, stp_host);
-	if (!gw->sccp.instance) {
-		LOGP(DMAIN, LOGL_ERROR, "Failed to init SCCP Instance\n");
+	if (!addr_name) {
+		LOGP(DMAIN, LOGL_ERROR, "Missing config: %s remote-addr\n", label);
 		return -1;
 	}
 
-	LOGP(DRUA, LOGL_DEBUG, "SCCP uplink to STP: %s %u\n", stp_host, stp_port);
+	ss7_tmp = osmo_sccp_addr_by_name(dest, addr_name);
+	if (!ss7_tmp) {
+		LOGP(DMAIN, LOGL_ERROR, "%s remote addr: no such SCCP address book entry: '%s'\n",
+			label, addr_name);
+		return -1;
+	}
 
-	osmo_sccp_make_addr_pc_ssn(&gw->sccp.local_addr, local_pc,
-				   OSMO_SCCP_SSN_RANAP);
+	if (*ss7 && (*ss7 != ss7_tmp)) {
+		LOGP(DMAIN, LOGL_ERROR, "IuCS and IuPS cannot be served from separate CS7 instances,"
+		     " cs7 instance %d != %d\n", (*ss7)->cfg.id, ss7_tmp->cfg.id);
+		return -1;
+	}
+
+	*ss7 = ss7_tmp;
+
+	osmo_sccp_addr_set_ssn(dest, OSMO_SCCP_SSN_RANAP);
+
+	if (!addr_has_pc_and_ssn(dest)) {
+		LOGP(DMAIN, LOGL_ERROR, "Invalid/incomplete %s remote-addr: %s\n",
+		     label, osmo_sccp_addr_name(dest));
+		return -1;
+	}
+
+	LOGP(DRANAP, LOGL_NOTICE, "Remote %s SCCP addr: %s\n",
+	     label, osmo_sccp_addr_name(*ss7, dest));
+	return 0;
+}
+
+int hnbgw_cnlink_init(struct hnb_gw *gw, const char *stp_host, uint16_t stp_port, const char *local_ip)
+{
+	struct hnbgw_cnlink *cnlink;
+	struct osmo_ss7_instance *ss7;
+	uint32_t local_pc;
+	int rc;
+
+	OSMO_ASSERT(!gw->sccp.client);
+	OSMO_ASSERT(!gw->sccp.cnlink);
+
+	ss7 = NULL;
+	if (resolve_addr_name(&gw->sccp.iucs_remote_addr, &ss7,
+			      gw->config.iucs_remote_addr_name, "IuCS"))
+		return -1;
+	if (resolve_addr_name(&gw->sccp.iups_remote_addr, &ss7,
+			      gw->config.iups_remote_addr_name, "IuPS"))
+		return -1;
+
+	if (!osmo_ss7_pc_is_valid(ss7->cfg.primary_pc)) {
+		LOGP(DMAIN, LOGL_ERROR, "IuCS/IuPS uplink cannot be setup: CS7 instance %d has no point-code set\n",
+		     ss7->cfg.id);
+		return -1;
+	}
+	local_pc = ss7->cfg.primary_pc;
+
+	osmo_sccp_make_addr_pc_ssn(&gw->sccp.local_addr, local_pc, OSMO_SCCP_SSN_RANAP);
+
+	LOGP(DRANAP, LOGL_NOTICE, "M3UA uplink to STP: %s %u\n", stp_host, stp_port);
+	LOGP(DRANAP, LOGL_NOTICE, "Local SCCP addr: %s\n", osmo_sccp_addr_name(ss7, &gw->sccp.local_addr));
+
+	gw->sccp.client = osmo_sccp_simple_client_on_ss7_id(gw, ss7->cfg.id, "OsmoHNBGW",
+							    local_pc, OSMO_SS7_ASP_PROT_M3UA,
+							    0, local_ip, stp_port, stp_host);
+	if (!gw->sccp.client) {
+		LOGP(DMAIN, LOGL_ERROR, "Failed to init SCCP Client\n");
+		return -1;
+	}
 
 	cnlink = talloc_zero(gw, struct hnbgw_cnlink);
 	cnlink->gw = gw;
@@ -430,10 +493,8 @@ int hnbgw_cnlink_init(struct hnb_gw *gw, const char *stp_host, uint16_t stp_port
 	cnlink->T_RafC.data = gw;
 	cnlink->next_conn_id = 1000;
 
-	cnlink->sccp_user = osmo_sccp_user_bind_pc(gw->sccp.instance,
-						   "OsmoHNBGW",
-						   sccp_sap_up, OSMO_SCCP_SSN_RANAP,
-						   gw->sccp.local_addr.pc);
+	cnlink->sccp_user = osmo_sccp_user_bind_pc(gw->sccp.client, "OsmoHNBGW", sccp_sap_up,
+						   OSMO_SCCP_SSN_RANAP, gw->sccp.local_addr.pc);
 	if (!cnlink->sccp_user) {
 		LOGP(DMAIN, LOGL_ERROR, "Failed to init SCCP User\n");
 		return -1;

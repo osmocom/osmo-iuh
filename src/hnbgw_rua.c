@@ -188,11 +188,11 @@ static int rua_to_scu(struct hnb_context *hnb,
 
 	switch (cN_DomainIndicator) {
 	case RUA_CN_DomainIndicator_cs_domain:
-		remote_addr = &hnb->gw->sccp.remote_addr_cs;
+		remote_addr = &hnb->gw->sccp.iucs_remote_addr;
 		is_ps = false;
 		break;
 	case RUA_CN_DomainIndicator_ps_domain:
-		remote_addr = &hnb->gw->sccp.remote_addr_ps;
+		remote_addr = &hnb->gw->sccp.iups_remote_addr;
 		is_ps = true;
 		break;
 	default:
