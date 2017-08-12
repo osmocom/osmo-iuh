@@ -75,21 +75,6 @@ DEFUN(cfg_iu_rab_assign_addr_enc, cfg_iu_rab_assign_addr_enc_cmd,
 	return CMD_SUCCESS;
 }
 
-extern struct osmo_sccp_addr local_sccp_addr;
-
-DEFUN(cfg_iu_local_addr_pc, cfg_iu_local_addr_pc_cmd,
-	"iu local-address point-code PC",
-	IU_STR "Local SCCP Address\n")
-{
-	local_sccp_addr.presence = OSMO_SCCP_ADDR_T_PC | OSMO_SCCP_ADDR_T_SSN;
-	local_sccp_addr.ri = OSMO_SCCP_RI_SSN_PC;
-	local_sccp_addr.pc = osmo_ss7_pointcode_parse(NULL, argv[0]);
-
-	return CMD_SUCCESS;
-}
-
-/* TODO: GT address configuration, in line with 4.5.1.1.1 of TS 25.410 */
-
 int ranap_iu_vty_config_write(struct vty *vty, const char *indent)
 {
 	if (!g_rab_assign_addr_enc) {
@@ -113,9 +98,6 @@ int ranap_iu_vty_config_write(struct vty *vty, const char *indent)
 		return CMD_WARNING;
 	}
 
-	vty_out(vty, "%siu local-address point-code %s%s", indent,
-		osmo_ss7_pointcode_print(NULL, local_sccp_addr.pc), VTY_NEWLINE);
-
 	if (asn_debug)
 		vty_out(vty, "%sasn1 debug 1%s", indent, VTY_NEWLINE);
 
@@ -130,7 +112,6 @@ void ranap_iu_vty_init(int iu_parent_node, enum ranap_nsap_addr_enc *rab_assign_
 	g_rab_assign_addr_enc = rab_assign_addr_enc;
 
 	install_element(iu_parent_node, &cfg_iu_rab_assign_addr_enc_cmd);
-	install_element(iu_parent_node, &cfg_iu_local_addr_pc_cmd);
 
 	/* Technically, these are global ASN.1 settings and not necessarily limited to the Iu interface.
 	 * Practically, only Iu users will use ASN.1 in Osmocom programs -- at least so far. So it is

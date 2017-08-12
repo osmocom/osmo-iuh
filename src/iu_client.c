@@ -83,6 +83,7 @@ static LLIST_HEAD(rnc_list);
 
 static struct osmo_sccp_instance *g_sccp;
 static struct osmo_sccp_user *g_scu;
+static struct osmo_sccp_addr g_local_sccp_addr;
 
 const struct value_string ranap_iu_event_type_names[] = {
 	OSMO_VALUE_STRING(RANAP_IU_EVENT_RAB_ASSIGN),
@@ -584,13 +585,6 @@ static void cn_ranap_handle_cl(void *ctx, ranap_message *message)
  * Paging
  ***********************************************************************/
 
-struct osmo_sccp_addr local_sccp_addr = {
-	.presence = OSMO_SCCP_ADDR_T_SSN | OSMO_SCCP_ADDR_T_PC,
-	.ri = OSMO_SCCP_RI_SSN_PC,
-	.ssn = OSMO_SCCP_SSN_RANAP,
-	.pc = 1,
-};
-
 /* Send a paging command down a given SCCP User. tmsi and paging_cause are
  * optional and may be passed NULL and 0, respectively, to disable their use.
  * See enum RANAP_PagingCause.
@@ -604,7 +598,7 @@ static int iu_tx_paging_cmd(struct osmo_sccp_addr *called_addr,
 	struct msgb *msg;
 	msg = ranap_new_msg_paging_cmd(imsi, tmsi, is_ps? 1 : 0, paging_cause);
 	msg->l2h = msg->data;
-	osmo_sccp_tx_unitdata_msg(g_scu, &local_sccp_addr, called_addr, msg);
+	osmo_sccp_tx_unitdata_msg(g_scu, &g_local_sccp_addr, called_addr, msg);
 	return 0;
 }
 
@@ -776,6 +770,7 @@ int ranap_iu_init(void *ctx, int log_subsystem, const char *sccp_user_name, stru
 	global_iu_recv_cb = iu_recv_cb;
 	global_iu_event_cb = iu_event_cb;
 	g_sccp = sccp;
+	osmo_sccp_local_addr_by_instance(&g_local_sccp_addr, sccp, OSMO_SCCP_SSN_RANAP);
 	g_scu = osmo_sccp_user_bind(g_sccp, sccp_user_name, sccp_sap_up, OSMO_SCCP_SSN_RANAP);
 
 	return 0;
