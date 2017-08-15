@@ -439,7 +439,7 @@ static int resolve_addr_name(struct osmo_sccp_addr *dest, struct osmo_ss7_instan
 
 	if (!addr_has_pc_and_ssn(dest)) {
 		LOGP(DMAIN, LOGL_ERROR, "Invalid/incomplete %s remote-addr: %s\n",
-		     label, osmo_sccp_addr_name(dest));
+		     label, osmo_sccp_addr_name(*ss7, dest));
 		return -1;
 	}
 
