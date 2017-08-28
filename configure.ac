@@ -16,6 +16,10 @@ AC_CONFIG_TESTDIR(src/tests)
 dnl kernel style compile messages
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
+dnl include release helper
+RELMAKE='-include osmo-release.mk'
+AC_SUBST([RELMAKE])
+
 dnl checks for programs
 AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P

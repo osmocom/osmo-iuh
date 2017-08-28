@@ -7,6 +7,8 @@ pkgconfig_DATA = libosmo-ranap.pc
 
 EXTRA_DIST = asn1 .version README.md
 
+@RELMAKE@
+
 BUILT_SOURCES = $(top_srcdir)/.version
 $(top_srcdir)/.version:
 	echo $(VERSION) > $@-t && mv $@-t $@
