@@ -52,7 +52,8 @@ COMMON_LDADD = -lsctp
 RANAP_LIBVERSION=0:0:0
 lib_LTLIBRARIES = libosmo-ranap.la
 libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION)
-libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) $(COMMON_LDADD) ranap/libosmo-asn1-ranap.la
+libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOSIGTRAN_LIBS) \
+			  $(ASN1C_LIBS) $(COMMON_LDADD) ranap/libosmo-asn1-ranap.la
 libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_msg_factory.c iu_helpers.c \
 			   ranap_common_cn.c iu_client.c iu_client_vty.c
 
