@@ -49,7 +49,7 @@ COMMON_LDADD = -lsctp
 
 # build the shared RANAP library
 #
-RANAP_LIBVERSION=0:0:0
+RANAP_LIBVERSION=1:0:0
 lib_LTLIBRARIES = libosmo-ranap.la
 libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION)
 libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOSIGTRAN_LIBS) \

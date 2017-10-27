@@ -1,3 +1,9 @@
+osmo-iuh (0.2.0) UNRELEASED; urgency=low
+
+  * Upstream 0.2.0 release
+
+ -- Harald Welte <laforge@gnumonks.org>  Fri, 27 Oct 2017 22:19:00 +0000
+
 osmo-iuh (0.1.0) UNRELEASED; urgency=low
 
   * Initial release.
