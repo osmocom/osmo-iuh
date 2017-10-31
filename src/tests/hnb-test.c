@@ -904,7 +904,6 @@ static void hnbtest_vty_init(void)
 	install_element_ve(&chan_cmd);
 
 	install_node(&chan_node, NULL);
-	vty_install_default(CHAN_NODE);
 }
 
 static void handle_options(int argc, char **argv)

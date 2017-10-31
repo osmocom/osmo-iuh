@@ -268,11 +268,9 @@ void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 
 	install_element(CONFIG_NODE, &cfg_hnbgw_cmd);
 	install_node(&hnbgw_node, config_write_hnbgw);
-	vty_install_default(HNBGW_NODE);
 
 	install_element(HNBGW_NODE, &cfg_hnbgw_iuh_cmd);
 	install_node(&iuh_node, config_write_hnbgw_iuh);
-	vty_install_default(IUH_NODE);
 
 	install_element(IUH_NODE, &cfg_hnbgw_iuh_local_ip_cmd);
 	install_element(IUH_NODE, &cfg_hnbgw_iuh_local_port_cmd);
@@ -280,13 +278,11 @@ void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 
 	install_element(HNBGW_NODE, &cfg_hnbgw_iucs_cmd);
 	install_node(&iucs_node, config_write_hnbgw_iucs);
-	vty_install_default(IUCS_NODE);
 
 	install_element(IUCS_NODE, &cfg_hnbgw_iucs_remote_addr_cmd);
 
 	install_element(HNBGW_NODE, &cfg_hnbgw_iups_cmd);
 	install_node(&iups_node, config_write_hnbgw_iups);
-	vty_install_default(IUPS_NODE);
 
 	install_element(IUPS_NODE, &cfg_hnbgw_iups_remote_addr_cmd);
 
