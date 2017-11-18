@@ -142,6 +142,8 @@ void test_asn1_decoding(void)
 	printf("HNBAP UE Register request from IMSI %s\n", imsi);
 	hnbap_free_ueregisterrequesties(&ue_req_ies);
 
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_PDU, pdu);
+
 	memset(pdu, 0, sizeof(*pdu));
 	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
 			hnbap_ue_reg_acc, sizeof(hnbap_ue_reg_acc), 0, 0);
@@ -163,6 +165,7 @@ void test_asn1_decoding(void)
 	printf("HNBAP UE Register accept to IMSI %s\n", imsi);
 	hnbap_free_ueregisteraccepties(&ue_acc_ies);
 
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_PDU, pdu);
 }
 
 int main(int argc, char **argv)
@@ -175,6 +178,7 @@ int main(int argc, char **argv)
 
 	test_asn1_decoding();
 
+	test_common_cleanup();
 	return 0;
 }
 

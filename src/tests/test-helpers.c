@@ -105,6 +105,8 @@ void test_asn1_helpers(void)
 	ASSERT(enc.size == 24/8);
 	ASSERT(enc.bits_unused == 0);
 
+	talloc_free(buffer);
+
 	rc = aper_encode_to_new_buffer(&asn_DEF_BIT_STRING, 0, &enc, (void **) &buffer);
 	printf("Encoded: %s\n", osmo_hexdump_nospc(buffer, rc));
 
@@ -118,6 +120,7 @@ void test_asn1_helpers(void)
 	printf("Decoding large string from asn1: %s\n", text);
 	ASSERT(rc == 31);
 
+	talloc_free(buffer);
 }
 
 void test_ranap_common(void)
@@ -211,5 +214,6 @@ int main(int argc, char **argv)
 	test_asn1_helpers();
 	test_ranap_common();
 
+	test_common_cleanup();
 	return 0;
 }

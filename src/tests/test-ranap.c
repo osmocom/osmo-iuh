@@ -197,6 +197,8 @@ int main(int argc, char **argv)
 	talloc_report(talloc_asn1_ctx, stdout);
 	talloc_report(tall_msgb_ctx, stdout);
 	//talloc_report(NULL, stdout);
+
+	test_common_cleanup();
 	printf("exit\n");
 	exit(0);
 }

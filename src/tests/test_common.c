@@ -69,11 +69,13 @@ static const struct log_info test_log_info = {
 	.num_cat = ARRAY_SIZE(log_cat),
 };
 
+static void *msgb_ctx;
+
 int test_common_init(void)
 {
 	int rc;
 
-	msgb_talloc_ctx_init(NULL, 0);
+	msgb_ctx = msgb_talloc_ctx_init(NULL, 0);
 	talloc_asn1_ctx = talloc_named_const(NULL, 0, "asn1_context");
 
 	rc = osmo_init_logging(&test_log_info);
@@ -84,4 +86,23 @@ int test_common_init(void)
 
 	log_set_print_filename(osmo_stderr_target, 0);
 	log_set_use_color(osmo_stderr_target, 0);
+}
+
+void test_common_cleanup(void)
+{
+	if (talloc_total_blocks(msgb_ctx) != 1
+	    || talloc_total_size(msgb_ctx) != 0)
+		talloc_report_full(msgb_ctx, stderr);
+
+	OSMO_ASSERT(talloc_total_blocks(msgb_ctx) == 1);
+	OSMO_ASSERT(talloc_total_size(msgb_ctx) == 0);
+	talloc_free(msgb_ctx);
+
+	if (talloc_total_blocks(talloc_asn1_ctx) != 1
+	    || talloc_total_size(talloc_asn1_ctx) != 0)
+		talloc_report_full(talloc_asn1_ctx, stderr);
+
+	OSMO_ASSERT(talloc_total_blocks(talloc_asn1_ctx) == 1);
+	OSMO_ASSERT(talloc_total_size(talloc_asn1_ctx) == 0);
+	talloc_free(talloc_asn1_ctx);
 }
