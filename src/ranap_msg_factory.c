@@ -638,6 +638,7 @@ static void new_transp_layer_addr(BIT_STRING_t *out, uint32_t ip, bool use_x213_
 {
 	uint8_t *buf;
 	unsigned int len;
+	uint32_t ip_h = ntohl(ip);
 
 	if (use_x213_nsap) {
 		len = 160/8;
@@ -645,11 +646,11 @@ static void new_transp_layer_addr(BIT_STRING_t *out, uint32_t ip, bool use_x213_
 		buf[0] = 0x35;	/* AFI For IANA ICP */
 		buf[1] = 0x00;	/* See A.5.2.1.2.7 of X.213 */
 		buf[2] = 0x01;
-		*(uint32_t *)&buf[3] = ntohl(ip);
+		memcpy(&buf[3], &ip_h, sizeof(ip_h));
 	} else {
-		len = 4;
+		len = sizeof(ip_h);
 		buf = CALLOC(len, sizeof(uint8_t));
-		*(uint32_t *)buf = ntohl(ip);
+		memcpy(buf, &ip_h, sizeof(ip_h));
 	}
 	out->buf = buf;
 	out->size = len;
