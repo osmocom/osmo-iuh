@@ -474,8 +474,6 @@ int hnbgw_cnlink_init(struct hnb_gw *gw, const char *stp_host, uint16_t stp_port
 	local_pc = ss7->cfg.primary_pc;
 
 	osmo_sccp_make_addr_pc_ssn(&gw->sccp.local_addr, local_pc, OSMO_SCCP_SSN_RANAP);
-
-	LOGP(DRANAP, LOGL_NOTICE, "M3UA uplink to STP: %s %u\n", stp_host, stp_port);
 	LOGP(DRANAP, LOGL_NOTICE, "Local SCCP addr: %s\n", osmo_sccp_addr_name(ss7, &gw->sccp.local_addr));
 
 	gw->sccp.client = osmo_sccp_simple_client_on_ss7_id(gw, ss7->cfg.id, "OsmoHNBGW",
