@@ -716,7 +716,8 @@ static void assign_new_ra_id(RANAP_RAB_ID_t *id, uint8_t rab_id)
 
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for CS (voice).
  * See 3GPP TS 25.413 8.2.
- * RAB ID: 3GPP TS 25.413 9.2.1.2
+ * RAB ID: 3GPP TS 25.413 9.2.1.2.
+ * \param rtp_ip  MGW's RTP IPv4 address in *network* byte order.
  */
 struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 					    uint16_t rtp_port,
@@ -785,7 +786,8 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	return msg;
 }
 
-/*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for PS (data) */
+/*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for PS (data)
+ * \param gtp_ip  SGSN's GTP IPv4 address in *network* byte order. */
 struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
 					   uint32_t gtp_tei, bool use_x213_nsap)
 {
