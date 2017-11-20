@@ -37,6 +37,8 @@
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/logging.h>
 
+#include <osmocom/ranap/ranap_common.h>
+
 #include <osmocom/iuh/hnbgw.h>
 
 void *talloc_asn1_ctx;
