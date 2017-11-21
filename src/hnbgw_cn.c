@@ -389,7 +389,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *ctx)
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DISCONNECT, PRIM_OP_INDICATION):
 		rc = handle_cn_disc_ind(cnlink, &prim->u.disconnect, oph);
 		break;
-	defualt:
+	default:
 		LOGP(DMAIN, LOGL_ERROR,
 			"Received unknown prim %u from SCCP USER SAP\n",
 			OSMO_PRIM_HDR(oph));
