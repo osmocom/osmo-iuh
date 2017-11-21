@@ -238,21 +238,6 @@ out:
 	return rc;
 }
 
-static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
-{
-	struct hnb_context *ctx = fd->data;
-	struct sctp_sndrcvinfo sinfo = {
-		.sinfo_ppid = htonl(msgb_sctp_ppid(msg)),
-		.sinfo_stream = ctx->hnbap_stream,
-	};
-	int rc;
-
-	rc = sctp_send(fd->fd, msgb_data(msg), msgb_length(msg),
-			&sinfo, 0);
-	/* we don't need to msgb_free(), write_queue does this for us */
-	return rc;
-}
-
 struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_link *link, int new_fd)
 {
 	struct hnb_context *ctx;
