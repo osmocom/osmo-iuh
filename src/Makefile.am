@@ -42,7 +42,7 @@ gen_ranap.stamp: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN1TOSTRUCT)
 
 ranap_decoder.c ranap_encoder.c: gen_ranap.stamp
 
-AM_CFLAGS = -I$(top_srcdir)/include -I$(top_builddir)/include \
+AM_CFLAGS = -Wall -I$(top_srcdir)/include -I$(top_builddir)/include \
 	    $(OSMOCORE_CFLAGS) $(OSMOVTY_CFLAGS) $(OSMOGSM_CFLAGS) \
 	    $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS)
 
