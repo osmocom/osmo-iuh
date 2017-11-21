@@ -169,4 +169,6 @@ int context_map_init(struct hnb_gw *gw)
 	context_map_tmr.cb = context_map_tmr_cb;
 	context_map_tmr.data = gw;
 	osmo_timer_schedule(&context_map_tmr, EXPIRY_TIMER_SECS, 0);
+
+	return 0;
 }

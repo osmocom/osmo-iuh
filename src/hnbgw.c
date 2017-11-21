@@ -44,8 +44,11 @@
 
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
+#include <osmocom/vty/command.h>
 
 #include <osmocom/netif/stream.h>
+
+#include <osmocom/ranap/ranap_common.h>
 
 #include <osmocom/sigtran/protocol/m3ua.h>
 #include <osmocom/sigtran/sccp_sap.h>
@@ -68,8 +71,6 @@ static void *tall_hnb_ctx;
 void *talloc_asn1_ctx;
 
 static struct hnb_gw *g_hnb_gw;
-
-static int listen_fd_cb(struct osmo_fd *fd, unsigned int what);
 
 static struct hnb_gw *hnb_gw_create(void *ctx)
 {
@@ -175,13 +176,13 @@ void ue_context_free(struct ue_context *ue)
 }
 static int hnb_close_cb(struct osmo_stream_srv *conn)
 {
+	return 0;
 }
 
 static int hnb_read_cb(struct osmo_stream_srv *conn)
 {
 	struct hnb_context *hnb = osmo_stream_srv_get_data(conn);
 	struct msgb *msg = msgb_alloc(IUH_MSGB_SIZE, "Iuh rx");
-	int flags = 0;
 	int rc;
 
 	if (!msg)
@@ -222,12 +223,12 @@ static int hnb_read_cb(struct osmo_stream_srv *conn)
 	case IUH_PPI_SABP:
 	case IUH_PPI_RNA:
 	case IUH_PPI_PUA:
-		LOGP(DMAIN, LOGL_ERROR, "Unimplemented SCTP PPID=%u received\n",
+		LOGP(DMAIN, LOGL_ERROR, "Unimplemented SCTP PPID=%lu received\n",
 		     msgb_sctp_ppid(msg));
 		rc = 0;
 		break;
 	default:
-		LOGP(DMAIN, LOGL_ERROR, "Unknown SCTP PPID=%u received\n",
+		LOGP(DMAIN, LOGL_ERROR, "Unknown SCTP PPID=%lu received\n",
 		     msgb_sctp_ppid(msg));
 		rc = 0;
 		break;
@@ -421,8 +422,6 @@ static void handle_options(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-	struct osmo_sccp_user *sccp_user;
-	struct osmo_sccp_link *sua_link;
 	struct osmo_stream_srv_link *srv;
 	int rc;
 

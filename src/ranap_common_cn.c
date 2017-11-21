@@ -319,7 +319,7 @@ int ranap_cn_rx_co(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 static int cn_ranap_rx_initiating_msg_cl(void *ctx, RANAP_InitiatingMessage_t *imsg,
 					 ranap_message *message)
 {
-	int rc;
+	int rc = 0;
 
 	message->procedureCode = imsg->procedureCode;
 	message->criticality = imsg->criticality;
@@ -360,6 +360,8 @@ static int cn_ranap_rx_initiating_msg_cl(void *ctx, RANAP_InitiatingMessage_t *i
 		     get_value_string(ranap_procedure_code_vals, imsg->procedureCode));
 		break;
 	}
+
+	return rc;
 }
 
 static void cn_ranap_free_initiating_msg_cl(ranap_message *message)
@@ -403,7 +405,7 @@ static void cn_ranap_free_initiating_msg_cl(ranap_message *message)
 static int cn_ranap_rx_successful_msg_cl(void *ctx, RANAP_SuccessfulOutcome_t *imsg,
 					 ranap_message *message)
 {
-	int rc;
+	int rc = 0;
 
 	message->procedureCode = imsg->procedureCode;
 	message->criticality = imsg->criticality;
@@ -433,6 +435,8 @@ static int cn_ranap_rx_successful_msg_cl(void *ctx, RANAP_SuccessfulOutcome_t *i
 		     get_value_string(ranap_procedure_code_vals, imsg->procedureCode));
 		break;
 	}
+
+	return rc;
 }
 
 static void cn_ranap_free_successful_msg_cl(ranap_message *message)
@@ -463,7 +467,7 @@ static void cn_ranap_free_successful_msg_cl(ranap_message *message)
 
 static int _cn_ranap_rx_cl(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *message)
 {
-	int rc;
+	int rc = 0;
 
 	/* Extend _cn_ranap_free_cl as well when extending this function */
 
@@ -488,6 +492,8 @@ static int _cn_ranap_rx_cl(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *mes
 		     get_value_string(ranap_presence_vals, pdu->present));
 		break;
 	}
+
+	return rc;
 }
 
 static void _cn_ranap_free_cl(ranap_message *message)
@@ -505,7 +511,7 @@ static void _cn_ranap_free_cl(ranap_message *message)
 		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Suspicious RANAP "
-		     "presence %s (CL) from RNC, ignoring\n", message->direction);
+		     "presence %d (CL) from RNC, ignoring\n", message->direction);
 		break;
 	}
 }

@@ -24,6 +24,7 @@
 #include <osmocom/netif/stream.h>
 
 #include <osmocom/sigtran/sccp_sap.h>
+#include <osmocom/sigtran/sccp_helpers.h>
 
 #include <unistd.h>
 #include <errno.h>
@@ -418,7 +419,6 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 static int rua_rx_init_udt(struct msgb *msg, ANY_t *in)
 {
 	RUA_ConnectionlessTransferIEs_t ies;
-	RUA_CN_DomainIndicator_t domain;
 	int rc;
 
 	rc = rua_decode_connectionlesstransferies(&ies, in);
@@ -483,7 +483,7 @@ static int rua_rx_initiating_msg(struct msgb *msg, RUA_InitiatingMessage_t *imsg
 		rc = 0;
 		break;
 	default:
-		LOGP(DRUA, LOGL_NOTICE, "Unknown RUA Procedure %u\n",
+		LOGP(DRUA, LOGL_NOTICE, "Unknown RUA Procedure %lu\n",
 		     imsg->procedureCode);
 		rc = -1;
 	}

@@ -355,8 +355,8 @@ static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	DEBUGP(DHNBAP, "HNB-DE-REGISTER cause=%ld\n",
-		ies.cause);
+	DEBUGP(DHNBAP, "HNB-DE-REGISTER cause=%s\n",
+		hnbap_cause_str(&ies.cause));
 
 	hnbap_free_hnbde_registeries(&ies);
 	hnb_context_release(ctx);
@@ -457,7 +457,7 @@ static int hnbgw_rx_ue_deregister(struct hnb_context *ctx, ANY_t *in)
 
 	ctxid = asn1bitstr_to_u24(&ies.context_ID);
 
-	DEBUGP(DHNBAP, "UE-DE-REGISTER context=%ld cause=%s\n",
+	DEBUGP(DHNBAP, "UE-DE-REGISTER context=%u cause=%s\n",
 		ctxid, hnbap_cause_str(&ies.cause));
 
 	ue = ue_context_by_id(ctx->gw, ctxid);
@@ -486,7 +486,7 @@ static int hnbgw_rx_err_ind(struct hnb_context *hnb, ANY_t *in)
 
 static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, InitiatingMessage_t *imsg)
 {
-	int rc;
+	int rc = 0;
 
 	switch (imsg->procedureCode) {
 	case ProcedureCode_id_HNBRegister:	/* 8.2 */
@@ -517,6 +517,8 @@ static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, InitiatingMessage_t 
 			imsg->procedureCode);
 		break;
 	}
+
+	return rc;
 }
 
 static int hnbgw_rx_successful_outcome_msg(struct hnb_context *hnb, SuccessfulOutcome_t *msg)
@@ -581,5 +583,5 @@ int hnbgw_hnbap_rx(struct hnb_context *hnb, struct msgb *msg)
 
 int hnbgw_hnbap_init(void)
 {
-
+	return 0;
 }

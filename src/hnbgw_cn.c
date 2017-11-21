@@ -38,13 +38,12 @@
  * Outbound RANAP RESET to CN
  ***********************************************************************/
 
-int hnbgw_cnlink_change_state(struct hnbgw_cnlink *cnlink, enum hnbgw_cnlink_state state);
+void hnbgw_cnlink_change_state(struct hnbgw_cnlink *cnlink, enum hnbgw_cnlink_state state);
 
 static int transmit_rst(struct hnb_gw *gw, RANAP_CN_DomainIndicator_t domain,
 			struct osmo_sccp_addr *remote_addr)
 {
 	struct msgb *msg;
-	struct msgb *msgprim;
 	RANAP_Cause_t cause = {
 		.present = RANAP_Cause_PR_transmissionNetwork,
 		.choice. transmissionNetwork = RANAP_CauseTransmissionNetwork_signalling_transport_resource_failure,
@@ -71,7 +70,7 @@ static void cnlink_trafc_cb(void *data)
 }
 
 /* change the state of a CN Link */
-int hnbgw_cnlink_change_state(struct hnbgw_cnlink *cnlink, enum hnbgw_cnlink_state state)
+void hnbgw_cnlink_change_state(struct hnbgw_cnlink *cnlink, enum hnbgw_cnlink_state state)
 {
 	switch (state) {
 	case CNLINK_S_NULL:
@@ -127,9 +126,11 @@ static int cn_ranap_rx_paging_cmd(struct hnbgw_cnlink *cnlink,
 	struct hnb_gw *gw = cnlink->gw;
 	struct hnb_context *hnb;
 	RANAP_PagingIEs_t ies;
-	int rc = 0;
+	int rc;
 
 	rc = ranap_decode_pagingies(&ies, &imsg->value);
+	if (rc < 0)
+		return rc;
 
 	/* FIXME: determine which HNBs to send this Paging command,
 	 * rather than broadcasting to all HNBs */
@@ -145,8 +146,6 @@ static int cn_ranap_rx_initiating_msg(struct hnbgw_cnlink *cnlink,
 				      RANAP_InitiatingMessage_t *imsg,
 				      const uint8_t *data, unsigned int len)
 {
-	int rc;
-
 	switch (imsg->procedureCode) {
 	case RANAP_ProcedureCode_id_Reset:
 		return cn_ranap_rx_reset_cmd(cnlink, imsg);
@@ -161,11 +160,11 @@ static int cn_ranap_rx_initiating_msg(struct hnbgw_cnlink *cnlink,
 	case RANAP_ProcedureCode_id_DirectInformationTransfer:
 	case RANAP_ProcedureCode_id_UplinkInformationExchange:
 		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
-		     "Procedure %u from CN, ignoring\n", imsg->procedureCode);
+		     "Procedure %ld from CN, ignoring\n", imsg->procedureCode);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
-		     "Procedure %u from CN, ignoring\n", imsg->procedureCode);
+		     "Procedure %ld from CN, ignoring\n", imsg->procedureCode);
 		break;
 	}
 	return 0;
@@ -174,8 +173,6 @@ static int cn_ranap_rx_initiating_msg(struct hnbgw_cnlink *cnlink,
 static int cn_ranap_rx_successful_msg(struct hnbgw_cnlink *cnlink,
 					RANAP_SuccessfulOutcome_t *omsg)
 {
-	int rc;
-
 	switch (omsg->procedureCode) {
 	case RANAP_ProcedureCode_id_Reset: /* Reset acknowledge */
 		return cn_ranap_rx_reset_ack(cnlink, omsg);
@@ -184,11 +181,11 @@ static int cn_ranap_rx_successful_msg(struct hnbgw_cnlink *cnlink,
 	case RANAP_ProcedureCode_id_DirectInformationTransfer:
 	case RANAP_ProcedureCode_id_UplinkInformationExchange:
 		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
-		     "Procedure %u from CN, ignoring\n", omsg->procedureCode);
+		     "Procedure %ld from CN, ignoring\n", omsg->procedureCode);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
-		     "Procedure %u from CN, ignoring\n", omsg->procedureCode);
+		     "Procedure %ld from CN, ignoring\n", omsg->procedureCode);
 		break;
 	}
 	return 0;
@@ -210,7 +207,7 @@ static int _cn_ranap_rx(struct hnbgw_cnlink *cnlink, RANAP_RANAP_PDU_t *pdu,
 		break;
 	case RANAP_RANAP_PDU_PR_unsuccessfulOutcome:
 		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
-		     "unsuccessful outcome procedure %u from CN, ignoring\n",
+		     "unsuccessful outcome procedure %ld from CN, ignoring\n",
 		     pdu->choice.unsuccessfulOutcome.procedureCode);
 		break;
 	default:
@@ -218,6 +215,8 @@ static int _cn_ranap_rx(struct hnbgw_cnlink *cnlink, RANAP_RANAP_PDU_t *pdu,
 		     "presence %u from CN, ignoring\n", pdu->present);
 		break;
 	}
+
+	return rc;
 }
 
 static int handle_cn_ranap(struct hnbgw_cnlink *cnlink, const uint8_t *data,
@@ -357,7 +356,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *ctx)
 	struct osmo_sccp_user *scu = ctx;
 	struct hnbgw_cnlink *cnlink;
 	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) oph;
-	int rc;
+	int rc = 0;
 
 	LOGP(DMAIN, LOGL_DEBUG, "sccp_sap_up(%s)\n", osmo_scu_prim_name(oph));
 
@@ -398,7 +397,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *ctx)
 
 	msgb_free(oph->msg);
 
-	return 0;
+	return rc;
 }
 
 static bool addr_has_pc_and_ssn(const struct osmo_sccp_addr *addr)
@@ -453,7 +452,6 @@ int hnbgw_cnlink_init(struct hnb_gw *gw, const char *stp_host, uint16_t stp_port
 	struct hnbgw_cnlink *cnlink;
 	struct osmo_ss7_instance *ss7;
 	uint32_t local_pc;
-	int rc;
 
 	OSMO_ASSERT(!gw->sccp.client);
 	OSMO_ASSERT(!gw->sccp.cnlink);

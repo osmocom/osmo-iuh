@@ -18,6 +18,8 @@
  *
  */
 
+#include <string.h>
+
 #include <osmocom/vty/command.h>
 
 #include <osmocom/iuh/vty.h>
@@ -233,9 +235,6 @@ static int config_write_hnbgw_iuh(struct vty *vty)
 
 static int config_write_hnbgw_iucs(struct vty *vty)
 {
-	const char *addr;
-	uint16_t port;
-
 	if (!g_hnb_gw->config.iucs_remote_addr_name)
 		return CMD_SUCCESS;
 
@@ -248,9 +247,6 @@ static int config_write_hnbgw_iucs(struct vty *vty)
 
 static int config_write_hnbgw_iups(struct vty *vty)
 {
-	const char *addr;
-	uint16_t port;
-
 	if (!g_hnb_gw->config.iups_remote_addr_name)
 		return CMD_SUCCESS;
 

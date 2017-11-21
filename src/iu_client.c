@@ -25,12 +25,16 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include <asn1c/asn1helpers.h>
+
 #include <osmocom/ranap/iu_client.h>
 
 #include <osmocom/core/logging.h>
 #include <osmocom/crypt/auth.h>
 #include <osmocom/gprs/gprs_msgb.h>
 #include <osmocom/sigtran/sccp_sap.h>
+#include <osmocom/sigtran/sccp_helpers.h>
+#include <osmocom/ranap/ranap_common_cn.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_msg_factory.h>
 
