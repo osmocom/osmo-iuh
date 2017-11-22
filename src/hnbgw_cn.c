@@ -506,6 +506,11 @@ int hnbgw_cnlink_init(struct hnb_gw *gw, const char *stp_host, uint16_t stp_port
 		return -1;
 	}
 
+	LOGP(DRANAP, LOGL_NOTICE, "Remote SCCP addr: IuCS: %s\n",
+	     osmo_sccp_addr_name(ss7, &gw->sccp.iucs_remote_addr));
+	LOGP(DRANAP, LOGL_NOTICE, "Remote SCCP addr: IuPS: %s\n",
+	     osmo_sccp_addr_name(ss7, &gw->sccp.iups_remote_addr));
+
 	/* In sccp_sap_up() we expect the cnlink in the user's priv. */
 	osmo_sccp_user_set_priv(cnlink->sccp_user, cnlink);
 
