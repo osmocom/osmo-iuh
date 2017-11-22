@@ -410,13 +410,16 @@ static bool addr_has_pc_and_ssn(const struct osmo_sccp_addr *addr)
 }
 
 static int resolve_addr_name(struct osmo_sccp_addr *dest, struct osmo_ss7_instance **ss7,
-			      const char *addr_name, const char *label)
+			     const char *addr_name, const char *label,
+			     uint32_t default_pc)
 {
 	struct osmo_ss7_instance *ss7_tmp;
 
 	if (!addr_name) {
-		LOGP(DMAIN, LOGL_ERROR, "Missing config: %s remote-addr\n", label);
-		return -1;
+		osmo_sccp_make_addr_pc_ssn(dest, default_pc, OSMO_SCCP_SSN_RANAP);
+		LOGP(DMAIN, LOGL_INFO, "%s remote addr not configured, using default: %s\n", label,
+		     osmo_sccp_addr_name(*ss7, dest));
+		return 0;
 	}
 
 	ss7_tmp = osmo_sccp_addr_by_name(dest, addr_name);
@@ -458,11 +461,18 @@ int hnbgw_cnlink_init(struct hnb_gw *gw, const char *stp_host, uint16_t stp_port
 
 	ss7 = NULL;
 	if (resolve_addr_name(&gw->sccp.iucs_remote_addr, &ss7,
-			      gw->config.iucs_remote_addr_name, "IuCS"))
+			      gw->config.iucs_remote_addr_name, "IuCS", (23 << 3) + 1))
 		return -1;
 	if (resolve_addr_name(&gw->sccp.iups_remote_addr, &ss7,
-			      gw->config.iups_remote_addr_name, "IuPS"))
+			      gw->config.iups_remote_addr_name, "IuPS", (23 << 3) + 4))
 		return -1;
+
+	if (!ss7) {
+		LOGP(DRANAP, LOGL_NOTICE, "No cs7 instance configured for IuCS nor IuPS,"
+		     " creating default instance\n");
+		ss7 = osmo_ss7_instance_find_or_create(gw, 0);
+		ss7->cfg.primary_pc = (23 << 3) + 5;
+	}
 
 	if (!osmo_ss7_pc_is_valid(ss7->cfg.primary_pc)) {
 		LOGP(DMAIN, LOGL_ERROR, "IuCS/IuPS uplink cannot be setup: CS7 instance %d has no point-code set\n",
