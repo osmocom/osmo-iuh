@@ -47,6 +47,15 @@ struct iu_grnc_id {
 	uint16_t rnc_id;
 };
 
+struct iu_lac_rac_entry {
+	struct llist_head entry;
+
+	/* LAC: Location Area Code (for CS and PS) */
+	uint16_t lac;
+	/* RAC: Routing Area Code (for PS only) */
+	uint8_t rac;
+};
+
 /* A remote RNC (Radio Network Controller, like BSC but for UMTS) that has
  * called us and is currently reachable at the given osmo_sccp_addr. So, when we
  * know a LAC for a subscriber, we can page it at the RNC matching that LAC or
@@ -58,9 +67,10 @@ struct ranap_iu_rnc {
 	struct llist_head entry;
 
 	uint16_t rnc_id;
-	uint16_t lac; /* Location Area Code (used for CS and PS) */
-	uint8_t rac; /* Routing Area Code (used for PS only) */
 	struct osmo_sccp_addr sccp_addr;
+
+	/* A list of struct iu_lac_rac_entry */
+	struct llist_head lac_rac_list;
 };
 
 void *talloc_iu_ctx;
@@ -81,6 +91,9 @@ int iu_log_subsystem = 0;
 
 #define LOGPIU(level, fmt, args...) \
 	LOGP(iu_log_subsystem, level, fmt, ## args)
+
+#define LOGPIUC(level, fmt, args...) \
+	LOGPC(iu_log_subsystem, level, fmt, ## args)
 
 static LLIST_HEAD(ue_conn_ctx_list);
 static LLIST_HEAD(rnc_list);
@@ -119,53 +132,109 @@ static struct ranap_ue_conn_ctx *ue_conn_ctx_find(uint32_t conn_id)
 	return NULL;
 }
 
-static struct ranap_iu_rnc *iu_rnc_alloc(uint16_t rnc_id, uint16_t lac, uint8_t rac,
-					 struct osmo_sccp_addr *addr)
+static struct ranap_iu_rnc *iu_rnc_alloc(uint16_t rnc_id, struct osmo_sccp_addr *addr)
 {
 	struct ranap_iu_rnc *rnc = talloc_zero(talloc_iu_ctx, struct ranap_iu_rnc);
+	OSMO_ASSERT(rnc);
+
+	INIT_LLIST_HEAD(&rnc->lac_rac_list);
 
 	rnc->rnc_id = rnc_id;
-	rnc->lac = lac;
-	rnc->rac = rac;
 	rnc->sccp_addr = *addr;
 	llist_add(&rnc->entry, &rnc_list);
 
-	LOGPIU(LOGL_NOTICE, "New RNC %d (LAC=%d RAC=%d)\n",
-	       rnc->rnc_id, rnc->lac, rnc->rac);
+	LOGPIU(LOGL_NOTICE, "New RNC %d at %s\n", rnc->rnc_id, osmo_sccp_addr_dump(addr));
 
 	return rnc;
+}
+
+/* Find a match for the given LAC (and RAC). For CS, pass rac as 0.
+ * If rnc and lre pointers are not NULL, *rnc / *lre are set to NULL if no match is found, or to the
+ * match if a match is found.  Return true if a match is found. */
+static bool iu_rnc_lac_rac_find(struct ranap_iu_rnc **rnc, struct iu_lac_rac_entry **lre,
+				uint16_t lac, uint8_t rac)
+{
+	struct ranap_iu_rnc *r;
+	struct iu_lac_rac_entry *e;
+
+	if (rnc)
+		*rnc = NULL;
+	if (lre)
+		*lre = NULL;
+
+	llist_for_each_entry(r, &rnc_list, entry) {
+		llist_for_each_entry(e, &r->lac_rac_list, entry) {
+			if (e->lac == lac && e->rac == rac) {
+				if (rnc)
+					*rnc = r;
+				if (lre)
+					*lre = e;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+static struct ranap_iu_rnc *iu_rnc_id_find(uint16_t rnc_id)
+{
+	struct ranap_iu_rnc *rnc;
+	llist_for_each_entry(rnc, &rnc_list, entry) {
+		if (rnc->rnc_id == rnc_id)
+			return rnc;
+	}
+	return NULL;
+}
+
+static bool same_sccp_addr(struct osmo_sccp_addr *a, struct osmo_sccp_addr *b)
+{
+	char buf[256];
+	osmo_strlcpy(buf, osmo_sccp_addr_dump(a), sizeof(buf));
+	return !strcmp(buf, osmo_sccp_addr_dump(b));
 }
 
 static struct ranap_iu_rnc *iu_rnc_register(uint16_t rnc_id, uint16_t lac,
 					    uint8_t rac, struct osmo_sccp_addr *addr)
 {
 	struct ranap_iu_rnc *rnc;
-	llist_for_each_entry(rnc, &rnc_list, entry) {
-		if (rnc->rnc_id != rnc_id)
-			continue;
+	struct ranap_iu_rnc *old_rnc;
+	struct iu_lac_rac_entry *lre;
 
-		/* We have this RNC Id registered already. Make sure that the
-		 * details match. */
+	/* Make sure we know this rnc_id and that this SCCP address is in our records */
+	rnc = iu_rnc_id_find(rnc_id);
 
-		/* TODO should a mismatch be an error? */
-		if (rnc->lac != lac || rnc->rac != rac)
-			LOGPIU(LOGL_NOTICE, "RNC %d changes its details:"
-			       " LAC=%d RAC=%d --> LAC=%d RAC=%d\n",
-			       rnc->rnc_id, rnc->lac, rnc->rac,
-			       lac, rac);
-		rnc->lac = lac;
-		rnc->rac = rac;
+	if (rnc) {
+		if (!same_sccp_addr(&rnc->sccp_addr, addr)) {
+			LOGPIU(LOGL_NOTICE, "RNC %u changed its SCCP addr to %s (LAC=%u RAC=%u)\n",
+			       rnc_id, osmo_sccp_addr_dump(addr), lac, rac);
+			rnc->sccp_addr = *addr;
+		}
+	} else
+		rnc = iu_rnc_alloc(rnc_id, addr);
 
-		if (addr && memcmp(&rnc->sccp_addr, addr, sizeof(*addr)))
-			LOGPIU(LOGL_NOTICE, "RNC %d on New SCCP Addr %s"
-			       " (LAC=%d RAC=%d)\n",
-			       rnc->rnc_id, osmo_sccp_addr_dump(addr), rnc->lac, rnc->rac);
-		rnc->sccp_addr = *addr;
-		return rnc;
+	/* Detect whether the LAC,RAC is already recorded in another RNC */
+	iu_rnc_lac_rac_find(&old_rnc, &lre, lac, rac);
+
+	if (old_rnc && old_rnc != rnc) {
+		/* LAC,RAC already exists in a different RNC */
+		LOGPIU(LOGL_NOTICE, "LAC %u RAC %u moved from RNC %u %s",
+		       lac, rac, old_rnc->rnc_id, osmo_sccp_addr_dump(&old_rnc->sccp_addr));
+		LOGPIUC(LOGL_NOTICE, " to RNC %u %s\n",
+			rnc->rnc_id, osmo_sccp_addr_dump(&rnc->sccp_addr));
+
+		llist_del(&lre->entry);
+		llist_add(&lre->entry, &rnc->lac_rac_list);
+	} else if (!old_rnc) {
+		/* LAC,RAC not recorded yet */
+		LOGPIU(LOGL_NOTICE, "RNC %u: new LAC %u RAC %u\n", rnc_id, lac, rac);
+		lre = talloc_zero(rnc, struct iu_lac_rac_entry);
+		lre->lac = lac;
+		lre->rac = rac;
+		llist_add(&lre->entry, &rnc->lac_rac_list);
 	}
+	/* else, LAC,RAC already recorded with the current RNC. */
 
-	/* Not found, make a new one. */
-	return iu_rnc_alloc(rnc_id, lac, rac, addr);
+	return rnc;
 }
 
 /***********************************************************************
@@ -602,69 +671,45 @@ static int iu_tx_paging_cmd(struct osmo_sccp_addr *called_addr,
 	struct msgb *msg;
 	msg = ranap_new_msg_paging_cmd(imsi, tmsi, is_ps? 1 : 0, paging_cause);
 	msg->l2h = msg->data;
-	osmo_sccp_tx_unitdata_msg(g_scu, &g_local_sccp_addr, called_addr, msg);
-	return 0;
+	return osmo_sccp_tx_unitdata_msg(g_scu, &g_local_sccp_addr, called_addr, msg);
 }
 
-static int iu_page(const char *imsi, const uint32_t *tmsi_or_ptimsi,
+static int iu_page(const char *imsi, const uint32_t *tmsi_or_ptmsi,
 		   uint16_t lac, uint8_t rac, bool is_ps)
 {
 	struct ranap_iu_rnc *rnc;
-	int pagings_sent = 0;
+	int rc;
+	const char *log_msg;
+	int log_level;
+	int paged = 0;
 
-	if (tmsi_or_ptimsi) {
-		LOGPIU(LOGL_DEBUG, "%s: Looking for RNCs to page for IMSI %s"
-		       " (paging will use %s %x)\n",
-		       is_ps? "IuPS" : "IuCS",
-		       imsi,
-		       is_ps? "PTMSI" : "TMSI",
-		       *tmsi_or_ptimsi);
+	iu_rnc_lac_rac_find(&rnc, NULL, lac, rac);
+	if (rnc) {
+		if (iu_tx_paging_cmd(&rnc->sccp_addr, imsi, tmsi_or_ptmsi, is_ps, 0) == 0) {
+			log_msg = "Paging";
+			log_level = LOGL_DEBUG;
+			paged = 1;
+		} else {
+			log_msg = "Paging failed";
+			log_level = LOGL_ERROR;
+		}
 	} else {
-		LOGPIU(LOGL_DEBUG, "%s: Looking for RNCs to page for IMSI %s"
-		       " (paging will use IMSI)\n",
-		       is_ps? "IuPS" : "IuCS",
-		       imsi
-		      );
+		log_msg = "Found no RNC to Page";
+		log_level = LOGL_ERROR;
 	}
 
-	llist_for_each_entry(rnc, &rnc_list, entry) {
-		if (rnc->lac != lac)
-			continue;
-		if (is_ps && rnc->rac != rac)
-			continue;
+	if (is_ps)
+		LOGPIU(log_level, "IuPS: %s on LAC %d RAC %d", log_msg, lac, rac);
+	else
+		LOGPIU(log_level, "IuCS: %s on LAC %d", log_msg, lac);
+	if (rnc)
+		LOGPIUC(log_level, " at SCCP-addr %s", osmo_sccp_addr_dump(&rnc->sccp_addr));
+	if (tmsi_or_ptmsi)
+		LOGPIUC(log_level, ", for %s %08x\n", is_ps? "PTMSI" : "TMSI", *tmsi_or_ptmsi);
+	else
+		LOGPIUC(log_level, ", for IMSI %s\n", imsi);
 
-		/* Found a match! */
-		if (iu_tx_paging_cmd(&rnc->sccp_addr, imsi, tmsi_or_ptimsi, is_ps, 0)
-		    == 0) {
-			LOGPIU(LOGL_DEBUG,
-			       "%s: Paged for IMSI %s on RNC %d, on SCCP addr %s\n",
-			       is_ps? "IuPS" : "IuCS",
-			       imsi, rnc->rnc_id, osmo_sccp_addr_dump(&rnc->sccp_addr));
-			pagings_sent ++;
-		}
-	}
-
-	/* Some logging... */
-	if (pagings_sent > 0) {
-		LOGPIU(LOGL_DEBUG,
-		       "%s: %d RNCs were paged for IMSI %s.\n",
-		       is_ps? "IuPS" : "IuCS",
-		       pagings_sent, imsi);
-	}
-	else {
-		if (is_ps) {
-			LOGPIU(LOGL_ERROR, "IuPS: Found no RNC to page for"
-			       " LAC %d RAC %d (would have paged IMSI %s)\n",
-			       lac, rac, imsi);
-		}
-		else {
-			LOGPIU(LOGL_ERROR, "IuCS: Found no RNC to page for"
-			       " LAC %d (would have paged IMSI %s)\n",
-			       lac, imsi);
-		}
-	}
-
-	return pagings_sent;
+	return paged;
 }
 
 int ranap_iu_page_cs(const char *imsi, const uint32_t *tmsi, uint16_t lac)
