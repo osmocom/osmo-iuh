@@ -24,6 +24,7 @@
 #include <osmocom/gsm/gsm48.h>
 
 #include <osmocom/ranap/ranap_common.h>
+#include <asn1c/asn1helpers.h>
 
 extern int asn1_xer_print;
 int _ranap_DRANAP = 0;
@@ -278,7 +279,7 @@ char *ranap_cause_str(const RANAP_Cause_t *cause)
 					cause->choice.misc));
 		break;
 	case RANAP_Cause_PR_non_Standard:
-		snprintf(buf, sizeof(buf), "non-standard(%u)",
+		snprintf(buf, sizeof(buf), "non-standard(%ld)",
 			cause->choice.non_Standard);
 		break;
 	default:
@@ -542,7 +543,6 @@ void ranap_set_log_area(int log_area)
 
 int ranap_ip_from_transp_layer_addr(const BIT_STRING_t *in, uint32_t *ip)
 {
-	uint32_t addr;
 	uint8_t x213[] = {0x35, 0x00, 0x01};
 
 	/* Only support IPv4 for now - plain and with x213 encapsulation */
