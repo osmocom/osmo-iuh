@@ -280,7 +280,7 @@ struct msgb *ranap_new_msg_sec_mod_compl(
 	RANAP_SecurityModeCompleteIEs_t ies;
 	RANAP_SecurityModeComplete_t out;
 	struct msgb *msg;
-	int i, rc;
+	int rc;
 
 	memset(&ies, 0, sizeof(ies));
 	memset(&out, 0, sizeof(out));
