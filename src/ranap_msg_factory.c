@@ -185,6 +185,10 @@ struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas
 
 	/* ies -> dt */
 	rc = ranap_encode_directtransferies(&dt, &ies);
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding direct transfer IEs: %d\n", rc);
+		return NULL;
+	}
 
 	/* dt -> msg */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_DirectTransfer,
@@ -251,6 +255,11 @@ struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck, enu
 	if (ck)
 		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_EncryptionInformation, &ies.encryptionInformation);
 
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding security mode command IEs: %d\n", rc);
+		return NULL;
+	}
+
 	/* out -> msg */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_SecurityModeControl,
 						RANAP_Criticality_reject,
@@ -282,6 +291,10 @@ struct msgb *ranap_new_msg_sec_mod_compl(
 
 	/* ies -> out */
 	rc = ranap_encode_securitymodecompleteies(&out, &ies);
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding security mode complete IEs: %d\n", rc);
+		return NULL;
+	}
 
 	/* out -> msg */
 	msg = ranap_generate_successful_outcome(RANAP_ProcedureCode_id_SecurityModeControl,
@@ -317,10 +330,14 @@ struct msgb *ranap_new_msg_common_id(const char *imsi)
 
 	/* ies -> out */
 	rc = ranap_encode_commonid_ies(&out, &ies);
+
 	/* release dynamic allocations attached to ies */
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_PermanentNAS_UE_ID, &ies.permanentNAS_UE_ID);
-	if (rc < 0)
+
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding common id IEs: %d\n", rc);
 		return NULL;
+	}
 
 	/* out -> msg */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_CommonID,
@@ -349,8 +366,10 @@ struct msgb *ranap_new_msg_iu_rel_cmd(const RANAP_Cause_t *cause_in)
 
 	/* ies -> out */
 	rc = ranap_encode_iu_releasecommandies(&out, &ies);
-	if (rc < 0)
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding release command IEs: %d\n", rc);
 		return NULL;
+	}
 
 	/* out -> msg */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_Iu_Release,
@@ -377,8 +396,10 @@ struct msgb *ranap_new_msg_iu_rel_compl(void)
 
 	/* ies -> out */
 	rc = ranap_encode_iu_releasecompleteies(&out, &ies);
-	if (rc < 0)
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding release complete IEs: %d\n", rc);
 		return NULL;
+	}
 
 	/* out -> msg */
 	msg = ranap_generate_successful_outcome(RANAP_ProcedureCode_id_Iu_Release,
@@ -434,11 +455,15 @@ struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, in
 
 	/* ies -> out */
 	rc = ranap_encode_pagingies(&out, &ies);
+
 	/* release dynamic allocation attached to ies */
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_PermanentNAS_UE_ID, &ies.permanentNAS_UE_ID);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_TemporaryUE_ID, &ies.temporaryUE_ID);
-	if (rc < 0)
+
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding paging IEs: %d\n", rc);
 		return NULL;
+	}
 
 	/* out -> msg */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_Paging,
@@ -879,13 +904,17 @@ struct msgb *ranap_new_msg_iu_rel_req(const RANAP_Cause_t *cause)
 	memcpy(&ies.cause, cause, sizeof(ies.cause));
 
 	rc = ranap_encode_iu_releaserequesties(&out, &ies);
-	if (rc < 0)
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding release request IEs: %d\n", rc);
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_Iu_ReleaseRequest, &out);
 		return NULL;
+	}
 
 	/* encode the output into the msgb */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_Iu_ReleaseRequest,
 						RANAP_Criticality_reject,
 						&asn_DEF_RANAP_Iu_ReleaseRequest, &out);
+
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_Iu_ReleaseRequest, &out);
 
 	return msg;
@@ -915,10 +944,14 @@ struct msgb *ranap_new_msg_rab_rel_req(uint8_t rab_id, const RANAP_Cause_t *caus
 
 	/* encoe the list IEs into the output */
 	rc = ranap_encode_rab_releaserequesties(&out, &ies);
-	if (rc < 0)
-		return NULL;
+
 	/* 'out' has been generated, we can release the input */
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_ReleaseList, &ies.raB_ReleaseList);
+
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding release request IEs: %d\n", rc);
+		return NULL;
+	}
 
 	/* encode the output into the msgb */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_RAB_ReleaseRequest,
