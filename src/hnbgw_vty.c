@@ -20,6 +20,7 @@
 
 #include <string.h>
 
+#include <osmocom/core/socket.h>
 #include <osmocom/vty/command.h>
 
 #include <osmocom/iuh/vty.h>
@@ -27,6 +28,8 @@
 #include <osmocom/iuh/hnbgw.h>
 #include <osmocom/iuh/context_map.h>
 #include <osmocom/sigtran/protocol/sua.h>
+#include <osmocom/sigtran/sccp_helpers.h>
+#include <osmocom/netif/stream.h>
 
 static void *tall_hnb_ctx = NULL;
 static struct hnb_gw *g_hnb_gw = NULL;
@@ -108,19 +111,68 @@ int hnbgw_vty_go_parent(struct vty *vty)
 	return vty->node;
 }
 
+DEFUN(show_cnlink, show_cnlink_cmd, "show cnlink",
+      SHOW_STR "Display information on core network link\n")
+{
+	struct osmo_ss7_route *rt;
+	struct osmo_ss7_instance *ss7 = osmo_sccp_get_ss7(g_hnb_gw->sccp.client);
+	int i;
+#define GUARD(STR) \
+	STR ? STR : "", \
+	STR ? ":" : ""
+	
+	vty_out(vty, "IuCS: %s <->",
+		osmo_sccp_user_name(g_hnb_gw->sccp.cnlink->sccp_user));
+	vty_out(vty, " %s%s%s%s",
+		GUARD(g_hnb_gw->config.iucs_remote_addr_name),
+		osmo_sccp_inst_addr_name(g_hnb_gw->sccp.client, &g_hnb_gw->sccp.iucs_remote_addr),
+		VTY_NEWLINE);
+
+	rt = osmo_ss7_route_lookup(ss7, g_hnb_gw->sccp.iucs_remote_addr.pc);
+	vty_out(vty, "      SS7 route: %s%s", osmo_ss7_route_name(rt, true), VTY_NEWLINE);
+
+	vty_out(vty, "IuPS: %s <->",
+		osmo_sccp_user_name(g_hnb_gw->sccp.cnlink->sccp_user));
+	vty_out(vty, " %s%s%s%s",
+		GUARD(g_hnb_gw->config.iups_remote_addr_name),
+		osmo_sccp_inst_addr_name(g_hnb_gw->sccp.client, &g_hnb_gw->sccp.iups_remote_addr),
+		VTY_NEWLINE);
+
+	rt = osmo_ss7_route_lookup(ss7, g_hnb_gw->sccp.iups_remote_addr.pc);
+	vty_out(vty, "      SS7 route: %s%s", osmo_ss7_route_name(rt, true), VTY_NEWLINE);
+
+#undef GUARD
+	return CMD_SUCCESS;
+}
+
+static void vty_out_ofd_addr(struct vty *vty, struct osmo_fd *ofd)
+{
+    char *name;
+    if (!ofd || ofd->fd < 0
+	|| !(name = osmo_sock_get_name(vty, ofd->fd))) {
+	    vty_out(vty, "(no addr)");
+	    return;
+    }
+    vty_out(vty, name);
+    talloc_free(name);
+}
+
 static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
 {
 	struct hnbgw_context_map *map;
 
-	vty_out(vty, "HNB \"%s\" MCC %u MNC %u LAC %u RAC %u SAC %u CID %u%s", hnb->identity_info,
-			hnb->id.mcc, hnb->id.mnc, hnb->id.lac, hnb->id.rac, hnb->id.sac, hnb->id.cid,
-			VTY_NEWLINE);
-	vty_out(vty, "   HNBAP ID %u RUA ID %u%s", hnb->hnbap_stream, hnb->rua_stream, VTY_NEWLINE);
+	vty_out(vty, "HNB ");
+	vty_out_ofd_addr(vty, hnb->conn? osmo_stream_srv_get_ofd(hnb->conn) : NULL);
+	vty_out(vty, " \"%s\"%s", hnb->identity_info, VTY_NEWLINE);
+	vty_out(vty, "    MCC %u MNC %u LAC %u RAC %u SAC %u CID %u SCCP-stream:HNBAP=%u,RUA=%u%s",
+		hnb->id.mcc, hnb->id.mnc, hnb->id.lac, hnb->id.rac, hnb->id.sac, hnb->id.cid,
+		hnb->hnbap_stream, hnb->rua_stream, VTY_NEWLINE);
 
 	llist_for_each_entry(map, &hnb->map_list, hnb_list) {
-		vty_out(vty, " Map %u->%u (RUA->SUA) cnlink=%p state=%u%s", map->rua_ctx_id, map->scu_conn_id,
-			map->cn_link, map->state, VTY_NEWLINE);
-
+		vty_out(vty, "    %s %u->%u (RUA->SUA) state=%u%s",
+			map->is_ps ? "IuPS" : "IuCS",
+			map->rua_ctx_id, map->scu_conn_id,
+			map->state, VTY_NEWLINE);
 	}
 }
 
@@ -132,6 +184,11 @@ static void vty_dump_ue_info(struct vty *vty, struct ue_context *ue)
 DEFUN(show_hnb, show_hnb_cmd, "show hnb all", SHOW_STR "Display information about a HNB")
 {
 	struct hnb_context *hnb;
+
+	if (llist_empty(&g_hnb_gw->hnb_list)) {
+		vty_out(vty, "No HNB connected%s", VTY_NEWLINE);
+		return CMD_SUCCESS;
+	}
 
 	llist_for_each_entry(hnb, &g_hnb_gw->hnb_list, list) {
 		vty_dump_hnb_info(vty, hnb);
@@ -282,6 +339,7 @@ void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 
 	install_element(IUPS_NODE, &cfg_hnbgw_iups_remote_addr_cmd);
 
+	install_element_ve(&show_cnlink_cmd);
 	install_element_ve(&show_hnb_cmd);
 	install_element_ve(&show_ue_cmd);
 	install_element_ve(&show_talloc_cmd);
