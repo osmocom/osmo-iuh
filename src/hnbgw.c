@@ -471,7 +471,7 @@ int main(int argc, char **argv)
 		log_set_log_level(osmo_stderr_target,
 				  hnbgw_cmdline_config.log_level);
 
-	rc = telnet_init_dynif(NULL, g_hnb_gw, vty_get_bind_addr(), OSMO_VTY_PORT_HNBGW);
+	rc = telnet_init_dynif(tall_hnb_ctx, g_hnb_gw, vty_get_bind_addr(), OSMO_VTY_PORT_HNBGW);
 	if (rc < 0) {
 		perror("Error binding VTY port");
 		exit(1);
