@@ -311,7 +311,12 @@ for key in iesDefs:
         f.write("    memset(%s, 0, sizeof(%s_t));\n" % (lowerFirstCamelWord(re.sub('-', '_', key)), prefix + re.sub('-', '_', key)))
 
     f.write("    %s_DEBUG(\"Decoding message %s (%%s:%%d)\\n\", __FILE__, __LINE__);\n\n" % (fileprefix.upper(), prefix + re.sub('-', '_', keyName)))
-    f.write("    ANY_to_type_aper(any_p, &asn_DEF_%s, (void**)&%s_p);\n\n" % (asn1cStruct, asn1cStructfirstlower))
+    f.write("    tempDecoded = ANY_to_type_aper(any_p, &asn_DEF_%s, (void**)&%s_p);\n\n" % (asn1cStruct, asn1cStructfirstlower))
+    f.write("    if (tempDecoded < 0 || %s_p == NULL) {\n" % (asn1cStructfirstlower))
+    f.write("        %s_DEBUG(\"Decoding of message %s failed\\n\");\n" % (fileprefix.upper(), prefix + re.sub('-', '_', keyName)))
+    f.write("        return -1;\n")
+    f.write("    }\n\n")
+
     f.write("    for (i = 0; i < %s_p->%slist.count; i++) {\n" % (asn1cStructfirstlower, iesaccess))
     f.write("        %sIE_t *ie_p;\n" % (prefix))
     f.write("        ie_p = %s_p->%slist.array[i];\n" % (asn1cStructfirstlower, iesaccess))
