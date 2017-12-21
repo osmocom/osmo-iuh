@@ -389,6 +389,8 @@ for key in iesDefs:
         iename = re.sub('id-', '', ie[0])
         ienameunderscore = lowerFirstCamelWord(re.sub('-', '_', iename))
         f.write("    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_%s, &%s->%s);\n" % (ietypeunderscore, lowerFirstCamelWord(re.sub('-', '_', key)), ienameunderscore))
+
+    f.write("    return 0;\n")
     f.write("}\n\n")
 
 for key in iesDefs:
