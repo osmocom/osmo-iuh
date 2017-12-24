@@ -185,6 +185,7 @@ static int rua_to_scu(struct hnb_context *hnb,
 	struct hnbgw_cnlink *cn = hnb->gw->sccp.cnlink;
 	struct osmo_sccp_addr *remote_addr;
 	bool is_ps;
+	bool release_context_map = false;
 	int rc;
 
 	switch (cN_DomainIndicator) {
@@ -239,6 +240,7 @@ static int rua_to_scu(struct hnb_context *hnb,
 	case OSMO_SCU_PRIM_N_DISCONNECT:
 		prim->u.disconnect.conn_id = map->scu_conn_id;
 		prim->u.disconnect.cause = cause;
+		release_context_map = true;
 		break;
 	case OSMO_SCU_PRIM_N_UNITDATA:
 		prim->u.unitdata.called_addr = *remote_addr;
@@ -260,6 +262,9 @@ static int rua_to_scu(struct hnb_context *hnb,
 	}
 
 	rc = osmo_sccp_user_sap_down(cn->sccp_user, &prim->oph);
+
+	if (release_context_map)
+		context_map_deactivate(map);
 
 	return rc;
 }
