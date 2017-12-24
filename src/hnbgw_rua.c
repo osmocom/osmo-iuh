@@ -213,13 +213,21 @@ static int rua_to_scu(struct hnb_context *hnb,
 	prim = (struct osmo_scu_prim *) msgb_put(msg, sizeof(*prim));
 	osmo_prim_init(&prim->oph, SCCP_SAP_USER, type, PRIM_OP_REQUEST, msg);
 
-	map = context_map_alloc_by_hnb(hnb, context_id, is_ps, cn);
-	OSMO_ASSERT(map);
-
-	DEBUGP(DRUA, "rua_to_scu() %s to %s, rua_ctx_id %u scu_conn_id %u\n",
-	       cn_domain_indicator_to_str(cN_DomainIndicator),
-	       osmo_sccp_addr_dump(remote_addr),
-	       map->rua_ctx_id, map->scu_conn_id);
+	switch (type) {
+	case OSMO_SCU_PRIM_N_UNITDATA:
+		DEBUGP(DRUA, "rua_to_scu() %s to %s, rua_ctx_id %u (unitdata, no scu_conn_id)\n",
+		       cn_domain_indicator_to_str(cN_DomainIndicator),
+		       osmo_sccp_addr_dump(remote_addr),
+		       map->rua_ctx_id);
+		break;
+	default:
+		map = context_map_alloc_by_hnb(hnb, context_id, is_ps, cn);
+		OSMO_ASSERT(map);
+		DEBUGP(DRUA, "rua_to_scu() %s to %s, rua_ctx_id %u scu_conn_id %u\n",
+		       cn_domain_indicator_to_str(cN_DomainIndicator),
+		       osmo_sccp_addr_dump(remote_addr),
+		       map->rua_ctx_id, map->scu_conn_id);
+	}
 
 	/* add primitive header */
 	switch (type) {
@@ -263,7 +271,7 @@ static int rua_to_scu(struct hnb_context *hnb,
 
 	rc = osmo_sccp_user_sap_down(cn->sccp_user, &prim->oph);
 
-	if (release_context_map)
+	if (map && release_context_map)
 		context_map_deactivate(map);
 
 	return rc;
