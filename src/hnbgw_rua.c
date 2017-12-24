@@ -361,7 +361,7 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 	rc = rua_to_scu(hnb, ies.cN_DomainIndicator, OSMO_SCU_PRIM_N_CONNECT,
 			context_id, 0, ies.ranaP_Message.buf,
 			ies.ranaP_Message.size);
-	/* FIXME: what to do with the asn1c-allocated memory */
+
 	rua_free_connecties(&ies);
 
 	return rc;
@@ -396,7 +396,6 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 			OSMO_SCU_PRIM_N_DISCONNECT,
 			context_id, scu_cause, ranap_data, ranap_len);
 
-	/* FIXME: what to do with the asn1c-allocated memory */
 	rua_free_disconnecties(&ies);
 
 	return rc;
@@ -423,7 +422,6 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 			context_id, 0, ies.ranaP_Message.buf,
 			ies.ranaP_Message.size);
 
-	/* FIXME: what to do with the asn1c-allocated memory */
 	rua_free_directtransferies(&ies);
 
 	return rc;
