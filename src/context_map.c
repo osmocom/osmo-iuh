@@ -157,7 +157,7 @@ static void context_map_tmr_cb(void *data)
 			map->state = MAP_S_RESERVED2;
 			break;
 		case MAP_S_RESERVED2:
-			/* first time we see this reserved
+			/* second time we see this reserved
 			 * entry: remove it */
 			map->state = MAP_S_NULL;
 			llist_del(&map->cn_list);
