@@ -239,6 +239,17 @@ DEFUN(show_talloc, show_talloc_cmd, "show talloc", SHOW_STR "Display talloc info
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_hnbgw_rnc_id, cfg_hnbgw_rnc_id_cmd,
+      "rnc-id <0-65535>",
+      "Configure the HNBGW's RNC Id, the common RNC Id used for all connected hNodeB. It is sent to"
+      " each hNodeB upon HNBAP HNB-Register-Accept, and the hNodeB will subsequently send this as"
+      " RANAP InitialUE Messages' GlobalRNC-ID IE. Takes effect as soon as the hNodeB re-registers.\n"
+      "RNC Id value\n")
+{
+	g_hnb_gw->config.rnc_id = atoi(argv[0]);
+	return CMD_SUCCESS;
+}
+
 DEFUN(cfg_hnbgw_iuh_local_ip, cfg_hnbgw_iuh_local_ip_cmd, "local-ip A.B.C.D",
       "Accept Iuh connections on local interface\n"
       "Local interface IP address (default: " HNBGW_LOCAL_IP_DEFAULT ")")
@@ -344,6 +355,8 @@ void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 
 	install_element(CONFIG_NODE, &cfg_hnbgw_cmd);
 	install_node(&hnbgw_node, config_write_hnbgw);
+
+	install_element(HNBGW_NODE, &cfg_hnbgw_rnc_id_cmd);
 
 	install_element(HNBGW_NODE, &cfg_hnbgw_iuh_cmd);
 	install_node(&iuh_node, config_write_hnbgw_iuh);
