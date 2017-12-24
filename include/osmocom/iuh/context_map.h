@@ -8,7 +8,12 @@ enum hnbgw_context_map_state {
 	MAP_S_ACTIVE,		/* currently active map */
 	MAP_S_RESERVED1,	/* just disconnected, still resrved */
 	MAP_S_RESERVED2,	/* still reserved */
+	MAP_S_NUM_STATES	/* Number of states, keep this at the end */
 };
+
+extern const struct value_string hnbgw_context_map_state_names[];
+static inline const char *hnbgw_context_map_state_name(enum hnbgw_context_map_state val)
+{ return get_value_string(hnbgw_context_map_state_names, val); }
 
 struct hnb_context;
 struct hnbgw_cnlink;

@@ -157,9 +157,26 @@ static void vty_out_ofd_addr(struct vty *vty, struct osmo_fd *ofd)
     talloc_free(name);
 }
 
+static void vty_dump_hnb_info__map_states(struct vty *vty, const char *name, unsigned int count,
+					  unsigned int state_count[])
+{
+	unsigned int i;
+	if (!count)
+		return;
+	vty_out(vty, "    %s: %u contexts:", name, count);
+	for (i = 0; i <= MAP_S_NUM_STATES; i++) {
+		if (!state_count[i])
+			continue;
+		vty_out(vty, " %s:%u", hnbgw_context_map_state_name(i), state_count[i]);
+	}
+	vty_out(vty, VTY_NEWLINE);
+}
+
 static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
 {
 	struct hnbgw_context_map *map;
+	unsigned int map_count[2] = {};
+	unsigned int state_count[2][MAP_S_NUM_STATES + 1] = {};
 
 	vty_out(vty, "HNB ");
 	vty_out_ofd_addr(vty, hnb->conn? osmo_stream_srv_get_ofd(hnb->conn) : NULL);
@@ -169,11 +186,13 @@ static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
 		hnb->hnbap_stream, hnb->rua_stream, VTY_NEWLINE);
 
 	llist_for_each_entry(map, &hnb->map_list, hnb_list) {
-		vty_out(vty, "    %s %u->%u (RUA->SUA) state=%u%s",
-			map->is_ps ? "IuPS" : "IuCS",
-			map->rua_ctx_id, map->scu_conn_id,
-			map->state, VTY_NEWLINE);
+		map_count[map->is_ps? 1 : 0]++;
+		state_count[map->is_ps? 1 : 0]
+			   [(map->state >= 0 && map->state < MAP_S_NUM_STATES)?
+			    map->state : MAP_S_NUM_STATES]++;
 	}
+	vty_dump_hnb_info__map_states(vty, "IuCS", map_count[0], state_count[0]);
+	vty_dump_hnb_info__map_states(vty, "IuPS", map_count[1], state_count[1]);
 }
 
 static void vty_dump_ue_info(struct vty *vty, struct ue_context *ue)
@@ -184,6 +203,7 @@ static void vty_dump_ue_info(struct vty *vty, struct ue_context *ue)
 DEFUN(show_hnb, show_hnb_cmd, "show hnb all", SHOW_STR "Display information about a HNB")
 {
 	struct hnb_context *hnb;
+	unsigned int count = 0;
 
 	if (llist_empty(&g_hnb_gw->hnb_list)) {
 		vty_out(vty, "No HNB connected%s", VTY_NEWLINE);
@@ -192,7 +212,10 @@ DEFUN(show_hnb, show_hnb_cmd, "show hnb all", SHOW_STR "Display information abou
 
 	llist_for_each_entry(hnb, &g_hnb_gw->hnb_list, list) {
 		vty_dump_hnb_info(vty, hnb);
+		count++;
 	}
+
+	vty_out(vty, "%u HNB connected%s", count, VTY_NEWLINE);
 
 	return CMD_SUCCESS;
 }

@@ -27,6 +27,14 @@
 #include <osmocom/iuh/hnbgw.h>
 #include <osmocom/iuh/context_map.h>
 
+const struct value_string hnbgw_context_map_state_names[] = {
+	{MAP_S_NULL     , "not-initialized"},
+	{MAP_S_ACTIVE   , "active"},
+	{MAP_S_RESERVED1, "inactive-reserved"},
+	{MAP_S_RESERVED2, "inactive-discard"},
+	{0, NULL}
+};
+
 /* is a given SCCP USER SAP Connection ID in use for a given CN link? */
 static int cn_id_in_use(struct hnbgw_cnlink *cn, uint32_t id)
 {
