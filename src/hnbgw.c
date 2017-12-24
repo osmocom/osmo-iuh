@@ -485,6 +485,8 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+	LOGP(DHNBAP, LOGL_NOTICE, "Using RNC-Id %u\n", g_hnb_gw->config.rnc_id);
+
 	OSMO_ASSERT(g_hnb_gw->config.iuh_local_ip);
 	LOGP(DMAIN, LOGL_NOTICE, "Listening for Iuh at %s %d\n",
 	     g_hnb_gw->config.iuh_local_ip,
