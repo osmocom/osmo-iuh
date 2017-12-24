@@ -146,10 +146,10 @@ static void context_map_tmr_cb(void *data)
 {
 	struct hnb_gw *gw = data;
 	struct hnbgw_cnlink *cn = gw->sccp.cnlink;
-	struct hnbgw_context_map *map;
+	struct hnbgw_context_map *map, *next_map;
 
 	DEBUGP(DMAIN, "Running context mapper garbage collection\n");
-	llist_for_each_entry(map, &cn->map_list, cn_list) {
+	llist_for_each_entry_safe(map, next_map, &cn->map_list, cn_list) {
 		switch (map->state) {
 		case MAP_S_RESERVED1:
 			/* first time we see this reserved
