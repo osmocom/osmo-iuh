@@ -181,7 +181,7 @@ static void vty_dump_hnb_info(struct vty *vty, struct hnb_context *hnb)
 	vty_out(vty, "HNB ");
 	vty_out_ofd_addr(vty, hnb->conn? osmo_stream_srv_get_ofd(hnb->conn) : NULL);
 	vty_out(vty, " \"%s\"%s", hnb->identity_info, VTY_NEWLINE);
-	vty_out(vty, "    MCC %u MNC %u LAC %u RAC %u SAC %u CID %u SCCP-stream:HNBAP=%u,RUA=%u%s",
+	vty_out(vty, "    MCC %u MNC %u LAC %u RAC %u SAC %u CID %u SCTP-stream:HNBAP=%u,RUA=%u%s",
 		hnb->id.mcc, hnb->id.mnc, hnb->id.lac, hnb->id.rac, hnb->id.sac, hnb->id.cid,
 		hnb->hnbap_stream, hnb->rua_stream, VTY_NEWLINE);
 
