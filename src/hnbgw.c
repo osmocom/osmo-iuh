@@ -41,7 +41,10 @@
 #include <osmocom/core/socket.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/write_queue.h>
-
+#include <osmocom/ctrl/control_if.h>
+#include <osmocom/ctrl/control_cmd.h>
+#include <osmocom/ctrl/control_vty.h>
+#include <osmocom/ctrl/ports.h>
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
 #include <osmocom/vty/command.h>
@@ -474,6 +477,13 @@ int main(int argc, char **argv)
 	rc = telnet_init_dynif(tall_hnb_ctx, g_hnb_gw, vty_get_bind_addr(), OSMO_VTY_PORT_HNBGW);
 	if (rc < 0) {
 		perror("Error binding VTY port");
+		exit(1);
+	}
+
+	g_hnb_gw->ctrl = ctrl_interface_setup_dynip(NULL, ctrl_vty_get_bind_addr(), OSMO_CTRL_PORT_HNBGW, NULL);
+	if (!g_hnb_gw->ctrl) {
+		LOGP(DMAIN, LOGL_ERROR, "Failed to create CTRL interface on %s:%u\n",
+		     ctrl_vty_get_bind_addr(), OSMO_CTRL_PORT_HNBGW);
 		exit(1);
 	}
 

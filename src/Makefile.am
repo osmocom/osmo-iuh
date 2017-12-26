@@ -43,7 +43,7 @@ gen_ranap.stamp: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN1TOSTRUCT)
 ranap_decoder.c ranap_encoder.c: gen_ranap.stamp
 
 AM_CFLAGS = -Wall -I$(top_srcdir)/include -I$(top_builddir)/include \
-	    $(OSMOCORE_CFLAGS) $(OSMOVTY_CFLAGS) $(OSMOGSM_CFLAGS) \
+	    $(OSMOCORE_CFLAGS) $(OSMOVTY_CFLAGS) $(OSMOCTRL_CFLAGS) $(OSMOGSM_CFLAGS) \
 	    $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS)
 
 # build the shared RANAP library
@@ -67,7 +67,7 @@ osmo_hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c hnbap_common.c \
 		     hnbgw_vty.c \
 		     context_map.c hnbgw_cn.c
 
-osmo_hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) \
+osmo_hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOCTRL_LIBS) \
 		   $(ASN1C_LIBS) $(OSMOSIGTRAN_LIBS) \
 		   $(OSMONETIF_LIBS) \
 		   hnbap/libosmo-asn1-hnbap.a rua/libosmo-asn1-rua.a \

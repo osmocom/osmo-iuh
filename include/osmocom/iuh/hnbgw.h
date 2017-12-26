@@ -129,7 +129,7 @@ struct hnb_gw {
 	struct llist_head ue_list;
 	/* next availble UE Context ID */
 	uint32_t next_ue_ctx_id;
-
+	struct ctrl_handle *ctrl;
 	/* currently active CN links for CS and PS */
 	struct {
 		struct osmo_sccp_instance *client;
