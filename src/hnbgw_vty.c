@@ -147,14 +147,14 @@ DEFUN(show_cnlink, show_cnlink_cmd, "show cnlink",
 
 static void vty_out_ofd_addr(struct vty *vty, struct osmo_fd *ofd)
 {
-    char *name;
-    if (!ofd || ofd->fd < 0
+	char *name;
+	if (!ofd || ofd->fd < 0
 	|| !(name = osmo_sock_get_name(vty, ofd->fd))) {
 	    vty_out(vty, "(no addr)");
 	    return;
-    }
-    vty_out(vty, name);
-    talloc_free(name);
+	}
+	vty_out(vty, name);
+	talloc_free(name);
 }
 
 static void vty_dump_hnb_info__map_states(struct vty *vty, const char *name, unsigned int count,
