@@ -153,7 +153,7 @@ static void vty_out_ofd_addr(struct vty *vty, struct osmo_fd *ofd)
 	    vty_out(vty, "(no addr)");
 	    return;
 	}
-	vty_out(vty, name);
+	vty_out(vty, "%s", name);
 	talloc_free(name);
 }
 
