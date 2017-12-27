@@ -6,7 +6,7 @@
 #include <osmocom/core/timer.h>
 #include <osmocom/sigtran/sccp_sap.h>
 #include <osmocom/sigtran/osmo_ss7.h>
-
+#include <osmocom/ctrl/control_if.h>
 #define DEBUG
 #include <osmocom/core/logging.h>
 
@@ -18,6 +18,10 @@ enum {
 	DRANAP,
 };
 
+enum hnb_ctrl_node {
+	CTRL_NODE_HNB = _LAST_CTRL_NODE,
+	_LAST_CTRL_NODE_HNB
+};
 
 #define HNBGW_LOCAL_IP_DEFAULT "0.0.0.0"
 /* TODO: CS and PS now both connect to OsmoSTP, i.e. that's always going to be the same address. Drop the
@@ -141,6 +145,9 @@ struct hnb_gw {
 };
 
 extern void *talloc_asn1_ctx;
+
+struct hnb_context *hnb_context_by_id(struct hnb_gw *gw, uint32_t cid);
+unsigned hnb_contexts(const struct hnb_gw *gw);
 
 struct ue_context *ue_context_by_id(struct hnb_gw *gw, uint32_t id);
 struct ue_context *ue_context_by_imsi(struct hnb_gw *gw, const char *imsi);

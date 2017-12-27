@@ -93,6 +93,30 @@ static struct hnb_gw *hnb_gw_create(void *ctx)
 	return gw;
 }
 
+struct hnb_context *hnb_context_by_id(struct hnb_gw *gw, uint32_t cid)
+{
+	struct hnb_context *hnb;
+
+	llist_for_each_entry(hnb, &gw->hnb_list, list) {
+		if (hnb->id.cid == cid)
+			return hnb;
+	}
+
+	return NULL;
+}
+
+unsigned hnb_contexts(const struct hnb_gw *gw)
+{
+	unsigned num_ctx = 0;
+	struct hnb_context *hnb;
+
+	llist_for_each_entry(hnb, &gw->hnb_list, list) {
+		num_ctx++;
+	}
+
+	return num_ctx;
+}
+
 struct ue_context *ue_context_by_id(struct hnb_gw *gw, uint32_t id)
 {
 	struct ue_context *ue;
@@ -423,6 +447,63 @@ static void handle_options(int argc, char **argv)
 	}
 }
 
+CTRL_CMD_DEFINE_RO(hnb_info, "info");
+static int get_hnb_info(struct ctrl_cmd *cmd, void *data)
+{
+	struct hnb_context *hnb = data;
+
+	cmd->reply = talloc_strdup(cmd, hnb->identity_info);
+
+	return CTRL_CMD_REPLY;
+}
+
+CTRL_CMD_DEFINE_RO(hnbs, "num-hnb");
+static int get_hnbs(struct ctrl_cmd *cmd, void *data)
+{
+	cmd->reply = talloc_asprintf(cmd, "%u", hnb_contexts(data));
+
+	return CTRL_CMD_REPLY;
+}
+
+int hnb_ctrl_cmds_install()
+{
+	int rc = 0;
+
+	rc |= ctrl_cmd_install(CTRL_NODE_ROOT, &cmd_hnbs);
+	rc |= ctrl_cmd_install(CTRL_NODE_HNB, &cmd_hnb_info);
+
+	return rc;
+}
+
+static int hnb_ctrl_node_lookup(void *data, vector vline, int *node_type, void **node_data, int *i)
+{
+	const char *token = vector_slot(vline, *i);
+	struct hnb_context *hnb;
+	long num;
+
+	switch (*node_type) {
+	case CTRL_NODE_ROOT:
+		if (strcmp(token, "hnb") != 0)
+			return 0;
+
+		(*i)++;
+
+		if (!ctrl_parse_get_num(vline, *i, &num))
+			return -ERANGE;
+
+		hnb = hnb_context_by_id(data, num);
+		if (!hnb)
+			return -ENODEV;
+
+		*node_data = hnb;
+		*node_type = CTRL_NODE_HNB;
+		break;
+	default:
+		return 0;
+	}
+
+	return 1;
+}
 
 int main(int argc, char **argv)
 {
@@ -480,11 +561,18 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	g_hnb_gw->ctrl = ctrl_interface_setup_dynip(NULL, ctrl_vty_get_bind_addr(), OSMO_CTRL_PORT_HNBGW, NULL);
+	g_hnb_gw->ctrl = ctrl_interface_setup_dynip2(g_hnb_gw, ctrl_vty_get_bind_addr(), OSMO_CTRL_PORT_HNBGW,
+						     hnb_ctrl_node_lookup, _LAST_CTRL_NODE_HNB);
 	if (!g_hnb_gw->ctrl) {
 		LOGP(DMAIN, LOGL_ERROR, "Failed to create CTRL interface on %s:%u\n",
 		     ctrl_vty_get_bind_addr(), OSMO_CTRL_PORT_HNBGW);
 		exit(1);
+	} else {
+		rc = hnb_ctrl_cmds_install();
+		if (rc) {
+			LOGP(DMAIN, LOGL_ERROR, "Failed to install CTRL interface commands\n");
+			return 2;
+		}
 	}
 
 	ranap_set_log_area(DRANAP);
