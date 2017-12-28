@@ -34,7 +34,7 @@ echo
 set -x
 
 autoreconf --install --force
-./configure
+./configure --enable-sanitize
 
 # Verify that checked-in asn1 code is identical to regenerated asn1 code
 PATH="$inst/bin:$PATH" $MAKE $PARALLEL_MAKE -C src regen
