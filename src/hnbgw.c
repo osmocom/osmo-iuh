@@ -326,7 +326,7 @@ static const struct log_info hnbgw_log_info = {
 
 static struct vty_app_info vty_info = {
 	.name		= "OsmoHNBGW",
-	.version	= "0",
+	.version	= PACKAGE_VERSION,
 	.go_parent_cb	= hnbgw_vty_go_parent,
 };
 
