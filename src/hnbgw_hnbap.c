@@ -77,6 +77,42 @@ static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
 	return hnbgw_hnbap_tx(ctx, msg);
 }
 
+static int hnbgw_tx_hnb_register_rej(struct hnb_context *ctx)
+{
+	HNBRegisterReject_t reject_out;
+	struct msgb *msg;
+	int rc;
+
+	/* Single required response IE: Cause */
+	HNBRegisterRejectIEs_t reject = {
+		.cause = {
+			.present = Cause_PR_radioNetwork,
+			.choice = {
+				.radioNetwork = CauseRadioNetwork_hNB_parameter_mismatch,
+			},
+		},
+	};
+
+	/* encode the Information Elements */
+	memset(&reject_out, 0, sizeof(reject_out));
+	rc = hnbap_encode_hnbregisterrejecties(&reject_out,  &reject);
+	if (rc < 0) {
+		return rc;
+	}
+
+	/* generate a successfull outcome PDU */
+	msg = hnbap_generate_successful_outcome(ProcedureCode_id_HNBRegister,
+					       Criticality_reject,
+					       &asn_DEF_HNBRegisterReject,
+					       &reject_out);
+
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBRegisterReject, &reject_out);
+
+	return hnbgw_hnbap_tx(ctx, msg);
+}
+
+
+
 
 static int hnbgw_tx_ue_register_acc(struct ue_context *ue)
 {
@@ -367,7 +403,8 @@ static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 {
 	HNBRegisterRequestIEs_t ies;
-	int rc;
+	uint16_t lac, sac, rac, mcc, mnc;
+	int cid, rc;
 
 	rc = hnbap_decode_hnbregisterrequesties(&ies, in);
 	if (rc < 0)
@@ -376,17 +413,34 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 	/* copy all identity parameters from the message to ctx */
 	asn1_strncpy(ctx->identity_info, &ies.hnB_Identity.hNB_Identity_Info,
 			sizeof(ctx->identity_info));
-	ctx->id.lac = asn1str_to_u16(&ies.lac);
-	ctx->id.sac = asn1str_to_u16(&ies.sac);
-	ctx->id.rac = asn1str_to_u8(&ies.rac);
-	ctx->id.cid = asn1bitstr_to_u28(&ies.cellIdentity);
-	gsm48_mcc_mnc_from_bcd(ies.plmNidentity.buf, &ctx->id.mcc, &ctx->id.mnc);
+	lac = asn1str_to_u16(&ies.lac);
+	sac = asn1str_to_u16(&ies.sac);
+	rac = asn1str_to_u8(&ies.rac);
+	cid = asn1bitstr_to_u28(&ies.cellIdentity);
+	gsm48_mcc_mnc_from_bcd(ies.plmNidentity.buf, &mcc, &mnc);
+	hnbap_free_hnbregisterrequesties(&ies);
 
-	DEBUGP(DHNBAP, "HNB-REGISTER-REQ from %s\n", ctx->identity_info);
+	DEBUGP(DHNBAP, "HNB-REGISTER-REQ (LAC=%u, SAC=%u, RAC=%u, CID=%u) from %s\n",
+		lac, sac, rac, cid, ctx->identity_info);
+
+	if (hnb_context_find_by_cid(ctx->gw, cid)) {
+		LOGP(DHNBAP, LOGL_ERROR, "HNB-REGISTER-REQ from %s for already-existing "
+			"CID=%u, rejecting\n", ctx->identity_info, cid);
+		hnbgw_tx_hnb_register_rej(ctx);
+		hnb_context_release(ctx);
+		return 0;
+	}
+
+	ctx->id.mcc = mcc;
+	ctx->id.mcc = mnc;
+	ctx->id.lac = lac;
+	ctx->id.sac = sac;
+	ctx->id.rac = rac;
+	ctx->id.cid = cid;
 
 	/* Send HNBRegisterAccept */
 	rc = hnbgw_tx_hnb_register_acc(ctx);
-	hnbap_free_hnbregisterrequesties(&ies);
+
 	return rc;
 }
 

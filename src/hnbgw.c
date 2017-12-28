@@ -283,6 +283,17 @@ void hnb_context_release(struct hnb_context *ctx)
 	talloc_free(ctx);
 }
 
+struct hnb_context *hnb_context_find_by_cid(struct hnb_gw *gw, uint32_t cid)
+{
+	struct hnb_context *ctx;
+
+	llist_for_each_entry(ctx, &gw->hnb_list, list) {
+		if (ctx->id.cid == cid)
+			return ctx;
+	}
+	return NULL;
+}
+
 /*! call-back when the listen FD has something to read */
 static int accept_cb(struct osmo_stream_srv_link *srv, int fd)
 {
