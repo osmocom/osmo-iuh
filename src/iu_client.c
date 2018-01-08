@@ -678,7 +678,6 @@ static int iu_page(const char *imsi, const uint32_t *tmsi_or_ptmsi,
 		   uint16_t lac, uint8_t rac, bool is_ps)
 {
 	struct ranap_iu_rnc *rnc;
-	int rc;
 	const char *log_msg;
 	int log_level;
 	int paged = 0;
@@ -824,4 +823,3 @@ int ranap_iu_init(void *ctx, int log_subsystem, const char *sccp_user_name, stru
 
 	return 0;
 }
-
