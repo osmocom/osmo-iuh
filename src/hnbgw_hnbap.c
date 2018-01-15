@@ -529,6 +529,10 @@ static int hnbgw_rx_successful_outcome_msg(struct hnb_context *hnb, SuccessfulOu
 static int hnbgw_rx_unsuccessful_outcome_msg(struct hnb_context *hnb, UnsuccessfulOutcome_t *msg)
 {
 	/* We don't care much about HNBAP */
+	LOGP(DHNBAP, LOGL_ERROR, "Received Unsuccessful Outcome, procedureCode %ld, criticality %ld,"
+	     " from '%s', cell mcc %u mnc %u lac %u rac %u sac %u cid %u\n",
+	     msg->procedureCode, msg->criticality, hnb->identity_info,
+	     hnb->id.mcc, hnb->id.mnc, hnb->id.lac, hnb->id.rac, hnb->id.sac, hnb->id.cid);
 	return 0;
 }
 
