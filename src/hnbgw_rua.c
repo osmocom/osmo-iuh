@@ -181,7 +181,7 @@ static int rua_to_scu(struct hnb_context *hnb,
 {
 	struct msgb *msg;
 	struct osmo_scu_prim *prim;
-	struct hnbgw_context_map *map;
+	struct hnbgw_context_map *map = NULL;
 	struct hnbgw_cnlink *cn = hnb->gw->sccp.cnlink;
 	struct osmo_sccp_addr *remote_addr;
 	bool is_ps;
@@ -218,7 +218,7 @@ static int rua_to_scu(struct hnb_context *hnb,
 		DEBUGP(DRUA, "rua_to_scu() %s to %s, rua_ctx_id %u (unitdata, no scu_conn_id)\n",
 		       cn_domain_indicator_to_str(cN_DomainIndicator),
 		       osmo_sccp_addr_dump(remote_addr),
-		       map->rua_ctx_id);
+		       context_id);
 		break;
 	default:
 		map = context_map_alloc_by_hnb(hnb, context_id, is_ps, cn);
