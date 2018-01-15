@@ -198,7 +198,7 @@ static int rua_to_scu(struct hnb_context *hnb,
 		is_ps = true;
 		break;
 	default:
-		LOGP(DRUA, LOGL_ERROR, "Unsupported Domain %u\n",
+		LOGP(DRUA, LOGL_ERROR, "Unsupported Domain %ld\n",
 		     cN_DomainIndicator);
 		return -1;
 	}
