@@ -19,6 +19,7 @@
  */
 
 #include <arpa/inet.h>
+#include <errno.h>
 
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/utils.h>
@@ -209,10 +210,12 @@ static int _cn_ranap_rx(struct hnbgw_cnlink *cnlink, RANAP_RANAP_PDU_t *pdu,
 		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
 		     "unsuccessful outcome procedure %ld from CN, ignoring\n",
 		     pdu->choice.unsuccessfulOutcome.procedureCode);
+		rc = -ENOTSUP;
 		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
 		     "presence %u from CN, ignoring\n", pdu->present);
+		rc = -EINVAL;
 		break;
 	}
 
