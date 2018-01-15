@@ -522,12 +522,14 @@ static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, InitiatingMessage_t 
 
 static int hnbgw_rx_successful_outcome_msg(struct hnb_context *hnb, SuccessfulOutcome_t *msg)
 {
-
+	/* We don't care much about HNBAP */
+	return 0;
 }
 
 static int hnbgw_rx_unsuccessful_outcome_msg(struct hnb_context *hnb, UnsuccessfulOutcome_t *msg)
 {
-
+	/* We don't care much about HNBAP */
+	return 0;
 }
 
 
