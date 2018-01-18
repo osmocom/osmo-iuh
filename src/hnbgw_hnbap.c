@@ -63,6 +63,8 @@ static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
 	memset(&accept_out, 0, sizeof(accept_out));
 	rc = hnbap_encode_hnbregisteraccepties(&accept_out,  &accept);
 	if (rc < 0) {
+		LOGP(DHNBAP, LOGL_ERROR, "Failure to encode HNB-REGISTER-ACCEPT to %s: rc=%d\n",
+		     ctx->identity_info, rc);
 		return rc;
 	}
 
@@ -370,8 +372,11 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 	int rc;
 
 	rc = hnbap_decode_hnbregisterrequesties(&ies, in);
-	if (rc < 0)
+	if (rc < 0) {
+		LOGP(DHNBAP, LOGL_ERROR, "Failure to decode HNB-REGISTER-REQ from %s: rc=%d\n",
+		     ctx->identity_info, rc);
 		return rc;
+	}
 
 	/* copy all identity parameters from the message to ctx */
 	asn1_strncpy(ctx->identity_info, &ies.hnB_Identity.hNB_Identity_Info,
