@@ -58,6 +58,9 @@ then
 	CPPFLAGS="$CPPFLAGS -fsanitize=address -fsanitize=undefined"
 fi
 
+CFLAGS="$CFLAGS -Wall"
+CPPFLAGS="$CPPFLAGS -Wall"
+
 AC_OUTPUT(
 	libosmo-ranap.pc
 	src/Makefile
