@@ -97,6 +97,10 @@ struct hnb_context {
 	/*! SCTP stream ID for RUA */
 	uint16_t rua_stream;
 
+	/*! True if a HNB-REGISTER-REQ from this HNB has been accepted. Note that
+	 * this entire data structure is freed if the HNB sends HNB-DE-REGISTER-REQ. */
+	bool hnb_registered;
+
 	/* linked list of hnbgw_context_map */
 	struct llist_head map_list;
 };
