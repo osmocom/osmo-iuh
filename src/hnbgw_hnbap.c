@@ -20,6 +20,7 @@
 
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/core/socket.h>
 #include <osmocom/gsm/gsm48.h>
 #include <osmocom/netif/stream.h>
 
@@ -46,6 +47,45 @@ static int hnbgw_hnbap_tx(struct hnb_context *ctx, struct msgb *msg)
 	osmo_stream_srv_send(ctx->conn, msg);
 
 	return 0;
+}
+
+static int hnbgw_tx_hnb_register_rej(struct hnb_context *ctx)
+{
+	HNBRegisterReject_t reject_out;
+	HNBRegisterRejectIEs_t reject;
+	struct msgb *msg;
+	int rc;
+
+	reject.presenceMask = 0,
+	reject.cause.present = Cause_PR_radioNetwork;
+	reject.cause.choice.radioNetwork = CauseRadioNetwork_unspecified;
+
+	/* encode the Information Elements */
+	memset(&reject_out, 0, sizeof(reject_out));
+	rc = hnbap_encode_hnbregisterrejecties(&reject_out,  &reject);
+	if (rc < 0) {
+		LOGP(DHNBAP, LOGL_ERROR, "Failure to encode HNB-REGISTER-REJECT to %s: rc=%d\n",
+		     ctx->identity_info, rc);
+		return rc;
+	}
+
+	/* generate a successfull outcome PDU */
+	msg = hnbap_generate_unsuccessful_outcome(ProcedureCode_id_HNBRegister,
+						  Criticality_reject,
+						  &asn_DEF_HNBRegisterReject,
+						  &reject_out);
+
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBRegisterReject, &reject_out);
+
+	rc = hnbgw_hnbap_tx(ctx, msg);
+	if (rc == 0) {
+		/* Tell libosmo-netif to destroy this connection when it is done
+		 * sending our HNB-REGISTER-REJECT response. */
+		osmo_stream_srv_set_flush_and_destroy(ctx->conn);
+	} else {
+		/* The message was not queued. Destroy the connection right away. */
+		hnb_context_release(ctx, true);
+	}
 }
 
 static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
@@ -361,13 +401,14 @@ static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 		hnbap_cause_str(&ies.cause));
 
 	hnbap_free_hnbde_registeries(&ies);
-	hnb_context_release(ctx);
+	hnb_context_release(ctx, true);
 
 	return 0;
 }
 
 static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 {
+	struct hnb_context *hnb;
 	HNBRegisterRequestIEs_t ies;
 	int rc;
 
@@ -386,6 +427,20 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 	ctx->id.rac = asn1str_to_u8(&ies.rac);
 	ctx->id.cid = asn1bitstr_to_u28(&ies.cellIdentity);
 	gsm48_mcc_mnc_from_bcd(ies.plmNidentity.buf, &ctx->id.mcc, &ctx->id.mnc);
+
+	llist_for_each_entry(hnb, &ctx->gw->hnb_list, list) {
+		if (hnb->hnb_registered && ctx != hnb && memcmp(&ctx->id, &hnb->id, sizeof(ctx->id)) == 0) {
+			struct osmo_fd *ofd = osmo_stream_srv_get_ofd(ctx->conn);
+			char *name = osmo_sock_get_name(ctx, ofd->fd);
+			LOGP(DHNBAP, LOGL_ERROR, "rejecting HNB-REGISTER-REQ with duplicate cell identity "
+			     "MCC=%u,MNC=%u,LAC=%u,RAC=%u,SAC=%u,CID=%u from %s\n",
+			     ctx->id.mcc, ctx->id.mnc, ctx->id.lac, ctx->id.rac, ctx->id.sac, ctx->id.cid, name);
+			talloc_free(name);
+			return hnbgw_tx_hnb_register_rej(ctx);
+		}
+	}
+
+	ctx->hnb_registered = true;
 
 	DEBUGP(DHNBAP, "HNB-REGISTER-REQ from %s\n", ctx->identity_info);
 
