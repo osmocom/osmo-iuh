@@ -267,6 +267,15 @@ out:
 	return rc;
 }
 
+static void txflushed_cb(struct osmo_stream_srv *conn, void *data)
+{
+	struct hnb_context *hnb = osmo_stream_srv_get_data(conn);
+
+	/* Close connection after sending HNB-REGISTER-REJECT and the Tx queue has been flushed. */
+	if (hnb->hnb_rejected)
+		hnb_context_release(hnb);
+}
+
 struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_link *link, int new_fd)
 {
 	struct hnb_context *ctx;
@@ -283,6 +292,8 @@ struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_
 		talloc_free(ctx);
 		return NULL;
 	}
+
+	osmo_stream_srv_set_txflushed_cb(ctx->conn, txflushed_cb);
 
 	llist_add_tail(&ctx->list, &gw->hnb_list);
 	return ctx;

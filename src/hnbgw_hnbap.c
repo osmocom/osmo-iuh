@@ -428,7 +428,15 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 			     "MCC=%u,MNC=%u,LAC=%u,RAC=%u,SAC=%u,CID=%u from %s\n",
 			     ctx->id.mcc, ctx->id.mnc, ctx->id.lac, ctx->id.rac, ctx->id.sac, ctx->id.cid, name);
 			talloc_free(name);
-			return hnbgw_tx_hnb_register_rej(ctx);
+			rc = hnbgw_tx_hnb_register_rej(ctx);
+			if (rc != 0) {
+				/* The message was not queued. Clean up HNB right away. */
+				hnb_context_release(ctx);
+			} else {
+				/* Release the HNB once the message has been sent. */
+				ctx->hnb_rejected = true;
+			}
+			return rc;
 		}
 	}
 

@@ -101,6 +101,10 @@ struct hnb_context {
 	 * this entire data structure is freed if the HNB sends HNB-DE-REGISTER-REQ. */
 	bool hnb_registered;
 
+	/*! True if a HNB-REGISTER-REJECT has been sent to this HNB. If this flag
+	 * is set we will close the connection once its Tx queue has been flushed. */
+	bool hnb_rejected;
+
 	/* linked list of hnbgw_context_map */
 	struct llist_head map_list;
 };
