@@ -53,7 +53,7 @@ static int hnbgw_tx_hnb_register_rej(struct hnb_context *ctx)
 {
 	HNBRegisterReject_t reject_out;
 	HNBRegisterRejectIEs_t reject;
-	struct msgb *msg;
+	struct msgb *msg, *msg0;
 	int rc;
 
 	reject.presenceMask = 0,
@@ -69,6 +69,10 @@ static int hnbgw_tx_hnb_register_rej(struct hnb_context *ctx)
 		return rc;
 	}
 
+	msg0 = msgb_alloc(0, "zero-length terminating message");
+	if (msg0 == NULL)
+		return -ENOMEM;
+
 	/* generate a successfull outcome PDU */
 	msg = hnbap_generate_unsuccessful_outcome(ProcedureCode_id_HNBRegister,
 						  Criticality_reject,
@@ -77,7 +81,17 @@ static int hnbgw_tx_hnb_register_rej(struct hnb_context *ctx)
 
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBRegisterReject, &reject_out);
 
-	return hnbgw_hnbap_tx(ctx, msg);
+	rc = hnbgw_hnbap_tx(ctx, msg);
+	if (rc == 0) {
+		/* Enqueue a zero-length message to destroy the connection
+		 * after sending HNB-REGISTER-REJECT. */
+		if (hnbgw_hnbap_tx(ctx, msg0) != 0)
+			LOGP(DHNBAP, LOGL_ERROR, "Failure to send zero-length message after "
+			     "HNB-REGISTER-REJECT to %s: rc=%d; the connection won't be closed "
+			     "from our side\n", ctx->identity_info, rc);
+	}
+
+	return rc;
 }
 
 static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
@@ -393,7 +407,7 @@ static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 		hnbap_cause_str(&ies.cause));
 
 	hnbap_free_hnbde_registeries(&ies);
-	hnb_context_release(ctx);
+	hnb_context_release(ctx, true);
 
 	return 0;
 }
