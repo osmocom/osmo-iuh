@@ -77,6 +77,9 @@ static int hnbgw_tx_hnb_register_rej(struct hnb_context *ctx)
 
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBRegisterReject, &reject_out);
 
+	/* Destroy the connection after sending HNB-REGISTER-REJECT. */
+	msgb_netif_destroy_conn_after_tx(msg);
+
 	return hnbgw_hnbap_tx(ctx, msg);
 }
 
@@ -393,7 +396,7 @@ static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 		hnbap_cause_str(&ies.cause));
 
 	hnbap_free_hnbde_registeries(&ies);
-	hnb_context_release(ctx);
+	hnb_context_release(ctx, true);
 
 	return 0;
 }

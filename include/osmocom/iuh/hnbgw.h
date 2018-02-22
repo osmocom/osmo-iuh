@@ -161,7 +161,7 @@ struct ue_context *ue_context_alloc(struct hnb_context *hnb, const char *imsi,
 void ue_context_free(struct ue_context *ue);
 
 struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_link *link, int new_fd);
-void hnb_context_release(struct hnb_context *ctx);
+void hnb_context_release(struct hnb_context *ctx, bool destroy_conn);
 
 void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx);
 int hnbgw_vty_go_parent(struct vty *vty);

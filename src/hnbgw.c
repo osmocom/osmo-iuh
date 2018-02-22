@@ -204,6 +204,11 @@ void ue_context_free(struct ue_context *ue)
 }
 static int hnb_close_cb(struct osmo_stream_srv *conn)
 {
+	struct hnb_context *hnb = osmo_stream_srv_get_data(conn);
+
+	if (hnb)
+		hnb_context_release(hnb, false);
+
 	return 0;
 }
 
@@ -228,10 +233,10 @@ static int hnb_read_cb(struct osmo_stream_srv *conn)
 	} else if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Error during sctp_recvmsg()\n");
 		/* FIXME: clean up after disappeared HNB */
-		hnb_context_release(hnb);
+		hnb_context_release(hnb, true);
 		goto out;
 	} else if (rc == 0) {
-		hnb_context_release(hnb);
+		hnb_context_release(hnb, true);
 		rc = -1;
 
 		goto out;
@@ -288,7 +293,7 @@ struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_
 	return ctx;
 }
 
-void hnb_context_release(struct hnb_context *ctx)
+void hnb_context_release(struct hnb_context *ctx, bool destroy_conn)
 {
 	struct hnbgw_context_map *map, *map2;
 
@@ -305,7 +310,9 @@ void hnb_context_release(struct hnb_context *ctx)
 		context_map_deactivate(map);
 	}
 	ue_context_free_by_hnb(ctx->gw, ctx);
-	osmo_stream_srv_destroy(ctx->conn);
+
+	if (destroy_conn)
+		osmo_stream_srv_destroy(ctx->conn);
 
 	talloc_free(ctx);
 }
