@@ -267,10 +267,11 @@ int hnb_test_nas_rx_lu_accept(struct gsm48_hdr *gh, int len, int *sent_tmsi)
 
 	lai = (struct gsm48_loc_area_id *)&gh->data[0];
 
-	uint16_t mcc, mnc, lac;
-	gsm48_decode_lai(lai, &mcc, &mnc, &lac);
-	printf("LU: mcc %hd  mnc %hd  lac %hd\n",
-	       mcc, mnc, lac);
+	struct osmo_location_area_id laid;
+	gsm48_decode_lai2(lai, &laid);
+	printf("LU: mcc %s  mnc %s  lac %hd\n",
+	       osmo_mcc_name(laid.plmn.mcc), osmo_mnc_name(laid.plmn.mnc, laid.plmn.mnc_3_digits),
+	       laid.lac);
 
 	struct tlv_parsed tp;
 	int parse_res;
