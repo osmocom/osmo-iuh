@@ -42,8 +42,7 @@
  * PLMN identity is a BCD representation of the MCC and MNC.
  * See iu_grnc_id_parse(). */
 struct iu_grnc_id {
-	uint16_t mcc;
-	uint16_t mnc;
+	struct osmo_plmn_id plmn;
 	uint16_t rnc_id;
 };
 
@@ -310,8 +309,7 @@ static int iu_grnc_id_parse(struct iu_grnc_id *dst, struct RANAP_GlobalRNC_ID *s
 		       " should be 3, is %d\n", src->pLMNidentity.size);
 		return -1;
 	}
-	gsm48_mcc_mnc_from_bcd(&src->pLMNidentity.buf[0],
-			       &dst->mcc, &dst->mnc);
+	osmo_plmn_from_bcd(&src->pLMNidentity.buf[0], &dst->plmn);
 	dst->rnc_id = (uint16_t)src->rNC_ID;
 	return 0;
 }
