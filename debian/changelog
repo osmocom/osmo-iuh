@@ -1,3 +1,77 @@
+osmo-iuh (0.3.0) unstable; urgency=medium
+
+  [ Neels Hofmeyr ]
+  * jenkins: use osmo-clean-workspace.sh before and after build
+  * vty: skip installing cmds now always installed by default
+  * src/Makefile.am: drop unused COMMON_LDADD
+  * add --enable-sanitize config option
+  * osmo-hnbgw: drop erratic log line on remote STP address
+  * api doc: clarify byte order in ranap_new_msg_rab_assign_*
+  * tests: sanitize: fix mem leaks, clean after tests
+  * ranap_msg_factory: sanitize: memcpy instead of unaligned int copy
+  * test_common: fix compiler warning: include ranap_common.h
+  * osmo-hnbgw: auto-config local and remote PCs if omitted
+  * cosmetic: osmo-hnbgw: log remote SCCP addresses on startup
+  * osmo-hnbgw: don't configure specific local IP address for STP connection
+  * iu client: store multiple LAC,RAC per RNC = fix paging for multiple RNC
+  * hnbgw: use proper VTY port number defined in libosmocore (4261)
+  * fix 3 compiler warnings in ranap_common.c
+  * hnbgw: use proper talloc ctx for vty telnet init
+  * hnbgw: hnb info: record MCC, MNC, show on 'show hnb'
+  * hnbap,rua,ranap decode: fix segfault on decode error
+  * vty: tweak / improve HNB and cnlink introspection
+  * osmo-hnbgw: vty: revamp output of context maps on 'show hnb'
+  * compiler warning: asn1tostruct.py: return 0 at end of *_free_*()
+  * segfault: context_map gc: use llist_for_each_entry_safe()
+  * rua: discard context maps on id-Disconnect
+  * rua_to_scu(): don't create a context map for UNITDATA
+  * cosmetic: context_map_tmr_cb(): fix comment
+  * osmo-hnbgw config: add 'rnc-id' config item
+  * osmo-hnbgw: startup: log the RNC-Id that is going to be used
+  * comments: hnbgw_rua.c: remove obsolete fixmes for asn1 free
+  * vty typo: 'show hnb': SCTP stream, not SCCP stream
+  * hnbgw_rua.c: log: fix integer format for cN_DomainIndicator
+  * hnbgw_rua: fix dereference of unset pointer
+  * hnbgw_cn: rx ranap: set rc in all cases
+  * hnbgw_hnbap: fix missing return in rx [un]successful outcome
+  * cosmetic: hnbgw: hnbap: log rx of unsuccessful outcome
+  * hnbap: log errors on decoding/encoding HNB-REGISTER msgs
+  * hnb-test: log accurate three-digit MNC with leading zeros
+  * configure: add --enable-werror
+  * cosmetic: use osmo_plmn_id instead of mcc,mnc
+
+  [ Harald Welte ]
+  * osmo-hnbgw: Avoid useless linking to libosmogsm and libsctp
+  * Link libosmo-ranap against libosmovty
+  * Add "-Wall" to the compile rules of the non-asn1c-generated source code
+  * hnbgw.c: Remove dead code creating libsctp linker dependency
+  * sccp_sap_up(): Fix never-hit "default" case in switch
+  * Fix various compiler warnings in hnb-gw code
+  * hnbgw_vty.c: cosmetic: Fix non-tab-indented code
+  * hnbgw_vty.c: Fix "-Werror=format-security" failure in vty_out()
+
+  [ Philipp Maier ]
+  * iu: iu_helpers: add functions to decode ip/port from rab-ass
+  * ranap_msg_factory: check IE encoder return codes
+  * ranap_msg_factory: remove unusued variable
+
+  [ Max ]
+  * Use proper package version
+  * Add control interface
+  * Expand ctrl interface
+  * Enable sanitize for CI tests
+
+  [ Pau Espin Pedrol ]
+  * iu_client.c: Remove unusued variable
+  * configure.ac: Enable -Wall flag
+  * contrib: jenkins.sh: Disable doxygen in libosmocore build
+  * debian/changelog: set prev releases to unstable
+
+  [ Stefan Sperling ]
+  * ensure unique CellIDs in HNB-GW
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Thu, 03 May 2018 18:29:13 +0200
+
 osmo-iuh (0.2.0) unstable; urgency=low
 
   * Upstream 0.2.0 release
