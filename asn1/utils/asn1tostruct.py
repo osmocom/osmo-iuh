@@ -4,6 +4,7 @@ import re, os, sys, string
 import datetime
 import getopt
 import getpass
+import time
 
 version = "0.5osmo1"
 
@@ -33,11 +34,11 @@ def printDebug(string):
         print string
 
 def outputHeaderToFile(f, filename):
-    now = datetime.datetime.now()
+    now = datetime.datetime.utcfromtimestamp(int(os.environ.get('SOURCE_DATE_EPOCH', time.time())))
     f.write("/*******************************************************************************\n")
     f.write(" * This file had been created by asn1tostruct.py script v%s\n" % (version))
     f.write(" * Please do not modify this file but regenerate it via script.\n")
-    f.write(" * Created on: %s by %s\n * from %s\n" % (str(now), getpass.getuser(), filenames))
+    f.write(" * Created on: %s\n * from %s\n" % (str(now), filenames))
     f.write(" ******************************************************************************/\n")
 
 def lowerFirstCamelWord(word):
