@@ -84,7 +84,7 @@ static int hnbgw_tx_hnb_register_rej(struct hnb_context *ctx)
 		osmo_stream_srv_set_flush_and_destroy(ctx->conn);
 	} else {
 		/* The message was not queued. Destroy the connection right away. */
-		hnb_context_release(ctx, true);
+		hnb_context_release(ctx);
 	}
 }
 
@@ -401,7 +401,7 @@ static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 		hnbap_cause_str(&ies.cause));
 
 	hnbap_free_hnbde_registeries(&ies);
-	hnb_context_release(ctx, true);
+	hnb_context_release(ctx);
 
 	return 0;
 }
