@@ -1,11 +1,14 @@
 AUTOMAKE_OPTIONS = foreign dist-bzip2
 
-SUBDIRS = src include doc
+SUBDIRS = src include doc contrib
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libosmo-ranap.pc
 
 EXTRA_DIST = asn1 .version README.md
+
+DISTCHECK_CONFIGURE_FLAGS = \
+	--with-systemdsystemunitdir=$$dc_install_base/$(systemdsystemunitdir)
 
 @RELMAKE@
 
