@@ -524,6 +524,7 @@ int main(int argc, char **argv)
 	vty_init(&vty_info);
 
 	osmo_ss7_vty_init_asp(tall_hnb_ctx);
+	osmo_sccp_vty_init();
 	hnbgw_vty_init(g_hnb_gw, tall_hnb_ctx);
 	logging_vty_add_cmds(&hnbgw_log_info);
 
