@@ -109,7 +109,7 @@ int ranap_transp_layer_addr_decode(char *addr, unsigned int addr_len,
 	buf = trasp_layer_addr->buf;
 	len = trasp_layer_addr->size;
 
-	if (buf[0] == 0x35 && len == 7)
+	if (buf[0] == 0x35 && len >= 7)
 		rc = inet_ntop(AF_INET, buf + 3, addr, addr_len);
 	else if (len > 3)
 		rc = inet_ntop(AF_INET, buf, addr, addr_len);
