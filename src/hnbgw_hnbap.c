@@ -85,7 +85,10 @@ static int hnbgw_tx_hnb_register_rej(struct hnb_context *ctx)
 	} else {
 		/* The message was not queued. Destroy the connection right away. */
 		hnb_context_release(ctx);
+		return rc;
 	}
+
+	return 0;
 }
 
 static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
