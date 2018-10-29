@@ -200,7 +200,7 @@ static void vty_dump_ue_info(struct vty *vty, struct ue_context *ue)
 	vty_out(vty, "UE IMSI \"%s\" context ID %u%s", ue->imsi, ue->context_id, VTY_NEWLINE);
 }
 
-DEFUN(show_hnb, show_hnb_cmd, "show hnb all", SHOW_STR "Display information about a HNB")
+DEFUN(show_hnb, show_hnb_cmd, "show hnb all", SHOW_STR "Display information about all HNB")
 {
 	struct hnb_context *hnb;
 	unsigned int count = 0;
@@ -217,6 +217,27 @@ DEFUN(show_hnb, show_hnb_cmd, "show hnb all", SHOW_STR "Display information abou
 
 	vty_out(vty, "%u HNB connected%s", count, VTY_NEWLINE);
 
+	return CMD_SUCCESS;
+}
+
+DEFUN(show_one_hnb, show_one_hnb_cmd, "show hnb NAME ", SHOW_STR "Display information about a HNB")
+{
+	struct hnb_context *hnb;
+	int found = 0;
+	const char *identity_info = argv[0];
+
+	if (llist_empty(&g_hnb_gw->hnb_list)) {
+		vty_out(vty, "No HNB connected%s", VTY_NEWLINE);
+		return CMD_SUCCESS;
+	}
+
+	hnb = hnb_context_by_identity_info(&g_hnb_gw, identity_info);
+	if (hnb == NULL) {
+		vty_out(vty, "No HNB found with identity '%s'%s", identity_info, VTY_NEWLINE);
+		return CMD_SUCCESS;
+	}
+
+	vty_dump_hnb_info(vty, hnb);
 	return CMD_SUCCESS;
 }
 
@@ -377,6 +398,7 @@ void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 
 	install_element_ve(&show_cnlink_cmd);
 	install_element_ve(&show_hnb_cmd);
+	install_element_ve(&show_one_hnb_cmd);
 	install_element_ve(&show_ue_cmd);
 	install_element_ve(&show_talloc_cmd);
 }

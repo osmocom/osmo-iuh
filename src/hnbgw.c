@@ -105,6 +105,19 @@ struct hnb_context *hnb_context_by_id(struct hnb_gw *gw, uint32_t cid)
 	return NULL;
 }
 
+struct hnb_context *hnb_context_by_identity_info(struct hnb_gw *gw, const char *identity_info)
+{
+	struct hnb_context *hnb;
+
+	llist_for_each_entry(hnb, &gw->hnb_list, list) {
+		if (strcmp(identity_info, hnb->identity_info) == 0)
+			return hnb;
+	}
+
+	return NULL;
+}
+
+
 unsigned hnb_contexts(const struct hnb_gw *gw)
 {
 	unsigned num_ctx = 0;

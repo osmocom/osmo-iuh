@@ -151,6 +151,7 @@ struct hnb_gw {
 extern void *talloc_asn1_ctx;
 
 struct hnb_context *hnb_context_by_id(struct hnb_gw *gw, uint32_t cid);
+struct hnb_context *hnb_context_by_identity_info(struct hnb_gw *gw, const char *identity_info);
 unsigned hnb_contexts(const struct hnb_gw *gw);
 
 struct ue_context *ue_context_by_id(struct hnb_gw *gw, uint32_t id);
