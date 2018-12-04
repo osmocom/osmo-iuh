@@ -7,7 +7,7 @@ pkgconfig_DATA = libosmo-ranap.pc
 
 EXTRA_DIST = asn1 .version README.md
 
-DISTCHECK_CONFIGURE_FLAGS = \
+AM_DISTCHECK_CONFIGURE_FLAGS = \
 	--with-systemdsystemunitdir=$$dc_install_base/$(systemdsystemunitdir)
 
 @RELMAKE@
