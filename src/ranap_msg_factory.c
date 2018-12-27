@@ -766,7 +766,7 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	memset(&first, 0, sizeof(first));
 	assign_new_ra_id(&first.rAB_ID, rab_id);
 	first.nAS_SynchronisationIndicator = new_rab_nas_sync_ind(60);
-	first.rAB_Parameters = new_rab_par_voice(6700, 12200);
+	first.rAB_Parameters = new_rab_par_voice(6700, 6700);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_support_mode_for_predefined_SDU_sizes, 1); /* 2? */
 	first.transportLayerInformation = new_transp_info_rtp(rtp_ip, rtp_port,
 							      use_x213_nsap);
