@@ -6,6 +6,7 @@ Type=simple
 Restart=always
 ExecStart=/usr/bin/osmo-hnbgw -c /etc/osmocom/osmo-hnbgw.cfg
 RestartSec=2
+ExecStopPost=/usr/local/bin/save_log_tail osmo-hnbgw
 
 [Install]
 WantedBy=multi-user.target
