@@ -7,6 +7,7 @@
 #include <osmocom/ranap/RANAP_GlobalRNC-ID.h>
 #include <osmocom/ranap/RANAP_ChosenIntegrityProtectionAlgorithm.h>
 #include <osmocom/ranap/RANAP_ChosenEncryptionAlgorithm.h>
+#include <osmocom/ranap/RANAP_KeyStatus.h>
 
 /*! \brief generate RANAP DIRECT TRANSFER message */
 struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas_len);
