@@ -743,21 +743,52 @@ static struct osmo_prim_hdr *make_conn_resp(struct osmo_scu_connect_param *param
 	return &prim->oph;
 }
 
+enum sap_up_type {
+	RANAP_SAP_UP_CO_INITIAL,
+	RANAP_SAP_UP_CO,
+	RANAP_SAP_UP_CL,
+};
+
+static int ranap_iu_l2_rx(enum sap_up_type sap_up_type, void *ctx, struct msgb *msg)
+{
+	switch (sap_up_type) {
+	case SAP_UP_CO_INITIAL:
+		rc = ranap_cn_rx_co(cn_ranap_handle_co_initial, (struct new_ue_conn_ctx*)ctx, msgb_l2(msg), msgb_l2len(msg));
+		break;
+	case SAP_UP_CO:
+		rc = ranap_cn_rx_co(cn_ranap_handle_co, (struct ranap_ue_conn_ctx*)ctx, msgb_l2(msg), msgb_l2len(msg));
+		break;
+	case SAP_UP_CL:
+		rc = ranap_cn_rx_cl(cn_ranap_handle_cl, ctx, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+		break;
+	default:
+		rc = -ENOTSUP;
+		break;
+	}
+
+	msgb_free(oph->msg);
+	return rc;
+}
+
 static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 {
 	struct osmo_sccp_user *scu = _scu;
 	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) oph;
 	struct osmo_prim_hdr *resp = NULL;
 	int rc;
-	struct ranap_ue_conn_ctx *ue;
+	struct ranap_ue_conn_ctx *ue = NULL;
 	struct new_ue_conn_ctx new_ctx = {};
+	enum sap_up_type sap_up_type;
+	void *ctx = NULL;
 
 	LOGPIU(LOGL_DEBUG, "sccp_sap_up(%s)\n", osmo_scu_prim_name(oph));
 
 	switch (OSMO_PRIM_HDR(oph)) {
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_CONNECT, PRIM_OP_CONFIRM):
 		/* confirmation of outbound connection */
+	default:
 		rc = -1;
+		msgb_free(oph->msg);
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_CONNECT, PRIM_OP_INDICATION):
 		/* indication of new inbound connection request*/
@@ -774,14 +805,16 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		resp = make_conn_resp(&prim->u.connect);
 		osmo_sccp_user_sap_down(scu, resp);
 		/* then handle the RANAP payload */
-		rc = ranap_cn_rx_co(cn_ranap_handle_co_initial, &new_ctx, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+		sap_up_type = RANAP_SAP_UP_CO_INITIAL;
+		ctx = &new_ctx;
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DISCONNECT, PRIM_OP_INDICATION):
 		/* indication of disconnect */
 		LOGPIU(LOGL_DEBUG, "N-DISCONNECT.ind(%u)\n",
 		       prim->u.disconnect.conn_id);
 		ue = ue_conn_ctx_find(prim->u.disconnect.conn_id);
-		rc = ranap_cn_rx_co(cn_ranap_handle_co, ue, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+		sap_up_type = RANAP_SAP_UP_CO;
+		ctx = ue;
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DATA, PRIM_OP_INDICATION):
 		/* connection-oriented data received */
@@ -789,21 +822,19 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		       osmo_hexdump(msgb_l2(oph->msg), msgb_l2len(oph->msg)));
 		/* resolve UE context */
 		ue = ue_conn_ctx_find(prim->u.data.conn_id);
-		rc = ranap_cn_rx_co(cn_ranap_handle_co, ue, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+		sap_up_type = RANAP_SAP_UP_CO;
+		ctx = ue;
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_UNITDATA, PRIM_OP_INDICATION):
 		/* connection-less data received */
 		LOGPIU(LOGL_DEBUG, "N-UNITDATA.ind(%s)\n",
 		       osmo_hexdump(msgb_l2(oph->msg), msgb_l2len(oph->msg)));
-		rc = ranap_cn_rx_cl(cn_ranap_handle_cl, scu, msgb_l2(oph->msg), msgb_l2len(oph->msg));
-		break;
-	default:
-		rc = -1;
+		sap_up_type = RANAP_SAP_UP_CL;
+		ctx = NULL;
 		break;
 	}
 
-	msgb_free(oph->msg);
-	return rc;
+	return ranap_iu_l2_rx(sap_up_type, ctx, oph->msg);
 }
 
 int ranap_iu_init(void *ctx, int log_subsystem, const char *sccp_user_name, struct osmo_sccp_instance *sccp,
