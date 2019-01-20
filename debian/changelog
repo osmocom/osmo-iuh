@@ -1,3 +1,34 @@
+osmo-iuh (0.4.0) unstable; urgency=medium
+
+  [ Bernhard M. Wiedemann ]
+  * asn1tostruct: allow to override build date
+
+  [ Alexander Couzens ]
+  * hnbgw: remove close_cb() to fix a crash when releasing a hnbgw
+
+  [ Harald Welte ]
+  * debian/rules: Don't overwrite .tarball-version
+  * hnbgw_tx_hnb_register_rej(): Missing return statement
+
+  [ Neels Hofmeyr ]
+  * fix decoding of incoming X.213 NSAP addr
+  * hnbgw: vty: add SCCP related vty commands
+  * fix transport layer addr again, for nano3g
+
+  [ Pau Espin Pedrol ]
+  * debian: package osmo-hnbgw.service
+  * Install systemd services with autotools
+  * Install sample cfg file to /etc/osmocom
+
+  [ Stefan Sperling ]
+  * add a VTY command which shows a specific HNB
+
+  [ Oliver Smith ]
+  * Fix DISTCHECK_CONFIGURE_FLAGS override
+  * contrib: fix makedistcheck with disabled systemd
+
+ -- Harald Welte <laforge@gnumonks.org>  Sun, 20 Jan 2019 21:46:05 +0100
+
 osmo-iuh (0.3.0) unstable; urgency=medium
 
   [ Neels Hofmeyr ]
