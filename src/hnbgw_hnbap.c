@@ -119,6 +119,8 @@ static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
 
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBRegisterAccept, &accept_out);
 
+	LOGP(DHNBAP, LOGL_NOTICE, "Accepting HNB-REGISTER-REQ from %s\n", ctx->identity_info);
+
 	return hnbgw_hnbap_tx(ctx, msg);
 }
 

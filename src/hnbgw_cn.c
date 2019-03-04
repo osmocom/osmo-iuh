@@ -34,6 +34,7 @@
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_msg_factory.h>
 #include <osmocom/iuh/context_map.h>
+#include <osmocom/hnbap/CN-DomainIndicator.h>
 
 /***********************************************************************
  * Outbound RANAP RESET to CN
@@ -49,6 +50,10 @@ static int transmit_rst(struct hnb_gw *gw, RANAP_CN_DomainIndicator_t domain,
 		.present = RANAP_Cause_PR_transmissionNetwork,
 		.choice. transmissionNetwork = RANAP_CauseTransmissionNetwork_signalling_transport_resource_failure,
 	};
+
+	LOGP(DRANAP, LOGL_NOTICE, "Tx RESET to %s %s\n",
+	     domain == CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
+	     osmo_sccp_inst_addr_name(gw->sccp.cnlink->sccp, remote_addr));
 
 	msg = ranap_new_msg_reset(domain, &cause);
 
