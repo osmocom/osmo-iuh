@@ -63,6 +63,23 @@ static int transmit_rst(struct hnb_gw *gw, RANAP_CN_DomainIndicator_t domain,
 					 msg);
 }
 
+static int transmit_reset_ack(struct hnb_gw *gw, RANAP_CN_DomainIndicator_t domain,
+			      const struct osmo_sccp_addr *remote_addr)
+{
+	struct msgb *msg;
+
+	LOGP(DRANAP, LOGL_NOTICE, "Tx RESET ACK to %s %s\n",
+	     domain == CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
+	     osmo_sccp_inst_addr_name(gw->sccp.cnlink->sccp, remote_addr));
+
+	msg = ranap_new_msg_reset_ack(domain, NULL);
+
+	return osmo_sccp_tx_unitdata_msg(gw->sccp.cnlink->sccp_user,
+					 &gw->sccp.local_addr,
+					 remote_addr,
+					 msg);
+}
+
 /* Timer callback once T_RafC expires */
 static void cnlink_trafc_cb(void *data)
 {
@@ -99,15 +116,28 @@ void hnbgw_cnlink_change_state(struct hnbgw_cnlink *cnlink, enum hnbgw_cnlink_st
  ***********************************************************************/
 
 static int cn_ranap_rx_reset_cmd(struct hnbgw_cnlink *cnlink,
+				 const struct osmo_scu_unitdata_param *unitdata,
 				 RANAP_InitiatingMessage_t *imsg)
 {
+	CN_DomainIndicator_t domain;
 	RANAP_ResetIEs_t ies;
 	int rc;
 
 	rc = ranap_decode_reseties(&ies, &imsg->value);
-	/* FIXME: reset resources and return reset ack */
-
+	domain = ies.cN_DomainIndicator;
 	ranap_free_reseties(&ies);
+
+	LOGP(DRANAP, LOGL_NOTICE, "Rx RESET from %s %s, returning ACK\n",
+	     domain == CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
+	     osmo_sccp_inst_addr_name(cnlink->sccp, &unitdata->calling_addr));
+
+	/* FIXME: actually reset connections, if any */
+
+	if (transmit_reset_ack(cnlink->gw, domain, &unitdata->calling_addr))
+		LOGP(DRANAP, LOGL_ERROR, "Error: cannot send RESET ACK to %s %s\n",
+		     domain == CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
+		     osmo_sccp_inst_addr_name(cnlink->sccp, &unitdata->calling_addr));
+
 	return rc;
 }
 
@@ -149,12 +179,13 @@ static int cn_ranap_rx_paging_cmd(struct hnbgw_cnlink *cnlink,
 }
 
 static int cn_ranap_rx_initiating_msg(struct hnbgw_cnlink *cnlink,
+				      const struct osmo_scu_unitdata_param *unitdata,
 				      RANAP_InitiatingMessage_t *imsg,
 				      const uint8_t *data, unsigned int len)
 {
 	switch (imsg->procedureCode) {
 	case RANAP_ProcedureCode_id_Reset:
-		return cn_ranap_rx_reset_cmd(cnlink, imsg);
+		return cn_ranap_rx_reset_cmd(cnlink, unitdata, imsg);
 	case RANAP_ProcedureCode_id_Paging:
 		return cn_ranap_rx_paging_cmd(cnlink, imsg, data, len);
 	case RANAP_ProcedureCode_id_OverloadControl: /* Overload ind */
@@ -198,14 +229,15 @@ static int cn_ranap_rx_successful_msg(struct hnbgw_cnlink *cnlink,
 }
 
 
-static int _cn_ranap_rx(struct hnbgw_cnlink *cnlink, RANAP_RANAP_PDU_t *pdu,
-			const uint8_t *data, unsigned int len)
+static int _cn_ranap_rx(struct hnbgw_cnlink *cnlink,
+			const struct osmo_scu_unitdata_param *unitdata,
+			RANAP_RANAP_PDU_t *pdu, const uint8_t *data, unsigned int len)
 {
 	int rc;
 
 	switch (pdu->present) {
 	case RANAP_RANAP_PDU_PR_initiatingMessage:
-		rc = cn_ranap_rx_initiating_msg(cnlink, &pdu->choice.initiatingMessage,
+		rc = cn_ranap_rx_initiating_msg(cnlink, unitdata, &pdu->choice.initiatingMessage,
 						data, len);
 		break;
 	case RANAP_RANAP_PDU_PR_successfulOutcome:
@@ -227,8 +259,8 @@ static int _cn_ranap_rx(struct hnbgw_cnlink *cnlink, RANAP_RANAP_PDU_t *pdu,
 	return rc;
 }
 
-static int handle_cn_ranap(struct hnbgw_cnlink *cnlink, const uint8_t *data,
-			   unsigned int len)
+static int handle_cn_ranap(struct hnbgw_cnlink *cnlink, const struct osmo_scu_unitdata_param *unitdata,
+			   const uint8_t *data, unsigned int len)
 {
 	RANAP_RANAP_PDU_t _pdu, *pdu = &_pdu;
 	asn_dec_rval_t dec_ret;
@@ -242,7 +274,7 @@ static int handle_cn_ranap(struct hnbgw_cnlink *cnlink, const uint8_t *data,
 		return -1;
 	}
 
-	rc = _cn_ranap_rx(cnlink, pdu, data, len);
+	rc = _cn_ranap_rx(cnlink, unitdata, pdu, data, len);
 
 	return rc;
 }
@@ -286,7 +318,7 @@ static int handle_cn_unitdata(struct hnbgw_cnlink *cnlink,
 	if (classify_cn_remote_addr(cnlink->gw, &param->calling_addr, NULL) < 0)
 		return -1;
 
-	return handle_cn_ranap(cnlink, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+	return handle_cn_ranap(cnlink, param, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 }
 
 static int handle_cn_conn_conf(struct hnbgw_cnlink *cnlink,
