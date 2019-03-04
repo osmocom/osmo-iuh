@@ -527,7 +527,7 @@ int main(int argc, char **argv)
 	g_hnb_gw = hnb_gw_create(tall_hnb_ctx);
 	g_hnb_gw->config.rnc_id = 23;
 
-	rc = osmo_init_logging(&hnbgw_log_info);
+	rc = osmo_init_logging2(tall_hnb_ctx, &hnbgw_log_info);
 	if (rc < 0)
 		exit(1);
 
