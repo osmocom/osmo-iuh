@@ -377,7 +377,7 @@ static struct {
 } hnbgw_cmdline_config = {
 	0,
 	"osmo-hnbgw.cfg",
-	true,
+	false,
 	false,
 	0,
 	NULL,
