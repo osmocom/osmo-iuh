@@ -3,6 +3,8 @@ AM_CFLAGS = -g -Wall -I$(top_srcdir)/src/tests \
 	$(OSMOVTY_CFLAGS) $(OSMOCORE_CFLAGS) $(OSMOGSM_CFLAGS) \
 	$(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS)
 
+AM_LDFLAGS = -no-install
+
 COMMON_LIBS = $(OSMOVTY_LIBS) $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(ASN1C_LIBS) $(OSMOSIGTRAN_LIBS) -lsctp
 
 check_PROGRAMS = test-ranap test-helpers test-hnbap hnb-test #dummy-cn
