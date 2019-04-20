@@ -23,7 +23,7 @@ Decoded Cause Misc=115
     <criticality><ignore/></criticality>
     <value>00</value>
 </RANAP_IE>
-00 14 00 10 00 00 02 00 10 40 04 03 aa bb cc 00 3b 40 01 00 
+00 14 40 10 00 00 02 00 10 40 04 03 aa bb cc 00 3b 40 01 00 
 
 ==> SECURITY MODE COMMAND
 <RANAP_IE>
@@ -81,7 +81,7 @@ Decoded Cause Misc=115
     <criticality><ignore/></criticality>
     <value>00 01 23 45 67</value>
 </RANAP_IE>
-00 0e 00 1e 00 00 03 00 03 40 01 00 00 17 40 09 50 09 71 00 21 43 65 87 f9 00 40 40 05 00 01 23 45 67 
+00 0e 40 1e 00 00 03 00 03 40 01 00 00 17 40 09 50 09 71 00 21 43 65 87 f9 00 40 40 05 00 01 23 45 67 
 
 ==> RAB ASSIGNMENT COMMAND (VOICE)
 <RANAP_ProtocolIE-FieldPair>
@@ -194,7 +194,7 @@ Decoded Cause Misc=115
     <criticality><ignore/></criticality>
     <value>09 01 99 09 26</value>
 </RANAP_IE>
-00 13 00 36 00 00 06 00 03 40 01 00 00 0f 40 06 00 09 01 99 42 23 00 3a 40 08 00 09 01 99 42 23 42 23 00 10 40 04 03 aa bb cc 00 4f 40 03 00 00 17 00 56 40 05 09 01 99 09 26 
+00 13 40 36 00 00 06 00 03 40 01 00 00 0f 40 06 00 09 01 99 42 23 00 3a 40 08 00 09 01 99 42 23 42 23 00 10 40 04 03 aa bb cc 00 4f 40 03 00 00 17 00 56 40 05 09 01 99 09 26 
 
 ==> IU RELEASE REQ
 <RANAP_IE>
@@ -202,7 +202,7 @@ Decoded Cause Misc=115
     <criticality><ignore/></criticality>
     <value>0B 40</value>
 </RANAP_IE>
-00 0b 00 09 00 00 01 00 04 40 02 0b 40 
+00 0b 40 09 00 00 01 00 04 40 02 0b 40 
 
 ==> RAB RELEASE REQ
 <RANAP_IE>
@@ -215,7 +215,7 @@ Decoded Cause Misc=115
     <criticality><ignore/></criticality>
     <value>00 00 01 00 28 40 03 05 C2 D0</value>
 </RANAP_IE>
-00 0a 00 11 00 00 01 00 29 40 0a 00 00 01 00 28 40 03 05 c2 d0 
+00 0a 40 11 00 00 01 00 29 40 0a 00 00 01 00 28 40 03 05 c2 d0 
 report
 talloc report on 'asn1_context' (total      0 bytes in   1 blocks)
 talloc report on 'msgb' (total      0 bytes in   1 blocks)

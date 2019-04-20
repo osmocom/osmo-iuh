@@ -150,7 +150,7 @@ struct msgb *ranap_new_msg_initial_ue(uint32_t conn_id, int is_ps,
 	}
 
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_InitialUE_Message,
-						RANAP_Criticality_reject,
+						RANAP_Criticality_ignore,
 						&asn_DEF_RANAP_InitialUE_Message,
 						&out);
 
@@ -192,7 +192,7 @@ struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas
 
 	/* dt -> msg */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_DirectTransfer,
-						RANAP_Criticality_reject,
+						RANAP_Criticality_ignore,
 						&asn_DEF_RANAP_DirectTransfer,
 						&dt);
 
@@ -467,7 +467,7 @@ struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, in
 
 	/* out -> msg */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_Paging,
-						RANAP_Criticality_reject,
+						RANAP_Criticality_ignore,
 						&asn_DEF_RANAP_Paging,
 						&out);
 
@@ -912,7 +912,7 @@ struct msgb *ranap_new_msg_iu_rel_req(const RANAP_Cause_t *cause)
 
 	/* encode the output into the msgb */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_Iu_ReleaseRequest,
-						RANAP_Criticality_reject,
+						RANAP_Criticality_ignore,
 						&asn_DEF_RANAP_Iu_ReleaseRequest, &out);
 
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_Iu_ReleaseRequest, &out);
@@ -955,7 +955,7 @@ struct msgb *ranap_new_msg_rab_rel_req(uint8_t rab_id, const RANAP_Cause_t *caus
 
 	/* encode the output into the msgb */
 	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_RAB_ReleaseRequest,
-						RANAP_Criticality_reject,
+						RANAP_Criticality_ignore,
 						&asn_DEF_RANAP_RAB_ReleaseRequest, &out);
 
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_ReleaseRequest, &out);
