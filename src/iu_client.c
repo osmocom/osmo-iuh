@@ -603,8 +603,24 @@ static void cn_ranap_handle_co(void *ctx, ranap_message *message)
 
 static int ranap_handle_cl_reset_req(void *ctx, RANAP_ResetIEs_t *ies)
 {
-	/* FIXME: send reset response */
-	return -1;
+	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) ctx;
+	struct osmo_scu_unitdata_param *ud_prim = &prim->u.unitdata;
+	RANAP_GlobalRNC_ID_t *grnc_id = NULL;
+	struct msgb *resp;
+
+	OSMO_ASSERT(prim->oph.primitive == OSMO_SCU_PRIM_N_UNITDATA);
+
+	/* FIXME: verify ies.cN_DomainIndicator */
+
+	if (ies->presenceMask & RESETIES_RANAP_GLOBALRNC_ID_PRESENT)
+		grnc_id = &ies->globalRNC_ID;
+
+	/* send reset response */
+	resp = ranap_new_msg_reset_ack(ies->cN_DomainIndicator, grnc_id);
+	if (!resp)
+		return -ENOMEM;
+	resp->l2h = resp->data;
+	return osmo_sccp_tx_unitdata_msg(g_scu, &g_local_sccp_addr, &ud_prim->calling_addr, resp);
 }
 
 static int ranap_handle_cl_err_ind(void *ctx, RANAP_ErrorIndicationIEs_t *ies)
@@ -795,7 +811,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		/* connection-less data received */
 		LOGPIU(LOGL_DEBUG, "N-UNITDATA.ind(%s)\n",
 		       osmo_hexdump(msgb_l2(oph->msg), msgb_l2len(oph->msg)));
-		rc = ranap_cn_rx_cl(cn_ranap_handle_cl, scu, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+		rc = ranap_cn_rx_cl(cn_ranap_handle_cl, prim, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 		break;
 	default:
 		rc = -1;
