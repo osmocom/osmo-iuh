@@ -1,10 +1,10 @@
-SUBDIRS = hnbap rua ranap tests
+SUBDIRS = hnbap rua ranap sabp tests
 
 # Build {hnbap,rua,ranap}_{encoder,decoder}.c using asn1tostruct
 ASN1_ROOT = $(top_srcdir)/asn1
 ASN1TOSTRUCT = $(ASN1_ROOT)/utils/asn1tostruct.py
-BUILT_SOURCES = hnbap_decoder.c hnbap_encoder.c rua_decoder.c rua_encoder.c \
-	gen_hnbap.stamp gen_rua.stamp gen_ranap.stamp
+BUILT_SOURCES = hnbap_decoder.c hnbap_encoder.c rua_decoder.c rua_encoder.c sabp_encoder.c sabp_decoder.c \
+	gen_hnbap.stamp gen_rua.stamp gen_ranap.stamp gen_sabp.stamp
 
 gen_hnbap.stamp: $(ASN1_ROOT)/hnbap/HNBAP-PDU-Contents.asn $(ASN1TOSTRUCT)
 	$(ASN1TOSTRUCT) -f $<
@@ -42,19 +42,39 @@ gen_ranap.stamp: $(ASN1_ROOT)/ranap/RANAP-PDU-Contents.asn $(ASN1TOSTRUCT)
 
 ranap_decoder.c ranap_encoder.c: gen_ranap.stamp
 
+gen_sabp.stamp: $(ASN1_ROOT)/sabp/SABP-PDU-Contents.asn $(ASN1TOSTRUCT)
+	$(ASN1TOSTRUCT) -p SABP_ -f $<
+#	We also need to replace the include in the newly generated .c files:
+	sed -i 's,^#include "sabp_ies_defs.h",#include <osmocom/sabp/sabp_ies_defs.h>,' sabp_encoder.c sabp_decoder.c
+	sed -i 's,^#include "sabp_common.h",#include <osmocom/sabp/sabp_common.h>,' sabp_encoder.c sabp_decoder.c sabp_ies_defs.h
+	mv sabp_ies_defs.h $(top_builddir)/include/osmocom/sabp/
+#	this is ugly ^. sabp_ies_defs.h is generated from asn1tostruct.py here, but
+#	it should live in include/osmocom/sabp/.
+	touch $(top_builddir)/src/$@
+
+sabp_decoder.c sabp_encoder.c: gen_sabp.stamp
+
+
 AM_CFLAGS = -Wall -I$(top_srcdir)/include -I$(top_builddir)/include \
 	    $(OSMOCORE_CFLAGS) $(OSMOVTY_CFLAGS) $(OSMOCTRL_CFLAGS) $(OSMOGSM_CFLAGS) \
 	    $(OSMONETIF_CFLAGS) $(ASN1C_CFLAGS) $(OSMOSIGTRAN_CFLAGS)
 
-# build the shared RANAP library
+# build the shared RANAP + SABP library
 #
 RANAP_LIBVERSION=2:2:0
-lib_LTLIBRARIES = libosmo-ranap.la
+SABP_LIBVERSION=0:0:0
+lib_LTLIBRARIES = libosmo-ranap.la libosmo-sabp.la
 libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION)
 libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
 			  $(ASN1C_LIBS) ranap/libosmo-asn1-ranap.la
 libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_msg_factory.c iu_helpers.c \
 			   ranap_common_cn.c iu_client.c iu_client_vty.c
+
+libosmo_sabp_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(SABP_LIBVERSION)
+libosmo_sabp_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
+			  $(ASN1C_LIBS) sabp/libosmo-asn1-sabp.la
+libosmo_sabp_la_SOURCES = sabp_common.c sabp_encoder.c sabp_decoder.c 
+
 
 # build the actual HomeNodeB gateway
 #
@@ -80,6 +100,7 @@ regenerate-from-asn1-source:
 	$(MAKE) -C hnbap regen
 	$(MAKE) -C ranap regen
 	$(MAKE) -C rua regen
+	$(MAKE) -C sabp regen
 
 DISTCLEANFILES = \
 	hnbap_decoder.c \
@@ -88,6 +109,9 @@ DISTCLEANFILES = \
 	rua_encoder.c \
 	ranap_decoder.c \
 	ranap_encoder.c \
+	sabp_decoder.c \
+	sabp_encoder.c \
 	gen_hnbap.stamp \
 	gen_rua.stamp \
-	gen_ranap.stamp
+	gen_ranap.stamp \
+	gen_sabp.stamp

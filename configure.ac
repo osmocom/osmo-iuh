@@ -142,10 +142,12 @@ AC_MSG_RESULT([CPPFLAGS="$CPPFLAGS"])
 
 AC_OUTPUT(
 	libosmo-ranap.pc
+	libosmo-sabp.pc
 	src/Makefile
 	src/hnbap/Makefile
 	src/ranap/Makefile
 	src/rua/Makefile
+	src/sabp/Makefile
 	src/tests/Makefile
 	Makefile
 	include/Makefile
@@ -153,6 +155,7 @@ AC_OUTPUT(
 	include/osmocom/hnbap/Makefile
 	include/osmocom/ranap/Makefile
 	include/osmocom/rua/Makefile
+	include/osmocom/sabp/Makefile
 	include/osmocom/iuh/Makefile
 	doc/Makefile
 	doc/examples/Makefile

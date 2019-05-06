@@ -34,6 +34,7 @@ src/tests/testsuite.log
 src/osmo-hnbgw
 tags
 libosmo-ranap.pc
+libosmo-sabp.pc
 m4
 gen_hnbap.stamp
 gen_rua.stamp
@@ -41,3 +42,4 @@ gen_ranap.stamp
 include/osmocom/hnbap/hnbap_ies_defs.h
 include/osmocom/rua/rua_ies_defs.h
 include/osmocom/ranap/ranap_ies_defs.h
+include/osmocom/sabp/sabp_ies_defs.h
