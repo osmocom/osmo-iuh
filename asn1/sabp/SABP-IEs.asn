@@ -12,6 +12,7 @@ IMPORTS
  maxNrOfErrors,
  maxnoofSAI,
  maxNrOfLevels,
+ maxProtocolExtensions,
  id-MessageStructure,
  id-TypeOfError
 FROM SABP-Constants
@@ -20,9 +21,11 @@ FROM SABP-Constants
  TriggeringMessage,
  ProtocolIE-ID
 FROM SABP-CommonDataTypes
- ProtocolExtensionContainer{},
- SABP-PROTOCOL-EXTENSION
-FROM SABP-Containers;
+ IE
+FROM SABP-PDU;
+
+IE-Extensions ::= SEQUENCE (SIZE (1..maxProtocolExtensions)) OF IE
+
 -- A
 Available-Bandwidth ::= INTEGER (0..20480)
 -- bits/sec
@@ -66,7 +69,7 @@ Criticality-Diagnostics ::= SEQUENCE {
  triggeringMessage TriggeringMessage OPTIONAL,
  procedureCriticality Criticality OPTIONAL,
  iEsCriticalityDiagnostics CriticalityDiagnostics-IE-List OPTIONAL,
- iE-Extensions ProtocolExtensionContainer { {CriticalityDiagnostics-ExtIEs} } OPTIONAL,
+ iE-Extensions IE-Extensions OPTIONAL,
  ...
 }
 CriticalityDiagnostics-ExtIEs SABP-PROTOCOL-EXTENSION ::= {
@@ -77,19 +80,19 @@ CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF
  iECriticality Criticality,
  iE-ID ProtocolIE-ID,
  repetitionNumber RepetitionNumber0 OPTIONAL,
- iE-Extensions ProtocolExtensionContainer { {CriticalityDiagnostics-IE-List-ExtIEs} } OPTIONAL,
+ iE-Extensions IE-Extensions OPTIONAL,
  ...
  }
 CriticalityDiagnostics-IE-List-ExtIEs SABP-PROTOCOL-EXTENSION ::= {
- { ID id-MessageStructure CRITICALITY ignore EXTENSION MessageStructure PRESENCE optional }|
- { ID id-TypeOfError CRITICALITY ignore EXTENSION TypeOfError PRESENCE mandatory },
+ -- { ID id-MessageStructure CRITICALITY ignore EXTENSION MessageStructure PRESENCE optional }|
+ -- { ID id-TypeOfError CRITICALITY ignore EXTENSION TypeOfError PRESENCE mandatory },
  ...
 }
 MessageStructure ::= SEQUENCE (SIZE (1..maxNrOfLevels)) OF
  SEQUENCE {
  iE-ID ProtocolIE-ID,
  repetitionNumber RepetitionNumber1 OPTIONAL,
- iE-Extensions ProtocolExtensionContainer { {MessageStructure-ExtIEs} } OPTIONAL,
+ iE-Extensions IE-Extensions OPTIONAL,
  ...
  }
 MessageStructure-ExtIEs SABP-PROTOCOL-EXTENSION ::= {
@@ -103,7 +106,7 @@ Failure-List ::= SEQUENCE (SIZE (1..maxnoofSAI)) OF Failure-List-Item
 Failure-List-Item ::= SEQUENCE {
  service-area-identifier Service-Area-Identifier,
  cause Cause,
- iE-Extensions ProtocolExtensionContainer { {FailureListItemIE-ExtIEs} } OPTIONAL,
+ iE-Extensions IE-Extensions OPTIONAL,
  ...
 }
 FailureListItemIE-ExtIEs SABP-PROTOCOL-EXTENSION ::= {
@@ -125,7 +128,7 @@ Number-of-Broadcasts-Completed-List-Item ::= SEQUENCE {
  service-area-identifier Service-Area-Identifier,
  number-of-broadcasts-completed INTEGER (0..65535),
  number-of-broadcasts-completed-info Number-Of-Broadcasts-Completed-Info OPTIONAL,
- iE-Extensions ProtocolExtensionContainer { {NoOfBroadcastsCompletedListItemIE-ExtIEs} } OPTIONAL,
+ iE-Extensions IE-Extensions OPTIONAL,
  ...
 }
 NoOfBroadcastsCompletedListItemIE-ExtIEs SABP-PROTOCOL-EXTENSION ::= {
@@ -153,7 +156,7 @@ Radio-Resource-Loading-List ::= SEQUENCE (SIZE (1..maxnoofSAI)) OF
 Radio-Resource-Loading-List-Item ::= SEQUENCE {
  service-area-identifier Service-Area-Identifier,
  available-bandwidth Available-Bandwidth,
- iE-Extensions ProtocolExtensionContainer { {RadioResourceLoadingListItemIE-ExtIEs} } OPTIONAL,
+ iE-Extensions IE-Extensions OPTIONAL,
  ...
 }
 RadioResourceLoadingListItemIE-ExtIEs SABP-PROTOCOL-EXTENSION ::= {
