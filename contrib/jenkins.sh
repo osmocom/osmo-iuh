@@ -55,5 +55,6 @@ $MAKE check \
   || cat-testlogs.sh
 $MAKE distcheck \
   || cat-testlogs.sh
+$MAKE maintainer-clean
 
 osmo-clean-workspace.sh
