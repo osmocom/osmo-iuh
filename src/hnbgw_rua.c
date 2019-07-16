@@ -505,7 +505,7 @@ static int rua_rx_initiating_msg(struct msgb *msg, RUA_InitiatingMessage_t *imsg
 static int rua_rx_successful_outcome_msg(struct msgb *msg, RUA_SuccessfulOutcome_t *in)
 {
 	/* FIXME */
-	LOGP(DRUA, LOGL_NOTICE, "Unexpected RUA Sucessful Outcome\n");
+	LOGP(DRUA, LOGL_NOTICE, "Unexpected RUA Successful Outcome\n");
 	return -1;
 }
 
