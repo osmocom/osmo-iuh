@@ -1,4 +1,7 @@
-SUBDIRS = examples
+SUBDIRS = \
+	  examples \
+	  manuals \
+	  $(NULL)
 
 EXTRA_DIST = \
   hnb_cs_lu.msc \
