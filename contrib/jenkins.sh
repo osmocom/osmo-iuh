@@ -15,6 +15,7 @@ verify_value_string_arrays_are_terminated.py $(find . -name "*.[hc]")
 
 export PKG_CONFIG_PATH="$inst/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$inst/lib"
+export PATH="$inst/bin:$PATH"
 
 osmo-build-dep.sh libosmocore "" --disable-doxygen
 osmo-build-dep.sh libosmo-abis
@@ -25,6 +26,12 @@ osmo-build-dep.sh libasn1c
 # the asn1c binary is used by the 'regen' target below
 osmo-build-dep.sh asn1c aper-prefix
 
+CONFIG=""
+if [ "$WITH_MANUALS" = "1" ]; then
+	osmo-build-dep.sh osmo-gsm-manuals
+	CONFIG="--enable-manuals"
+fi
+
 set +x
 echo
 echo
@@ -34,7 +41,7 @@ echo
 set -x
 
 autoreconf --install --force
-./configure --enable-sanitize
+./configure --enable-sanitize $CONFIG
 
 # Verify that checked-in asn1 code is identical to regenerated asn1 code
 PATH="$inst/bin:$PATH" $MAKE $PARALLEL_MAKE -C src regen
@@ -55,6 +62,10 @@ $MAKE check \
   || cat-testlogs.sh
 $MAKE distcheck \
   || cat-testlogs.sh
-$MAKE maintainer-clean
 
+if [ "$WITH_MANUALS" = "1" ] && [ "$PUBLISH" = "1" ]; then
+	make -C "$base/doc/manuals" publish
+fi
+
+$MAKE maintainer-clean
 osmo-clean-workspace.sh
