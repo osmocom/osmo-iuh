@@ -1,3 +1,33 @@
+osmo-iuh (0.5.0) unstable; urgency=medium
+
+  [ Neels Hofmeyr ]
+  * ranap_msg_factory.h: fix enum def within function signature
+  * osmo-hnbgw: fix cmdline: do not force-disable colored logging
+  * osmo-hnbgw: set a proper talloc ctx for logging
+  * osmo-hnbgw: logging tweaks
+  * osmo-hnbgw: reply with RESET ACK when receiving a RESET
+
+  [ Oliver Smith ]
+  * tests: use -no-install libtool flag to avoid ./lt-* scripts
+  * contrib/jenkins.sh: run "make maintainer-clean"
+  * osmo-hnbgw.cfg: set local-ip to 0.0.0.0
+
+  [ Harald Welte ]
+  * iu_client: Implement transmission of ResetAcknowledge
+  * ranap_msg_factory: Fix criticality of PDUs
+
+  [ Thorsten Alteholz ]
+  * spelling stuff found by lintian
+
+  [ Daniel Willmann ]
+  * Add VTY reference manual
+  * jenkins: Enable manual publishing and building
+
+  [ Pau Espin Pedrol ]
+  * Remove undefined param passed to {logging,osmo_stats}_vty_add_cmds
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Wed, 07 Aug 2019 21:23:57 +0200
+
 osmo-iuh (0.4.0) unstable; urgency=medium
 
   [ Bernhard M. Wiedemann ]

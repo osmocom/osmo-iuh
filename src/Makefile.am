@@ -48,7 +48,7 @@ AM_CFLAGS = -Wall -I$(top_srcdir)/include -I$(top_builddir)/include \
 
 # build the shared RANAP library
 #
-RANAP_LIBVERSION=2:1:0
+RANAP_LIBVERSION=2:2:0
 lib_LTLIBRARIES = libosmo-ranap.la
 libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION)
 libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \

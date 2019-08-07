@@ -11,10 +11,9 @@ Build-Depends: debhelper (>=9),
                git,
                libasn1c-dev,
                libsctp-dev,
-               libosmo-netif-dev,
-               libosmocore-dev,
-               libosmo-netif-dev,
-               libosmo-sigtran-dev (>= 0.8.0),
+               libosmocore-dev (>= 0.12.0),
+               libosmo-netif-dev (>= 0.3.0),
+               libosmo-sigtran-dev (>= 0.10.0),
                python (>= 2.7)
 Standards-Version: 3.9.8
 Vcs-Git: git://git.osmocom.org/osmo-iuh.git
