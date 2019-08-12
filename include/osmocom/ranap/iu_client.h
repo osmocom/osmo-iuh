@@ -70,5 +70,9 @@ int ranap_iu_tx_sec_mode_cmd(struct ranap_ue_conn_ctx *uectx, struct osmo_auth_v
 int ranap_iu_tx_common_id(struct ranap_ue_conn_ctx *ue_ctx, const char *imsi);
 int ranap_iu_tx_release(struct ranap_ue_conn_ctx *ctx, const struct RANAP_Cause *cause);
 
+/* freeing the UE will release all resources
+ * This will close the SCCP connection connected to the UE */
+void ranap_iu_free_ue(struct ranap_ue_conn_ctx *ue_ctx);
+
 void ranap_iu_vty_init(int iu_parent_node, enum ranap_nsap_addr_enc *rab_assign_addr_enc);
 int ranap_iu_vty_config_write(struct vty *vty, const char *indent);
