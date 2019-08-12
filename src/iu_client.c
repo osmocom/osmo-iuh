@@ -132,6 +132,16 @@ static struct ranap_ue_conn_ctx *ue_conn_ctx_find(uint32_t conn_id)
 	return NULL;
 }
 
+void ranap_iu_free_ue(struct ranap_ue_conn_ctx *ue_ctx)
+{
+	if (!ue_ctx)
+		return;
+
+	osmo_sccp_tx_disconn(g_scu, ue_ctx->conn_id, NULL, 0);
+	llist_del(&ue_ctx->list);
+	talloc_free(ue_ctx);
+}
+
 static struct ranap_iu_rnc *iu_rnc_alloc(uint16_t rnc_id, struct osmo_sccp_addr *addr)
 {
 	struct ranap_iu_rnc *rnc = talloc_zero(talloc_iu_ctx, struct ranap_iu_rnc);
