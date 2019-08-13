@@ -812,6 +812,13 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		rc = 0;
 		if (msgb_l2len(oph->msg) > 0)
 			rc = ranap_cn_rx_co(cn_ranap_handle_co, ue, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+
+		/* A Iu Release event might be used to free the UE in cn_ranap_handle_co. */
+		ue = ue_conn_ctx_find(prim->u.disconnect.conn_id);
+		if (!ue)
+			break;
+
+		global_iu_event_cb(ue, RANAP_IU_EVENT_LINK_INVALIDATED, NULL);
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DATA, PRIM_OP_INDICATION):
 		/* connection-oriented data received */
