@@ -23,6 +23,11 @@ enum ranap_nsap_addr_enc {
 	RANAP_NSAP_ADDR_ENC_V4RAW,
 };
 
+enum ranap_conn_state {
+	RANAP_CONN_STATE_CONNECTED,
+	RANAP_CONN_STATE_DISCONNECTED,
+};
+
 struct ranap_ue_conn_ctx {
 	struct llist_head list;
 	struct ranap_iu_rnc *rnc;
@@ -30,6 +35,7 @@ struct ranap_ue_conn_ctx {
 	int integrity_active;
 	struct gprs_ra_id ra_id;
 	enum ranap_nsap_addr_enc rab_assign_addr_enc;
+	enum ranap_conn_state conn_state;
 };
 
 enum ranap_iu_event_type {

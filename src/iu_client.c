@@ -116,6 +116,7 @@ static struct ranap_ue_conn_ctx *ue_conn_ctx_alloc(struct ranap_iu_rnc *rnc, uin
 
 	ctx->rnc = rnc;
 	ctx->conn_id = conn_id;
+	ctx->conn_state = RANAP_CONN_STATE_CONNECTED;
 	llist_add(&ctx->list, &ue_conn_ctx_list);
 
 	return ctx;
@@ -137,7 +138,9 @@ void ranap_iu_free_ue(struct ranap_ue_conn_ctx *ue_ctx)
 	if (!ue_ctx)
 		return;
 
-	osmo_sccp_tx_disconn(g_scu, ue_ctx->conn_id, NULL, 0);
+	if (ue_ctx->conn_state == RANAP_CONN_STATE_CONNECTED)
+		osmo_sccp_tx_disconn(g_scu, ue_ctx->conn_id, NULL, 0);
+
 	llist_del(&ue_ctx->list);
 	talloc_free(ue_ctx);
 }
@@ -814,6 +817,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		if (msgb_l2len(oph->msg))
 			rc = ranap_cn_rx_co(cn_ranap_handle_co, ue, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 
+		ue->conn_state = RANAP_CONN_STATE_DISCONNECTED;
 		global_iu_event_cb(ue, RANAP_IU_EVENT_LINK_INVALIDATED, NULL);
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DATA, PRIM_OP_INDICATION):
