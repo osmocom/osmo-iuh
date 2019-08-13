@@ -37,6 +37,7 @@ enum ranap_iu_event_type {
 	RANAP_IU_EVENT_SECURITY_MODE_COMPLETE,
 	RANAP_IU_EVENT_IU_RELEASE, /* An actual Iu Release message was received */
 	RANAP_IU_EVENT_LINK_INVALIDATED, /* A SUA link was lost or closed down */
+	RANAP_IU_EVENT_SECURITY_MODE_FAILED, /* FIXME: unimplemented */
 };
 
 extern const struct value_string ranap_iu_event_type_names[];
