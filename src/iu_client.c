@@ -765,7 +765,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 	struct osmo_sccp_user *scu = _scu;
 	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) oph;
 	struct osmo_prim_hdr *resp = NULL;
-	int rc;
+	int rc = -1;
 	struct ranap_ue_conn_ctx *ue;
 	struct new_ue_conn_ctx new_ctx = {};
 
@@ -774,7 +774,6 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 	switch (OSMO_PRIM_HDR(oph)) {
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_CONNECT, PRIM_OP_CONFIRM):
 		/* confirmation of outbound connection */
-		rc = -1;
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_CONNECT, PRIM_OP_INDICATION):
 		/* indication of new inbound connection request*/
@@ -815,7 +814,6 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		rc = ranap_cn_rx_cl(cn_ranap_handle_cl, prim, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 		break;
 	default:
-		rc = -1;
 		break;
 	}
 
