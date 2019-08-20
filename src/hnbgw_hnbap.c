@@ -417,6 +417,8 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 	HNBRegisterRequestIEs_t ies;
 	int rc;
 
+	ctx->hnb_register_attempted = true;
+
 	rc = hnbap_decode_hnbregisterrequesties(&ies, in);
 	if (rc < 0) {
 		LOGP(DHNBAP, LOGL_ERROR, "Failure to decode HNB-REGISTER-REQ from %s: rc=%d\n",

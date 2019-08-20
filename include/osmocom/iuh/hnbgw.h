@@ -99,6 +99,7 @@ struct hnb_context {
 
 	/*! True if a HNB-REGISTER-REQ from this HNB has been accepted. Note that
 	 * this entire data structure is freed if the HNB sends HNB-DE-REGISTER-REQ. */
+	bool hnb_register_attempted;
 	bool hnb_registered;
 
 	/* linked list of hnbgw_context_map */

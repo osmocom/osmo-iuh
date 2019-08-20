@@ -287,7 +287,7 @@ struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_
 
 	ctx->gw = gw;
 	ctx->conn = osmo_stream_srv_create(tall_hnb_ctx, link, new_fd, hnb_read_cb, NULL, ctx);
-	if (!ctx->conn) {
+	if (!ctx->conn || (ctx->hnb_register_attempted && !ctx->hnb_registered)) {
 		LOGP(DMAIN, LOGL_INFO, "error while creating connection\n");
 		talloc_free(ctx);
 		return NULL;
