@@ -437,10 +437,14 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 		if (hnb->hnb_registered && ctx != hnb && memcmp(&ctx->id, &hnb->id, sizeof(ctx->id)) == 0) {
 			struct osmo_fd *ofd = osmo_stream_srv_get_ofd(ctx->conn);
 			char *name = osmo_sock_get_name(ctx, ofd->fd);
+			struct osmo_fd *ofd2 = osmo_stream_srv_get_ofd(hnb->conn);
+			char *name2 = ofd2 ? osmo_sock_get_name(ctx, ofd2->fd) : "(null)";
 			LOGP(DHNBAP, LOGL_ERROR, "rejecting HNB-REGISTER-REQ with duplicate cell identity "
-			     "MCC=%u,MNC=%u,LAC=%u,RAC=%u,SAC=%u,CID=%u from %s\n",
-			     ctx->id.mcc, ctx->id.mnc, ctx->id.lac, ctx->id.rac, ctx->id.sac, ctx->id.cid, name);
+			     "MCC=%u,MNC=%u,LAC=%u,RAC=%u,SAC=%u,CID=%u from %s"
+			     ", duplicates %s\n",
+			     ctx->id.mcc, ctx->id.mnc, ctx->id.lac, ctx->id.rac, ctx->id.sac, ctx->id.cid, name, name2);
 			talloc_free(name);
+			talloc_free(name2);
 			return hnbgw_tx_hnb_register_rej(ctx);
 		}
 	}
