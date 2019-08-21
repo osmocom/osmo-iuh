@@ -136,6 +136,7 @@ static struct ranap_ue_conn_ctx *ue_conn_ctx_find(uint32_t conn_id)
 void ranap_iu_free_ue(struct ranap_ue_conn_ctx *ue_ctx)
 {
 	LOGPIU(LOGL_ERROR, "RANAP iu FREE on %p", ue_ctx);
+	osmo_log_backtrace(iu_log_subsystem, LOGL_ERROR);
 	if (!ue_ctx)
 		return;
 
