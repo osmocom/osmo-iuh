@@ -138,10 +138,11 @@ void ranap_iu_free_ue(struct ranap_ue_conn_ctx *ue_ctx)
 	if (!ue_ctx)
 		return;
 
+	llist_del(&ue_ctx->list);
+
 	if (ue_ctx->conn_state == RANAP_CONN_STATE_CONNECTED)
 		osmo_sccp_tx_disconn(g_scu, ue_ctx->conn_id, NULL, 0);
 
-	llist_del(&ue_ctx->list);
 	talloc_free(ue_ctx);
 }
 
