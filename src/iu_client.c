@@ -135,13 +135,27 @@ static struct ranap_ue_conn_ctx *ue_conn_ctx_find(uint32_t conn_id)
 
 void ranap_iu_free_ue(struct ranap_ue_conn_ctx *ue_ctx)
 {
+	struct ranap_ue_conn_ctx *tmp;
+	bool found = false;
+
 	if (!ue_ctx)
+		return;
+
+	llist_for_each_entry(tmp, &ue_conn_ctx_list, list) {
+		if (tmp == ue_ctx) {
+			found = true;
+			break;
+		}
+	}
+
+	if (!found)
 		return;
 
 	if (ue_ctx->conn_state == RANAP_CONN_STATE_CONNECTED)
 		osmo_sccp_tx_disconn(g_scu, ue_ctx->conn_id, NULL, 0);
 
 	llist_del(&ue_ctx->list);
+
 	talloc_free(ue_ctx);
 }
 
