@@ -820,6 +820,11 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		if (msgb_l2len(oph->msg))
 			rc = ranap_cn_rx_co(cn_ranap_handle_co, ue, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 
+		/* A Iu Release event might be used to free the UE in cn_ranap_handle_co. */
+		ue = ue_conn_ctx_find(prim->u.disconnect.conn_id);
+		if (!ue)
+			break;
+
 		ue->conn_state = RANAP_CONN_STATE_DISCONNECTED;
 		global_iu_event_cb(ue, RANAP_IU_EVENT_LINK_INVALIDATED, NULL);
 		break;
