@@ -231,7 +231,7 @@ DEFUN(show_one_hnb, show_one_hnb_cmd, "show hnb NAME ", SHOW_STR "Display inform
 		return CMD_SUCCESS;
 	}
 
-	hnb = hnb_context_by_identity_info(&g_hnb_gw, identity_info);
+	hnb = hnb_context_by_identity_info(g_hnb_gw, identity_info);
 	if (hnb == NULL) {
 		vty_out(vty, "No HNB found with identity '%s'%s", identity_info, VTY_NEWLINE);
 		return CMD_SUCCESS;
