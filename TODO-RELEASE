@@ -9,3 +9,4 @@
 #library	what		description / commit summary line
 libranap    iu_client.h struct ranap_ue_conn_ctx: add field notification
 libranap    iu_client.h struct ranap_ue_conn_ctx: add field release_timeout
+libranap    iu_client.h struct ranap_ue_conn_ctx: add field free_on_release

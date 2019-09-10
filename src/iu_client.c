@@ -129,6 +129,7 @@ static struct ranap_ue_conn_ctx *ue_conn_ctx_alloc(struct ranap_iu_rnc *rnc, uin
 	ctx->rnc = rnc;
 	ctx->conn_id = conn_id;
 	ctx->notification = true;
+	ctx->free_on_release = false;
 	osmo_timer_setup(&ctx->release_timeout,
 			 (void *)(void *) ranap_iu_free_ue,
 			 ctx);
@@ -500,6 +501,7 @@ void ranap_iu_tx_release_free(struct ranap_ue_conn_ctx *ctx,
 			     int timeout)
 {
 	ctx->notification = false;
+	ctx->free_on_release = true;
 	int ret = ranap_iu_tx_release(ctx, cause);
 	if (ret) {
 		ranap_iu_free_ue(ctx);
@@ -851,6 +853,13 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 			break;
 
 		global_iu_event(ue, RANAP_IU_EVENT_LINK_INVALIDATED, NULL);
+
+		/* A RANAP_IU_EVENT_LINK_INVALIDATED, can lead to a free */
+		ue = ue_conn_ctx_find(prim->u.disconnect.conn_id);
+		if (!ue)
+			break;
+		if (ue->free_on_release)
+			ranap_iu_free_ue(ue);
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DATA, PRIM_OP_INDICATION):
 		/* connection-oriented data received */

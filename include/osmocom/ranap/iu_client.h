@@ -31,6 +31,8 @@ struct ranap_ue_conn_ctx {
 	struct gprs_ra_id ra_id;
 	enum ranap_nsap_addr_enc rab_assign_addr_enc;
 	bool notification; /* send notification to the upstream user */
+	/* if true the ue_ctx will be free on Iu release complete */
+	bool free_on_release;
 	/* Will be set when the Iu Release Command has been sent */
 	struct osmo_timer_list release_timeout;
 };
