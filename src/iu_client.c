@@ -129,6 +129,9 @@ static struct ranap_ue_conn_ctx *ue_conn_ctx_alloc(struct ranap_iu_rnc *rnc, uin
 	ctx->rnc = rnc;
 	ctx->conn_id = conn_id;
 	ctx->notification = true;
+	osmo_timer_setup(&ctx->release_timeout,
+			 (void *)(void *) ranap_iu_free_ue,
+			 ctx);
 	llist_add(&ctx->list, &ue_conn_ctx_list);
 
 	return ctx;
@@ -150,6 +153,7 @@ void ranap_iu_free_ue(struct ranap_ue_conn_ctx *ue_ctx)
 	if (!ue_ctx)
 		return;
 
+	osmo_timer_del(&ue_ctx->release_timeout);
 	osmo_sccp_tx_disconn(g_scu, ue_ctx->conn_id, NULL, 0);
 	llist_del(&ue_ctx->list);
 	talloc_free(ue_ctx);
@@ -489,6 +493,20 @@ int ranap_iu_tx_release(struct ranap_ue_conn_ctx *ctx, const struct RANAP_Cause 
 			OSMO_SCU_PRIM_N_DATA,
 			PRIM_OP_REQUEST, msg);
 	return osmo_sccp_user_sap_down(g_scu, &prim->oph);
+}
+
+void ranap_iu_tx_release_free(struct ranap_ue_conn_ctx *ctx,
+			     const struct RANAP_Cause *cause,
+			     int timeout)
+{
+	ctx->notification = false;
+	int ret = ranap_iu_tx_release(ctx, cause);
+	if (ret) {
+		ranap_iu_free_ue(ctx);
+		return;
+	}
+
+	osmo_timer_schedule(&ctx->release_timeout, timeout, 0);
 }
 
 static int ranap_handle_co_iu_rel_req(struct ranap_ue_conn_ctx *ctx, RANAP_Iu_ReleaseRequestIEs_t *ies)

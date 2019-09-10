@@ -31,6 +31,8 @@ struct ranap_ue_conn_ctx {
 	struct gprs_ra_id ra_id;
 	enum ranap_nsap_addr_enc rab_assign_addr_enc;
 	bool notification; /* send notification to the upstream user */
+	/* Will be set when the Iu Release Command has been sent */
+	struct osmo_timer_list release_timeout;
 };
 
 enum ranap_iu_event_type {
@@ -70,6 +72,13 @@ int ranap_iu_tx_sec_mode_cmd(struct ranap_ue_conn_ctx *uectx, struct osmo_auth_v
 			     int send_ck, int new_key);
 int ranap_iu_tx_common_id(struct ranap_ue_conn_ctx *ue_ctx, const char *imsi);
 int ranap_iu_tx_release(struct ranap_ue_conn_ctx *ctx, const struct RANAP_Cause *cause);
+
+/* transmit a Iu Release Command and free the ctx afterwards.
+ * If a Release Complete is not received within timeout s,
+ * release the SCCP connection. */
+void ranap_iu_tx_release_free(struct ranap_ue_conn_ctx *ctx,
+			      const struct RANAP_Cause *cause,
+			      int timeout);
 
 /* freeing the UE will release all resources
  * This will close the SCCP connection connected to the UE */
