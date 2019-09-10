@@ -109,6 +109,16 @@ const struct value_string ranap_iu_event_type_names[] = {
 	{ 0, NULL }
 };
 
+static int global_iu_event(struct ranap_ue_conn_ctx *ue_ctx,
+			   enum ranap_iu_event_type type,
+			   void *data)
+{
+	if (!global_iu_event_cb)
+		return 0;
+
+	return global_iu_event_cb(ue_ctx, type, data);
+}
+
 static struct ranap_ue_conn_ctx *ue_conn_ctx_alloc(struct ranap_iu_rnc *rnc, uint32_t conn_id)
 {
 	struct ranap_ue_conn_ctx *ctx = talloc_zero(talloc_iu_ctx, struct ranap_ue_conn_ctx);
@@ -501,7 +511,7 @@ static int ranap_handle_co_rab_ass_resp(struct ranap_ue_conn_ctx *ctx, RANAP_RAB
 			return rc;
 		}
 
-		rc = global_iu_event_cb(ctx, RANAP_IU_EVENT_RAB_ASSIGN, &setup_ies);
+		rc = global_iu_event(ctx, RANAP_IU_EVENT_RAB_ASSIGN, &setup_ies);
 
 		ranap_free_rab_setupormodifieditemies(&setup_ies);
 	}
@@ -567,11 +577,11 @@ static void cn_ranap_handle_co(void *ctx, ranap_message *message)
 		switch (message->procedureCode) {
 		case RANAP_ProcedureCode_id_SecurityModeControl:
 			/* Security Mode Complete */
-			rc = global_iu_event_cb(ctx, RANAP_IU_EVENT_SECURITY_MODE_COMPLETE, NULL);
+			rc = global_iu_event(ctx, RANAP_IU_EVENT_SECURITY_MODE_COMPLETE, NULL);
 			break;
 		case RANAP_ProcedureCode_id_Iu_Release:
 			/* Iu Release Complete */
-			rc = global_iu_event_cb(ctx, RANAP_IU_EVENT_IU_RELEASE, NULL);
+			rc = global_iu_event(ctx, RANAP_IU_EVENT_IU_RELEASE, NULL);
 			if (rc) {
 				LOGPIU(LOGL_ERROR, "Iu Release event: Iu Event callback returned %d\n",
 				       rc);
@@ -818,7 +828,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		if (!ue)
 			break;
 
-		global_iu_event_cb(ue, RANAP_IU_EVENT_LINK_INVALIDATED, NULL);
+		global_iu_event(ue, RANAP_IU_EVENT_LINK_INVALIDATED, NULL);
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DATA, PRIM_OP_INDICATION):
 		/* connection-oriented data received */
