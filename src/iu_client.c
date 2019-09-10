@@ -116,6 +116,9 @@ static int global_iu_event(struct ranap_ue_conn_ctx *ue_ctx,
 	if (!global_iu_event_cb)
 		return 0;
 
+	if (!ue_ctx->notification)
+		return 0;
+
 	return global_iu_event_cb(ue_ctx, type, data);
 }
 
@@ -125,6 +128,7 @@ static struct ranap_ue_conn_ctx *ue_conn_ctx_alloc(struct ranap_iu_rnc *rnc, uin
 
 	ctx->rnc = rnc;
 	ctx->conn_id = conn_id;
+	ctx->notification = true;
 	llist_add(&ctx->list, &ue_conn_ctx_list);
 
 	return ctx;

@@ -30,6 +30,7 @@ struct ranap_ue_conn_ctx {
 	int integrity_active;
 	struct gprs_ra_id ra_id;
 	enum ranap_nsap_addr_enc rab_assign_addr_enc;
+	bool notification; /* send notification to the upstream user */
 };
 
 enum ranap_iu_event_type {
