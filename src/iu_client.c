@@ -306,9 +306,7 @@ int ranap_iu_tx_sec_mode_cmd(struct ranap_ue_conn_ctx *uectx, struct osmo_auth_v
 	osmo_prim_init(&prim->oph, SCCP_SAP_USER,
 			OSMO_SCU_PRIM_N_DATA,
 			PRIM_OP_REQUEST, msg);
-	osmo_sccp_user_sap_down(g_scu, &prim->oph);
-
-	return 0;
+	return osmo_sccp_user_sap_down(g_scu, &prim->oph);
 }
 
 int ranap_iu_tx_common_id(struct ranap_ue_conn_ctx *uectx, const char *imsi)
@@ -326,8 +324,7 @@ int ranap_iu_tx_common_id(struct ranap_ue_conn_ctx *uectx, const char *imsi)
 	osmo_prim_init(&prim->oph, SCCP_SAP_USER,
 			OSMO_SCU_PRIM_N_DATA,
 			PRIM_OP_REQUEST, msg);
-	osmo_sccp_user_sap_down(g_scu, &prim->oph);
-	return 0;
+	return osmo_sccp_user_sap_down(g_scu, &prim->oph);
 }
 
 static int iu_grnc_id_parse(struct iu_grnc_id *dst, struct RANAP_GlobalRNC_ID *src)
@@ -467,8 +464,7 @@ int ranap_iu_tx(struct msgb *msg_nas, uint8_t sapi)
 	osmo_prim_init(&prim->oph, SCCP_SAP_USER,
 			OSMO_SCU_PRIM_N_DATA,
 			PRIM_OP_REQUEST, msg);
-	osmo_sccp_user_sap_down(g_scu, &prim->oph);
-	return 0;
+	return osmo_sccp_user_sap_down(g_scu, &prim->oph);
 }
 
 /* Send Iu Release for the given UE connection.
