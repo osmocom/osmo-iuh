@@ -9,8 +9,41 @@ DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
 Criticality ::= ENUMERATED { reject, ignore, notify }
 Presence ::= ENUMERATED { optional, conditional, mandatory }
-ProcedureCode ::= INTEGER (0..255)
+
+ProcedureCode ::= INTEGER {
+	id-Write-Replace(0),
+	id-Kill(1),
+	id-Load-Status-Enquiry(2),
+	id-Message-Status-Query(3),
+	id-Restart-Indication(4),
+	id-Reset(5),
+	id-Failure-Indication(6),
+	id-Error-Indication(7)
+} (0..255)
 ProtocolExtensionID ::= INTEGER (0..65535)
-ProtocolIE-ID ::= INTEGER (0..65535)
+ProtocolIE-ID ::= INTEGER {
+	id-Broadcast-Message-Content(0),
+	id-Category(1),
+	id-Cause(2),
+	id-Data-Coding-Scheme(4),
+	id-Failure-List(5),
+	id-Message-Identifier(6),
+	id-New-Serial-Number(7),
+	id-Number-of-Broadcasts-Completed-List(8),
+	id-Number-of-Broadcasts-Requested(9),
+	id-Old-Serial-Number(10),
+	id-Radio-Resource-Loading-List(11),
+	id-Recovery-Indication(12),
+	id-Repetition-Period(13),
+	id-Serial-Number(14),
+	id-Service-Areas-List(15),
+	id-MessageStructure(16),
+	id-TypeOfError(17),
+	id-Paging-ETWS-Indicator(18),
+	id-Warning-Type(19),
+	id-WarningSecurityInfo(20),
+	id-Broadcast-Message-Content-Validity-Indicator(21)
+} (0..65535)
+
 TriggeringMessage ::= ENUMERATED {initiating-message, successful-outcome, unsuccessful-outcome, outcome}
 END 

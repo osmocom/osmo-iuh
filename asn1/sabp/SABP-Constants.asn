@@ -8,46 +8,53 @@ itu-t (0) identified-organization (4) etsi (0) mobileDomain (0)
 umts-Access (20) modules (3) sabp (3) version1 (1) sabp-Constants (4) }
 DEFINITIONS AUTOMATIC TAGS ::=
 BEGIN
+
+IMPORTS
+	ProcedureCode,
+	ProtocolIE-ID
+FROM SABP-CommonDataTypes;
+
+
 -- **************************************************************
 --
 -- Elementary Procedures
 --
 -- **************************************************************
-id-Write-Replace INTEGER ::= 0
-id-Kill INTEGER ::= 1
-id-Load-Status-Enquiry INTEGER ::= 2
-id-Message-Status-Query INTEGER ::= 3 
-id-Restart-Indication INTEGER ::= 4
-id-Reset INTEGER ::= 5
-id-Failure-Indication INTEGER ::= 6
-id-Error-Indication INTEGER ::= 7
+id-Write-Replace ProcedureCode ::= 0
+id-Kill ProcedureCode ::= 1
+id-Load-Status-Enquiry ProcedureCode ::= 2
+id-Message-Status-Query ProcedureCode ::= 3 
+id-Restart-Indication ProcedureCode ::= 4
+id-Reset ProcedureCode ::= 5
+id-Failure-Indication ProcedureCode ::= 6
+id-Error-Indication ProcedureCode ::= 7
 -- **************************************************************
 --
 -- IEs
 --
 -- **************************************************************
-id-Broadcast-Message-Content INTEGER ::= 0
-id-Category INTEGER ::= 1
-id-Cause INTEGER ::= 2
-id-Criticality-Diagnostics INTEGER ::=3
-id-Data-Coding-Scheme INTEGER ::= 4
-id-Failure-List INTEGER ::= 5
-id-Message-Identifier INTEGER ::= 6
-id-New-Serial-Number INTEGER ::= 7
-id-Number-of-Broadcasts-Completed-List INTEGER ::= 8
-id-Number-of-Broadcasts-Requested INTEGER ::= 9
-id-Old-Serial-Number INTEGER ::= 10
-id-Radio-Resource-Loading-List INTEGER ::= 11
-id-Recovery-Indication INTEGER ::= 12
-id-Repetition-Period INTEGER ::= 13
-id-Serial-Number INTEGER ::= 14
-id-Service-Areas-List INTEGER ::= 15
-id-MessageStructure INTEGER ::= 16
-id-TypeOfError INTEGER ::= 17
-id-Paging-ETWS-Indicator INTEGER ::= 18
-id-Warning-Type INTEGER ::= 19
-id-WarningSecurityInfo INTEGER ::= 20
-id-Broadcast-Message-Content-Validity-Indicator INTEGER ::= 21
+id-Broadcast-Message-Content ProtocolIE-ID ::= 0
+id-Category ProtocolIE-ID ::= 1
+id-Cause ProtocolIE-ID ::= 2
+id-Criticality-Diagnostics ProtocolIE-ID ::=3
+id-Data-Coding-Scheme ProtocolIE-ID ::= 4
+id-Failure-List ProtocolIE-ID ::= 5
+id-Message-Identifier ProtocolIE-ID ::= 6
+id-New-Serial-Number ProtocolIE-ID ::= 7
+id-Number-of-Broadcasts-Completed-List ProtocolIE-ID ::= 8
+id-Number-of-Broadcasts-Requested ProtocolIE-ID ::= 9
+id-Old-Serial-Number ProtocolIE-ID ::= 10
+id-Radio-Resource-Loading-List ProtocolIE-ID ::= 11
+id-Recovery-Indication ProtocolIE-ID ::= 12
+id-Repetition-Period ProtocolIE-ID ::= 13
+id-Serial-Number ProtocolIE-ID ::= 14
+id-Service-Areas-List ProtocolIE-ID ::= 15
+id-MessageStructure ProtocolIE-ID ::= 16
+id-TypeOfError ProtocolIE-ID ::= 17
+id-Paging-ETWS-Indicator ProtocolIE-ID ::= 18
+id-Warning-Type ProtocolIE-ID ::= 19
+id-WarningSecurityInfo ProtocolIE-ID ::= 20
+id-Broadcast-Message-Content-Validity-Indicator ProtocolIE-ID ::= 21
 -- **************************************************************
 --
 -- Extension constants
