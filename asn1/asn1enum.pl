@@ -22,7 +22,7 @@ foreach my $k (keys %h) {
 		next;
 	}
 	printf("%s ::= INTEGER {\n", $k);
-	foreach my $r (sort { $a <=> $b } keys $h{$k}) {
+	foreach my $r (sort { $a <=> $b } keys %{$h{$k}}) {
 		printf("\t%s(%d),\n", $h{$k}{$r}, $r);
 	}
 	printf("}\n");
