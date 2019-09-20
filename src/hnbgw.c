@@ -258,6 +258,9 @@ static int hnb_read_cb(struct osmo_stream_srv *conn)
 		rc = hnbgw_rua_rx(hnb, msg);
 		break;
 	case IUH_PPI_SABP:
+		hnb->sabp_stream = msgb_sctp_stream(msg);
+		rc = hnbgw_sabp_rx(hnb, msg);
+		break;
 	case IUH_PPI_RNA:
 	case IUH_PPI_PUA:
 		LOGP(DMAIN, LOGL_ERROR, "Unimplemented SCTP PPID=%lu received\n",
@@ -353,6 +356,11 @@ static const struct log_info_cat log_cat[] = {
 		.name = "DRANAP", .loglevel = LOGL_DEBUG, .enabled = 1,
 		.color = "",
 		.description = "RAN Application Part",
+	},
+	[DSABP] = {
+		.name = "DSABP", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.color = "",
+		.description = "Service Area Broadcast Protocol",
 	},
 };
 
@@ -588,6 +596,7 @@ int main(int argc, char **argv)
 	}
 
 	ranap_set_log_area(DRANAP);
+	sabp_set_log_area(DSABP);
 
 	rc = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.1", M3UA_PORT, NULL);
 	if (rc < 0) {

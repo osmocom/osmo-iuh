@@ -16,6 +16,7 @@ enum {
 	DHNBAP,
 	DRUA,
 	DRANAP,
+	DSABP,
 };
 
 enum hnb_ctrl_node {
@@ -96,6 +97,8 @@ struct hnb_context {
 	uint16_t hnbap_stream;
 	/*! SCTP stream ID for RUA */
 	uint16_t rua_stream;
+	/*! SCTP stream ID for SABP */
+	uint16_t sabp_stream;
 
 	/*! True if a HNB-REGISTER-REQ from this HNB has been accepted. Note that
 	 * this entire data structure is freed if the HNB sends HNB-DE-REGISTER-REQ. */

@@ -85,13 +85,13 @@ osmo_hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c hnbap_common.c \
 		     rua_msg_factory.c \
 		     hnbgw.c hnbgw_hnbap.c hnbgw_rua.c hnbgw_ranap.c \
 		     hnbgw_vty.c \
-		     context_map.c hnbgw_cn.c
+		     context_map.c hnbgw_cn.c hnbgw_sabp.c
 
 osmo_hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOCTRL_LIBS) \
 		   $(ASN1C_LIBS) $(OSMOSIGTRAN_LIBS) \
 		   $(OSMONETIF_LIBS) \
 		   hnbap/libosmo-asn1-hnbap.a rua/libosmo-asn1-rua.a \
-		   libosmo-ranap.la
+		   libosmo-ranap.la libosmo-sabp.la
 
 
 regen: regenerate-from-asn1-source
