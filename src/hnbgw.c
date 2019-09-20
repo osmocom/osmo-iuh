@@ -539,6 +539,7 @@ int main(int argc, char **argv)
 	osmo_ss7_vty_init_asp(tall_hnb_ctx);
 	osmo_sccp_vty_init();
 	hnbgw_vty_init(g_hnb_gw, tall_hnb_ctx);
+	ctrl_vty_init(tall_hnb_ctx);
 	logging_vty_add_cmds();
 
 	/* Handle options after vty_init(), for --version */
