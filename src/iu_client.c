@@ -468,15 +468,15 @@ int ranap_iu_tx(struct msgb *msg_nas, uint8_t sapi)
 }
 
 /* Send Iu Release for the given UE connection.
- * If cause is NULL, the standard "No remaining RAB" cause is sent, otherwise
+ * If cause is NULL, Normal Release cause is sent, otherwise
  * the provided cause. */
 int ranap_iu_tx_release(struct ranap_ue_conn_ctx *ctx, const struct RANAP_Cause *cause)
 {
 	struct msgb *msg;
 	struct osmo_scu_prim *prim;
 	static const struct RANAP_Cause default_cause = {
-		.present = RANAP_Cause_PR_radioNetwork,
-		.choice.radioNetwork = RANAP_CauseRadioNetwork_no_remaining_rab,
+		.present = RANAP_Cause_PR_nAS,
+		.choice.radioNetwork = RANAP_CauseNAS_normal_release,
 	};
 
 	if (!cause)
