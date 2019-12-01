@@ -1,0 +1,56 @@
+[[overview]]
+== Overview
+
+
+[[intro_overview]]
+=== About OsmoHNBGW
+
+OsmoHNBGW implements the Home NodeB Gateway function in the 3G network architecture.  It serves 
+as a gateway between the classic 3G core network (CN) domain with its IuCS and IuPS interface
+and the femtocell based RAN.
+
+A typical 3G network consisting of Osmocom components will look as illustrated in the following
+diagram:
+
+[[fig-3g]]
+.Typical 3G network architecture used with OsmoHNBGW
+----
+        +------------+           +--------+          +----------+          +---------+
+ UE <-->| hNodeB     |<--Iuh---->| HNB-GW |<--IuCS-->| OsmoMSC  |<--GSUP-->| OsmoHLR |
+ UE <-->| femto cell |     ...-->|        |    ...-->|          |          |         |
+        |            |           |        |          +----------+          +---------|
+        +------------+<--GTP-U   |        |
+                              \  |        |          +------+           +------+
+                              |  |        |<--IuPS-->| SGSN |<--GTP-C-->| GGSN |
+                              |  +--------+    ...-->|      |   GTP-U-->|      |
+                              |                      +------+  /        +------+
+                              \_______________________________/
+----
+
+The HNB-GW performs a translation interface between the IuCS/IuPS interfaces on the one hand
+side, and the Iuh interface on the or ther hand:
+
+----
+                      Iuh                         IuCS/IuPS
+
+NAS                   +----+----+                 +----+----+
+Non-Access Stratum    | CC | MM |                 | CC | MM |
+- - - - - - - - - - - +----+----+-------+         +----+----+
+                      | RANAP   |       |    H    | RANAP   |
+Access Stratum        +---------+ HNBAP |    N    +---------+ - - SCCP USER SAP
+                      | RUA     |       |    B    | SUA     |  \
+                      +---------+-------+    -    +---------+  |
+                      |        SCTP     |    G    | SCTP    |  } SIGTRAN
+                      +-----------------+    W    +---------+  |
+                      |        IP       |         | IP      |  /
+                      +-----------------+         +---------+
+----
+
+On the femtocell (Home NodeB) side, OsmoHNBGW implements the Iuh interface as specified by 3GPP.
+
+=== The Iuh interface
+
+Iuh consists of the following sub-layers:
+
+- HNBAP (Home NodeB Application Part)
+- RUA (RANAP User Adaptation, between RANAP and SCTP

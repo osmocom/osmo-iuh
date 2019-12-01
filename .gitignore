@@ -43,3 +43,8 @@ include/osmocom/hnbap/hnbap_ies_defs.h
 include/osmocom/rua/rua_ies_defs.h
 include/osmocom/ranap/ranap_ies_defs.h
 include/osmocom/sabp/sabp_ies_defs.h
+
+doc/manuals/build
+doc/manuals/common
+doc/manuals/generated
+doc/manuals/*.pdf
