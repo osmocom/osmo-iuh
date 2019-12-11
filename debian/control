@@ -14,7 +14,7 @@ Build-Depends: debhelper (>=9),
                libosmocore-dev (>= 0.12.0),
                libosmo-netif-dev (>= 0.3.0),
                libosmo-sigtran-dev (>= 0.10.0),
-               python (>= 2.7)
+               python3
 Standards-Version: 3.9.8
 Vcs-Git: git://git.osmocom.org/osmo-iuh.git
 Vcs-Browser: https://git.osmocom.org/osmo-iuh/

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import re, os, sys, string
 import datetime
@@ -27,11 +27,11 @@ def printFail(string):
     sys.stderr.write(FAIL + string + ENDC + "\n")
 
 def printWarning(string):
-    print WARN + string + ENDC
+    print(WARN + string + ENDC)
 
 def printDebug(string):
     if verbosity > 0:
-        print string
+        print(string)
 
 def outputHeaderToFile(f, filename):
     now = datetime.datetime.utcfromtimestamp(int(os.environ.get('SOURCE_DATE_EPOCH', time.time())))
@@ -57,7 +57,7 @@ def lowerFirstCamelWord(word):
         return lowered
 
     for c in swapped:
-        if c in string.lowercase:
+        if c.islower():
             newstr += c
             idx += 1
         else:
@@ -70,14 +70,14 @@ def lowerFirstCamelWord(word):
     return newstr
 
 def usage():
-    print "Python parser for asn1 v%s" % (version)
-    print "Usage: python asn1tostruct.py [options]"
-    print "Available options:"
-    print "-d        Enable script debug"
-    print "-f [file] Input file to parse"
-    print "-o [dir]  Output files to given directory"
-    print "-p [pfx]  Prefix all types with given prefix"
-    print "-h        Print this help and return"
+    print("Python parser for asn1 v%s" % (version))
+    print("Usage: python asn1tostruct.py [options]")
+    print("Available options:")
+    print("-d        Enable script debug")
+    print("-f [file] Input file to parse")
+    print("-o [dir]  Output files to given directory")
+    print("-p [pfx]  Prefix all types with given prefix")
+    print("-h        Print this help and return")
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "df:ho:p:", ["debug", "file", "help", "outdir", "prefix"])
@@ -102,7 +102,7 @@ for o, a in opts:
         sys.exit(2)
 
 for filename in filenames:
-    file = open(filename, 'r')
+    file = open(filename, 'r', encoding='utf-8')
     for line in file:
         # Removing any comment
         if line.find('--') >= 0:
@@ -139,17 +139,17 @@ if len(iesDefs) == 0:
     printFail("No Information Element parsed, exiting")
     sys.exit(0)
 
-f = open(outdir + fileprefix + '_ies_defs.h', 'w')
+f = open(outdir + fileprefix + '_ies_defs.h', 'w', encoding='utf-8')
 outputHeaderToFile(f, filename)
 f.write("#include \"%s_common.h\"\n\n" % (fileprefix))
 f.write("#ifndef %s_IES_DEFS_H_\n#define %s_IES_DEFS_H_\n\n" % (fileprefix.upper(), fileprefix.upper()))
 
 for key in iesDefs:
 
-    if key not in ieofielist.values():
+    if key not in list(ieofielist.values()):
         continue
 
-    for (i, j) in ieofielist.items():
+    for (i, j) in list(ieofielist.items()):
         if j == key:
             break
 
@@ -200,10 +200,10 @@ f.write("    uint8_t criticality;\n")
 f.write("    uint8_t direction;\n")
 f.write("    union {\n")
 
-messageList = iesDefs.keys()
+messageList = list(iesDefs.keys())
 messageList.sort()
 for message in messageList:
-    if message in ieofielist.values():
+    if message in list(ieofielist.values()):
         continue
     if len(iesDefs[message]["ies"]) == 0:
         continue
@@ -212,7 +212,7 @@ f.write("    } msg;\n")
 f.write("} %s_message;\n\n" % (fileprefix))
 
 for key in iesDefs:
-    if key in ieofielist.values():
+    if key in list(ieofielist.values()):
         continue
     structName = re.sub('ies', '', key)
     asn1cStruct = re.sub('-', '_', re.sub('IEs', '', re.sub('-IEs', '', key)))
@@ -242,7 +242,7 @@ for key in iesDefs:
     f.write("    %s_t *%s);\n\n" % (prefix + re.sub('-', '_', key), lowerFirstCamelWord(re.sub('-', '_', key))))
 
 for key in iesDefs:
-    if key not in ieofielist.values():
+    if key not in list(ieofielist.values()):
         continue
     asn1cStruct = re.sub('-', '_', re.sub('IEs', '', key))
     asn1cStruct = prefix + re.sub('Item', 'List', asn1cStruct)
@@ -276,11 +276,11 @@ for key in iesDefs:
 f.write("#endif /* %s_IES_DEFS_H_ */\n\n" % (fileprefix.upper()))
 
 #Generate Decode functions
-f = open(outdir + fileprefix + '_decoder.c', 'w')
+f = open(outdir + fileprefix + '_decoder.c', 'w', encoding='utf-8')
 outputHeaderToFile(f, filename)
 f.write("#include \"%s_common.h\"\n#include \"%s_ies_defs.h\"\n\n" % (fileprefix, fileprefix))
 for key in iesDefs:
-    if key in ieofielist.values():
+    if key in list(ieofielist.values()):
         continue
     structName = re.sub('ies', '', key)
     asn1cStruct = re.sub('-', '_', re.sub('IEs', '', re.sub('-IEs', '', key)))
@@ -293,7 +293,7 @@ for key in iesDefs:
     asn1cStruct = prefix + re.sub('Item', 'List', asn1cStruct)
 
     iesaccess = ""
-    if key not in ieofielist.values():
+    if key not in list(ieofielist.values()):
         iesaccess = "%s_ies." % (firstlower)
 
     f.write("int %s_decode_%s(\n" % (fileprefix, re.sub('-', '_', structName.lower())))
@@ -346,7 +346,7 @@ for key in iesDefs:
         f.write("                decoded += tempDecoded;\n")
         f.write("                if (asn1_xer_print)\n")
         f.write("                    xer_fprint(stdout, &asn_DEF_%s, %s_p);\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst)))
-        if ie[2] in ieofielist.keys():
+        if ie[2] in list(ieofielist.keys()):
             f.write("                if (%s_decode_%s(&%s->%s, %s_p) < 0) {\n" % (fileprefix, ietypeunderscore.lower(), lowerFirstCamelWord(re.sub('-', '_', key)), ienameunderscore, lowerFirstCamelWord(ietypesubst)))
             f.write("                    %s_DEBUG(\"Decoding of encapsulated IE %s failed\\n\");\n" % (fileprefix.upper(), lowerFirstCamelWord(ietypesubst)))
             f.write("                    ASN_STRUCT_FREE(asn_DEF_%s, %s_p);\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst)))
@@ -395,7 +395,7 @@ for key in iesDefs:
     f.write("}\n\n")
 
 for key in iesDefs:
-    if key not in ieofielist.values():
+    if key not in list(ieofielist.values()):
         continue
 
     keyname = re.sub('IEs', '', re.sub('Item', 'List', key))
@@ -437,12 +437,12 @@ for key in iesDefs:
 
 
 #Generate IES Encode functions
-f = open(outdir + fileprefix + '_encoder.c', 'w')
+f = open(outdir + fileprefix + '_encoder.c', 'w', encoding='utf-8')
 outputHeaderToFile(f,filename)
 f.write("#include \"%s_common.h\"\n" % (fileprefix))
 f.write("#include \"%s_ies_defs.h\"\n\n" % (fileprefix))
 for key in iesDefs:
-    if key in ieofielist.values():
+    if key in list(ieofielist.values()):
         continue
 
     structName = re.sub('ies', '', key)
@@ -452,7 +452,7 @@ for key in iesDefs:
     asn1cStructfirstlower = asn1cStruct[:1].lower() + asn1cStruct[1:]
 
     iesaccess = ""
-    if key not in ieofielist.values():
+    if key not in list(ieofielist.values()):
         iesaccess = "%s_ies." % (firstwordlower)
 
     keyName = re.sub('-', '_', key)
@@ -489,7 +489,7 @@ for key in iesDefs:
             f.write("        ASN_SEQUENCE_ADD(&%s->%slist, ie);\n" % (firstwordlower, iesaccess))
             f.write("    }\n\n")
         else:
-            if ie[2] in ieofielist.keys():
+            if ie[2] in list(ieofielist.keys()):
                 f.write("    %s_t %s;\n\n" % (prefix + ietypeunderscore, ienamefirstwordlower))
                 f.write("    memset(&%s, 0, sizeof(%s_t));\n" % (ienamefirstwordlower, ietypeunderscore))
                 f.write("\n")
@@ -497,21 +497,21 @@ for key in iesDefs:
             f.write("    if ((ie = %s_new_ie(%sProtocolIE_ID_%s,\n" % (fileprefix, prefix, re.sub('-', '_', ie[0])))
             f.write("                          %sCriticality_%s,\n" % (prefix, ie[1]))
             f.write("                          &asn_DEF_%s,\n" % (ietypeunderscore))
-            if ie[2] in ieofielist.keys():
+            if ie[2] in list(ieofielist.keys()):
                 f.write("                          &%s)) == NULL) {\n" % (ienamefirstwordlower))
             else:
                 f.write("                          &%s->%s)) == NULL) {\n" % (lowerFirstCamelWord(re.sub('-', '_', key)), ienamefirstwordlower))
             f.write("        return -1;\n")
             f.write("    }\n")
             f.write("    ASN_SEQUENCE_ADD(&%s->%slist, ie);\n\n" % (firstwordlower, iesaccess))
-            if ie[2] in ieofielist.keys():
+            if ie[2] in list(ieofielist.keys()):
                 f.write("    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_%s, &%s);\n\n" % (ietypeunderscore, ienamefirstwordlower))
 
     f.write("    return 0;\n")
     f.write("}\n\n")
 
-for (key, value) in iesDefs.items():
-    if key not in ieofielist.values():
+for (key, value) in list(iesDefs.items()):
+    if key not in list(ieofielist.values()):
         continue
 
     ie = value["ies"][0]
@@ -520,7 +520,7 @@ for (key, value) in iesDefs.items():
     asn1cStruct = prefix + re.sub('Item', 'List', asn1cStruct)
     firstwordlower = re.sub('Item', 'List', re.sub('enb', 'eNB', lowerFirstCamelWord(asn1cStruct)))
 
-    for (i, j) in ieofielist.items():
+    for (i, j) in list(ieofielist.items()):
         if j == key:
             break
     f.write("int %s_encode_%s(\n" % (fileprefix, re.sub('-', '_', i).lower()))
