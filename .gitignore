@@ -39,6 +39,7 @@ m4
 gen_hnbap.stamp
 gen_rua.stamp
 gen_ranap.stamp
+gen_sabp.stamp
 include/osmocom/hnbap/hnbap_ies_defs.h
 include/osmocom/rua/rua_ies_defs.h
 include/osmocom/ranap/ranap_ies_defs.h
