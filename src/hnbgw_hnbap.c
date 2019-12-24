@@ -99,7 +99,7 @@ static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
 
 	/* Single required response IE: RNC-ID */
 	HNBRegisterAcceptIEs_t accept = {
-		.rnc_id = ctx->gw->config.rnc_id
+		.rnc_id = ctx->id.lac,
 	};
 
 	/* encode the Information Elements */
