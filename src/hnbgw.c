@@ -536,7 +536,11 @@ int main(int argc, char **argv)
 	if (rc < 0)
 		exit(1);
 
-	osmo_ss7_init();
+	rc = osmo_ss7_init();
+	if (rc < 0) {
+		LOGP(DMAIN, LOGL_FATAL, "osmo_ss7_init() failed with rc=%d\n", rc);
+		exit(1);
+	}
 
 	vty_info.copyright = osmo_hnbgw_copyright;
 	vty_init(&vty_info);
