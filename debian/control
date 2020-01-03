@@ -36,7 +36,7 @@ Pre-Depends: ${misc:Pre-Depends}
 Depends: osmo-hnbgw (= ${binary:Version}), ${misc:Depends}
 Description: osmocom Home Node B Gateway
 
-Package: libosmo-ranap2
+Package: libosmo-ranap3
 Section: libs
 Architecture: any
 Multi-Arch: same
@@ -48,14 +48,14 @@ Package: libosmo-ranap-dbg
 Section: debug
 Architecture: any
 Multi-Arch: same
-Depends: libosmo-ranap2 (= ${binary:Version}), ${misc:Depends}
+Depends: libosmo-ranap3 (= ${binary:Version}), ${misc:Depends}
 Description: Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
 Package: libosmo-ranap-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libosmo-ranap2 (= ${binary:Version}), ${misc:Depends}
+Depends: libosmo-ranap3 (= ${binary:Version}), ${misc:Depends}
 Description: Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
 Package: libosmo-sabp0

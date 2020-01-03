@@ -61,7 +61,7 @@ AM_CFLAGS = -Wall -I$(top_srcdir)/include -I$(top_builddir)/include \
 
 # build the shared RANAP + SABP library
 #
-RANAP_LIBVERSION=2:2:0
+RANAP_LIBVERSION=3:0:0
 SABP_LIBVERSION=0:0:0
 lib_LTLIBRARIES = libosmo-ranap.la libosmo-sabp.la
 libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION)

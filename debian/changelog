@@ -1,3 +1,42 @@
+osmo-iuh (0.6.0) unstable; urgency=medium
+
+  [ Vadim Yanitskiy ]
+  * hnbgw_vty.c: fix: properly pass pointer to g_hnb_gw
+  * osmo-hnbgw: make sure osmo_ss7_init() executed successfully
+
+  [ Alexander Couzens ]
+  * iu_client: sccp_sap_up: set rc early
+  * iu_client: ensure UE is not NULL on CO primitives
+  * iu_client: sccp_sap_up: don't decode empty disconnect indications
+  * iu_client: introduce ranap_iu_free_ue() to free the UE connections
+  * iu_client: emit RANAP_IU_EVENT_LINK_INVALIDATED on SCCP disconnect indication
+  * iu_client: introduce a guard around global_iu_event_cb
+  * iu_client: allow to control the notifications
+  * iu_client: introduce ranap_iu_tx_release_free()
+  * iu_client: introduce UE field free_on_release
+  * iu_client: pass return value of osmo_sccp_user_sap_down() towards the caller
+  * iu_client: ranap_iu_tx_release() change default cause code to Success
+
+  [ Pau Espin Pedrol ]
+  * hnbgw: Add libosmoctrl's VTY CTRL command initialization
+  * debian/rules: Fix dbg pacakges
+  * debian: Split libosmo-sabp from libosmo-ranap package
+
+  [ Harald Welte ]
+  * asn1enum.pl: Make compatible with modern perl
+  * sabp: Initial import of SABP ASN.1 from 3GPP TS 25.419 V11.1.0 (2013-03)
+  * sabp: fixup SABP ASN.1 to avoid IOC (which are not supported by our toolchain)
+  * sabp: Add Procedure Codes and IEI constants to CommonDataTypes
+  * sabp: Generate C/H files for SABP; create libosmo-sabp
+  * Initial minimal OsmoHNBGW user manual
+  * exit(2) on unsupported positional arguments on command line
+
+  [ Oliver Smith ]
+  * gitignore: add gen_sabp.stamp
+  * debian, asn1tostruct.py: switch to python3
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Fri, 03 Jan 2020 17:04:15 +0100
+
 osmo-iuh (0.5.0) unstable; urgency=medium
 
   [ Neels Hofmeyr ]

@@ -7,6 +7,3 @@
 # If any interfaces have been added since the last public release: c:r:a + 1.
 # If any interfaces have been removed or changed since the last public release: c:r:0.
 #library	what		description / commit summary line
-libranap    iu_client.h struct ranap_ue_conn_ctx: add field notification
-libranap    iu_client.h struct ranap_ue_conn_ctx: add field release_timeout
-libranap    iu_client.h struct ranap_ue_conn_ctx: add field free_on_release
