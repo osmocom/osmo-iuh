@@ -10,8 +10,8 @@ VERSION := $(shell echo '$(DEBVERS)' | sed -e 's/[+-].*//' -e 's/~//g')
 
 # See https://www.debian.org/doc/manuals/developers-reference/best-pkging-practices.html#bpp-dbg
 override_dh_strip:
-	dh_strip --dbg-package=libosmo-ranap-dbg
-	dh_strip --dbg-package=osmo-hnbgw
+	dh_strip -plibosmo-ranap2 --dbg-package=libosmo-ranap-dbg
+	dh_strip -posmo-hnbgw --dbg-package=osmo-hnbgw-dbg
 
 # Print test results in case of a failure
 override_dh_auto_test:
