@@ -1,0 +1,3 @@
+usr/include/osmocom/sabp
+usr/lib/*/libosmo-sabp.so
+usr/lib/*/pkgconfig/libosmo-sabp.pc

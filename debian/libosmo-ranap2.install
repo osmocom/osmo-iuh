@@ -1,1 +1,1 @@
-usr/lib/*/*.so.*
+usr/lib/*/libosmo-ranap*.so.*
