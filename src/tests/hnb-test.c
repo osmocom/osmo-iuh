@@ -326,7 +326,7 @@ static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct gsm48_hdr *gh,
 
 	if (len < sizeof(*ar)) {
 		printf("GSM48 Auth Req does not fit.\n");
-		return;
+		return -1;
 	}
 
 	printf(" :) Authentication Request :)\n");
