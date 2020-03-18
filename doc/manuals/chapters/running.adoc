@@ -103,6 +103,8 @@ hnbgw
   remote-addr sgsn
 ----
 
+This configuration is explained in detail in <<cs7_config>>.
+
 ==== Configure RUA to accept Iuh connections from hNodeB
 
 OsmoHNBGW acts as server to accept Iuh connections from hNodeB devices.
