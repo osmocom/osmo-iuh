@@ -73,7 +73,7 @@ void hnb_test_rua_cl_handle_ranap(struct hnb_test *hnb,
 					 ranap_msg->msg.pagingIEs.permanentNAS_UE_ID.choice.iMSI.size);
 		} else imsi[0] = '\0';
 
-		printf("rx Paging: presence=%hx  domain=%d  IMSI=%s\n",
+		printf("rx Paging: presence=%hx  domain=%ld  IMSI=%s\n",
 		       ranap_msg->msg.pagingIEs.presenceMask,
 		       ranap_msg->msg.pagingIEs.cN_DomainIndicator,
 		       imsi
