@@ -194,10 +194,10 @@ static int hnbgw_tx_ue_register_rej_tmsi(struct hnb_context *hnb, UE_Identity_t 
 				   ue_id->choice.tMSILAI.tMSI.size * 8
 				   - ue_id->choice.tMSILAI.tMSI.bits_unused);
 		OCTET_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.lAI.pLMNID,
-				     ue_id->choice.tMSILAI.lAI.pLMNID.buf,
+				     (const char *)ue_id->choice.tMSILAI.lAI.pLMNID.buf,
 				     ue_id->choice.tMSILAI.lAI.pLMNID.size);
 		OCTET_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.lAI.lAC,
-				     ue_id->choice.tMSILAI.lAI.lAC.buf,
+				     (const char *)ue_id->choice.tMSILAI.lAI.lAC.buf,
 				     ue_id->choice.tMSILAI.lAI.lAC.size);
 		break;
 
@@ -227,13 +227,13 @@ static int hnbgw_tx_ue_register_rej_tmsi(struct hnb_context *hnb, UE_Identity_t 
 				   ue_id->choice.pTMSIRAI.pTMSI.size * 8
 				   - ue_id->choice.pTMSIRAI.pTMSI.bits_unused);
 		OCTET_STRING_fromBuf(&reject.uE_Identity.choice.pTMSIRAI.rAI.lAI.pLMNID,
-				     ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.buf,
+				     (const char *)ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.buf,
 				     ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.size);
 		OCTET_STRING_fromBuf(&reject.uE_Identity.choice.pTMSIRAI.rAI.lAI.lAC,
-				     ue_id->choice.pTMSIRAI.rAI.lAI.lAC.buf,
+				     (const char *)ue_id->choice.pTMSIRAI.rAI.lAI.lAC.buf,
 				     ue_id->choice.pTMSIRAI.rAI.lAI.lAC.size);
 		OCTET_STRING_fromBuf(&reject.uE_Identity.choice.pTMSIRAI.rAI.rAC,
-				     ue_id->choice.pTMSIRAI.rAI.rAC.buf,
+				     (const char *)ue_id->choice.pTMSIRAI.rAI.rAC.buf,
 				     ue_id->choice.pTMSIRAI.rAI.rAC.size);
 		break;
 
@@ -312,10 +312,10 @@ static int hnbgw_tx_ue_register_acc_tmsi(struct hnb_context *hnb, UE_Identity_t 
 				   - ue_id->choice.tMSILAI.tMSI.bits_unused);
 		tmsi = *(uint32_t*)accept.uE_Identity.choice.tMSILAI.tMSI.buf;
 		OCTET_STRING_fromBuf(&accept.uE_Identity.choice.tMSILAI.lAI.pLMNID,
-				     ue_id->choice.tMSILAI.lAI.pLMNID.buf,
+				     (const char *)ue_id->choice.tMSILAI.lAI.pLMNID.buf,
 				     ue_id->choice.tMSILAI.lAI.pLMNID.size);
 		OCTET_STRING_fromBuf(&accept.uE_Identity.choice.tMSILAI.lAI.lAC,
-				     ue_id->choice.tMSILAI.lAI.lAC.buf,
+				     (const char *)ue_id->choice.tMSILAI.lAI.lAC.buf,
 				     ue_id->choice.tMSILAI.lAI.lAC.size);
 		break;
 
@@ -326,13 +326,13 @@ static int hnbgw_tx_ue_register_acc_tmsi(struct hnb_context *hnb, UE_Identity_t 
 				   - ue_id->choice.pTMSIRAI.pTMSI.bits_unused);
 		tmsi = *(uint32_t*)accept.uE_Identity.choice.pTMSIRAI.pTMSI.buf;
 		OCTET_STRING_fromBuf(&accept.uE_Identity.choice.pTMSIRAI.rAI.lAI.pLMNID,
-				     ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.buf,
+				     (const char *)ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.buf,
 				     ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.size);
 		OCTET_STRING_fromBuf(&accept.uE_Identity.choice.pTMSIRAI.rAI.lAI.lAC,
-				     ue_id->choice.pTMSIRAI.rAI.lAI.lAC.buf,
+				     (const char *)ue_id->choice.pTMSIRAI.rAI.lAI.lAC.buf,
 				     ue_id->choice.pTMSIRAI.rAI.lAI.lAC.size);
 		OCTET_STRING_fromBuf(&accept.uE_Identity.choice.pTMSIRAI.rAI.rAC,
-				     ue_id->choice.pTMSIRAI.rAI.rAC.buf,
+				     (const char *)ue_id->choice.pTMSIRAI.rAI.rAC.buf,
 				     ue_id->choice.pTMSIRAI.rAI.rAC.size);
 		break;
 

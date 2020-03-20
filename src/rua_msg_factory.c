@@ -16,7 +16,7 @@ struct msgb *rua_new_udt(struct msgb *inmsg)
 	int rc;
 
 	memset(&ies, 0, sizeof(ies));
-	OCTET_STRING_fromBuf(&ies.ranaP_Message, inmsg->data, msgb_length(inmsg));
+	OCTET_STRING_fromBuf(&ies.ranaP_Message, (const char *)inmsg->data, msgb_length(inmsg));
 	msgb_free(inmsg);
 
 	memset(&out, 0, sizeof(out));
@@ -53,7 +53,7 @@ struct msgb *rua_new_conn(int is_ps, uint32_t context_id, struct msgb *inmsg)
 		ies.cN_DomainIndicator = RUA_CN_DomainIndicator_cs_domain;
 	asn1_u24_to_bitstring(&ies.context_ID, &ctxidbuf, context_id);
 	ies.establishment_Cause = RUA_Establishment_Cause_normal_call;
-	OCTET_STRING_fromBuf(&ies.ranaP_Message, inmsg->data, msgb_length(inmsg));
+	OCTET_STRING_fromBuf(&ies.ranaP_Message, (const char *)inmsg->data, msgb_length(inmsg));
 	msgb_free(inmsg);
 
 	memset(&out, 0, sizeof(out));
@@ -89,7 +89,7 @@ struct msgb *rua_new_dt(int is_ps, uint32_t context_id, struct msgb *inmsg)
 	else
 		ies.cN_DomainIndicator = RUA_CN_DomainIndicator_cs_domain;
 	asn1_u24_to_bitstring(&ies.context_ID, &ctxidbuf, context_id);
-	OCTET_STRING_fromBuf(&ies.ranaP_Message, inmsg->data, msgb_length(inmsg));
+	OCTET_STRING_fromBuf(&ies.ranaP_Message, (const char *)inmsg->data, msgb_length(inmsg));
 	msgb_free(inmsg);
 
 	memset(&out, 0, sizeof(out));
@@ -130,7 +130,7 @@ struct msgb *rua_new_disc(int is_ps, uint32_t context_id, struct msgb *inmsg)
 	ies.cause.choice.radioNetwork = RUA_CauseRadioNetwork_normal;
 	if (inmsg && inmsg->data&& msgb_length(inmsg)) {
 		ies.presenceMask |= DISCONNECTIES_RUA_RANAP_MESSAGE_PRESENT;
-		OCTET_STRING_fromBuf(&ies.ranaP_Message, inmsg->data, msgb_length(inmsg));
+		OCTET_STRING_fromBuf(&ies.ranaP_Message, (const char *)inmsg->data, msgb_length(inmsg));
 	}
 	msgb_free(inmsg);
 
