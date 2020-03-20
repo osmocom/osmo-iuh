@@ -116,11 +116,10 @@ DEFUN(show_cnlink, show_cnlink_cmd, "show cnlink",
 {
 	struct osmo_ss7_route *rt;
 	struct osmo_ss7_instance *ss7 = osmo_sccp_get_ss7(g_hnb_gw->sccp.client);
-	int i;
 #define GUARD(STR) \
 	STR ? STR : "", \
 	STR ? ":" : ""
-	
+
 	vty_out(vty, "IuCS: %s <->",
 		osmo_sccp_user_name(g_hnb_gw->sccp.cnlink->sccp_user));
 	vty_out(vty, " %s%s%s%s",
@@ -223,7 +222,6 @@ DEFUN(show_hnb, show_hnb_cmd, "show hnb all", SHOW_STR "Display information abou
 DEFUN(show_one_hnb, show_one_hnb_cmd, "show hnb NAME ", SHOW_STR "Display information about a HNB")
 {
 	struct hnb_context *hnb;
-	int found = 0;
 	const char *identity_info = argv[0];
 
 	if (llist_empty(&g_hnb_gw->hnb_list)) {
