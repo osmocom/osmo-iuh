@@ -51,7 +51,7 @@ static void test_aper_int(uint32_t inp)
 		fprintf(stderr, "Failed\n");
 		return;
 	}
-	printf("Encoded MaxBitRate %u to %s\n", mbr, osmo_hexdump(buf, rv.encoded/8));
+	printf("Encoded MaxBitRate %ld to %s\n", mbr, osmo_hexdump(buf, rv.encoded/8));
 }
 
 static void test_aper_causemisc(uint32_t inp, uint8_t exp_enc)
@@ -75,7 +75,7 @@ static void test_aper_causemisc(uint32_t inp, uint8_t exp_enc)
 
 	/* test re-decoding */
 	aper_decode(NULL, &asn_DEF_RANAP_Cause, &c_dec, buf, 1, 0, 0);
-	printf("Decoded Cause Misc=%u\n", c_dec->choice.misc);
+	printf("Decoded Cause Misc=%ld\n", c_dec->choice.misc);
 	OSMO_ASSERT(c_dec->present == RANAP_Cause_PR_misc);
 	OSMO_ASSERT(c_dec->choice.misc == inp);
 	ASN_STRUCT_FREE(asn_DEF_RANAP_Cause, c_dec);
