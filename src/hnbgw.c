@@ -335,22 +335,22 @@ static int accept_cb(struct osmo_stream_srv_link *srv, int fd)
 
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
-		.name = "DMAIN", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.name = "DMAIN", .loglevel = LOGL_NOTICE, .enabled = 1,
 		.color = "",
 		.description = "Main program",
 	},
 	[DHNBAP] = {
-		.name = "DHNBAP", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.name = "DHNBAP", .loglevel = LOGL_NOTICE, .enabled = 1,
 		.color = "",
 		.description = "Home Node B Application Part",
 	},
 	[DRUA] = {
-		.name = "DRUA", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.name = "DRUA", .loglevel = LOGL_NOTICE, .enabled = 1,
 		.color = "",
 		.description = "RANAP User Adaptation",
 	},
 	[DRANAP] = {
-		.name = "DRANAP", .loglevel = LOGL_DEBUG, .enabled = 1,
+		.name = "DRANAP", .loglevel = LOGL_NOTICE, .enabled = 1,
 		.color = "",
 		.description = "RAN Application Part",
 	},
