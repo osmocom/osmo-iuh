@@ -64,12 +64,12 @@ void test_iu_helpers(void)
 const uint32_t val1 = 0xdeadbeef;
 
 const OCTET_STRING_t text1 = {
-	.buf = "0123456789012345",
+	.buf = (uint8_t *) "0123456789012345",
 	.size = 16,
 };
 
 const OCTET_STRING_t text2 = {
-	.buf = "01234567890123456789012345678901234567890",
+	.buf = (uint8_t *) "01234567890123456789012345678901234567890",
 	.size = 40,
 };
 
@@ -145,9 +145,9 @@ void test_ranap_common(void)
 
 	printf("Testing ranap common functions\n");
 
-	printf("PLMN-Id [ %s]", osmo_hexdump((char*)lai.pLMNidentity.buf,
+	printf("PLMN-Id [ %s]", osmo_hexdump(lai.pLMNidentity.buf,
 					     lai.pLMNidentity.size));
-	printf(", LAC [ %s]\n", osmo_hexdump((char*)lai.lAC.buf,
+	printf(", LAC [ %s]\n", osmo_hexdump(lai.lAC.buf,
 					     lai.lAC.size));
 
 	rc = ranap_parse_lai(&ra_id, &lai);
@@ -164,9 +164,9 @@ void test_ranap_common(void)
 	uint8_t plmnid_buf_mnc3[] = { 0x21, 0x43, 0x65 };
 	lai.pLMNidentity.buf = plmnid_buf_mnc3;
 
-	printf("PLMN-Id [ %s]", osmo_hexdump((char*)lai.pLMNidentity.buf,
+	printf("PLMN-Id [ %s]", osmo_hexdump(lai.pLMNidentity.buf,
 					     lai.pLMNidentity.size));
-	printf(", LAC [ %s]\n", osmo_hexdump((char*)lai.lAC.buf,
+	printf(", LAC [ %s]\n", osmo_hexdump(lai.lAC.buf,
 					     lai.lAC.size));
 
 	rc = ranap_parse_lai(&ra_id, &lai);
@@ -182,9 +182,9 @@ void test_ranap_common(void)
 	/* wrong PLMN-Id size */
 	lai.pLMNidentity.size = 2;
 
-	printf("PLMN-Id [ %s]", osmo_hexdump((char*)lai.pLMNidentity.buf,
+	printf("PLMN-Id [ %s]", osmo_hexdump(lai.pLMNidentity.buf,
 					     lai.pLMNidentity.size));
-	printf(", LAC [ %s]\n", osmo_hexdump((char*)lai.lAC.buf,
+	printf(", LAC [ %s]\n", osmo_hexdump(lai.lAC.buf,
 					     lai.lAC.size));
 
 	rc = ranap_parse_lai(&ra_id, &lai);
@@ -196,9 +196,9 @@ void test_ranap_common(void)
 	lai.pLMNidentity.size = 3;
 	lai.lAC.size = 1;
 
-	printf("PLMN-Id [ %s]", osmo_hexdump((char*)lai.pLMNidentity.buf,
+	printf("PLMN-Id [ %s]", osmo_hexdump(lai.pLMNidentity.buf,
 					  lai.pLMNidentity.size));
-	printf(", LAC [ %s]\n", osmo_hexdump((char*)lai.lAC.buf,
+	printf(", LAC [ %s]\n", osmo_hexdump(lai.lAC.buf,
 					     lai.lAC.size));
 
 	rc = ranap_parse_lai(&ra_id, &lai);
