@@ -93,7 +93,7 @@ int main(int argc, char **argv)
 	uint32_t gtp_tei = 0x11223344;
 	uint8_t ik[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	uint8_t ck[16] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 };
-	int i, rc;
+	int i;
 
 	//asn_debug = 1;
 
