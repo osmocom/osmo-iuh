@@ -6,7 +6,7 @@ Testing asn.1 helper functions
 Encoding 0xdeadbeef to asn.1 bitstring
 Encoded: 20deadbeef
 Decoding back to uint32_t: 0xdeadbeef
-Encoding efbead to 24-bit asn.1 bitstring
+Encoding 0xdeadbeef to 24-bit asn.1 bitstring
 Encoded: 18adbeef
 Decoding string from asn.1: 0123456789012345
 Decoding large string from asn1: 0123456789012345678901234567890

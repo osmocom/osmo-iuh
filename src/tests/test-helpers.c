@@ -98,8 +98,7 @@ void test_asn1_helpers(void)
 	printf("Decoding back to uint32_t: 0x%x\n", res);
 	ASSERT(res == val1);
 
-	printf("Encoding %s to 24-bit asn.1 bitstring\n",
-	       osmo_hexdump_nospc((unsigned char*)&val1, 3));
+	printf("Encoding 0x%x to 24-bit asn.1 bitstring\n", val1);
 	asn1_u24_to_bitstring(&enc, &tmpval, val1);
 
 	ASSERT(enc.size == 24/8);
