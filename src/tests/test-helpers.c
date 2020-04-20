@@ -33,7 +33,7 @@
 #include <osmocom/ranap/RANAP_LAI.h>
 
 int asn1_xer_print = 0;
-void *talloc_asn1_ctx;
+extern void *talloc_asn1_ctx;
 
 /* use odd number of digits */
 const uint8_t imsi_encoded[] = { 0x10, 0x32, 0x54, 0x76, 0xF8 };
