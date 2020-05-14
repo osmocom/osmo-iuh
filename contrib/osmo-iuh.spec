@@ -12,12 +12,8 @@
 # license that conforms to the Open Source Definition (Version 1.9)
 # published by the Open Source Initiative.
 
-# Please submit bugfixes or comments via http://bugs.opensuse.org/
-#
-
-
 Name:           osmo-iuh
-Version:        0.6.0.13
+Version:        0.0.0
 Release:        0
 Summary:        Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 License:        AGPL-3.0-or-later AND GPL-2.0-or-later
@@ -103,10 +99,13 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 %postun -n libosmo-ranap3 -p /sbin/ldconfig
 %post   -n libosmo-sabp0 -p /sbin/ldconfig
 %postun -n libosmo-sabp0 -p /sbin/ldconfig
+
+%if 0%{?suse_version}
 %pre     %service_add_pre    osmo-hnbgw.service
 %post    %service_add_post   osmo-hnbgw.service
 %preun   %service_del_preun  osmo-hnbgw.service
 %postun  %service_del_postun osmo-hnbgw.service
+%endif
 
 %files
 %license COPYING
