@@ -49,3 +49,5 @@ doc/manuals/build
 doc/manuals/common
 doc/manuals/generated
 doc/manuals/*.pdf
+
+contrib/osmo-iuh.spec
