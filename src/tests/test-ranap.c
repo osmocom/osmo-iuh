@@ -34,8 +34,6 @@
 
 #include <osmocom/iuh/hnbgw.h>
 
-int asn1_xer_print = 1;
-
 extern void *tall_msgb_ctx;
 
 static void test_aper_int(uint32_t inp)
@@ -94,6 +92,8 @@ int main(int argc, char **argv)
 	uint8_t ik[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	uint8_t ck[16] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 };
 	int i;
+
+	asn1_xer_print = 1;
 
 	//asn_debug = 1;
 

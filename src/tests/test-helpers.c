@@ -32,7 +32,6 @@
 
 #include <osmocom/ranap/RANAP_LAI.h>
 
-int asn1_xer_print = 0;
 extern void *talloc_asn1_ctx;
 
 /* use odd number of digits */
@@ -207,6 +206,8 @@ void test_ranap_common(void)
 
 int main(int argc, char **argv)
 {
+	asn1_xer_print = 0;
+
 	test_common_init();
 
 	test_iu_helpers();

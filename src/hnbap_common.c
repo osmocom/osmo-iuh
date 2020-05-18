@@ -106,10 +106,6 @@ char *hnbap_cause_str(Cause_t *cause)
 	return buf;
 }
 
-
-int asn_debug = 0;
-int asn1_xer_print = 0;
-
 static struct msgb *hnbap_msgb_alloc(void)
 {
 	return msgb_alloc(1024, "HNBAP Tx");

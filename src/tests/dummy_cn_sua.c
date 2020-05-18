@@ -26,7 +26,6 @@
 #include <osmocom/ranap/ranap_msg_factory.h>
 #include <osmocom/iuh/hnbgw.h>
 
-int asn1_xer_print = 1;
 const char *cmdline_bind_addr = "127.0.0.1";
 
 struct ue_conn_ctx {
@@ -363,6 +362,8 @@ int main(int argc, char **argv)
 	void *ctx = talloc_named_const(NULL, 1, "root");
 	int rc;
 	int port = 14001;
+
+	asn1_xer_print = 1;
 
 	osmo_sua_set_log_area(DSUA);
 	ranap_set_log_area(DRANAP);

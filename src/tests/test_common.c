@@ -41,8 +41,6 @@
 
 #include <osmocom/iuh/hnbgw.h>
 
-void *talloc_asn1_ctx;
-
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
 		.name = "DMAIN", .loglevel = LOGL_INFO, .enabled = 1,
