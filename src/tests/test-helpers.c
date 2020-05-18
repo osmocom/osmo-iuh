@@ -130,7 +130,7 @@ void test_ranap_common(void)
 	struct gprs_ra_id ra_id = {0};
 
 	int rc;
-	
+
 	RANAP_LAI_t lai = {
 		.pLMNidentity = {
 			.buf = plmnid_buf,
