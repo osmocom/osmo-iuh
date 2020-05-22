@@ -5,7 +5,13 @@ SUBDIRS = src include doc contrib
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libosmo-ranap.pc libosmo-sabp.pc
 
-EXTRA_DIST = asn1 .version README.md
+EXTRA_DIST = \
+	     .version \
+	     README.md \
+	     asn1 \
+	     contrib/osmo-iuh.spec.in \
+	     debian \
+	     $(NULL)
 
 AM_DISTCHECK_CONFIGURE_FLAGS = \
 	--with-systemdsystemunitdir=$$dc_install_base/$(systemdsystemunitdir)
