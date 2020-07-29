@@ -114,7 +114,7 @@ struct msgb *sabp_generate_initiating_message(e_SABP_ProcedureCode procedureCode
 	pdu.choice.initiatingMessage.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.initiatingMessage.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DSABP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DSABP, LOGL_ERROR, "Error in ANY_fromType_aper (%s)\n", td->name);
 		return NULL;
 	}
 
@@ -141,7 +141,7 @@ struct msgb *sabp_generate_successful_outcome(
 	pdu.choice.successfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DSABP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DSABP, LOGL_ERROR, "Error in ANY_fromType_aper (%s)\n", td->name);
 		return NULL;
 	}
 
@@ -168,7 +168,7 @@ struct msgb *sabp_generate_unsuccessful_outcome(
 	pdu.choice.unsuccessfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.unsuccessfulOutcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DSABP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DSABP, LOGL_ERROR, "Error in ANY_fromType_aper (%s)\n", td->name);
 		return NULL;
 	}
 
@@ -195,7 +195,7 @@ SABP_IE_t *sabp_new_ie(SABP_ProtocolIE_ID_t id,
 
 	rc = ANY_fromType_aper(&buff->value, type, sptr);
 	if (rc < 0) {
-		LOGP(DSABP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DSABP, LOGL_ERROR, "Error in ANY_fromType_aper (%s)\n", type->name);
 		FREEMEM(buff);
 		return NULL;
 	}
