@@ -598,7 +598,7 @@ int main(int argc, char **argv)
 
 	ranap_set_log_area(DRANAP);
 
-	rc = hnbgw_cnlink_init(g_hnb_gw, "127.0.0.1", M3UA_PORT, NULL);
+	rc = hnbgw_cnlink_init(g_hnb_gw, "localhost", M3UA_PORT, "localhost");
 	if (rc < 0) {
 		LOGP(DMAIN, LOGL_ERROR, "Failed to initialize SCCP link to CN\n");
 		exit(1);
