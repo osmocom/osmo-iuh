@@ -111,11 +111,11 @@ void ranap_iu_vty_init(int iu_parent_node, enum ranap_nsap_addr_enc *rab_assign_
 {
 	g_rab_assign_addr_enc = rab_assign_addr_enc;
 
-	install_element(iu_parent_node, &cfg_iu_rab_assign_addr_enc_cmd);
+	install_lib_element(iu_parent_node, &cfg_iu_rab_assign_addr_enc_cmd);
 
 	/* Technically, these are global ASN.1 settings and not necessarily limited to the Iu interface.
 	 * Practically, only Iu users will use ASN.1 in Osmocom programs -- at least so far. So it is
 	 * easiest to have these commands under 'iu'. */
-	install_element(iu_parent_node, &cfg_iu_asn1_debug_cmd);
-	install_element(iu_parent_node, &cfg_iu_asn1_xer_print_cmd);
+	install_lib_element(iu_parent_node, &cfg_iu_asn1_debug_cmd);
+	install_lib_element(iu_parent_node, &cfg_iu_asn1_xer_print_cmd);
 }
