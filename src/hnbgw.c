@@ -617,6 +617,7 @@ int main(int argc, char **argv)
 	}
 	osmo_stream_srv_link_set_data(srv, g_hnb_gw);
 	osmo_stream_srv_link_set_proto(srv, IPPROTO_SCTP);
+	osmo_stream_srv_link_set_nodelay(srv, true);
 	osmo_stream_srv_link_set_addr(srv, g_hnb_gw->config.iuh_local_ip);
 	osmo_stream_srv_link_set_port(srv, g_hnb_gw->config.iuh_local_port);
 	osmo_stream_srv_link_set_accept_cb(srv, accept_cb);
