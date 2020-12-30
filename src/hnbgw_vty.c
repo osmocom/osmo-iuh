@@ -296,6 +296,19 @@ DEFUN(cfg_hnbgw_iuh_hnbap_allow_tmsi, cfg_hnbgw_iuh_hnbap_allow_tmsi_cmd,
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_hnbgw_log_prefix, cfg_hnbgw_log_prefix_cmd,
+      "log-prefix (hnb-id|umts-cell-id)",
+      "Configure the log message prefix\n"
+      "Use the hNB-ID as log message prefix\n"
+      "Use the UMTS Cell ID as log message prefix\n")
+{
+	if (!strcmp(argv[0], "hnb-id"))
+		g_hnb_gw->config.log_prefix_hnb_id = true;
+	else
+		g_hnb_gw->config.log_prefix_hnb_id = false;
+	return CMD_SUCCESS;
+}
+
 DEFUN(cfg_hnbgw_iucs_remote_addr,
       cfg_hnbgw_iucs_remote_addr_cmd,
       "remote-addr NAME",
@@ -319,6 +332,8 @@ DEFUN(cfg_hnbgw_iups_remote_addr,
 static int config_write_hnbgw(struct vty *vty)
 {
 	vty_out(vty, "hnbgw%s", VTY_NEWLINE);
+	vty_out(vty, " log-prefix %s%s", g_hnb_gw->config.log_prefix_hnb_id ? "hnb-id" : "umts-cell-id",
+		VTY_NEWLINE);
 	return CMD_SUCCESS;
 }
 
@@ -376,6 +391,7 @@ void hnbgw_vty_init(struct hnb_gw *gw, void *tall_ctx)
 	install_node(&hnbgw_node, config_write_hnbgw);
 
 	install_element(HNBGW_NODE, &cfg_hnbgw_rnc_id_cmd);
+	install_element(HNBGW_NODE, &cfg_hnbgw_log_prefix_cmd);
 
 	install_element(HNBGW_NODE, &cfg_hnbgw_iuh_cmd);
 	install_node(&iuh_node, config_write_hnbgw_iuh);

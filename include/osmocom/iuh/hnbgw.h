@@ -18,6 +18,9 @@ enum {
 	DRANAP,
 };
 
+#define LOGHNB(x, ss, lvl, fmt, args ...) \
+	LOGP(ss, lvl, "%s " fmt, hnb_context_name(x), ## args)
+
 enum hnb_ctrl_node {
 	CTRL_NODE_HNB = _LAST_CTRL_NODE,
 	_LAST_CTRL_NODE_HNB
@@ -128,6 +131,8 @@ struct hnb_gw {
 		const char *iups_remote_addr_name;
 		uint16_t rnc_id;
 		bool hnbap_allow_tmsi;
+		/*! print hnb-id (true) or MCC-MNC-LAC-RAC-SAC (false) in logs */
+		bool log_prefix_hnb_id;
 	} config;
 	/*! SCTP listen socket for incoming connections */
 	struct osmo_stream_srv_link *iuh;
@@ -152,6 +157,7 @@ extern void *talloc_asn1_ctx;
 
 struct hnb_context *hnb_context_by_id(struct hnb_gw *gw, uint32_t cid);
 struct hnb_context *hnb_context_by_identity_info(struct hnb_gw *gw, const char *identity_info);
+const char *hnb_context_name(struct hnb_context *ctx);
 unsigned hnb_contexts(const struct hnb_gw *gw);
 
 struct ue_context *ue_context_by_id(struct hnb_gw *gw, uint32_t id);

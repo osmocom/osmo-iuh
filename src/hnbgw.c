@@ -83,6 +83,7 @@ static struct hnb_gw *hnb_gw_create(void *ctx)
 	/* strdup so we can easily talloc_free in the VTY code */
 	gw->config.iuh_local_ip = talloc_strdup(gw, HNBGW_LOCAL_IP_DEFAULT);
 	gw->config.iuh_local_port = IUH_DEFAULT_SCTP_PORT;
+	gw->config.log_prefix_hnb_id = true;
 
 	gw->next_ue_ctx_id = 23;
 	INIT_LLIST_HEAD(&gw->hnb_list);
@@ -294,6 +295,25 @@ struct hnb_context *hnb_context_alloc(struct hnb_gw *gw, struct osmo_stream_srv_
 
 	llist_add_tail(&ctx->list, &gw->hnb_list);
 	return ctx;
+}
+
+static const char *umts_cell_id_name(const struct umts_cell_id *ucid)
+{
+	static __thread char buf[40];
+
+	snprintf(buf, sizeof(buf), "%u-%u-L%u-R%u-S%u", ucid->mcc, ucid->mnc, ucid->lac, ucid->rac, ucid->sac);
+	return buf;
+}
+
+const char *hnb_context_name(struct hnb_context *ctx)
+{
+	if (!ctx)
+		return "NULL";
+
+	if (ctx->gw->config.log_prefix_hnb_id)
+		return ctx->identity_info;
+	else
+		return umts_cell_id_name(&ctx->id);
 }
 
 void hnb_context_release(struct hnb_context *ctx)
