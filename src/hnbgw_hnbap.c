@@ -64,8 +64,8 @@ static int hnbgw_tx_hnb_register_rej(struct hnb_context *ctx)
 	memset(&reject_out, 0, sizeof(reject_out));
 	rc = hnbap_encode_hnbregisterrejecties(&reject_out,  &reject);
 	if (rc < 0) {
-		LOGP(DHNBAP, LOGL_ERROR, "Failure to encode HNB-REGISTER-REJECT to %s: rc=%d\n",
-		     ctx->identity_info, rc);
+		LOGHNB(ctx, DHNBAP, LOGL_ERROR, "Failure to encode HNB-REGISTER-REJECT to %s: rc=%d\n",
+			ctx->identity_info, rc);
 		return rc;
 	}
 
@@ -106,8 +106,8 @@ static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
 	memset(&accept_out, 0, sizeof(accept_out));
 	rc = hnbap_encode_hnbregisteraccepties(&accept_out,  &accept);
 	if (rc < 0) {
-		LOGP(DHNBAP, LOGL_ERROR, "Failure to encode HNB-REGISTER-ACCEPT to %s: rc=%d\n",
-		     ctx->identity_info, rc);
+		LOGHNB(ctx, DHNBAP, LOGL_ERROR, "Failure to encode HNB-REGISTER-ACCEPT to %s: rc=%d\n",
+			ctx->identity_info, rc);
 		return rc;
 	}
 
@@ -119,7 +119,7 @@ static int hnbgw_tx_hnb_register_acc(struct hnb_context *ctx)
 
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBRegisterAccept, &accept_out);
 
-	LOGP(DHNBAP, LOGL_NOTICE, "Accepting HNB-REGISTER-REQ from %s\n", ctx->identity_info);
+	LOGHNB(ctx, DHNBAP, LOGL_NOTICE, "Accepting HNB-REGISTER-REQ from %s\n", ctx->identity_info);
 
 	return hnbgw_hnbap_tx(ctx, msg);
 }
@@ -174,20 +174,14 @@ static int hnbgw_tx_ue_register_rej_tmsi(struct hnb_context *hnb, UE_Identity_t 
 	/* Copy the identity over to the reject message */
 	switch (ue_id->present) {
 	case UE_Identity_PR_tMSILAI:
-		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id tMSI %d %s\n",
-		     ue_id->choice.tMSILAI.tMSI.size,
-		     osmo_hexdump(ue_id->choice.tMSILAI.tMSI.buf,
-				  ue_id->choice.tMSILAI.tMSI.size));
+		LOGHNB(hnb, DHNBAP, LOGL_DEBUG, "REJ UE_Id tMSI %d %s\n", ue_id->choice.tMSILAI.tMSI.size,
+			osmo_hexdump(ue_id->choice.tMSILAI.tMSI.buf, ue_id->choice.tMSILAI.tMSI.size));
 
-		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id pLMNID %d %s\n",
-		     ue_id->choice.tMSILAI.lAI.pLMNID.size,
-		     osmo_hexdump(ue_id->choice.tMSILAI.lAI.pLMNID.buf,
-				  ue_id->choice.tMSILAI.lAI.pLMNID.size));
+		LOGHNB(hnb, DHNBAP, LOGL_DEBUG, "REJ UE_Id pLMNID %d %s\n", ue_id->choice.tMSILAI.lAI.pLMNID.size,
+			osmo_hexdump(ue_id->choice.tMSILAI.lAI.pLMNID.buf, ue_id->choice.tMSILAI.lAI.pLMNID.size));
 
-		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id lAC %d %s\n",
-		     ue_id->choice.tMSILAI.lAI.lAC.size,
-		     osmo_hexdump(ue_id->choice.tMSILAI.lAI.lAC.buf,
-				  ue_id->choice.tMSILAI.lAI.lAC.size));
+		LOGHNB(hnb, DHNBAP, LOGL_DEBUG, "REJ UE_Id lAC %d %s\n", ue_id->choice.tMSILAI.lAI.lAC.size,
+			osmo_hexdump(ue_id->choice.tMSILAI.lAI.lAC.buf, ue_id->choice.tMSILAI.lAI.lAC.size));
 
 		BIT_STRING_fromBuf(&reject.uE_Identity.choice.tMSILAI.tMSI,
 				   ue_id->choice.tMSILAI.tMSI.buf,
@@ -202,25 +196,17 @@ static int hnbgw_tx_ue_register_rej_tmsi(struct hnb_context *hnb, UE_Identity_t 
 		break;
 
 	case UE_Identity_PR_pTMSIRAI:
-		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id pTMSI %d %s\n",
-		     ue_id->choice.pTMSIRAI.pTMSI.size,
-		     osmo_hexdump(ue_id->choice.pTMSIRAI.pTMSI.buf,
-				  ue_id->choice.pTMSIRAI.pTMSI.size));
+		LOGHNB(hnb, DHNBAP, LOGL_DEBUG, "REJ UE_Id pTMSI %d %s\n", ue_id->choice.pTMSIRAI.pTMSI.size,
+			osmo_hexdump(ue_id->choice.pTMSIRAI.pTMSI.buf, ue_id->choice.pTMSIRAI.pTMSI.size));
 
-		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id pLMNID %d %s\n",
-		     ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.size,
-		     osmo_hexdump(ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.buf,
-				  ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.size));
+		LOGHNB(hnb, DHNBAP, LOGL_DEBUG, "REJ UE_Id pLMNID %d %s\n", ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.size,
+			osmo_hexdump(ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.buf, ue_id->choice.pTMSIRAI.rAI.lAI.pLMNID.size));
 
-		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id lAC %d %s\n",
-		     ue_id->choice.pTMSIRAI.rAI.lAI.lAC.size,
-		     osmo_hexdump(ue_id->choice.pTMSIRAI.rAI.lAI.lAC.buf,
-				  ue_id->choice.pTMSIRAI.rAI.lAI.lAC.size));
+		LOGHNB(hnb, DHNBAP, LOGL_DEBUG, "REJ UE_Id lAC %d %s\n", ue_id->choice.pTMSIRAI.rAI.lAI.lAC.size,
+			osmo_hexdump(ue_id->choice.pTMSIRAI.rAI.lAI.lAC.buf, ue_id->choice.pTMSIRAI.rAI.lAI.lAC.size));
 
-		LOGP(DHNBAP, LOGL_DEBUG, "REJ UE_Id rAC %d %s\n",
-		     ue_id->choice.pTMSIRAI.rAI.rAC.size,
-		     osmo_hexdump(ue_id->choice.pTMSIRAI.rAI.rAC.buf,
-				  ue_id->choice.pTMSIRAI.rAI.rAC.size));
+		LOGHNB(hnb, DHNBAP, LOGL_DEBUG, "REJ UE_Id rAC %d %s\n", ue_id->choice.pTMSIRAI.rAI.rAC.size,
+			osmo_hexdump(ue_id->choice.pTMSIRAI.rAI.rAC.buf, ue_id->choice.pTMSIRAI.rAI.rAC.size));
 
 		BIT_STRING_fromBuf(&reject.uE_Identity.choice.pTMSIRAI.pTMSI,
 				   ue_id->choice.pTMSIRAI.pTMSI.buf,
@@ -238,13 +224,12 @@ static int hnbgw_tx_ue_register_rej_tmsi(struct hnb_context *hnb, UE_Identity_t 
 		break;
 
 	default:
-		LOGP(DHNBAP, LOGL_ERROR, "Cannot compose UE Register Reject:"
+		LOGHNB(hnb, DHNBAP, LOGL_ERROR, "Cannot compose UE Register Reject:"
 		     " unsupported UE ID (present=%d)\n", ue_id->present);
 		return -1;
 	}
 
-	LOGP(DHNBAP, LOGL_ERROR, "Rejecting UE Register Request:"
-	     " TMSI identity registration is switched off\n");
+	LOGHNB(hnb, DHNBAP, LOGL_ERROR, "Rejecting UE Register Request: TMSI identity registration is switched off\n");
 
 	reject.cause.present = Cause_PR_radioNetwork;
 	reject.cause.choice.radioNetwork = CauseRadioNetwork_invalid_UE_identity;
@@ -337,14 +322,12 @@ static int hnbgw_tx_ue_register_acc_tmsi(struct hnb_context *hnb, UE_Identity_t 
 		break;
 
 	default:
-		LOGP(DHNBAP, LOGL_ERROR, "Unsupportedccept UE ID (present=%d)\n",
-			ue_id->present);
+		LOGHNB(hnb, DHNBAP, LOGL_ERROR, "Unsupportedccept UE ID (present=%d)\n", ue_id->present);
 		return -1;
 	}
 
 	tmsi = ntohl(tmsi);
-	LOGP(DHNBAP, LOGL_DEBUG, "HNBAP register with TMSI %x\n",
-	     tmsi);
+	LOGHNB(hnb, DHNBAP, LOGL_DEBUG, "HNBAP register with TMSI %x\n", tmsi);
 
 	ue = ue_context_by_tmsi(hnb->gw, tmsi);
 	if (!ue)
@@ -402,8 +385,7 @@ static int hnbgw_rx_hnb_deregister(struct hnb_context *ctx, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	DEBUGP(DHNBAP, "HNB-DE-REGISTER cause=%s\n",
-		hnbap_cause_str(&ies.cause));
+	LOGHNB(ctx, DHNBAP, LOGL_DEBUG, "HNB-DE-REGISTER cause=%s\n", hnbap_cause_str(&ies.cause));
 
 	hnbap_free_hnbde_registeries(&ies);
 	hnb_context_release(ctx);
@@ -419,8 +401,8 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 
 	rc = hnbap_decode_hnbregisterrequesties(&ies, in);
 	if (rc < 0) {
-		LOGP(DHNBAP, LOGL_ERROR, "Failure to decode HNB-REGISTER-REQ from %s: rc=%d\n",
-		     ctx->identity_info, rc);
+		LOGHNB(ctx, DHNBAP, LOGL_ERROR, "Failure to decode HNB-REGISTER-REQ from %s: rc=%d\n",
+			ctx->identity_info, rc);
 		return rc;
 	}
 
@@ -437,9 +419,9 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 		if (hnb->hnb_registered && ctx != hnb && memcmp(&ctx->id, &hnb->id, sizeof(ctx->id)) == 0) {
 			struct osmo_fd *ofd = osmo_stream_srv_get_ofd(ctx->conn);
 			char *name = osmo_sock_get_name(ctx, ofd->fd);
-			LOGP(DHNBAP, LOGL_ERROR, "rejecting HNB-REGISTER-REQ with duplicate cell identity "
-			     "MCC=%u,MNC=%u,LAC=%u,RAC=%u,SAC=%u,CID=%u from %s\n",
-			     ctx->id.mcc, ctx->id.mnc, ctx->id.lac, ctx->id.rac, ctx->id.sac, ctx->id.cid, name);
+			LOGHNB(ctx, DHNBAP, LOGL_ERROR, "rejecting HNB-REGISTER-REQ with duplicate cell identity "
+				"MCC=%u,MNC=%u,LAC=%u,RAC=%u,SAC=%u,CID=%u from %s\n",
+				ctx->id.mcc, ctx->id.mnc, ctx->id.lac, ctx->id.rac, ctx->id.sac, ctx->id.cid, name);
 			talloc_free(name);
 			return hnbgw_tx_hnb_register_rej(ctx);
 		}
@@ -447,7 +429,7 @@ static int hnbgw_rx_hnb_register_req(struct hnb_context *ctx, ANY_t *in)
 
 	ctx->hnb_registered = true;
 
-	DEBUGP(DHNBAP, "HNB-REGISTER-REQ from %s\n", ctx->identity_info);
+	LOGHNB(ctx, DHNBAP, LOGL_DEBUG, "HNB-REGISTER-REQ from %s\n", ctx->identity_info);
 
 	/* Send HNBRegisterAccept */
 	rc = hnbgw_tx_hnb_register_acc(ctx);
@@ -489,14 +471,13 @@ static int hnbgw_rx_ue_register_req(struct hnb_context *ctx, ANY_t *in)
 		hnbap_free_ueregisterrequesties(&ies);
 		return rc;
 	default:
-		LOGP(DHNBAP, LOGL_NOTICE,
-		     "UE-REGISTER-REQ with unsupported UE Id type %d\n",
-		     ies.uE_Identity.present);
+		LOGHNB(ctx, DHNBAP, LOGL_NOTICE, "UE-REGISTER-REQ with unsupported UE Id type %d\n",
+			ies.uE_Identity.present);
 		hnbap_free_ueregisterrequesties(&ies);
 		return rc;
 	}
 
-	DEBUGP(DHNBAP, "UE-REGISTER-REQ ID_type=%d imsi=%s cause=%ld\n",
+	LOGHNB(ctx, DHNBAP, LOGL_DEBUG, "UE-REGISTER-REQ ID_type=%d imsi=%s cause=%ld\n",
 		ies.uE_Identity.present, imsi, ies.registration_Cause);
 
 	ue = ue_context_by_imsi(ctx->gw, imsi);
@@ -521,8 +502,7 @@ static int hnbgw_rx_ue_deregister(struct hnb_context *ctx, ANY_t *in)
 
 	ctxid = asn1bitstr_to_u24(&ies.context_ID);
 
-	DEBUGP(DHNBAP, "UE-DE-REGISTER context=%u cause=%s\n",
-		ctxid, hnbap_cause_str(&ies.cause));
+	LOGHNB(ctx, DHNBAP, LOGL_DEBUG, "UE-DE-REGISTER context=%u cause=%s\n", ctxid, hnbap_cause_str(&ies.cause));
 
 	ue = ue_context_by_id(ctx->gw, ctxid);
 	if (ue)
@@ -541,8 +521,7 @@ static int hnbgw_rx_err_ind(struct hnb_context *hnb, ANY_t *in)
 	if (rc < 0)
 		return rc;
 
-	LOGP(DHNBAP, LOGL_NOTICE, "HNBAP ERROR.ind, cause: %s\n",
-		hnbap_cause_str(&ies.cause));
+	LOGHNB(hnb, DHNBAP, LOGL_NOTICE, "HNBAP ERROR.ind, cause: %s\n", hnbap_cause_str(&ies.cause));
 
 	hnbap_free_errorindicationies(&ies);
 	return 0;
@@ -573,12 +552,10 @@ static int hnbgw_rx_initiating_msg(struct hnb_context *hnb, InitiatingMessage_t 
 	case ProcedureCode_id_RelocationComplete:	/* 8.11 */
 	case ProcedureCode_id_U_RNTIQuery:	/* 8.12 */
 	case ProcedureCode_id_privateMessage:
-		LOGP(DHNBAP, LOGL_NOTICE, "Unimplemented HNBAP Procedure %ld\n",
-			imsg->procedureCode);
+		LOGHNB(hnb, DHNBAP, LOGL_NOTICE, "Unimplemented HNBAP Procedure %ld\n", imsg->procedureCode);
 		break;
 	default:
-		LOGP(DHNBAP, LOGL_NOTICE, "Unknown HNBAP Procedure %ld\n",
-			imsg->procedureCode);
+		LOGHNB(hnb, DHNBAP, LOGL_NOTICE, "Unknown HNBAP Procedure %ld\n", imsg->procedureCode);
 		break;
 	}
 
@@ -594,10 +571,9 @@ static int hnbgw_rx_successful_outcome_msg(struct hnb_context *hnb, SuccessfulOu
 static int hnbgw_rx_unsuccessful_outcome_msg(struct hnb_context *hnb, UnsuccessfulOutcome_t *msg)
 {
 	/* We don't care much about HNBAP */
-	LOGP(DHNBAP, LOGL_ERROR, "Received Unsuccessful Outcome, procedureCode %ld, criticality %ld,"
-	     " from '%s', cell mcc %u mnc %u lac %u rac %u sac %u cid %u\n",
-	     msg->procedureCode, msg->criticality, hnb->identity_info,
-	     hnb->id.mcc, hnb->id.mnc, hnb->id.lac, hnb->id.rac, hnb->id.sac, hnb->id.cid);
+	LOGHNB(hnb, DHNBAP, LOGL_ERROR, "Received Unsuccessful Outcome, procedureCode %ld, criticality %ld,"
+		" cell mcc %u mnc %u lac %u rac %u sac %u cid %u\n", msg->procedureCode, msg->criticality,
+		hnb->id.mcc, hnb->id.mnc, hnb->id.lac, hnb->id.rac, hnb->id.sac, hnb->id.cid);
 	return 0;
 }
 
@@ -619,8 +595,7 @@ static int _hnbgw_hnbap_rx(struct hnb_context *hnb, HNBAP_PDU_t *pdu)
 		rc = hnbgw_rx_unsuccessful_outcome_msg(hnb, &pdu->choice.unsuccessfulOutcome);
 		break;
 	default:
-		LOGP(DHNBAP, LOGL_NOTICE, "Unknown HNBAP Presence %u\n",
-			pdu->present);
+		LOGHNB(hnb, DHNBAP, LOGL_NOTICE, "Unknown HNBAP Presence %u\n", pdu->present);
 		rc = -1;
 	}
 
@@ -639,7 +614,7 @@ int hnbgw_hnbap_rx(struct hnb_context *hnb, struct msgb *msg)
 	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
 			      msg->data, msgb_length(msg), 0, 0);
 	if (dec_ret.code != RC_OK) {
-		LOGP(DHNBAP, LOGL_ERROR, "Error in ASN.1 decode\n");
+		LOGHNB(hnb, DHNBAP, LOGL_ERROR, "Error in ASN.1 decode\n");
 		return -1;
 	}
 

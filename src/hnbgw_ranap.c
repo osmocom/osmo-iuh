@@ -64,7 +64,7 @@ static int ranap_rx_init_reset(struct hnb_context *hnb, ANY_t *in)
 	if (ies.cN_DomainIndicator == RANAP_CN_DomainIndicator_ps_domain)
 		is_ps=1;
 
-	LOGP(DRANAP, LOGL_INFO, "Rx RESET.req(%s,%s)\n", is_ps ? "ps" : "cs",
+	LOGHNB(hnb, DRANAP, LOGL_INFO, "Rx RESET.req(%s,%s)\n", is_ps ? "ps" : "cs",
 		ranap_cause_str(&ies.cause));
 
 	/* FIXME: Actually we have to wait for some guard time? */
@@ -84,10 +84,9 @@ static int ranap_rx_error_ind(struct hnb_context *hnb, ANY_t *in)
 		return rc;
 
 	if (ies.presenceMask & ERRORINDICATIONIES_RANAP_CAUSE_PRESENT) {
-		LOGP(DRANAP, LOGL_ERROR, "Rx ERROR.ind(%s)\n",
-			ranap_cause_str(&ies.cause));
+		LOGHNB(hnb, DRANAP, LOGL_ERROR, "Rx ERROR.ind(%s)\n", ranap_cause_str(&ies.cause));
 	} else
-		LOGP(DRANAP, LOGL_ERROR, "Rx ERROR.ind\n");
+		LOGHNB(hnb, DRANAP, LOGL_ERROR, "Rx ERROR.ind\n");
 
 	return 0;
 }
@@ -117,12 +116,12 @@ static int ranap_rx_initiating_msg(struct hnb_context *hnb, RANAP_InitiatingMess
 	case RANAP_ProcedureCode_id_InformationTransfer:
 	case RANAP_ProcedureCode_id_DirectInformationTransfer:
 	case RANAP_ProcedureCode_id_UplinkInformationExchange:
-		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
-		     "Procedure %lu from HNB, ignoring\n", imsg->procedureCode);
+		LOGHNB(hnb, DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
+			"Procedure %lu from HNB, ignoring\n", imsg->procedureCode);
 		break;
 	default:
-		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
-		     "Procedure %lu from HNB, ignoring\n", imsg->procedureCode);
+		LOGHNB(hnb, DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
+			"Procedure %lu from HNB, ignoring\n", imsg->procedureCode);
 		break;
 	}
 
@@ -145,12 +144,12 @@ static int ranap_rx_successful_msg(struct hnb_context *hnb, RANAP_SuccessfulOutc
 	case RANAP_ProcedureCode_id_InformationTransfer:
 	case RANAP_ProcedureCode_id_DirectInformationTransfer:
 	case RANAP_ProcedureCode_id_UplinkInformationExchange:
-		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
-		     "Procedure %lu from HNB, ignoring\n", imsg->procedureCode);
+		LOGHNB(hnb, DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
+			"Procedure %lu from HNB, ignoring\n", imsg->procedureCode);
 		break;
 	default:
-		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
-		     "Procedure %lu from HNB, ignoring\n", imsg->procedureCode);
+		LOGHNB(hnb, DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
+			"Procedure %lu from HNB, ignoring\n", imsg->procedureCode);
 		break;
 	}
 
@@ -171,13 +170,13 @@ static int _hnbgw_ranap_rx(struct hnb_context *hnb, RANAP_RANAP_PDU_t *pdu)
 		rc = ranap_rx_successful_msg(hnb, &pdu->choice.successfulOutcome);
 		break;
 	case RANAP_RANAP_PDU_PR_unsuccessfulOutcome:
-		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
-		     "unsuccessful outcome procedure %lu from HNB, ignoring\n",
-		     pdu->choice.unsuccessfulOutcome.procedureCode);
+		LOGHNB(hnb, DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
+			"unsuccessful outcome procedure %lu from HNB, ignoring\n",
+			pdu->choice.unsuccessfulOutcome.procedureCode);
 		break;
 	default:
-		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
-		     "presence %u from HNB, ignoring\n", pdu->present);
+		LOGHNB(hnb, DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
+			"presence %u from HNB, ignoring\n", pdu->present);
 		break;
 	}
 
@@ -188,6 +187,7 @@ static int _hnbgw_ranap_rx(struct hnb_context *hnb, RANAP_RANAP_PDU_t *pdu)
 int hnbgw_ranap_rx(struct msgb *msg, uint8_t *data, size_t len)
 {
 	RANAP_RANAP_PDU_t _pdu, *pdu = &_pdu;
+	struct hnb_context *hnb = msg->dst;
 	asn_dec_rval_t dec_ret;
 	int rc;
 
@@ -195,11 +195,11 @@ int hnbgw_ranap_rx(struct msgb *msg, uint8_t *data, size_t len)
 	dec_ret = aper_decode(NULL,&asn_DEF_RANAP_RANAP_PDU, (void **) &pdu,
 			      data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
-		LOGP(DRANAP, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
+		LOGHNB(hnb, DRANAP, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
 		return -1;
 	}
 
-	rc = _hnbgw_ranap_rx(msg->dst, pdu);
+	rc = _hnbgw_ranap_rx(hnb, pdu);
 
 	return rc;
 }

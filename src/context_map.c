@@ -85,11 +85,11 @@ context_map_alloc_by_hnb(struct hnb_context *hnb, uint32_t rua_ctx_id,
 	}
 
 	if (alloc_cn_conn_id(cn_if_new, &new_scu_conn_id) < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Unable to allocate CN connection ID\n");
+		LOGHNB(hnb, DMAIN, LOGL_ERROR, "Unable to allocate CN connection ID\n");
 		return NULL;
 	}
 
-	LOGP(DMAIN, LOGL_INFO, "Creating new Mapping RUA CTX %p/%u <-> SCU Conn ID %p/%u\n",
+	LOGHNB(hnb, DMAIN, LOGL_INFO, "Creating new Mapping RUA CTX %p/%u <-> SCU Conn ID %p/%u\n",
 		hnb, rua_ctx_id, cn_if_new, new_scu_conn_id);
 
 	/* alloate a new map entry */
@@ -125,8 +125,7 @@ context_map_by_cn(struct hnbgw_cnlink *cn, uint32_t scu_conn_id)
 	/* we don't allocate new mappings in the CN->HNB
 	 * direction, as the RUA=SCCP=SUA connections are always
 	 * established from HNB towards CN. */
-	LOGP(DMAIN, LOGL_NOTICE, "Unable to resolve map for CN "
-		"connection ID %p/%u\n", cn, scu_conn_id);
+	LOGP(DMAIN, LOGL_NOTICE, "Unable to resolve map for CN " "connection ID %p/%u\n", cn, scu_conn_id);
 	return NULL;
 }
 

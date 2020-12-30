@@ -235,7 +235,7 @@ static int hnb_read_cb(struct osmo_stream_srv *conn)
 		msgb_free(msg);
 		return 0;
 	} else if (rc < 0) {
-		LOGP(DMAIN, LOGL_ERROR, "Error during sctp_recvmsg()\n");
+		LOGHNB(hnb, DMAIN, LOGL_ERROR, "Error during sctp_recvmsg()\n");
 		/* FIXME: clean up after disappeared HNB */
 		hnb_context_release(hnb);
 		goto out;
@@ -260,13 +260,11 @@ static int hnb_read_cb(struct osmo_stream_srv *conn)
 	case IUH_PPI_SABP:
 	case IUH_PPI_RNA:
 	case IUH_PPI_PUA:
-		LOGP(DMAIN, LOGL_ERROR, "Unimplemented SCTP PPID=%lu received\n",
-		     msgb_sctp_ppid(msg));
+		LOGHNB(hnb, DMAIN, LOGL_ERROR, "Unimplemented SCTP PPID=%lu received\n", msgb_sctp_ppid(msg));
 		rc = 0;
 		break;
 	default:
-		LOGP(DMAIN, LOGL_ERROR, "Unknown SCTP PPID=%lu received\n",
-		     msgb_sctp_ppid(msg));
+		LOGHNB(hnb, DMAIN, LOGL_ERROR, "Unknown SCTP PPID=%lu received\n", msgb_sctp_ppid(msg));
 		rc = 0;
 		break;
 	}

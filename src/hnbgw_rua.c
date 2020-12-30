@@ -86,7 +86,7 @@ int rua_tx_udt(struct hnb_context *hnb, const uint8_t *data, unsigned int len)
 					      &out);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_ConnectionlessTransfer, &out);
 
-	DEBUGP(DRUA, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+	LOGHNB(hnb, DRUA, LOGL_DEBUG, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
 
 	return hnbgw_rua_tx(hnb, msg);
 }
@@ -122,7 +122,7 @@ int rua_tx_dt(struct hnb_context *hnb, int is_ps, uint32_t context_id,
 					      &out);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_DirectTransfer, &out);
 
-	DEBUGP(DRUA, "transmitting RUA (cn=%s) payload of %u bytes\n",
+	LOGHNB(hnb, DRUA, LOGL_DEBUG, "transmitting RUA (cn=%s) payload of %u bytes\n",
 		is_ps ? "ps" : "cs", msgb_length(msg));
 
 	return hnbgw_rua_tx(hnb, msg);
@@ -163,7 +163,7 @@ int rua_tx_disc(struct hnb_context *hnb, int is_ps, uint32_t context_id,
 					      &out);
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_Disconnect, &out);
 
-	DEBUGP(DRUA, "transmitting RUA (cn=%s) payload of %u bytes\n",
+	LOGHNB(hnb, DRUA, LOGL_DEBUG, "transmitting RUA (cn=%s) payload of %u bytes\n",
 		is_ps ? "ps" : "cs", msgb_length(msg));
 
 
@@ -198,13 +198,12 @@ static int rua_to_scu(struct hnb_context *hnb,
 		is_ps = true;
 		break;
 	default:
-		LOGP(DRUA, LOGL_ERROR, "Unsupported Domain %ld\n",
-		     cN_DomainIndicator);
+		LOGHNB(hnb, DRUA, LOGL_ERROR, "Unsupported Domain %ld\n", cN_DomainIndicator);
 		return -1;
 	}
 
 	if (!cn) {
-		DEBUGP(DRUA, "CN=NULL, discarding message\n");
+		LOGHNB(hnb, DRUA, LOGL_NOTICE, "CN=NULL, discarding message\n");
 		return 0;
 	}
 
@@ -215,17 +214,14 @@ static int rua_to_scu(struct hnb_context *hnb,
 
 	switch (type) {
 	case OSMO_SCU_PRIM_N_UNITDATA:
-		DEBUGP(DRUA, "rua_to_scu() %s to %s, rua_ctx_id %u (unitdata, no scu_conn_id)\n",
-		       cn_domain_indicator_to_str(cN_DomainIndicator),
-		       osmo_sccp_addr_dump(remote_addr),
-		       context_id);
+		LOGHNB(hnb, DRUA, LOGL_DEBUG, "rua_to_scu() %s to %s, rua_ctx_id %u (unitdata, no scu_conn_id)\n",
+			cn_domain_indicator_to_str(cN_DomainIndicator), osmo_sccp_addr_dump(remote_addr), context_id);
 		break;
 	default:
 		map = context_map_alloc_by_hnb(hnb, context_id, is_ps, cn);
 		OSMO_ASSERT(map);
-		DEBUGP(DRUA, "rua_to_scu() %s to %s, rua_ctx_id %u scu_conn_id %u\n",
-		       cn_domain_indicator_to_str(cN_DomainIndicator),
-		       osmo_sccp_addr_dump(remote_addr),
+		LOGHNB(hnb, DRUA, LOGL_DEBUG, "rua_to_scu() %s to %s, rua_ctx_id %u scu_conn_id %u\n",
+		       cn_domain_indicator_to_str(cN_DomainIndicator), osmo_sccp_addr_dump(remote_addr),
 		       map->rua_ctx_id, map->scu_conn_id);
 	}
 
@@ -237,10 +233,10 @@ static int rua_to_scu(struct hnb_context *hnb,
 		prim->u.connect.sccp_class = 2;
 		prim->u.connect.conn_id = map->scu_conn_id;
 		/* Two separate logs because of osmo_sccp_addr_dump(). */
-		DEBUGP(DRUA, "RUA to SCCP N_CONNECT: called_addr:%s\n",
-		       osmo_sccp_addr_dump(&prim->u.connect.called_addr));
-		DEBUGP(DRUA, "RUA to SCCP N_CONNECT: calling_addr:%s\n",
-		       osmo_sccp_addr_dump(&prim->u.connect.calling_addr));
+		LOGHNB(hnb, DRUA, LOGL_DEBUG, "RUA to SCCP N_CONNECT: called_addr:%s\n",
+			osmo_sccp_addr_dump(&prim->u.connect.called_addr));
+		LOGHNB(hnb, DRUA, LOGL_DEBUG, "RUA to SCCP N_CONNECT: calling_addr:%s\n",
+			osmo_sccp_addr_dump(&prim->u.connect.calling_addr));
 		break;
 	case OSMO_SCU_PRIM_N_DATA:
 		prim->u.data.conn_id = map->scu_conn_id;
@@ -254,10 +250,10 @@ static int rua_to_scu(struct hnb_context *hnb,
 		prim->u.unitdata.called_addr = *remote_addr;
 		prim->u.unitdata.calling_addr = cn->gw->sccp.local_addr;
 		/* Two separate logs because of osmo_sccp_addr_dump(). */
-		DEBUGP(DRUA, "RUA to SCCP N_UNITDATA: called_addr:%s\n",
-		       osmo_sccp_addr_dump(&prim->u.unitdata.called_addr));
-		DEBUGP(DRUA, "RUA to SCCP N_UNITDATA: calling_addr:%s\n",
-		       osmo_sccp_addr_dump(&prim->u.unitdata.calling_addr));
+		LOGHNB(hnb, DRUA, LOGL_DEBUG, "RUA to SCCP N_UNITDATA: called_addr:%s\n",
+			osmo_sccp_addr_dump(&prim->u.unitdata.called_addr));
+		LOGHNB(hnb, DRUA, LOGL_DEBUG, "RUA to SCCP N_UNITDATA: calling_addr:%s\n",
+			osmo_sccp_addr_dump(&prim->u.unitdata.calling_addr));
 		break;
 	default:
 		return -EINVAL;
@@ -352,11 +348,9 @@ static int rua_rx_init_connect(struct msgb *msg, ANY_t *in)
 
 	context_id = asn1bitstr_to_u24(&ies.context_ID);
 
-	DEBUGP(DRUA, "RUA %s Connect.req(ctx=0x%x, %s)\n",
-	       cn_domain_indicator_to_str(ies.cN_DomainIndicator),
-	       context_id,
-	       ies.establishment_Cause == RUA_Establishment_Cause_emergency_call
-		? "emergency" : "normal");
+	LOGHNB(hnb, DRUA, LOGL_DEBUG, "RUA %s Connect.req(ctx=0x%x, %s)\n",
+		cn_domain_indicator_to_str(ies.cN_DomainIndicator), context_id,
+		ies.establishment_Cause == RUA_Establishment_Cause_emergency_call ? "emergency" : "normal");
 
 	rc = rua_to_scu(hnb, ies.cN_DomainIndicator, OSMO_SCU_PRIM_N_CONNECT,
 			context_id, 0, ies.ranaP_Message.buf,
@@ -384,7 +378,7 @@ static int rua_rx_init_disconnect(struct msgb *msg, ANY_t *in)
 	context_id = asn1bitstr_to_u24(&ies.context_ID);
 	scu_cause = rua_to_scu_cause(&ies.cause);
 
-	DEBUGP(DRUA, "RUA Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
+	LOGHNB(hnb, DRUA, LOGL_DEBUG, "RUA Disconnect.req(ctx=0x%x,cause=%s)\n", context_id,
 		rua_cause_str(&ies.cause));
 
 	if (ies.presenceMask & DISCONNECTIES_RUA_RANAP_MESSAGE_PRESENT) {
@@ -414,7 +408,7 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 
 	context_id = asn1bitstr_to_u24(&ies.context_ID);
 
-	DEBUGP(DRUA, "RUA Data.req(ctx=0x%x)\n", context_id);
+	LOGHNB(hnb, DRUA, LOGL_DEBUG, "RUA Data.req(ctx=0x%x)\n", context_id);
 
 	rc = rua_to_scu(hnb,
 			ies.cN_DomainIndicator,
@@ -430,13 +424,14 @@ static int rua_rx_init_dt(struct msgb *msg, ANY_t *in)
 static int rua_rx_init_udt(struct msgb *msg, ANY_t *in)
 {
 	RUA_ConnectionlessTransferIEs_t ies;
+	struct hnb_context *hnb = msg->dst;
 	int rc;
 
 	rc = rua_decode_connectionlesstransferies(&ies, in);
 	if (rc < 0)
 		return rc;
 
-	DEBUGP(DRUA, "RUA UData.req()\n");
+	LOGHNB(hnb, DRUA, LOGL_DEBUG, "RUA UData.req()\n");
 
 	/* according tot the spec, we can primarily receive Overload,
 	 * Reset, Reset ACK, Error Indication, reset Resource, Reset
@@ -455,14 +450,14 @@ static int rua_rx_init_udt(struct msgb *msg, ANY_t *in)
 static int rua_rx_init_err_ind(struct msgb *msg, ANY_t *in)
 {
 	RUA_ErrorIndicationIEs_t ies;
+	struct hnb_context *hnb = msg->dst;
 	int rc;
 
 	rc = rua_decode_errorindicationies(&ies, in);
 	if (rc < 0)
 		return rc;
 
-	LOGP(DRUA, LOGL_ERROR, "RUA UData.ErrorInd(%s)\n",
-		rua_cause_str(&ies.cause));
+	LOGHNB(hnb, DRUA, LOGL_ERROR, "RUA UData.ErrorInd(%s)\n", rua_cause_str(&ies.cause));
 
 	rua_free_errorindicationies(&ies);
 	return rc;
@@ -470,6 +465,7 @@ static int rua_rx_init_err_ind(struct msgb *msg, ANY_t *in)
 
 static int rua_rx_initiating_msg(struct msgb *msg, RUA_InitiatingMessage_t *imsg)
 {
+	struct hnb_context *hnb = msg->dst;
 	int rc;
 
 	switch (imsg->procedureCode) {
@@ -489,13 +485,11 @@ static int rua_rx_initiating_msg(struct msgb *msg, RUA_InitiatingMessage_t *imsg
 		rc = rua_rx_init_err_ind(msg, &imsg->value);
 		break;
 	case RUA_ProcedureCode_id_privateMessage:
-		LOGP(DRUA, LOGL_NOTICE,
-		     "Unhandled: RUA Initiating Msg: Private Msg\n");
+		LOGHNB(hnb, DRUA, LOGL_NOTICE, "Unhandled: RUA Initiating Msg: Private Msg\n");
 		rc = 0;
 		break;
 	default:
-		LOGP(DRUA, LOGL_NOTICE, "Unknown RUA Procedure %lu\n",
-		     imsg->procedureCode);
+		LOGHNB(hnb, DRUA, LOGL_NOTICE, "Unknown RUA Procedure %lu\n", imsg->procedureCode);
 		rc = -1;
 	}
 
@@ -504,21 +498,24 @@ static int rua_rx_initiating_msg(struct msgb *msg, RUA_InitiatingMessage_t *imsg
 
 static int rua_rx_successful_outcome_msg(struct msgb *msg, RUA_SuccessfulOutcome_t *in)
 {
+	struct hnb_context *hnb = msg->dst;
 	/* FIXME */
-	LOGP(DRUA, LOGL_NOTICE, "Unexpected RUA Successful Outcome\n");
+	LOGHNB(hnb, DRUA, LOGL_NOTICE, "Unexpected RUA Successful Outcome\n");
 	return -1;
 }
 
 static int rua_rx_unsuccessful_outcome_msg(struct msgb *msg, RUA_UnsuccessfulOutcome_t *in)
 {
+	struct hnb_context *hnb = msg->dst;
 	/* FIXME */
-	LOGP(DRUA, LOGL_NOTICE, "Unexpected RUA Unsucessful Outcome\n");
+	LOGHNB(hnb, DRUA, LOGL_NOTICE, "Unexpected RUA Unsucessful Outcome\n");
 	return -1;
 }
 
 
 static int _hnbgw_rua_rx(struct msgb *msg, RUA_RUA_PDU_t *pdu)
 {
+	struct hnb_context *hnb = msg->dst;
 	int rc;
 
 	/* it's a bit odd that we can't dispatch on procedure code, but
@@ -534,7 +531,7 @@ static int _hnbgw_rua_rx(struct msgb *msg, RUA_RUA_PDU_t *pdu)
 		rc = rua_rx_unsuccessful_outcome_msg(msg, &pdu->choice.unsuccessfulOutcome);
 		break;
 	default:
-		LOGP(DRUA, LOGL_NOTICE, "Unknown RUA presence %u\n", pdu->present);
+		LOGHNB(hnb, DRUA, LOGL_NOTICE, "Unknown RUA presence %u\n", pdu->present);
 		rc = -1;
 	}
 
@@ -553,7 +550,7 @@ int hnbgw_rua_rx(struct hnb_context *hnb, struct msgb *msg)
 	dec_ret = aper_decode(NULL, &asn_DEF_RUA_RUA_PDU, (void **) &pdu,
 			      msg->data, msgb_length(msg), 0, 0);
 	if (dec_ret.code != RC_OK) {
-		LOGP(DRUA, LOGL_ERROR, "Error in ASN.1 decode\n");
+		LOGHNB(hnb, DRUA, LOGL_ERROR, "Error in ASN.1 decode\n");
 		return -1;
 	}
 
