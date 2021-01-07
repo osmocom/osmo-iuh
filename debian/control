@@ -14,6 +14,7 @@ Build-Depends: debhelper (>=9),
                libosmocore-dev (>= 0.12.0),
                libosmo-netif-dev (>= 0.3.0),
                libosmo-sigtran-dev (>= 0.10.0),
+               osmo-gsm-manuals-dev (>= 1.0.0),
                python3
 Standards-Version: 3.9.8
 Vcs-Git: git://git.osmocom.org/osmo-iuh.git
@@ -35,6 +36,14 @@ Multi-Arch: no
 Pre-Depends: ${misc:Pre-Depends}
 Depends: osmo-hnbgw (= ${binary:Version}), ${misc:Depends}
 Description: osmocom Home Node B Gateway
+
+Package: osmo-hnbgw-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: ${misc:Package} PDF documentation
+  Various manuals: user manual, VTY reference manual and/or
+  protocol/interface manuals.
 
 Package: libosmo-ranap3
 Section: libs
