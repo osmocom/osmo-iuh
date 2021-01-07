@@ -1,3 +1,47 @@
+osmo-iuh (1.0.0) unstable; urgency=medium
+
+  [ Martin Hauke ]
+  * tests: Missing return statement
+
+  [ Pau Espin Pedrol ]
+  * tests/hnb-test-ranap.c: Fix wrong printf format
+  * tests/test-ranap.c: Fix wrong printf format
+  * Fix compiler warning on signedness of char ptr using OCTET_STRING_fromBuf()
+  * hnbgw_vty.c: Drop unusued variables
+  * tests: Fix trailing whitespace
+  * Fix OneDefinitionRule Asan violation in tests and osmo-hnbgw
+  * Change default SCTP conn NULL->127.0.0.1 to localhost->localhost
+  * hnbgw: Mark SCTP conn as NODELAY
+
+  [ Neels Hofmeyr ]
+  * manual: add "Configuring Primary Links" and "Multiple instances"
+  * manual: link to new common cs7-config.adoc
+
+  [ Vadim Yanitskiy ]
+  * tests/test-helpers: fix some -Wpointer-sign warnings reported by GCC
+  * tests/test-helpers: fix endianness: do not print uint32_t as raw bytes
+  * tests/test-ranap: cosmetic: remove unused variable 'rc'
+  * debian/control: change maintainer to the Osmocom team / mailing list
+
+  [ Eric ]
+  * configure.ac: fix libtool issue  with clang and sanitizer
+
+  [ Philipp Maier ]
+  * hnbgw: do not use LOGL_DEBUG as default loglevel
+
+  [ Harald Welte ]
+  * Fix compilation with gcc-10
+  * Provide more context when logging "Error in ANY_fromType_aper"
+  * debian: Actually build manuals; add osmo-hnbgw-doc package
+  * configure.ac: Ensure netinet/sctp.h is present
+
+  [ Oliver Smith ]
+  * contrib: import RPM spec
+  * contrib: integrate RPM spec
+  * Makefile.am: EXTRA_DIST: debian, contrib/*.spec.in
+
+ -- Harald Welte <laforge@osmocom.org>  Thu, 07 Jan 2021 13:55:19 +0100
+
 osmo-iuh (0.6.0) unstable; urgency=medium
 
   [ Vadim Yanitskiy ]
