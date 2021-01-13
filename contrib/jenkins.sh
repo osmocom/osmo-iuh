@@ -28,7 +28,6 @@ osmo-build-dep.sh asn1c aper-prefix
 
 CONFIG=""
 if [ "$WITH_MANUALS" = "1" ]; then
-	osmo-build-dep.sh osmo-gsm-manuals
 	CONFIG="--enable-manuals"
 fi
 
