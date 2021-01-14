@@ -112,7 +112,7 @@ static int hnb_test_ue_register_tx(struct hnb_test *hnb_test, const char *imsi_s
 	struct msgb *msg;
 	int rc, imsi_len;
 
-	char imsi_buf[16];
+	uint8_t imsi_buf[16];
 
 	UERegisterRequest_t request_out;
 	UERegisterRequestIEs_t request;
@@ -121,7 +121,7 @@ static int hnb_test_ue_register_tx(struct hnb_test *hnb_test, const char *imsi_s
 	request.uE_Identity.present = UE_Identity_PR_iMSI;
 
 	imsi_len = ranap_imsi_encode(imsi_buf, sizeof(imsi_buf), imsi_str);
-	OCTET_STRING_fromBuf(&request.uE_Identity.choice.iMSI, imsi_buf, imsi_len);
+	OCTET_STRING_fromBuf(&request.uE_Identity.choice.iMSI, (const char*)imsi_buf, imsi_len);
 
 	request.registration_Cause = Registration_Cause_normal;
 	request.uE_Capabilities.access_stratum_release_indicator = Access_stratum_release_indicator_rel_6;
