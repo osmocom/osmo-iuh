@@ -941,6 +941,8 @@ int main(int argc, char **argv)
 
 	tall_hnb_ctx = talloc_named_const(NULL, 0, "hnb_context");
 
+	osmo_init_logging2(tall_hnb_ctx, &hnb_test_log_info);
+
 	vty_init(&vty_info);
 	hnbtest_vty_init();
 
