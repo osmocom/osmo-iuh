@@ -1,5 +1,6 @@
 #include <osmocom/core/msgb.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
+#include <osmocom/ranap/iu_helpers.h>
 
 #include "hnb-test-layers.h"
 
