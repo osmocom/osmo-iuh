@@ -667,7 +667,7 @@ static void hnb_send_register_req(struct hnb_test *hnb_test)
 	asn1_u8_to_str(&request.rac, &rac, rac);
 	asn1_u28_to_bitstring(&request.cellIdentity, &cid, cid);
 
-	request.hnB_Identity.hNB_Identity_Info.buf = identity;
+	request.hnB_Identity.hNB_Identity_Info.buf = (uint8_t*) identity;
 	request.hnB_Identity.hNB_Identity_Info.size = strlen(identity);
 
 	request.plmNidentity.buf = plmn;
