@@ -16,7 +16,7 @@ void hnb_test_rua_dt_handle_ranap(struct hnb_test *hnb,
 				  struct ranap_message_s *ranap_msg)
 {
 	int len;
-	char *data;
+	uint8_t *data;
 	RANAP_PermittedIntegrityProtectionAlgorithms_t *algs;
 	RANAP_IntegrityProtectionAlgorithm_t *first_alg;
 
