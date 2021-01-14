@@ -81,7 +81,7 @@ struct msgb *rua_new_udt(struct msgb *inmsg);
 static int hnb_test_ue_de_register_tx(struct hnb_test *hnb_test)
 {
 	struct msgb *msg;
-	int rc, imsi_len;
+	int rc;
 	uint32_t ctx_id;
 
 	UEDe_Register_t dereg;
@@ -320,7 +320,6 @@ static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct gsm48_hdr *gh,
 				    int len)
 {
 	struct gsm48_auth_req *ar;
-	int parse_res;
 
 	len -= (const char *)&gh->data[0] - (const char *)gh;
 
@@ -629,7 +628,7 @@ static int hnb_read_cb(struct osmo_fd *fd)
 
 static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 {
-	struct hnb_test *ctx = fd->data;
+	/* struct hnb_test *ctx = fd->data; */
 	struct sctp_sndrcvinfo sinfo = {
 		.sinfo_ppid = htonl(msgb_sctp_ppid(msg)),
 		.sinfo_stream = 0,
