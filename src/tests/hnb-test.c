@@ -78,6 +78,7 @@ struct hnb_test g_hnb_test = {
 
 struct msgb *rua_new_udt(struct msgb *inmsg);
 
+#if 0
 static int hnb_test_ue_de_register_tx(struct hnb_test *hnb_test)
 {
 	struct msgb *msg;
@@ -107,6 +108,7 @@ static int hnb_test_ue_de_register_tx(struct hnb_test *hnb_test)
 
 	return osmo_wqueue_enqueue(&hnb_test->wqueue, msg);
 }
+#endif
 
 static int hnb_test_ue_register_tx(struct hnb_test *hnb_test, const char *imsi_str)
 {
