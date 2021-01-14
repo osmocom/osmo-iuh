@@ -478,7 +478,7 @@ int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 			      msg->data, msgb_length(msg), 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ASN.1 decode\n");
-		return rc;
+		return -EINVAL;
 	}
 
 	if (pdu->present != HNBAP_PDU_PR_successfulOutcome) {
@@ -506,14 +506,13 @@ int hnb_test_rua_rx(struct hnb_test *hnb, struct msgb *msg)
 {
 	RUA_RUA_PDU_t _pdu, *pdu = &_pdu;
 	asn_dec_rval_t dec_ret;
-	int rc;
 
 	memset(pdu, 0, sizeof(*pdu));
 	dec_ret = aper_decode(NULL, &asn_DEF_RUA_RUA_PDU, (void **) &pdu,
 			      msg->data, msgb_length(msg), 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ASN.1 decode\n");
-		return rc;
+		return -EINVAL;
 	}
 
 	switch (pdu->present) {
@@ -560,7 +559,7 @@ int hnb_test_rua_rx(struct hnb_test *hnb, struct msgb *msg)
 		break;
 	}
 
-	return rc;
+	return 0;
 }
 
 static int hnb_read_cb(struct osmo_fd *fd)
