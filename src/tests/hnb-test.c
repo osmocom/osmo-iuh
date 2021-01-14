@@ -94,6 +94,7 @@ static int hnb_test_ue_de_register_tx(struct hnb_test *hnb_test)
 
 	memset(&dereg, 0, sizeof(dereg));
 	rc = hnbap_encode_uede_registeries(&dereg, &dereg_ies);
+	OSMO_ASSERT(rc == 0);
 
 	msg = hnbap_generate_initiating_message(ProcedureCode_id_UEDe_Register,
 						Criticality_ignore,
@@ -129,6 +130,7 @@ static int hnb_test_ue_register_tx(struct hnb_test *hnb_test, const char *imsi_s
 
 	memset(&request_out, 0, sizeof(request_out));
 	rc = hnbap_encode_ueregisterrequesties(&request_out, &request);
+	OSMO_ASSERT(rc == 0);
 
 	msg = hnbap_generate_initiating_message(ProcedureCode_id_UERegister,
 						Criticality_reject,
