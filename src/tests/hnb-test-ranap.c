@@ -5,7 +5,7 @@
 
 static const char *printstr(OCTET_STRING_t *s)
 {
-	return osmo_hexdump((char*)s->buf, s->size);
+	return osmo_hexdump((const unsigned char*)s->buf, s->size);
 }
 
 #define PP(octet_string_t) \
