@@ -13,6 +13,8 @@ dnl to make tar allow longer filenames.
 
 AC_CONFIG_TESTDIR(src/tests)
 
+CFLAGS="$CFLAGS -std=gnu11"
+
 dnl kernel style compile messages
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
