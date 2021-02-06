@@ -202,18 +202,15 @@ struct msgb *ranap_new_msg_dt(uint8_t sapi, const uint8_t *nas, unsigned int nas
 	return msg;
 }
 
-static const enum RANAP_IntegrityProtectionAlgorithm ip_alg[2] = {
-	RANAP_IntegrityProtectionAlgorithm_standard_UMTS_integrity_algorithm_UIA1,
-	RANAP_IntegrityProtectionAlgorithm_standard_UMTS_integrity_algorithm_UIA2,
-};
-
-static const RANAP_EncryptionAlgorithm_t enc_alg[2] = {
-	RANAP_EncryptionAlgorithm_standard_UMTS_encryption_algorith_UEA1,
-	RANAP_EncryptionAlgorithm_standard_UMTS_encryption_algorithm_UEA2,
-};
-
-/*! \brief generate RANAP SECURITY MODE COMMAND message */
-struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck, enum RANAP_KeyStatus status)
+/*! \brief generate RANAP SECURITY MODE COMMAND message.
+ *  \param[in] ik 128bit integrity protection key (mandatory)
+ *  \param[in] ck 128bit ciphering key (optional)
+ *  \param[in] status key status
+ *  \param[in] uia_bitmask bit-mask of UIA algorithms; Bit0 = UIA0 .. Bit2 = UIA2
+ *  \param[in] uea_bitmask bit-mask of UEA algorithms; Bit0 = UEA0 .. Bit2 = UEA2; ck required
+ *  \returns message buffer with encoded command message */
+struct msgb *ranap_new_msg_sec_mod_cmd2(const uint8_t *ik, const uint8_t *ck, enum RANAP_KeyStatus status,
+					uint8_t uia_bitmask, uint8_t uea_bitmask)
 {
 	RANAP_SecurityModeCommandIEs_t ies;
 	RANAP_SecurityModeCommand_t out;
@@ -223,11 +220,26 @@ struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck, enu
 	memset(&ies, 0, sizeof(ies));
 	memset(&out, 0, sizeof(out));
 
-	for (i = 0; i < ARRAY_SIZE(ip_alg); i++) {
+	for (i = 0; i < 8; i++) {
+		RANAP_IntegrityProtectionAlgorithm_t ialg;
+		if (!(uia_bitmask & (1 << i)))
+			continue;
+		switch (i) {
+		case 1:
+			ialg = RANAP_IntegrityProtectionAlgorithm_standard_UMTS_integrity_algorithm_UIA1;
+			break;
+		case 2:
+			ialg = RANAP_IntegrityProtectionAlgorithm_standard_UMTS_integrity_algorithm_UIA2;
+			break;
+		default:
+			LOGP(DRANAP, "Unsupported UIA algorithm UIA%d specified\n", i);
+			return NULL;
+		}
+
 		/* needs to be dynamically allocated, as
 		 * SET_OF_free() will call FREEMEM() on it */
 		RANAP_IntegrityProtectionAlgorithm_t *alg = CALLOC(1, sizeof(*alg));
-		*alg = ip_alg[i];
+		*alg = ialg;
 		ASN_SEQUENCE_ADD(&ies.integrityProtectionInformation.permittedAlgorithms, alg);
 	}
 
@@ -235,11 +247,27 @@ struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck, enu
 
 	if (ck) {
 		ies.presenceMask = SECURITYMODECOMMANDIES_RANAP_ENCRYPTIONINFORMATION_PRESENT;
-		for (i = 0; i < ARRAY_SIZE(ip_alg); i++) {
+		for (i = 0; i < 8; i++) {
+			RANAP_EncryptionAlgorithm_t ealg;
+			if (!(uea_bitmask & (1 << i)))
+				continue;
+			switch (i) {
+			case 1:
+				ealg = RANAP_EncryptionAlgorithm_standard_UMTS_encryption_algorith_UEA1;
+				break;
+			case 2:
+				ealg = RANAP_EncryptionAlgorithm_standard_UMTS_encryption_algorithm_UEA2;
+				break;
+			default:
+				LOGP(DRANAP, "Unsupported UEA algorithm UEA%d specified\n", i);
+				asn_set_empty(&ies.integrityProtectionInformation.permittedAlgorithms);
+				return NULL;
+			}
+
 			/* needs to be dynamically allocated, as
 			 * SET_OF_free() will call FREEMEM() on it */
 			RANAP_EncryptionAlgorithm_t *alg = CALLOC(1, sizeof(*alg));
-			*alg = enc_alg[i];
+			*alg = ealg;
 			ASN_SEQUENCE_ADD(&ies.encryptionInformation.permittedAlgorithms, alg);
 		}
 		BIT_STRING_fromBuf(&ies.encryptionInformation.key, ck, 16*8);
@@ -270,6 +298,10 @@ struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck, enu
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_SecurityModeCommand, &out);
 
 	return msg;
+}
+struct msgb *ranap_new_msg_sec_mod_cmd(const uint8_t *ik, const uint8_t *ck, enum RANAP_KeyStatus status)
+{
+	return ranap_new_msg_sec_mod_cmd2(ik, ck, status, 0x06, 0x06);
 }
 
 /*! \brief generate RANAP SECURITY MODE COMPLETE message */
