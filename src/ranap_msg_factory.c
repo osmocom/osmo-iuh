@@ -232,7 +232,7 @@ struct msgb *ranap_new_msg_sec_mod_cmd2(const uint8_t *ik, const uint8_t *ck, en
 			ialg = RANAP_IntegrityProtectionAlgorithm_standard_UMTS_integrity_algorithm_UIA2;
 			break;
 		default:
-			LOGP(DRANAP, "Unsupported UIA algorithm UIA%d specified\n", i);
+			LOGP(DRANAP, LOGL_ERROR, "Unsupported UIA algorithm UIA%d specified\n", i);
 			return NULL;
 		}
 
@@ -259,7 +259,7 @@ struct msgb *ranap_new_msg_sec_mod_cmd2(const uint8_t *ik, const uint8_t *ck, en
 				ealg = RANAP_EncryptionAlgorithm_standard_UMTS_encryption_algorithm_UEA2;
 				break;
 			default:
-				LOGP(DRANAP, "Unsupported UEA algorithm UEA%d specified\n", i);
+				LOGP(DRANAP, LOGL_ERROR, "Unsupported UEA algorithm UEA%d specified\n", i);
 				asn_set_empty(&ies.integrityProtectionInformation.permittedAlgorithms);
 				return NULL;
 			}
