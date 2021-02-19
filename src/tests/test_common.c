@@ -86,6 +86,8 @@ int test_common_init(void)
 
 	log_set_print_filename(osmo_stderr_target, 0);
 	log_set_use_color(osmo_stderr_target, 0);
+	log_set_print_category(osmo_stderr_target, 0);
+	log_set_print_category_hex(osmo_stderr_target, 0);
 	return rc;
 }
 
