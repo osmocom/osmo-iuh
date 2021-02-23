@@ -72,7 +72,6 @@ static const char * const osmo_hnbgw_copyright =
 	"There is NO WARRANTY, to the extent permitted by law.\r\n";
 
 static void *tall_hnb_ctx;
-void *talloc_asn1_ctx;
 
 static struct hnb_gw *g_hnb_gw;
 
