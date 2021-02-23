@@ -30,13 +30,13 @@ BuildRequires:  python3
 BuildRequires:  systemd-rpm-macros
 %endif
 BuildRequires:  pkgconfig(libasn1c) >= 0.9.30
-BuildRequires:  pkgconfig(libosmo-netif) >= 0.3.0
-BuildRequires:  pkgconfig(libosmo-sigtran) >= 0.10.0
-BuildRequires:  pkgconfig(libosmocore) >= 0.12.0
-BuildRequires:  pkgconfig(libosmoctrl) >= 0.12.0
-BuildRequires:  pkgconfig(libosmogb)
-BuildRequires:  pkgconfig(libosmogsm) >= 0.12.0
-BuildRequires:  pkgconfig(libosmovty) >= 0.12.0
+BuildRequires:  pkgconfig(libosmo-netif) >= 1.1.0
+BuildRequires:  pkgconfig(libosmo-sigtran) >= 1.4.0
+BuildRequires:  pkgconfig(libosmocore) >= 1.5.0
+BuildRequires:  pkgconfig(libosmoctrl) >= 1.5.0
+BuildRequires:  pkgconfig(libosmogb) >= 1.5.0
+BuildRequires:  pkgconfig(libosmogsm) >= 1.5.0
+BuildRequires:  pkgconfig(libosmovty) >= 1.5.0
 %{?systemd_requires}
 
 %description

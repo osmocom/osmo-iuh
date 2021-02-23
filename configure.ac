@@ -28,7 +28,7 @@ AC_PROG_MKDIR_P
 AC_PROG_CC
 AC_PROG_INSTALL
 
-dnl patching ${archive_cmds} to affect generation of file "libtool" to fix linking with clang 
+dnl patching ${archive_cmds} to affect generation of file "libtool" to fix linking with clang
 AS_CASE(["$LD"],[*clang*],
   [AS_CASE(["${host_os}"],
      [*linux*],[archive_cmds='$CC -shared $pic_flag $libobjs $deplibs $compiler_flags $wl-soname $wl$soname -o $lib'])])
@@ -42,12 +42,12 @@ if test "x$PKG_CONFIG_INSTALLED" = "xno"; then
 fi
 PKG_PROG_PKG_CONFIG([0.20])
 
-PKG_CHECK_MODULES(OSMOCORE, libosmocore >= 0.12.0)
-PKG_CHECK_MODULES(OSMOGSM, libosmogsm >= 0.12.0)
-PKG_CHECK_MODULES(OSMOVTY, libosmovty >= 0.12.0)
-PKG_CHECK_MODULES(OSMOCTRL, libosmoctrl >= 0.12.0)
-PKG_CHECK_MODULES(OSMONETIF, libosmo-netif >= 0.3.0)
-PKG_CHECK_MODULES(OSMOSIGTRAN, libosmo-sigtran >= 0.10.0)
+PKG_CHECK_MODULES(OSMOCORE, libosmocore >= 1.5.0)
+PKG_CHECK_MODULES(OSMOGSM, libosmogsm >= 1.5.0)
+PKG_CHECK_MODULES(OSMOVTY, libosmovty >= 1.5.0)
+PKG_CHECK_MODULES(OSMOCTRL, libosmoctrl >= 1.5.0)
+PKG_CHECK_MODULES(OSMONETIF, libosmo-netif >= 1.1.0)
+PKG_CHECK_MODULES(OSMOSIGTRAN, libosmo-sigtran >= 1.4.0)
 PKG_CHECK_MODULES(ASN1C, libasn1c >= 0.9.30)
 
 AC_CONFIG_MACRO_DIR([m4])

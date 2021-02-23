@@ -1,3 +1,72 @@
+osmo-iuh (0.7.0) unstable; urgency=medium
+
+  [ Martin Hauke ]
+  * tests: Missing return statement
+
+  [ Pau Espin Pedrol ]
+  * tests/hnb-test-ranap.c: Fix wrong printf format
+  * tests/test-ranap.c: Fix wrong printf format
+  * Fix compiler warning on signedness of char ptr using OCTET_STRING_fromBuf()
+  * hnbgw_vty.c: Drop unusued variables
+  * tests: Fix trailing whitespace
+  * Fix OneDefinitionRule Asan violation in tests and osmo-hnbgw
+  * Change default SCTP conn NULL->127.0.0.1 to localhost->localhost
+  * hnbgw: Mark SCTP conn as NODELAY
+  * contrib/jenkins: Enable parallel make in make distcheck
+  * tests/hnb-test-ranap: Fix incorrect pointer type cast
+  * tests/hnb-test: Drop unused variables
+  * tests/hnb-test: Fix signedness of imsi_buf
+  * tests/hnb-test: check return code of hnbap_encode_ueregisterrequesties
+  * tests/hnb-test-ranap: Fix incorrect signedness in pointer
+  * tests/hnb-test-ranap: Fix missing include for ranap_bcd_decode
+  * tests/hnb-test: Fix uninitialized use of rc variable
+  * tests/hnb-test: Fix signedness of assigned pointer
+  * tests/hnb-test: Initialize logging with existing struct log_info
+  * tests/hnb-test: Disable building unsued code
+  * tests: Explicitly drop category from log
+  * tests: Replace deprecated API log_set_print_filename
+  * hnbgw: Avoid re-defining same global variable twice
+  * Workaround ASan report memleak during call to --vty-ref-xml
+
+  [ Neels Hofmeyr ]
+  * manual: add "Configuring Primary Links" and "Multiple instances"
+  * manual: link to new common cs7-config.adoc
+
+  [ Vadim Yanitskiy ]
+  * tests/test-helpers: fix some -Wpointer-sign warnings reported by GCC
+  * tests/test-helpers: fix endianness: do not print uint32_t as raw bytes
+  * tests/test-ranap: cosmetic: remove unused variable 'rc'
+  * debian/control: change maintainer to the Osmocom team / mailing list
+  * vty: use install_lib_element() and install_lib_element_ve()
+
+  [ Eric ]
+  * configure.ac: fix libtool issue  with clang and sanitizer
+
+  [ Philipp Maier ]
+  * hnbgw: do not use LOGL_DEBUG as default loglevel
+
+  [ Harald Welte ]
+  * Fix compilation with gcc-10
+  * Provide more context when logging "Error in ANY_fromType_aper"
+  * hnbgw: use OSMO_STRLCPY_ARRAY() instead of open coding it
+  * hnbgw: Introduce LOGHNB() macro for log context information
+  * debian: Actually build manuals; add osmo-hnbgw-doc package
+  * configure.ac: Ensure netinet/sctp.h is present
+  * hnbgw: Use LOGHNB() to add log context information to log lines
+  * ranap_msg_factory: Allow detailed control over UEA/UIA algorithm encoded
+  * ranap_msg_factory: Fix LOGP statements
+  * main: add --vty-ref-mode, use vty_dump_xml_ref_mode()
+  * manuals: generate vty reference xml at build time
+
+  [ Oliver Smith ]
+  * contrib: import RPM spec
+  * contrib: integrate RPM spec
+  * Makefile.am: EXTRA_DIST: debian, contrib/*.spec.in
+  * contrib/jenkins: don't build osmo-gsm-manuals
+  * configure.ac: set -std=gnu11
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 23 Feb 2021 20:11:59 +0100
+
 osmo-iuh (0.6.0) unstable; urgency=medium
 
   [ Vadim Yanitskiy ]

@@ -61,7 +61,7 @@ AM_CFLAGS = -Wall -I$(top_srcdir)/include -I$(top_builddir)/include \
 
 # build the shared RANAP + SABP library
 #
-RANAP_LIBVERSION=3:0:0
+RANAP_LIBVERSION=4:0:1
 SABP_LIBVERSION=0:0:0
 lib_LTLIBRARIES = libosmo-ranap.la libosmo-sabp.la
 libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION)
@@ -73,7 +73,7 @@ libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_
 libosmo_sabp_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(SABP_LIBVERSION)
 libosmo_sabp_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
 			  $(ASN1C_LIBS) sabp/libosmo-asn1-sabp.la
-libosmo_sabp_la_SOURCES = sabp_common.c sabp_encoder.c sabp_decoder.c 
+libosmo_sabp_la_SOURCES = sabp_common.c sabp_encoder.c sabp_decoder.c
 
 
 # build the actual HomeNodeB gateway
