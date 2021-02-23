@@ -576,7 +576,7 @@ int main(int argc, char **argv)
 	int rc;
 
 	tall_hnb_ctx = talloc_named_const(NULL, 0, "hnb_context");
-	talloc_asn1_ctx = talloc_named_const(NULL, 0, "asn1_context");
+	talloc_asn1_ctx = talloc_named_const(NULL, 1, "asn1_context");
 	msgb_talloc_ctx_init(tall_hnb_ctx, 0);
 
 	g_hnb_gw = hnb_gw_create(tall_hnb_ctx);
