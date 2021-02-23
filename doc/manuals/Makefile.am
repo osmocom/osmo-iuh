@@ -12,6 +12,12 @@ if BUILD_MANUALS
   include $(OSMO_GSM_MANUALS_DIR)/build/Makefile.asciidoc.inc
 
   VTY_REFERENCE = osmohnbgw-vty-reference.xml
+
+  BUILT_REFERENCE_XML = $(builddir)/vty/hnbgw_vty_reference.xml
+  $(builddir)/vty/hnbgw_vty_reference.xml: $(top_builddir)/src/osmo-hnbgw
+	mkdir -p $(builddir)/vty
+	$(top_builddir)/src/osmo-hnbgw --vty-ref-xml > $@
+
   include $(OSMO_GSM_MANUALS_DIR)/build/Makefile.vty-reference.inc
 
   OSMO_REPOSITORY = osmo-hnbgw
