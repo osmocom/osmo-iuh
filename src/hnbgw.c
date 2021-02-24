@@ -472,6 +472,7 @@ static void handle_options(int argc, char **argv)
 		switch (c) {
 		case 0:
 			handle_long_options(argv[0], long_option);
+			break;
 		case 'h':
 			print_usage();
 			print_help();
