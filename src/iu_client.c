@@ -119,6 +119,8 @@ static int global_iu_event(struct ranap_ue_conn_ctx *ue_ctx,
 	if (!ue_ctx->notification)
 		return 0;
 
+	LOGPIU(LOGL_DEBUG, "Submit Iu event to upper layer: %s\n", ranap_iu_event_type_str(type));
+
 	return global_iu_event_cb(ue_ctx, type, data);
 }
 
