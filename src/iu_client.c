@@ -124,6 +124,12 @@ static int global_iu_event(struct ranap_ue_conn_ctx *ue_ctx,
 	return global_iu_event_cb(ue_ctx, type, data);
 }
 
+static void ue_conn_ctx_release_timeout_cb(void *ctx_)
+{
+	struct ranap_ue_conn_ctx *ctx = (struct ranap_ue_conn_ctx *)ctx_;
+	global_iu_event(ctx, RANAP_IU_EVENT_IU_RELEASE, NULL);
+}
+
 static struct ranap_ue_conn_ctx *ue_conn_ctx_alloc(struct ranap_iu_rnc *rnc, uint32_t conn_id)
 {
 	struct ranap_ue_conn_ctx *ctx = talloc_zero(talloc_iu_ctx, struct ranap_ue_conn_ctx);
@@ -133,7 +139,7 @@ static struct ranap_ue_conn_ctx *ue_conn_ctx_alloc(struct ranap_iu_rnc *rnc, uin
 	ctx->notification = true;
 	ctx->free_on_release = false;
 	osmo_timer_setup(&ctx->release_timeout,
-			 (void *)(void *) ranap_iu_free_ue,
+			 ue_conn_ctx_release_timeout_cb,
 			 ctx);
 	llist_add(&ctx->list, &ue_conn_ctx_list);
 
@@ -501,10 +507,9 @@ void ranap_iu_tx_release_free(struct ranap_ue_conn_ctx *ctx,
 	ctx->notification = false;
 	ctx->free_on_release = true;
 	int ret = ranap_iu_tx_release(ctx, cause);
-	if (ret) {
-		ranap_iu_free_ue(ctx);
-		return;
-	}
+	/* On Tx failure, trigger timeout immediately, as the response will never arrive */
+	if (ret)
+		timeout = 0;
 
 	osmo_timer_schedule(&ctx->release_timeout, timeout, 0);
 }

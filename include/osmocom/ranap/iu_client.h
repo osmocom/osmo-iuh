@@ -75,9 +75,9 @@ int ranap_iu_tx_sec_mode_cmd(struct ranap_ue_conn_ctx *uectx, struct osmo_auth_v
 int ranap_iu_tx_common_id(struct ranap_ue_conn_ctx *ue_ctx, const char *imsi);
 int ranap_iu_tx_release(struct ranap_ue_conn_ctx *ctx, const struct RANAP_Cause *cause);
 
-/* transmit a Iu Release Command and free the ctx afterwards.
- * If a Release Complete is not received within timeout s,
- * release the SCCP connection. */
+/* Transmit a Iu Release Command and submit event RANAP_IU_EVENT_IU_RELEASE upon
+ * Release Complete or timeout. Caller is responsible to free the context and
+ * closing the SCCP connection (ranap_iu_free_ue) upon recieval of the event. */
 void ranap_iu_tx_release_free(struct ranap_ue_conn_ctx *ctx,
 			      const struct RANAP_Cause *cause,
 			      int timeout);
