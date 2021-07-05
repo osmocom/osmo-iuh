@@ -790,7 +790,7 @@ DEFUN(ue_register, ue_register_cmd,
 }
 
 DEFUN(asn_dbg, asn_dbg_cmd,
-	"asn-debug (1|0)", "Enable or disabel libasn1c debugging")
+	"asn-debug (1|0)", "Enable or disable libasn1c debugging")
 {
 	asn_debug = atoi(argv[0]);
 
