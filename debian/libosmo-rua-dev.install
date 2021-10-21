@@ -1,0 +1,3 @@
+usr/include/osmocom/rua
+usr/lib/*/libosmo-rua.so
+usr/lib/*/pkgconfig/libosmo-rua.pc

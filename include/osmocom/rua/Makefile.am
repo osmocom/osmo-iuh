@@ -1,4 +1,4 @@
-noinst_HEADERS = \
+rua_HEADERS = \
 	rua_common.h rua_ies_defs.h rua_msg_factory.h \
 	RUA_Ansi-41-IDNNS.h \
 	RUA_Cause.h \
@@ -35,6 +35,8 @@ noinst_HEADERS = \
 	RUA_TriggeringMessage.h \
 	RUA_TypeOfError.h \
 	RUA_UnsuccessfulOutcome.h
+
+ruadir = $(includedir)/osmocom/rua
 
 DISTCLEANFILES = \
 	rua_ies_defs.h

@@ -63,8 +63,9 @@ AM_CFLAGS = -Wall -I$(top_srcdir)/include -I$(top_builddir)/include \
 #
 HNBAP_LIBVERSION=0:0:0
 RANAP_LIBVERSION=4:0:1
+RUA_LIBVERSION=0:0:0
 SABP_LIBVERSION=0:0:0
-lib_LTLIBRARIES = libosmo-hnbap.la libosmo-ranap.la libosmo-sabp.la
+lib_LTLIBRARIES = libosmo-hnbap.la libosmo-ranap.la libosmo-rua.la libosmo-sabp.la
 libosmo_hnbap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(HNBAP_LIBVERSION)
 libosmo_hnbap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
 			  $(ASN1C_LIBS) hnbap/libosmo-asn1-hnbap.la
@@ -76,6 +77,11 @@ libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSM
 libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_msg_factory.c iu_helpers.c \
 			   ranap_common_cn.c iu_client.c iu_client_vty.c
 
+libosmo_rua_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(HNBAP_LIBVERSION)
+libosmo_rua_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
+			  $(ASN1C_LIBS) rua/libosmo-asn1-rua.la
+libosmo_rua_la_SOURCES = rua_common.c rua_encoder.c rua_decoder.c rua_msg_factory.c
+
 libosmo_sabp_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(SABP_LIBVERSION)
 libosmo_sabp_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
 			  $(ASN1C_LIBS) sabp/libosmo-asn1-sabp.la
@@ -86,17 +92,14 @@ libosmo_sabp_la_SOURCES = sabp_common.c sabp_encoder.c sabp_decoder.c
 #
 bin_PROGRAMS = osmo-hnbgw
 
-osmo_hnbgw_SOURCES = rua_encoder.c rua_decoder.c rua_common.c \
-		     rua_msg_factory.c \
-		     hnbgw.c hnbgw_hnbap.c hnbgw_rua.c hnbgw_ranap.c \
+osmo_hnbgw_SOURCES = hnbgw.c hnbgw_hnbap.c hnbgw_rua.c hnbgw_ranap.c \
 		     hnbgw_vty.c \
 		     context_map.c hnbgw_cn.c
 
 osmo_hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOCTRL_LIBS) \
 		   $(ASN1C_LIBS) $(OSMOSIGTRAN_LIBS) \
 		   $(OSMONETIF_LIBS) \
-		   rua/libosmo-asn1-rua.a \
-		   libosmo-hnbap.la libosmo-ranap.la
+		   libosmo-hnbap.la libosmo-rua.la libosmo-ranap.la
 
 
 regen: regenerate-from-asn1-source

@@ -75,6 +75,20 @@ Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 This subpackage contains libraries and header files for developing
 applications that want to make use of libosmoranap.
 
+%package -n libosmo-rua0
+Summary:        Shared Library part of libosmo-rua
+Group:          System/Libraries
+
+%description -n libosmo-rua0
+Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
+
+%package -n libosmo-rua-devel
+Summary:        Development files for Osmocom RUA library
+Group:          Development/Libraries/C and C++
+Requires:       libosmo-rua0 = %{version}
+
+%description -n libosmo-rua-devel
+Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
 %package -n libosmo-sabp0
 Summary:        Shared Library part of libosmo-sabp
@@ -151,6 +165,14 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 %{_includedir}/*
 %{_libdir}/libosmo-ranap.so
 %{_libdir}/pkgconfig/libosmo-ranap.pc
+
+%files -n libosmo-rua0
+%{_libdir}/libosmo-rua.so.0*
+
+%files -n libosmo-rua-devel
+%{_includedir}/*
+%{_libdir}/libosmo-rua.so
+%{_libdir}/pkgconfig/libosmo-rua.pc
 
 %files -n libosmo-sabp0
 %{_libdir}/libosmo-sabp.so.0*
