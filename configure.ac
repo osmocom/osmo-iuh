@@ -150,6 +150,7 @@ AC_MSG_RESULT([CFLAGS="$CFLAGS"])
 AC_MSG_RESULT([CPPFLAGS="$CPPFLAGS"])
 
 AC_OUTPUT(
+	libosmo-hnbap.pc
 	libosmo-ranap.pc
 	libosmo-sabp.pc
 	src/Makefile

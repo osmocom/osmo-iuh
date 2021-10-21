@@ -11,17 +11,16 @@ check_PROGRAMS = test-ranap test-helpers test-hnbap hnb-test #dummy-cn
 
 noinst_HEADERS = test_common.h hnb-test.h hnb-test-layers.h
 
-HNBAP_FILES = $(top_srcdir)/src/hnbap_common.c $(top_builddir)/src/hnbap_decoder.c $(top_builddir)/src/hnbap_encoder.c
 RUA_FILES = $(top_srcdir)/src/rua_common.c $(top_builddir)/src/rua_decoder.c $(top_builddir)/src/rua_encoder.c $(top_srcdir)/src/rua_msg_factory.c
 
 test_helpers_SOURCES = test-helpers.c test_common.c
 test_helpers_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 
 test_hnbap_SOURCES = $(top_srcdir)/src/hnbap_common.c $(top_builddir)/src/hnbap_decoder.c test-hnbap.c test_common.c
-test_hnbap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a $(top_builddir)/src/libosmo-ranap.la
+test_hnbap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-hnbap.la $(top_builddir)/src/libosmo-ranap.la
 
-hnb_test_SOURCES = $(HNBAP_FILES) $(RUA_FILES) hnb-test.c test_common.c hnb-test-ranap.c hnb-test-rua.c
-hnb_test_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a $(top_builddir)/src/rua/libosmo-asn1-rua.a $(top_builddir)/src/libosmo-ranap.la
+hnb_test_SOURCES = $(RUA_FILES) hnb-test.c test_common.c hnb-test-ranap.c hnb-test-rua.c
+hnb_test_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-hnbap.la $(top_builddir)/src/rua/libosmo-asn1-rua.a $(top_builddir)/src/libosmo-ranap.la
 
 test_ranap_SOURCES = test-ranap.c test_common.c
 test_ranap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
@@ -29,6 +28,9 @@ test_ranap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 # TODO: re-add using SCCP?
 #dummy_cn_SOURCES = test_common.c dummy_cn_sua.c
 #dummy_cn_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
+
+$(top_builddir)/src/libosmo-hnbap.la:
+	$(MAKE) -C $(top_builddir)/src libosmo-hnbap.la
 
 $(top_builddir)/src/libosmo-ranap.la:
 	$(MAKE) -C $(top_builddir)/src libosmo-ranap.la

@@ -61,9 +61,15 @@ AM_CFLAGS = -Wall -I$(top_srcdir)/include -I$(top_builddir)/include \
 
 # build the shared RANAP + SABP library
 #
+HNBAP_LIBVERSION=0:0:0
 RANAP_LIBVERSION=4:0:1
 SABP_LIBVERSION=0:0:0
-lib_LTLIBRARIES = libosmo-ranap.la libosmo-sabp.la
+lib_LTLIBRARIES = libosmo-hnbap.la libosmo-ranap.la libosmo-sabp.la
+libosmo_hnbap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(HNBAP_LIBVERSION)
+libosmo_hnbap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
+			  $(ASN1C_LIBS) hnbap/libosmo-asn1-hnbap.la
+libosmo_hnbap_la_SOURCES = hnbap_common.c hnbap_encoder.c hnbap_decoder.c
+
 libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION)
 libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
 			  $(ASN1C_LIBS) ranap/libosmo-asn1-ranap.la
@@ -80,8 +86,7 @@ libosmo_sabp_la_SOURCES = sabp_common.c sabp_encoder.c sabp_decoder.c
 #
 bin_PROGRAMS = osmo-hnbgw
 
-osmo_hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c hnbap_common.c \
-		     rua_encoder.c rua_decoder.c rua_common.c \
+osmo_hnbgw_SOURCES = rua_encoder.c rua_decoder.c rua_common.c \
 		     rua_msg_factory.c \
 		     hnbgw.c hnbgw_hnbap.c hnbgw_rua.c hnbgw_ranap.c \
 		     hnbgw_vty.c \
@@ -90,8 +95,8 @@ osmo_hnbgw_SOURCES = hnbap_encoder.c hnbap_decoder.c hnbap_common.c \
 osmo_hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOCTRL_LIBS) \
 		   $(ASN1C_LIBS) $(OSMOSIGTRAN_LIBS) \
 		   $(OSMONETIF_LIBS) \
-		   hnbap/libosmo-asn1-hnbap.a rua/libosmo-asn1-rua.a \
-		   libosmo-ranap.la
+		   rua/libosmo-asn1-rua.a \
+		   libosmo-hnbap.la libosmo-ranap.la
 
 
 regen: regenerate-from-asn1-source

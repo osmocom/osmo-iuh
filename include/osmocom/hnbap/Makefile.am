@@ -1,4 +1,4 @@
-noinst_HEADERS = \
+hnbap_HEADERS = \
 	hnbap_common.h hnbap_ies_defs.h \
 	AccessResult.h \
 	Access-stratum-release-indicator.h \
@@ -115,6 +115,8 @@ noinst_HEADERS = \
 	U-RNTIQueryRequest.h \
 	U-RNTIQueryResponse.h \
 	UTRANCellID.h
+
+hnbapdir = $(includedir)/osmocom/hnbap
 
 DISTCLEANFILES = \
 	hnbap_ies_defs.h

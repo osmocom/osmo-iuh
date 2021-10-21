@@ -42,6 +42,21 @@ BuildRequires:  pkgconfig(libosmovty) >= 1.5.0
 %description
 Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
+%package -n libosmo-hnbap0
+Summary:        Shared Library part of libosmo-hnbap
+Group:          System/Libraries
+
+%description -n libosmo-hnbap0
+Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
+
+%package -n libosmo-hnbap-devel
+Summary:        Development files for Osmocom HNBAP library
+Group:          Development/Libraries/C and C++
+Requires:       libosmo-hnbap0 = %{version}
+
+%description -n libosmo-hnbap-devel
+Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
+
 %package -n libosmo-ranap3
 Summary:        Shared Library part of libosmo-ranap
 Group:          System/Libraries
@@ -120,6 +135,14 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 %dir %{_sysconfdir}/osmocom
 %config %{_sysconfdir}/osmocom/osmo-hnbgw.cfg
 %{_unitdir}/osmo-hnbgw.service
+
+%files -n libosmo-hnbap0
+%{_libdir}/libosmo-hnbap.so.0*
+
+%files -n libosmo-hnbap-devel
+%{_includedir}/*
+%{_libdir}/libosmo-hnbap.so
+%{_libdir}/pkgconfig/libosmo-hnbap.pc
 
 %files -n libosmo-ranap3
 %{_libdir}/libosmo-ranap.so.3*

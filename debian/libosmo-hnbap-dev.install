@@ -1,0 +1,3 @@
+usr/include/osmocom/hnbap
+usr/lib/*/libosmo-hnbap.so
+usr/lib/*/pkgconfig/libosmo-hnbap.pc
