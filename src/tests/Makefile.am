@@ -23,11 +23,11 @@ test_hnbap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a
 hnb_test_SOURCES = $(HNBAP_FILES) $(RUA_FILES) hnb-test.c test_common.c hnb-test-ranap.c hnb-test-rua.c
 hnb_test_LDADD = $(COMMON_LIBS) $(top_builddir)/src/hnbap/libosmo-asn1-hnbap.a $(top_builddir)/src/rua/libosmo-asn1-rua.a $(top_builddir)/src/libosmo-ranap.la
 
-test_ranap_SOURCES = $(RANAP_FILES) test-ranap.c test_common.c
+test_ranap_SOURCES = test-ranap.c test_common.c
 test_ranap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 
 # TODO: re-add using SCCP?
-#dummy_cn_SOURCES = $(RANAP_FILES) test_common.c dummy_cn_sua.c
+#dummy_cn_SOURCES = test_common.c dummy_cn_sua.c
 #dummy_cn_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 
 $(top_builddir)/src/libosmo-ranap.la:
