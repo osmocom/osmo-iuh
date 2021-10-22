@@ -22,6 +22,7 @@ collect_sed_commands() {
 		shift
 
 		echo "s,^#include \"$fname\"$,#include <$include_subdir/$fname>,"
+		echo "s, \* \tfound in \"${base_dir}, * \tfound in \"../..,"
 	done
 }
 
