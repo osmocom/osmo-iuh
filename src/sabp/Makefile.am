@@ -135,9 +135,7 @@ libosmo_asn1_sabp_la_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	ASN1C_PREFIX="SABP_" asn1c -gen-PER $(top_srcdir)/asn1/sabp/SABP-CommonDataTypes.asn $(top_srcdir)/asn1/sabp/SABP-Constants.asn $(top_srcdir)/asn1/sabp/SABP-IEs.asn $(top_srcdir)/asn1/sabp/SABP-PDU.asn
-#	remove the local copy of the runtime code
-	@rm ANY.* INTEGER.* NativeEnumerated.* NativeInteger.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
+	ASN1C_PREFIX="SABP_" asn1c -R -gen-PER $(top_srcdir)/asn1/sabp/SABP-CommonDataTypes.asn $(top_srcdir)/asn1/sabp/SABP-Constants.asn $(top_srcdir)/asn1/sabp/SABP-IEs.asn $(top_srcdir)/asn1/sabp/SABP-PDU.asn
 #	change include style to `#include <dir/foo.h>'
 	sed -i 's/Member/MemberA/' SABP_MessageStructure.[ch]
 	sed -i 's/Member/MemberB/' SABP_Criticality-Diagnostics.[ch]

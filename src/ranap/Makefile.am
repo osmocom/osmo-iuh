@@ -1169,10 +1169,8 @@ libosmo_asn1_ranap_la_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	ASN1C_PREFIX="RANAP_" asn1c -gen-PER $(top_srcdir)/asn1/ranap/RANAP-CommonDataTypes.asn $(top_srcdir)/asn1/ranap/RANAP-Constants.asn $(top_srcdir)/asn1/ranap/RANAP-IEs.asn $(top_srcdir)/asn1/ranap/RANAP-PDU.asn
-	@rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* NULL.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
-# 	some fixups in erroneous code that asn1c generates
-	sed -i '6i#include <constr_CHOICE.h>' RANAP_ChosenEncryptionAlgorithm.h RANAP_ChosenIntegrityProtectionAlgorithm.h RANAP_IMSI.h RANAP_PLMNidentity.h RANAP_RAB-ReleaseFailedList.c RANAP_RAB-ReleaseList.c RANAP_RAB-SetupOrModifyList.c RANAP_ResetResourceList.c RANAP_ResetResourceAckList.c
+	ASN1C_PREFIX="RANAP_" asn1c -R -gen-PER $(top_srcdir)/asn1/ranap/RANAP-CommonDataTypes.asn $(top_srcdir)/asn1/ranap/RANAP-Constants.asn $(top_srcdir)/asn1/ranap/RANAP-IEs.asn $(top_srcdir)/asn1/ranap/RANAP-PDU.asn
+	sed -i '7i#include <constr_CHOICE.h>' RANAP_ChosenEncryptionAlgorithm.h RANAP_ChosenIntegrityProtectionAlgorithm.h RANAP_IMSI.h RANAP_PLMNidentity.h RANAP_RAB-ReleaseFailedList.c RANAP_RAB-ReleaseList.c RANAP_RAB-SetupOrModifyList.c RANAP_ResetResourceList.c RANAP_ResetResourceAckList.c
 	sed -i 's/Member/MemberA/' RANAP_LA-LIST.[ch]
 	sed -i 's/Member/MemberB/' RANAP_RABParametersList.[ch]
 	sed -i 's/Member/MemberC/' RANAP_AuthorisedPLMNs.[ch]

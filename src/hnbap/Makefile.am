@@ -243,9 +243,7 @@ libosmo_asn1_hnbap_la_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	asn1c -gen-PER -fnative-types $(HNBAP_ASN1)/HNBAP-CommonDataTypes.asn $(HNBAP_ASN1)/HNBAP-Constants.asn $(HNBAP_ASN1)/HNBAP-IEs.asn $(HNBAP_ASN1)/HNBAP-PDU.asn
-#	remove the local copy of the runtime code
-	-rm ANY.* BOOLEAN.* INTEGER.* NativeEnumerated.* NativeInteger.* OBJECT_IDENTIFIER.* asn_* OCTET_STRING.* converter-sample.c per_* xer_* constr* der_* ber_* BIT_STRING.*
+	asn1c -R -gen-PER -fnative-types $(HNBAP_ASN1)/HNBAP-CommonDataTypes.asn $(HNBAP_ASN1)/HNBAP-Constants.asn $(HNBAP_ASN1)/HNBAP-IEs.asn $(HNBAP_ASN1)/HNBAP-PDU.asn
 #	change include style to `#include <dir/foo.h>'
 	$(top_srcdir)/move-asn1-header-files.sh osmocom/hnbap $(ASN_MODULE_INC)
 #	Finally copy *.c from buildir to srcdir:
