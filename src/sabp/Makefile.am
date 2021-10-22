@@ -145,4 +145,7 @@ regenerate-from-asn1-source:
 	sed -i '/#include "SABP_Serial-Number.h"/a #include <constr_CHOICE.h>' SABP_Old-Serial-Number.h SABP_New-Serial-Number.h
 #	change include style to `#include <dir/foo.h>'
 	$(top_srcdir)/move-asn1-header-files.sh osmocom/sabp $(ASN_MODULE_INC)
-
+#	Finally copy *.c from buildir to srcdir:
+	if test "$(realpath $(CURDIR))" != "$(realpath $(top_srcdir)/src/sabp)"; then \
+		cp *.c $(top_srcdir)/src/sabp/; \
+	fi

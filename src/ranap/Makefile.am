@@ -1188,3 +1188,7 @@ regenerate-from-asn1-source:
 	sed -i 's/Member/MemberN/' RANAP_RABDataVolumeReport.[ch]
 #	change include style to `#include <dir/foo.h>'
 	$(top_srcdir)/move-asn1-header-files.sh osmocom/ranap $(ASN_MODULE_INC)
+#	Finally copy *.c from buildir to srcdir:
+	if test "$(realpath $(CURDIR))" != "$(realpath $(top_srcdir)/src/ranap)"; then \
+		cp *.c $(top_srcdir)/src/ranap/; \
+	fi
