@@ -75,12 +75,12 @@ void test_asn1_decoding(void)
 {
 	int rc;
 
-	HNBAP_PDU_t _pdu, *pdu = &_pdu;
-	InitiatingMessage_t *im;
-	SuccessfulOutcome_t *so;
-	UERegisterRequestIEs_t ue_req_ies;
-	UERegisterAcceptIEs_t ue_acc_ies;
-	HNBRegisterRequestIEs_t hnb_ies;
+	HNBAP_HNBAP_PDU_t _pdu, *pdu = &_pdu;
+	HNBAP_InitiatingMessage_t *im;
+	HNBAP_SuccessfulOutcome_t *so;
+	HNBAP_UERegisterRequestIEs_t ue_req_ies;
+	HNBAP_UERegisterAcceptIEs_t ue_acc_ies;
+	HNBAP_HNBRegisterRequestIEs_t hnb_ies;
 
 	char imsi[16];
 
@@ -89,16 +89,16 @@ void test_asn1_decoding(void)
 	memset(pdu, 0, sizeof(*pdu));
 	printf("Testing asn.1 HNBAP decoding\n");
 
-	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
+	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_HNBAP_PDU, (void **) &pdu,
 			hnbap_reg_req, sizeof(hnbap_reg_req), 0, 0);
 
 
 	ASSERT(dec_ret.code == RC_OK);
-	ASSERT(pdu->present == HNBAP_PDU_PR_initiatingMessage);
+	ASSERT(pdu->present == HNBAP_HNBAP_PDU_PR_initiatingMessage);
 
 	im = &pdu->choice.initiatingMessage;
 
-	ASSERT(im->procedureCode == ProcedureCode_id_HNBRegister);
+	ASSERT(im->procedureCode == HNBAP_ProcedureCode_id_HNBRegister);
 
 	rc = hnbap_decode_hnbregisterrequesties(&hnb_ies, &im->value);
 	ASSERT(rc >= 0);
@@ -122,50 +122,50 @@ void test_asn1_decoding(void)
 	printf("HNBAP register request for HNB %s\n", (char *) hnb_ies.hnB_Identity.hNB_Identity_Info.buf);
 	hnbap_free_hnbregisterrequesties(&hnb_ies);
 
-	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
+	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_HNBAP_PDU, (void **) &pdu,
 			hnbap_ue_reg_req, sizeof(hnbap_ue_reg_req), 0, 0);
 
 
 	ASSERT(dec_ret.code == RC_OK);
-	ASSERT(pdu->present == HNBAP_PDU_PR_initiatingMessage);
+	ASSERT(pdu->present == HNBAP_HNBAP_PDU_PR_initiatingMessage);
 
 	im = &pdu->choice.initiatingMessage;
-	ASSERT(im->procedureCode == ProcedureCode_id_UERegister);
+	ASSERT(im->procedureCode == HNBAP_ProcedureCode_id_UERegister);
 
 	rc = hnbap_decode_ueregisterrequesties(&ue_req_ies, &im->value);
 	ASSERT(rc >= 0);
 
-	ASSERT(ue_req_ies.uE_Identity.present == UE_Identity_PR_iMSI);
+	ASSERT(ue_req_ies.uE_Identity.present == HNBAP_UE_Identity_PR_iMSI);
 	ranap_bcd_decode(imsi, sizeof(imsi), ue_req_ies.uE_Identity.choice.iMSI.buf,
 			ue_req_ies.uE_Identity.choice.iMSI.size);
 
 	printf("HNBAP UE Register request from IMSI %s\n", imsi);
 	hnbap_free_ueregisterrequesties(&ue_req_ies);
 
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_PDU, pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_HNBAP_PDU, pdu);
 
 	memset(pdu, 0, sizeof(*pdu));
-	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
+	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_HNBAP_PDU, (void **) &pdu,
 			hnbap_ue_reg_acc, sizeof(hnbap_ue_reg_acc), 0, 0);
 
 
 	ASSERT(dec_ret.code == RC_OK);
-	ASSERT(pdu->present == HNBAP_PDU_PR_successfulOutcome);
+	ASSERT(pdu->present == HNBAP_HNBAP_PDU_PR_successfulOutcome);
 
 	so = &pdu->choice.successfulOutcome;
-	ASSERT(so->procedureCode == ProcedureCode_id_UERegister);
+	ASSERT(so->procedureCode == HNBAP_ProcedureCode_id_UERegister);
 
 	rc = hnbap_decode_ueregisteraccepties(&ue_acc_ies, &so->value);
 	ASSERT(rc >= 0);
 
-	ASSERT(ue_acc_ies.uE_Identity.present == UE_Identity_PR_iMSI);
+	ASSERT(ue_acc_ies.uE_Identity.present == HNBAP_UE_Identity_PR_iMSI);
 	ranap_bcd_decode(imsi, sizeof(imsi), ue_acc_ies.uE_Identity.choice.iMSI.buf,
 			ue_acc_ies.uE_Identity.choice.iMSI.size);
 
 	printf("HNBAP UE Register accept to IMSI %s\n", imsi);
 	hnbap_free_ueregisteraccepties(&ue_acc_ies);
 
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_PDU, pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_HNBAP_PDU, pdu);
 }
 
 int main(int argc, char **argv)
@@ -181,4 +181,3 @@ int main(int argc, char **argv)
 	test_common_cleanup();
 	return 0;
 }
-

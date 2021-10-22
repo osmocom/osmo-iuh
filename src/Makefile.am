@@ -7,7 +7,7 @@ BUILT_SOURCES = hnbap_decoder.c hnbap_encoder.c rua_decoder.c rua_encoder.c sabp
 	gen_hnbap.stamp gen_rua.stamp gen_ranap.stamp gen_sabp.stamp
 
 gen_hnbap.stamp: $(ASN1_ROOT)/hnbap/HNBAP-PDU-Contents.asn $(ASN1TOSTRUCT)
-	$(ASN1TOSTRUCT) -f $<
+	$(ASN1TOSTRUCT) -p HNBAP_ -f $<
 #	We also need to replace the include in the newly generated .c files:
 	sed -i 's,^#include "hnbap_ies_defs.h",#include <osmocom/hnbap/hnbap_ies_defs.h>,' hnbap_encoder.c hnbap_decoder.c
 	sed -i 's,^#include "hnbap_common.h",#include <osmocom/hnbap/hnbap_common.h>,' hnbap_encoder.c hnbap_decoder.c hnbap_ies_defs.h

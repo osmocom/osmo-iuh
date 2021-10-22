@@ -37,7 +37,7 @@
 #include <osmocom/rua/rua_common.h>
 #include <osmocom/rua/rua_ies_defs.h>
 #include <osmocom/iuh/context_map.h>
-#include <osmocom/hnbap/CN-DomainIndicator.h>
+#include <osmocom/hnbap/HNBAP_CN-DomainIndicator.h>
 
 static const char *cn_domain_indicator_to_str(RUA_CN_DomainIndicator_t cN_DomainIndicator)
 {

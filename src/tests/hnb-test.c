@@ -117,29 +117,29 @@ static int hnb_test_ue_register_tx(struct hnb_test *hnb_test, const char *imsi_s
 
 	uint8_t imsi_buf[16];
 
-	UERegisterRequest_t request_out;
-	UERegisterRequestIEs_t request;
+	HNBAP_UERegisterRequest_t request_out;
+	HNBAP_UERegisterRequestIEs_t request;
 	memset(&request, 0, sizeof(request));
 
-	request.uE_Identity.present = UE_Identity_PR_iMSI;
+	request.uE_Identity.present = HNBAP_UE_Identity_PR_iMSI;
 
 	imsi_len = ranap_imsi_encode(imsi_buf, sizeof(imsi_buf), imsi_str);
 	OCTET_STRING_fromBuf(&request.uE_Identity.choice.iMSI, (const char*)imsi_buf, imsi_len);
 
-	request.registration_Cause = Registration_Cause_normal;
-	request.uE_Capabilities.access_stratum_release_indicator = Access_stratum_release_indicator_rel_6;
-	request.uE_Capabilities.csg_capability = CSG_Capability_not_csg_capable;
+	request.registration_Cause = HNBAP_Registration_Cause_normal;
+	request.uE_Capabilities.access_stratum_release_indicator = HNBAP_Access_stratum_release_indicator_rel_6;
+	request.uE_Capabilities.csg_capability = HNBAP_CSG_Capability_not_csg_capable;
 
 	memset(&request_out, 0, sizeof(request_out));
 	rc = hnbap_encode_ueregisterrequesties(&request_out, &request);
 	OSMO_ASSERT(rc == 0);
 
-	msg = hnbap_generate_initiating_message(ProcedureCode_id_UERegister,
-						Criticality_reject,
-						&asn_DEF_UERegisterRequest,
+	msg = hnbap_generate_initiating_message(HNBAP_ProcedureCode_id_UERegister,
+						HNBAP_Criticality_reject,
+						&asn_DEF_HNBAP_UERegisterRequest,
 						&request_out);
 
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_UERegisterRequest, &request_out);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_HNBAP_UERegisterRequest, &request_out);
 
 	msgb_sctp_ppid(msg) = IUH_PPI_HNBAP;
 
@@ -149,7 +149,7 @@ static int hnb_test_ue_register_tx(struct hnb_test *hnb_test, const char *imsi_s
 static int hnb_test_rx_hnb_register_acc(struct hnb_test *hnb, ANY_t *in)
 {
 	int rc;
-	HNBRegisterAcceptIEs_t accept;
+	HNBAP_HNBRegisterAcceptIEs_t accept;
 
 	rc = hnbap_decode_hnbregisteraccepties(&accept, in);
 	if (rc < 0) {
@@ -166,7 +166,7 @@ static int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
 {
 	int rc;
 	uint32_t ctx_id;
-	UERegisterAcceptIEs_t accept;
+	HNBAP_UERegisterAcceptIEs_t accept;
 	char imsi[16];
 
 	rc = hnbap_decode_ueregisteraccepties(&accept, in);
@@ -174,7 +174,7 @@ static int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
 		return rc;
 	}
 
-	if (accept.uE_Identity.present != UE_Identity_PR_iMSI) {
+	if (accept.uE_Identity.present != HNBAP_UE_Identity_PR_iMSI) {
 		printf("Wrong type in UE register accept\n");
 		return -1;
 	}
@@ -471,28 +471,28 @@ void hnb_test_rx_paging(struct hnb_test *hnb, const char *imsi)
 
 int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 {
-	HNBAP_PDU_t _pdu, *pdu = &_pdu;
+	HNBAP_HNBAP_PDU_t _pdu, *pdu = &_pdu;
 	asn_dec_rval_t dec_ret;
 	int rc;
 
 	memset(pdu, 0, sizeof(*pdu));
-	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_PDU, (void **) &pdu,
+	dec_ret = aper_decode(NULL, &asn_DEF_HNBAP_HNBAP_PDU, (void **) &pdu,
 			      msg->data, msgb_length(msg), 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DMAIN, LOGL_ERROR, "Error in ASN.1 decode\n");
 		return -EINVAL;
 	}
 
-	if (pdu->present != HNBAP_PDU_PR_successfulOutcome) {
+	if (pdu->present != HNBAP_HNBAP_PDU_PR_successfulOutcome) {
 		printf("Unexpected HNBAP message received\n");
 	}
 
 	switch (pdu->choice.successfulOutcome.procedureCode) {
-	case ProcedureCode_id_HNBRegister:
+	case HNBAP_ProcedureCode_id_HNBRegister:
 		/* Get HNB id and send UE Register request */
 		rc = hnb_test_rx_hnb_register_acc(hnb, &pdu->choice.successfulOutcome.value);
 		break;
-	case ProcedureCode_id_UERegister:
+	case HNBAP_ProcedureCode_id_UERegister:
 		rc = hnb_test_rx_ue_register_acc(hnb, &pdu->choice.successfulOutcome.value);
 		break;
 	default:
@@ -648,7 +648,7 @@ static int hnb_write_cb(struct osmo_fd *fd, struct msgb *msg)
 
 static void hnb_send_register_req(struct hnb_test *hnb_test)
 {
-	HNBRegisterRequest_t request_out;
+	HNBAP_HNBRegisterRequest_t request_out;
 	struct msgb *msg;
 	int rc;
 	uint16_t lac, sac;
@@ -657,7 +657,7 @@ static void hnb_send_register_req(struct hnb_test *hnb_test)
 	uint8_t plmn[] = {0x09, 0xf1, 0x99};
 	char identity[50] = "ATestHNB@";
 
-	HNBRegisterRequestIEs_t request;
+	HNBAP_HNBRegisterRequestIEs_t request;
 	memset(&request, 0, sizeof(request));
 
 	lac = 0xc0fe;
@@ -684,9 +684,9 @@ static void hnb_send_register_req(struct hnb_test *hnb_test)
 		printf("Could not encode HNB register request IEs\n");
 	}
 
-	msg = hnbap_generate_initiating_message(ProcedureCode_id_HNBRegister,
-						Criticality_reject,
-						&asn_DEF_HNBRegisterRequest,
+	msg = hnbap_generate_initiating_message(HNBAP_ProcedureCode_id_HNBRegister,
+						HNBAP_Criticality_reject,
+						&asn_DEF_HNBAP_HNBRegisterRequest,
 						&request_out);
 
 
@@ -700,22 +700,22 @@ static void hnb_send_deregister_req(struct hnb_test *hnb_test)
 	struct msgb *msg;
 	int rc;
 
-	HNBDe_RegisterIEs_t request;
+	HNBAP_HNBDe_RegisterIEs_t request;
 	memset(&request, 0, sizeof(request));
 
-	request.cause.present = Cause_PR_misc;
-	request.cause.choice.misc = CauseMisc_o_and_m_intervention;
+	request.cause.present = HNBAP_Cause_PR_misc;
+	request.cause.choice.misc = HNBAP_CauseMisc_o_and_m_intervention;
 
-	HNBDe_Register_t request_out;
+	HNBAP_HNBDe_Register_t request_out;
 	memset(&request_out, 0, sizeof(request_out));
 	rc = hnbap_encode_hnbde_registeries(&request_out, &request);
 	if (rc < 0) {
 		printf("Could not encode HNB deregister request IEs\n");
 	}
 
-	msg = hnbap_generate_initiating_message(ProcedureCode_id_HNBDe_Register,
-						Criticality_reject,
-						&asn_DEF_HNBDe_Register,
+	msg = hnbap_generate_initiating_message(HNBAP_ProcedureCode_id_HNBDe_Register,
+						HNBAP_Criticality_reject,
+						&asn_DEF_HNBAP_HNBDe_Register,
 						&request_out);
 
 	msgb_sctp_ppid(msg) = IUH_PPI_HNBAP;
