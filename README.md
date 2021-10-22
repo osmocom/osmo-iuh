@@ -99,5 +99,6 @@ In order to re-generate the C source code from the ASN.1 source,
 you will need a modified asn1c which has the following features:
 * APER support (the patch from Eurecom, or its forward-ported version
   from the aper branch of git://git.osmocom.org/asn1c)
-* support for prefixing the generated types (aper-prefix branch of
+* Support for prefixing the generated types (aper-prefix branch of
   git://git.osmocom.org/asn1c)
+* Then in osmo-iuh.git: make -C src/ regen
