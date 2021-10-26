@@ -34,7 +34,6 @@
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_msg_factory.h>
 #include <osmocom/iuh/context_map.h>
-#include <osmocom/hnbap/CN-DomainIndicator.h>
 
 /***********************************************************************
  * Outbound RANAP RESET to CN
@@ -52,7 +51,7 @@ static int transmit_rst(struct hnb_gw *gw, RANAP_CN_DomainIndicator_t domain,
 	};
 
 	LOGP(DRANAP, LOGL_NOTICE, "Tx RESET to %s %s\n",
-	     domain == CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
+	     domain == RANAP_CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
 	     osmo_sccp_inst_addr_name(gw->sccp.cnlink->sccp, remote_addr));
 
 	msg = ranap_new_msg_reset(domain, &cause);
@@ -69,7 +68,7 @@ static int transmit_reset_ack(struct hnb_gw *gw, RANAP_CN_DomainIndicator_t doma
 	struct msgb *msg;
 
 	LOGP(DRANAP, LOGL_NOTICE, "Tx RESET ACK to %s %s\n",
-	     domain == CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
+	     domain == RANAP_CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
 	     osmo_sccp_inst_addr_name(gw->sccp.cnlink->sccp, remote_addr));
 
 	msg = ranap_new_msg_reset_ack(domain, NULL);
@@ -119,7 +118,7 @@ static int cn_ranap_rx_reset_cmd(struct hnbgw_cnlink *cnlink,
 				 const struct osmo_scu_unitdata_param *unitdata,
 				 RANAP_InitiatingMessage_t *imsg)
 {
-	CN_DomainIndicator_t domain;
+	RANAP_CN_DomainIndicator_t domain;
 	RANAP_ResetIEs_t ies;
 	int rc;
 
@@ -128,14 +127,14 @@ static int cn_ranap_rx_reset_cmd(struct hnbgw_cnlink *cnlink,
 	ranap_free_reseties(&ies);
 
 	LOGP(DRANAP, LOGL_NOTICE, "Rx RESET from %s %s, returning ACK\n",
-	     domain == CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
+	     domain == RANAP_CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
 	     osmo_sccp_inst_addr_name(cnlink->sccp, &unitdata->calling_addr));
 
 	/* FIXME: actually reset connections, if any */
 
 	if (transmit_reset_ack(cnlink->gw, domain, &unitdata->calling_addr))
 		LOGP(DRANAP, LOGL_ERROR, "Error: cannot send RESET ACK to %s %s\n",
-		     domain == CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
+		     domain == RANAP_CN_DomainIndicator_cs_domain ? "IuCS" : "IuPS",
 		     osmo_sccp_inst_addr_name(cnlink->sccp, &unitdata->calling_addr));
 
 	return rc;
