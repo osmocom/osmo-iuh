@@ -39,7 +39,7 @@
 #include <osmocom/iuh/context_map.h>
 #include <osmocom/hnbap/CN-DomainIndicator.h>
 
-static const char *cn_domain_indicator_to_str(CN_DomainIndicator_t cN_DomainIndicator)
+static const char *cn_domain_indicator_to_str(RUA_CN_DomainIndicator_t cN_DomainIndicator)
 {
 	switch (cN_DomainIndicator) {
 	case RUA_CN_DomainIndicator_cs_domain:
@@ -174,7 +174,7 @@ int rua_tx_disc(struct hnb_context *hnb, int is_ps, uint32_t context_id,
 
 /* forward a RUA message to the SCCP User API to SCCP */
 static int rua_to_scu(struct hnb_context *hnb,
-		      CN_DomainIndicator_t cN_DomainIndicator,
+		      RUA_CN_DomainIndicator_t cN_DomainIndicator,
 		      enum osmo_scu_prim_type type,
 		      uint32_t context_id, uint32_t cause,
 		      const uint8_t *data, unsigned int len)
