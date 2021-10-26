@@ -2,6 +2,7 @@
 # spec file for package osmo-iuh
 #
 # Copyright (c) 2018 SUSE LINUX GmbH, Nuernberg, Germany.
+# Copyright (c) 2021 sysmocom - s.f.m.c GmbH
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -154,7 +155,9 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 %{_libdir}/libosmo-hnbap.so.0*
 
 %files -n libosmo-hnbap-devel
-%{_includedir}/*
+%dir %{_includedir}/osmocom/
+%dir %{_includedir}/osmocom/hnbap/
+%{_includedir}/osmocom/hnbap/*
 %{_libdir}/libosmo-hnbap.so
 %{_libdir}/pkgconfig/libosmo-hnbap.pc
 
@@ -162,7 +165,9 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 %{_libdir}/libosmo-ranap.so.3*
 
 %files -n libosmo-ranap-devel
-%{_includedir}/*
+%dir %{_includedir}/osmocom/
+%dir %{_includedir}/osmocom/ranap/
+%{_includedir}/osmocom/ranap/*
 %{_libdir}/libosmo-ranap.so
 %{_libdir}/pkgconfig/libosmo-ranap.pc
 
@@ -170,7 +175,9 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 %{_libdir}/libosmo-rua.so.0*
 
 %files -n libosmo-rua-devel
-%{_includedir}/*
+%dir %{_includedir}/osmocom/
+%dir %{_includedir}/osmocom/rua/
+%{_includedir}/osmocom/rua/*
 %{_libdir}/libosmo-rua.so
 %{_libdir}/pkgconfig/libosmo-rua.pc
 
@@ -178,6 +185,9 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 %{_libdir}/libosmo-sabp.so.0*
 
 %files -n libosmo-sabp-devel
+%dir %{_includedir}/osmocom/
+%dir %{_includedir}/osmocom/sabp/
+%{_includedir}/osmocom/sabp/*
 %{_libdir}/libosmo-sabp.so
 %{_libdir}/pkgconfig/libosmo-sabp.pc
 
