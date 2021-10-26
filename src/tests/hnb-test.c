@@ -496,6 +496,7 @@ int hnb_test_hnbap_rx(struct hnb_test *hnb, struct msgb *msg)
 		rc = hnb_test_rx_ue_register_acc(hnb, &pdu->choice.successfulOutcome.value);
 		break;
 	default:
+		rc = -ENOSPC;
 		break;
 	}
 
