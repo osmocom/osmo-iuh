@@ -135,10 +135,7 @@ libosmo_asn1_sabp_la_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	ASN1C_PREFIX="SABP_" asn1c -R -gen-PER $(top_srcdir)/asn1/sabp/SABP-CommonDataTypes.asn $(top_srcdir)/asn1/sabp/SABP-Constants.asn $(top_srcdir)/asn1/sabp/SABP-IEs.asn $(top_srcdir)/asn1/sabp/SABP-PDU.asn
-#	change include style to `#include <dir/foo.h>'
-	sed -i 's/Member/MemberA/' SABP_MessageStructure.[ch]
-	sed -i 's/Member/MemberB/' SABP_Criticality-Diagnostics.[ch]
+	ASN1C_PREFIX="SABP_" asn1c -R -fcompound-names -gen-PER $(top_srcdir)/asn1/sabp/SABP-CommonDataTypes.asn $(top_srcdir)/asn1/sabp/SABP-Constants.asn $(top_srcdir)/asn1/sabp/SABP-IEs.asn $(top_srcdir)/asn1/sabp/SABP-PDU.asn
 #	add missing includes
 	sed -i '/#include "SABP_Serial-Number.h"/a #include <constr_CHOICE.h>' SABP_Old-Serial-Number.h SABP_New-Serial-Number.h
 #	change include style to `#include <dir/foo.h>'
