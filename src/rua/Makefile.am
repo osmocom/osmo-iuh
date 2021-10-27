@@ -81,7 +81,7 @@ libosmo_asn1_rua_la_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	ASN1C_PREFIX="RUA_" asn1c -R -gen-PER $(top_srcdir)/asn1/rua/RUA-CommonDataTypes.asn $(top_srcdir)/asn1/rua/RUA-Constants.asn $(top_srcdir)/asn1/rua/RUA-IEs.asn $(top_srcdir)/asn1/rua/RUA-PDU.asn
+	ASN1C_PREFIX="RUA_" asn1c -R -fcompound-names -gen-PER $(top_srcdir)/asn1/rua/RUA-CommonDataTypes.asn $(top_srcdir)/asn1/rua/RUA-Constants.asn $(top_srcdir)/asn1/rua/RUA-IEs.asn $(top_srcdir)/asn1/rua/RUA-PDU.asn
 #	change include style to `#include <dir/foo.h>'
 	$(top_srcdir)/move-asn1-header-files.sh osmocom/rua $(ASN_MODULE_INC)
 #	Finally copy *.c from buildir to srcdir:
