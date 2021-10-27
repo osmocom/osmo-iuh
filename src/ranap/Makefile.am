@@ -1169,21 +1169,8 @@ libosmo_asn1_ranap_la_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	ASN1C_PREFIX="RANAP_" asn1c -R -gen-PER $(top_srcdir)/asn1/ranap/RANAP-CommonDataTypes.asn $(top_srcdir)/asn1/ranap/RANAP-Constants.asn $(top_srcdir)/asn1/ranap/RANAP-IEs.asn $(top_srcdir)/asn1/ranap/RANAP-PDU.asn
+	ASN1C_PREFIX="RANAP_" asn1c -fcompound-names -R -gen-PER $(top_srcdir)/asn1/ranap/RANAP-CommonDataTypes.asn $(top_srcdir)/asn1/ranap/RANAP-Constants.asn $(top_srcdir)/asn1/ranap/RANAP-IEs.asn $(top_srcdir)/asn1/ranap/RANAP-PDU.asn
 	sed -i '7i#include <constr_CHOICE.h>' RANAP_ChosenEncryptionAlgorithm.h RANAP_ChosenIntegrityProtectionAlgorithm.h RANAP_IMSI.h RANAP_PLMNidentity.h RANAP_RAB-ReleaseFailedList.c RANAP_RAB-ReleaseList.c RANAP_RAB-SetupOrModifyList.c RANAP_ResetResourceList.c RANAP_ResetResourceAckList.c
-	sed -i 's/Member/MemberA/' RANAP_LA-LIST.[ch]
-	sed -i 's/Member/MemberB/' RANAP_RABParametersList.[ch]
-	sed -i 's/Member/MemberC/' RANAP_AuthorisedPLMNs.[ch]
-	sed -i 's/Member/MemberD/' RANAP_UnsuccessfulLinking-IEs.[ch]
-	sed -i 's/Member/MemberE/' RANAP_SDU-FormatInformationParameters.[ch]
-	sed -i 's/Member/MemberF/' RANAP_JoinedMBMSBearerService-IEs.[ch]
-	sed -i 's/Member/MemberG/' RANAP_CriticalityDiagnostics-IE-List.[ch]
-	sed -i 's/Member/MemberH/' RANAP_DataVolumeList.[ch]
-	sed -i 's/Member/MemberJ/' RANAP_EUTRANFrequencies.[ch]
-	sed -i 's/Member/MemberK/' RANAP_LeftMBMSBearerService-IEs.[ch]
-	sed -i 's/Member/MemberL/' RANAP_MessageStructure.[ch]
-	sed -i 's/Member/MemberM/' RANAP_PLMNs-in-shared-network.[ch]
-	sed -i 's/Member/MemberN/' RANAP_RABDataVolumeReport.[ch]
 #	change include style to `#include <dir/foo.h>'
 	$(top_srcdir)/move-asn1-header-files.sh osmocom/ranap $(ASN_MODULE_INC)
 #	Finally copy *.c from buildir to srcdir:
