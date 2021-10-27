@@ -243,7 +243,7 @@ libosmo_asn1_hnbap_la_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	ASN1C_PREFIX="HNBAP_" asn1c -R -gen-PER $(HNBAP_ASN1)/HNBAP-CommonDataTypes.asn $(HNBAP_ASN1)/HNBAP-Constants.asn $(HNBAP_ASN1)/HNBAP-IEs.asn $(HNBAP_ASN1)/HNBAP-PDU.asn
+	ASN1C_PREFIX="HNBAP_" asn1c -R -fcompound-names -gen-PER $(HNBAP_ASN1)/HNBAP-CommonDataTypes.asn $(HNBAP_ASN1)/HNBAP-Constants.asn $(HNBAP_ASN1)/HNBAP-IEs.asn $(HNBAP_ASN1)/HNBAP-PDU.asn
 #	change include style to `#include <dir/foo.h>'
 	$(top_srcdir)/move-asn1-header-files.sh osmocom/hnbap $(ASN_MODULE_INC)
 #	Finally copy *.c from buildir to srcdir:
