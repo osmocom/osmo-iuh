@@ -583,22 +583,22 @@ static int hnb_read_cb(struct osmo_fd *fd)
 		/* FIXME: clean up after disappeared HNB */
 		close(fd->fd);
 		osmo_fd_unregister(fd);
-		return rc;
+		goto free_ret;
 	} else if (rc == 0) {
 		LOGP(DMAIN, LOGL_INFO, "Connection to HNB closed\n");
 		close(fd->fd);
 		osmo_fd_unregister(fd);
 		fd->fd = -1;
-
-		return -1;
+		rc = -1;
+		goto free_ret;
 	} else {
 		msgb_put(msg, rc);
 	}
 
 	if (flags & MSG_NOTIFICATION) {
 		LOGP(DMAIN, LOGL_DEBUG, "Ignoring SCTP notification\n");
-		msgb_free(msg);
-		return 0;
+		rc = 0;
+		goto free_ret;
 	}
 
 	sinfo.sinfo_ppid = ntohl(sinfo.sinfo_ppid);
@@ -626,6 +626,7 @@ static int hnb_read_cb(struct osmo_fd *fd)
 		break;
 	}
 
+free_ret:
 	msgb_free(msg);
 	return rc;
 }
