@@ -129,8 +129,12 @@ find %{buildroot} -type f -name "*.la" -delete -print
 %check
 make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 
+%post   -n libosmo-hnbap0 -p /sbin/ldconfig
+%postun -n libosmo-hnbap0 -p /sbin/ldconfig
 %post   -n libosmo-ranap3 -p /sbin/ldconfig
 %postun -n libosmo-ranap3 -p /sbin/ldconfig
+%post   -n libosmo-rua0 -p /sbin/ldconfig
+%postun -n libosmo-rua0 -p /sbin/ldconfig
 %post   -n libosmo-sabp0 -p /sbin/ldconfig
 %postun -n libosmo-sabp0 -p /sbin/ldconfig
 
