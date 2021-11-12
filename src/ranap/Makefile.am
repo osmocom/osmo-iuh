@@ -1169,7 +1169,14 @@ libosmo_asn1_ranap_la_LIBADD=$(ASN1C_LDADD)
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:
-	ASN1C_PREFIX="RANAP_" asn1c -fcompound-names -R -gen-PER $(top_srcdir)/asn1/ranap/RANAP-CommonDataTypes.asn $(top_srcdir)/asn1/ranap/RANAP-Constants.asn $(top_srcdir)/asn1/ranap/RANAP-IEs.asn $(top_srcdir)/asn1/ranap/RANAP-PDU.asn
+	ASN1C_PREFIX="RANAP_" asn1c \
+		-fcompound-names \
+		-R \
+		-gen-PER \
+		$(top_srcdir)/asn1/ranap/RANAP-CommonDataTypes.asn \
+		$(top_srcdir)/asn1/ranap/RANAP-Constants.asn \
+		$(top_srcdir)/asn1/ranap/RANAP-IEs.asn \
+		$(top_srcdir)/asn1/ranap/RANAP-PDU.asn
 	sed -i '7i#include <constr_CHOICE.h>' RANAP_ChosenEncryptionAlgorithm.h RANAP_ChosenIntegrityProtectionAlgorithm.h RANAP_IMSI.h RANAP_PLMNidentity.h RANAP_RAB-ReleaseFailedList.c RANAP_RAB-ReleaseList.c RANAP_RAB-SetupOrModifyList.c RANAP_ResetResourceList.c RANAP_ResetResourceAckList.c
 #	change include style to `#include <dir/foo.h>'
 	$(top_srcdir)/move-asn1-header-files.sh osmocom/ranap $(ASN_MODULE_INC)
