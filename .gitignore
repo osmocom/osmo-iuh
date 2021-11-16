@@ -33,7 +33,9 @@ src/tests/testsuite.dir
 src/tests/testsuite.log
 src/osmo-hnbgw
 tags
+libosmo-hnbap.pc
 libosmo-ranap.pc
+libosmo-rua.pc
 libosmo-sabp.pc
 m4
 gen_hnbap.stamp
