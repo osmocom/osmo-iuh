@@ -15,9 +15,9 @@ override_dh_auto_configure:
 # See https://www.debian.org/doc/manuals/developers-reference/best-pkging-practices.html#bpp-dbg
 override_dh_strip:
 	dh_strip -plibosmo-hnbap0 --dbg-package=libosmo-hnbap-dbg
-	dh_strip -plibosmo-ranap3 --dbg-package=libosmo-ranap-dbg
+	dh_strip -plibosmo-ranap5 --dbg-package=libosmo-ranap-dbg
 	dh_strip -plibosmo-rua0 --dbg-package=libosmo-rua-dbg
-	dh_strip -plibosmo-sabp0 --dbg-package=libosmo-sabp-dbg
+	dh_strip -plibosmo-sabp1 --dbg-package=libosmo-sabp-dbg
 	dh_strip -posmo-hnbgw --dbg-package=osmo-hnbgw-dbg
 
 # Print test results in case of a failure

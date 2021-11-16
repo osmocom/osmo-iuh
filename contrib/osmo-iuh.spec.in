@@ -58,17 +58,17 @@ Requires:       libosmo-hnbap0 = %{version}
 %description -n libosmo-hnbap-devel
 Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
-%package -n libosmo-ranap3
+%package -n libosmo-ranap5
 Summary:        Shared Library part of libosmo-ranap
 Group:          System/Libraries
 
-%description -n libosmo-ranap3
+%description -n libosmo-ranap5
 Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
 %package -n libosmo-ranap-devel
 Summary:        Development files for Osmocom RANAP library
 Group:          Development/Libraries/C and C++
-Requires:       libosmo-ranap3 = %{version}
+Requires:       libosmo-ranap5 = %{version}
 
 %description -n libosmo-ranap-devel
 Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
@@ -91,17 +91,17 @@ Requires:       libosmo-rua0 = %{version}
 %description -n libosmo-rua-devel
 Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
-%package -n libosmo-sabp0
+%package -n libosmo-sabp1
 Summary:        Shared Library part of libosmo-sabp
 Group:          System/Libraries
 
-%description -n libosmo-sabp0
+%description -n libosmo-sabp1
 Osmocom code for the SABP (service area broadcast protocol) interface
 
 %package -n libosmo-sabp-devel
 Summary:        Development files for Osmocom SABP library
 Group:          Development/Libraries/C and C++
-Requires:       libosmo-sabp0 = %{version}
+Requires:       libosmo-sabp1 = %{version}
 
 %description -n libosmo-sabp-devel
 Osmocom code for the SABP (service area broadcast protocol) interface
@@ -131,12 +131,12 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 
 %post   -n libosmo-hnbap0 -p /sbin/ldconfig
 %postun -n libosmo-hnbap0 -p /sbin/ldconfig
-%post   -n libosmo-ranap3 -p /sbin/ldconfig
-%postun -n libosmo-ranap3 -p /sbin/ldconfig
+%post   -n libosmo-ranap5 -p /sbin/ldconfig
+%postun -n libosmo-ranap5 -p /sbin/ldconfig
 %post   -n libosmo-rua0 -p /sbin/ldconfig
 %postun -n libosmo-rua0 -p /sbin/ldconfig
-%post   -n libosmo-sabp0 -p /sbin/ldconfig
-%postun -n libosmo-sabp0 -p /sbin/ldconfig
+%post   -n libosmo-sabp1 -p /sbin/ldconfig
+%postun -n libosmo-sabp1 -p /sbin/ldconfig
 
 %if 0%{?suse_version}
 %pre     %service_add_pre    osmo-hnbgw.service
@@ -165,8 +165,8 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 %{_libdir}/libosmo-hnbap.so
 %{_libdir}/pkgconfig/libosmo-hnbap.pc
 
-%files -n libosmo-ranap3
-%{_libdir}/libosmo-ranap.so.3*
+%files -n libosmo-ranap5
+%{_libdir}/libosmo-ranap.so.5*
 
 %files -n libosmo-ranap-devel
 %dir %{_includedir}/osmocom/
@@ -185,8 +185,8 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 %{_libdir}/libosmo-rua.so
 %{_libdir}/pkgconfig/libosmo-rua.pc
 
-%files -n libosmo-sabp0
-%{_libdir}/libosmo-sabp.so.0*
+%files -n libosmo-sabp1
+%{_libdir}/libosmo-sabp.so.1*
 
 %files -n libosmo-sabp-devel
 %dir %{_includedir}/osmocom/

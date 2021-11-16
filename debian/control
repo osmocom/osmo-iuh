@@ -67,7 +67,7 @@ Multi-Arch: same
 Depends: libosmo-hnbap0 (= ${binary:Version}), ${misc:Depends}
 Description: Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
-Package: libosmo-ranap3
+Package: libosmo-ranap5
 Section: libs
 Architecture: any
 Multi-Arch: same
@@ -79,14 +79,14 @@ Package: libosmo-ranap-dbg
 Section: debug
 Architecture: any
 Multi-Arch: same
-Depends: libosmo-ranap3 (= ${binary:Version}), ${misc:Depends}
+Depends: libosmo-ranap5 (= ${binary:Version}), ${misc:Depends}
 Description: Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
 Package: libosmo-ranap-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libosmo-ranap3 (= ${binary:Version}), ${misc:Depends}
+Depends: libosmo-ranap5 (= ${binary:Version}), ${misc:Depends}
 Description: Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
 Package: libosmo-rua0
@@ -111,7 +111,7 @@ Multi-Arch: same
 Depends: libosmo-rua0 (= ${binary:Version}), ${misc:Depends}
 Description: Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
-Package: libosmo-sabp0
+Package: libosmo-sabp1
 Section: libs
 Architecture: any
 Multi-Arch: same
@@ -123,12 +123,12 @@ Package: libosmo-sabp-dbg
 Section: debug
 Architecture: any
 Multi-Arch: same
-Depends: libosmo-sabp0 (= ${binary:Version}), ${misc:Depends}
+Depends: libosmo-sabp1 (= ${binary:Version}), ${misc:Depends}
 Description: Osmocom code for the Iuh interface (SABP)
 
 Package: libosmo-sabp-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libosmo-sabp0 (= ${binary:Version}), ${misc:Depends}
+Depends: libosmo-sabp1 (= ${binary:Version}), ${misc:Depends}
 Description: Osmocom code for the Iuh interface (SABP)

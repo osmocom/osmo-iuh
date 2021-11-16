@@ -1,3 +1,40 @@
+osmo-iuh (0.8.0) unstable; urgency=medium
+
+  [ Harald Welte ]
+  * hnbgw: Add missing break statement
+
+  [ Pau Espin Pedrol ]
+  * iu_client: Log event sent to upper layer callback
+  * ranap_iu_tx_release_free(): always trigger RANAP_IU_EVENT_IU_RELEASE as a result
+  * hnb-test: Fix typo in vty cmd description
+  *  cosmetic: src/ranap/Makefile.am: Drop trailing whitespace
+  * src/tests/Makefile.am: Drop reference to non-existent RANAP_FILES var
+  * src/*/Makefile.am: Fix trailing whitespace
+  * Provide libosmo-hnbap as a public shared library
+  * Provide libosmo-rua as a public shared library
+  * move-asn1-header-files.sh: Replace original asn file path in generated asn1 header files
+  * README.md: Document how to re-generate code from ASN1 files
+  * hnbgw_rua.c: Use proper type struct
+  * hnbgw_cn.c: Use proper type struct
+  * hnb-test: Fix rc var may be used uninitialized
+  * src/*/Makefile.am: Copy back to srcdir the generated .c files from ASN
+  * src/*/Makefile.am: Use asn1c -R to avoid generating runtime code
+  * Update generated .c/.h after using asn1c -R param
+  * hnbap: Use specific prefix for HNBAP generated code
+  * hnbap: Drop no longer existing asn1c param -fnative-types
+  * hnbap: Use asn1c flag -fcompound-names to avoid name collisions with other libs
+  * rua: Use asn1c flag -fcompound-names to avoid name collisions with other libs
+  * sabp: Use asn1c flag -fcompound-names to avoid name collisions with other libs
+  * ranap: Use asn1c flag -fcompound-names to avoid name collisions with other libs
+  * hnb-test: Fix memleak in hnb_read_cb
+
+  [ Oliver Smith ]
+  * contrib/osmo-iuh.spec.in: fix header packaging
+  * contrib/osmo-iuh.spec: fix missing ldconfig lines
+  * Cosmetic: put asn1c parameters in separate lines
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 16 Nov 2021 17:13:09 +0100
+
 osmo-iuh (0.7.0) unstable; urgency=medium
 
   [ Martin Hauke ]
