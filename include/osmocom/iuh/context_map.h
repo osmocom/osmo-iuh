@@ -35,6 +35,9 @@ struct hnbgw_context_map {
 	uint32_t scu_conn_id;
 
 	enum hnbgw_context_map_state state;
+
+	/* FSM instance for the MGW */
+	struct osmo_fsm_inst *mgw_fi;
 };
 
 

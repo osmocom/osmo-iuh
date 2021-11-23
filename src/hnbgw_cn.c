@@ -356,6 +356,11 @@ static int handle_cn_data_ind(struct hnbgw_cnlink *cnlink,
 		return 0;
 	}
 
+	/* TODO: Intercept RAB Assignment Request
+	 * Setup MGW and forward patched message with IP address
+	 * Save state in context map
+	 */
+
 	return rua_tx_dt(map->hnb_ctx, map->is_ps, map->rua_ctx_id,
 			 msgb_l2(oph->msg), msgb_l2len(oph->msg));
 }

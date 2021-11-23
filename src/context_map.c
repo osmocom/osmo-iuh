@@ -106,6 +106,8 @@ context_map_alloc_by_hnb(struct hnb_context *hnb, uint32_t rua_ctx_id,
 	llist_add_tail(&map->cn_list, &cn_if_new->map_list);
 	map->state = MAP_S_ACTIVE;
 
+	// TODO: map->mgw_fi = osmo_fsm_inst_alloc();
+
 	return map;
 }
 

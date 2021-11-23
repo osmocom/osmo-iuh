@@ -225,6 +225,9 @@ static int rua_to_scu(struct hnb_context *hnb,
 		       map->rua_ctx_id, map->scu_conn_id);
 	}
 
+	/* TODO: Check for map and if this is a RAB Assignment response
+	 * Control mgw, patch IPs and forward patched message */
+
 	/* add primitive header */
 	switch (type) {
 	case OSMO_SCU_PRIM_N_CONNECT:
