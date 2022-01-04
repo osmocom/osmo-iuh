@@ -173,6 +173,8 @@ int main(int argc, char **argv)
 	int rc;
 
 	test_common_init();
+	ranap_set_log_area(DRANAP);
+	hnbap_set_log_area(DHNBAP);
 	log_set_log_level(osmo_stderr_target, LOGL_INFO);
 
 

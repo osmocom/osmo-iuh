@@ -14,7 +14,7 @@ noinst_HEADERS = test_common.h hnb-test.h hnb-test-layers.h
 test_helpers_SOURCES = test-helpers.c test_common.c
 test_helpers_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-ranap.la
 
-test_hnbap_SOURCES = $(top_srcdir)/src/hnbap_common.c $(top_builddir)/src/hnbap_decoder.c test-hnbap.c test_common.c
+test_hnbap_SOURCES = test-hnbap.c test_common.c
 test_hnbap_LDADD = $(COMMON_LIBS) $(top_builddir)/src/libosmo-hnbap.la $(top_builddir)/src/libosmo-ranap.la
 
 hnb_test_SOURCES = hnb-test.c test_common.c hnb-test-ranap.c hnb-test-rua.c

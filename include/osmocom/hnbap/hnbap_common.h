@@ -124,7 +124,8 @@
 
 #include <osmocom/core/logging.h>
 
-#define HNBAP_DEBUG(x, args ...) DEBUGP(1, x, ## args)
+extern int _hnbap_DHNBAP;
+#define HNBAP_DEBUG(x, args ...) DEBUGP(_hnbap_DHNBAP, x, ## args)
 
 extern int asn1_xer_print;
 
@@ -149,3 +150,5 @@ HNBAP_IE_t *hnbap_new_ie(HNBAP_ProtocolIE_ID_t id, HNBAP_Criticality_t criticali
 		  asn_TYPE_descriptor_t *type, void *sptr);
 
 char *hnbap_cause_str(HNBAP_Cause_t *cause);
+
+void hnbap_set_log_area(int log_area);

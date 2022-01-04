@@ -7,10 +7,7 @@
 #define DEBUG
 #include <osmocom/core/logging.h>
 
-enum {
-	DMAIN,
-	DHNBAP,
-};
+#include "test_common.h"
 
 
 /* 25.467 Section 7.1 */

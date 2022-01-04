@@ -29,7 +29,7 @@
 #include <osmocom/ranap/ranap_common_cn.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
 
-#include <osmocom/iuh/hnbgw.h>
+#define DRANAP _ranap_DRANAP
 
 static int cn_ranap_rx_initiating_msg_co(void *ctx, RANAP_InitiatingMessage_t *imsg,
 					 ranap_message *message)

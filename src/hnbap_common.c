@@ -24,7 +24,9 @@
 #include <osmocom/core/msgb.h>
 
 #include <osmocom/hnbap/hnbap_common.h>
-#include <osmocom/iuh/hnbgw.h>
+
+int _hnbap_DHNBAP = 0;
+#define DHNBAP _hnbap_DHNBAP
 
 static const struct value_string hnbap_cause_radio_vals[] = {
 	{ HNBAP_CauseRadioNetwork_overload,		    "overload" },
@@ -241,4 +243,9 @@ HNBAP_IE_t *hnbap_new_ie(HNBAP_ProtocolIE_ID_t id,
 		}
 
 	return buff;
+}
+
+void hnbap_set_log_area(int log_area)
+{
+	_hnbap_DHNBAP = log_area;
 }

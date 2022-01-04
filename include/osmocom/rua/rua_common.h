@@ -44,7 +44,8 @@
 
 #include <osmocom/core/logging.h>
 
-#define RUA_DEBUG(x, args ...) DEBUGP(0, x, ## args)
+extern int _rua_DRUA;
+#define RUA_DEBUG(x, args ...) DEBUGP(_rua_DRUA, x, ## args)
 
 extern int asn1_xer_print;
 
@@ -69,3 +70,5 @@ RUA_IE_t *rua_new_ie(RUA_ProtocolIE_ID_t id, RUA_Criticality_t criticality,
 		     asn_TYPE_descriptor_t *type, void *sptr);
 
 char *rua_cause_str(RUA_Cause_t *cause);
+
+void rua_set_log_area(int log_area);

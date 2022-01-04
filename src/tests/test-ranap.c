@@ -32,8 +32,6 @@
 
 #include "test_common.h"
 
-#include <osmocom/iuh/hnbgw.h>
-
 extern void *tall_msgb_ctx;
 
 static void test_aper_int(uint32_t inp)
@@ -98,6 +96,7 @@ int main(int argc, char **argv)
 	//asn_debug = 1;
 
 	test_common_init();
+	ranap_set_log_area(DRANAP);
 
 	test_aper_int(1);
 	test_aper_int(2);

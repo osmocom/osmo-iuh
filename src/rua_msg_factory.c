@@ -5,8 +5,10 @@
 #include <osmocom/rua/rua_ies_defs.h>
 #include <osmocom/rua/rua_msg_factory.h>
 #include "asn1helpers.h"
-#include <osmocom/iuh/hnbgw.h>
 
+#define DRUA _rua_DRUA
+
+#define IUH_PPI_RUA 19
 
 struct msgb *rua_new_udt(struct msgb *inmsg)
 {
@@ -31,7 +33,7 @@ struct msgb *rua_new_udt(struct msgb *inmsg)
 
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_ConnectionlessTransfer, &out);
 
-	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+	DEBUGP(DRUA, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
 
 	msgb_sctp_ppid(msg) = IUH_PPI_RUA;
 
@@ -68,7 +70,7 @@ struct msgb *rua_new_conn(int is_ps, uint32_t context_id, struct msgb *inmsg)
 
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_Connect, &out);
 
-	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+	DEBUGP(DRUA, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
 
 	msgb_sctp_ppid(msg) = IUH_PPI_RUA;
 
@@ -104,7 +106,7 @@ struct msgb *rua_new_dt(int is_ps, uint32_t context_id, struct msgb *inmsg)
 
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_DirectTransfer, &out);
 
-	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+	DEBUGP(DRUA, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
 
 	msgb_sctp_ppid(msg) = IUH_PPI_RUA;
 
@@ -146,7 +148,7 @@ struct msgb *rua_new_disc(int is_ps, uint32_t context_id, struct msgb *inmsg)
 
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_Disconnect, &out);
 
-	DEBUGP(DMAIN, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
+	DEBUGP(DRUA, "transmitting RUA payload of %u bytes\n", msgb_length(msg));
 
 	msgb_sctp_ppid(msg) = IUH_PPI_RUA;
 

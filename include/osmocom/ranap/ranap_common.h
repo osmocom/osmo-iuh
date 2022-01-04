@@ -593,8 +593,8 @@
 
 struct gprs_ra_id;
 
-#define RANAP_DEBUG(x, args ...) DEBUGP(_ranap_DRANAP, x, ## args)
 extern int _ranap_DRANAP;
+#define RANAP_DEBUG(x, args ...) DEBUGP(_ranap_DRANAP, x, ## args)
 
 extern int asn1_xer_print;
 

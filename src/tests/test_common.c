@@ -33,14 +33,14 @@
 #include <netinet/sctp.h>
 #include <arpa/inet.h>
 
+#include <asn1c/asn_internal.h>
+
 #include <osmocom/core/application.h>
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/logging.h>
 #include <osmocom/core/msgb.h>
 
-#include <osmocom/ranap/ranap_common.h>
-
-#include <osmocom/iuh/hnbgw.h>
+#include "test_common.h"
 
 static const struct log_info_cat log_cat[] = {
 	[DMAIN] = {
@@ -82,8 +82,6 @@ int test_common_init(void)
 	rc = osmo_init_logging(&test_log_info);
 	if (rc < 0)
 		exit(1);
-
-	ranap_set_log_area(DRANAP);
 
 	log_set_print_filename2(osmo_stderr_target, LOG_FILENAME_NONE);
 	log_set_use_color(osmo_stderr_target, 0);

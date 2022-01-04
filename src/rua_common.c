@@ -24,9 +24,11 @@
 #include <osmocom/core/msgb.h>
 
 #include <osmocom/rua/rua_common.h>
-#include <osmocom/iuh/hnbgw.h>
 
 extern int asn1_xer_print;
+
+int _rua_DRUA = 0;
+#define DRUA _rua_DRUA
 
 static const struct value_string rua_cause_radio_vals[] = {
 	{ RUA_CauseRadioNetwork_normal,		 "normal" },
@@ -223,4 +225,9 @@ RUA_IE_t *rua_new_ie(RUA_ProtocolIE_ID_t id,
 		}
 
 	return buff;
+}
+
+void rua_set_log_area(int log_area)
+{
+	_rua_DRUA = log_area;
 }

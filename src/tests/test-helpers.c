@@ -209,6 +209,7 @@ int main(int argc, char **argv)
 	asn1_xer_print = 0;
 
 	test_common_init();
+	ranap_set_log_area(DRANAP);
 
 	test_iu_helpers();
 	test_asn1_helpers();
