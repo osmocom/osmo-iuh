@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign dist-bzip2
 
-SUBDIRS = src include doc contrib
+SUBDIRS = src include doc
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libosmo-hnbap.pc libosmo-ranap.pc libosmo-rua.pc libosmo-sabp.pc

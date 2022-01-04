@@ -138,22 +138,9 @@ make %{?_smp_mflags} check || (find . -name testsuite.log -exec cat {} +)
 %post   -n libosmo-sabp1 -p /sbin/ldconfig
 %postun -n libosmo-sabp1 -p /sbin/ldconfig
 
-%if 0%{?suse_version}
-%pre     %service_add_pre    osmo-hnbgw.service
-%post    %service_add_post   osmo-hnbgw.service
-%preun   %service_del_preun  osmo-hnbgw.service
-%postun  %service_del_postun osmo-hnbgw.service
-%endif
-
 %files
 %license COPYING
 %doc README.md
-%dir %{_docdir}/%{name}/examples
-%{_docdir}/%{name}/examples/osmo-hnbgw.cfg
-%{_bindir}/osmo-hnbgw
-%dir %{_sysconfdir}/osmocom
-%config %{_sysconfdir}/osmocom/osmo-hnbgw.cfg
-%{_unitdir}/osmo-hnbgw.service
 
 %files -n libosmo-hnbap0
 %{_libdir}/libosmo-hnbap.so.0*

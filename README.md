@@ -1,10 +1,9 @@
-osmo-iuh - Osmocom Iuh and HNB-GW implementation
+osmo-iuh - Osmocom Iuh implementation
 ================================================
 
 This repository contains a C-language implementation of the 3GPP Iuh
-interface, together with a HNB-GW (Home NodeB Gateway).  You can use it
-to interface Iuh-speaking femtocells/small cells to Iu-speaking MSCs and
-SGSNs.
+interface.  You can use it to interface Iuh-speaking femtocells/small cells to
+Iu-speaking MSCs and SGSNs.
 
 It is part of the [Osmocom](https://osmocom.org/) Open Source Mobile
 Communications project.
@@ -86,11 +85,6 @@ Using
 
 Note: osmo-iuh just left very active development (December 2015, January
 2016), so your mileage may vary.
-
-If you run the 'hnbgw' executable, it will open a listening SCTP socket
-and wait for incoming Iuh connections.  It will accept any
-HNB-REGISTER-REQUEST, and it will establish Iu (over SUA) connections
-towards the MSC and SGSN.
 
 Regenerating C code from ASN.1 source
 -------------------------------------

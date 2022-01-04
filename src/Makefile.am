@@ -88,20 +88,6 @@ libosmo_sabp_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMO
 libosmo_sabp_la_SOURCES = sabp_common.c sabp_encoder.c sabp_decoder.c
 
 
-# build the actual HomeNodeB gateway
-#
-bin_PROGRAMS = osmo-hnbgw
-
-osmo_hnbgw_SOURCES = hnbgw.c hnbgw_hnbap.c hnbgw_rua.c hnbgw_ranap.c \
-		     hnbgw_vty.c \
-		     context_map.c hnbgw_cn.c
-
-osmo_hnbgw_LDADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOCTRL_LIBS) \
-		   $(ASN1C_LIBS) $(OSMOSIGTRAN_LIBS) \
-		   $(OSMONETIF_LIBS) \
-		   libosmo-hnbap.la libosmo-rua.la libosmo-ranap.la
-
-
 regen: regenerate-from-asn1-source
 
 regenerate-from-asn1-source:

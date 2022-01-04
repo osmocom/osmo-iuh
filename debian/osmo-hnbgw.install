@@ -1,4 +1,0 @@
-etc/osmocom/osmo-hnbgw.cfg
-lib/systemd/system/osmo-hnbgw.service
-usr/bin/osmo-hnbgw
-usr/share/doc/osmo-iuh/examples/osmo-hnbgw.cfg
