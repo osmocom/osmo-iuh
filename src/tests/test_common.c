@@ -36,6 +36,7 @@
 #include <osmocom/core/application.h>
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/logging.h>
+#include <osmocom/core/msgb.h>
 
 #include <osmocom/ranap/ranap_common.h>
 
