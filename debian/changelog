@@ -1,3 +1,16 @@
+osmo-iuh (1.2.0) unstable; urgency=medium
+
+  [ Oliver Smith ]
+  * treewide: remove FSF address
+
+  [ Pau Espin Pedrol ]
+  * tests/tests_common.c: Add missing header
+  * Introduce dynamic log category for libosmo-rua/hnbap
+  * Drop osmo-hnbgw
+  * tests/dummy_cn_sua.c: Drop no longer existing include
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Wed, 05 Jan 2022 12:26:51 +0100
+
 osmo-iuh (1.1.0) unstable; urgency=medium
 
   * gitignore: Ignore libsmo-{hnbap,rua}.pc
