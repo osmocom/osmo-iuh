@@ -643,3 +643,8 @@ int ranap_ip_from_transp_layer_addr(const BIT_STRING_t *in, uint32_t *ip);
 int ranap_decode_rab_setupormodifieditemies_fromlist(
     RANAP_RAB_SetupOrModifiedItemIEs_t *raB_SetupOrModifiedItemIEs,
     ANY_t *any_p);
+
+/* There is no generated decoder available, this is a custom one */
+int ranap_decode_rab_setupormodifyitemfirst(
+	RANAP_RAB_SetupOrModifyItemFirst_t *raB_SetupOrModifyItemFirst,
+	ANY_t *any_p);

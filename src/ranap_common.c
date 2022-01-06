@@ -562,7 +562,8 @@ int ranap_decode_rab_setupormodifieditemies_fromlist(
 		ANY_t *any_p) {
 
 	RANAP_RAB_SetupOrModifiedItem_t *ranaP_RABSetupOrModifiedItem_p = NULL;
-	int decoded = 0;
+	int decoded;
+
 	assert(any_p != NULL);
 	assert(raB_SetupOrModifiedItemIEs != NULL);
 
@@ -581,3 +582,28 @@ int ranap_decode_rab_setupormodifieditemies_fromlist(
 	return decoded;
 }
 
+int ranap_decode_rab_setupormodifyitemfirst(
+		RANAP_RAB_SetupOrModifyItemFirst_t *raB_SetupOrModifyItemFirst,
+		ANY_t *any_p)
+{
+	RANAP_RAB_SetupOrModifyItemFirst_t *ranaP_RABSetupOrModifyItemFirst_p = NULL;
+	int decoded;
+
+	assert(any_p != NULL);
+	assert(raB_SetupOrModifyItemFirst != NULL);
+
+	memset(raB_SetupOrModifyItemFirst, 0, sizeof(RANAP_RAB_SetupOrModifyItemFirst_t));
+	RANAP_DEBUG("Decoding message RANAP_RAB_SetupOrModifyItemFirst_t (%s:%d)\n", __FILE__, __LINE__);
+	decoded = ANY_to_type_aper(any_p, &asn_DEF_RANAP_RAB_SetupOrModifyItemFirst,
+				   (void **)&ranaP_RABSetupOrModifyItemFirst_p);
+	if (decoded < 0) {
+		RANAP_DEBUG("Decoding of RANAP_RAB_SetupOrModifyItemFirst_t failed\n");
+		return -1;
+	}
+	if (asn1_xer_print)
+		xer_fprint(stdout, &asn_DEF_RANAP_RAB_SetupOrModifyItemFirst, ranaP_RABSetupOrModifyItemFirst_p);
+	memcpy(raB_SetupOrModifyItemFirst, ranaP_RABSetupOrModifyItemFirst_p, sizeof(RANAP_RAB_SetupOrModifyItemFirst_t));
+	FREEMEM(ranaP_RABSetupOrModifyItemFirst_p);
+
+	return decoded;
+}
