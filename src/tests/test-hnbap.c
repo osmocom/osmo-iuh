@@ -170,8 +170,6 @@ void test_asn1_decoding(void)
 
 int main(int argc, char **argv)
 {
-	int rc;
-
 	test_common_init();
 	ranap_set_log_area(DRANAP);
 	hnbap_set_log_area(DHNBAP);
