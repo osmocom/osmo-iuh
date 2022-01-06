@@ -175,9 +175,8 @@ int main(int argc, char **argv)
 	hnbap_set_log_area(DHNBAP);
 	log_set_log_level(osmo_stderr_target, LOGL_INFO);
 
-
 	test_asn1_decoding();
-
 	test_common_cleanup();
+
 	return 0;
 }
