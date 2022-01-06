@@ -28,6 +28,7 @@
 #define ASSERT(x)	assert(x)
 
 #include <osmocom/core/utils.h>
+#include <osmocom/core/socket.h>
 #include <osmocom/gsm/gsm48.h>
 
 #include <osmocom/ranap/RANAP_LAI.h>
@@ -204,6 +205,120 @@ void test_ranap_common(void)
 	OSMO_ASSERT(rc == -1);
 }
 
+void test_ranap_new_transp_info_rtp(void)
+{
+	RANAP_TransportLayerInformation_t *tli;
+
+	printf("Testing function ranap_new_transp_info_rtp()\n");
+
+	struct osmo_sockaddr addr;
+
+	addr.u.sin.sin_family = AF_INET;
+	addr.u.sin.sin_port = htons(0x1122);
+	inet_pton(AF_INET, "1.2.3.4", &addr.u.sin.sin_addr);
+
+	printf(" ipv4, x213_nsap\n");
+	tli = ranap_new_transp_info_rtp(&addr, true);
+	printf("  transportLayerAddress = %s\n",
+	       osmo_hexdump_nospc(tli->transportLayerAddress.buf, tli->transportLayerAddress.size));
+	printf("  bindingID = %s\n",
+	       osmo_hexdump_nospc(tli->iuTransportAssociation.choice.bindingID.buf,
+				  tli->iuTransportAssociation.choice.bindingID.size));
+	ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
+
+	printf(" ipv4\n");
+	tli = ranap_new_transp_info_rtp(&addr, false);
+	printf("  transportLayerAddress = %s\n",
+	       osmo_hexdump_nospc(tli->transportLayerAddress.buf, tli->transportLayerAddress.size));
+	printf("  bindingID = %s\n",
+	       osmo_hexdump_nospc(tli->iuTransportAssociation.choice.bindingID.buf,
+				  tli->iuTransportAssociation.choice.bindingID.size));
+	ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
+
+	addr.u.sin.sin_family = AF_INET6;
+	addr.u.sin.sin_port = htons(0x1122);
+	inet_pton(AF_INET6, "f11f:f22f:f33f:f44f:f55f:f66f:f77f:f88f", &addr.u.sin6.sin6_addr);
+
+	printf(" ipv6, x213_nsap\n");
+	tli = ranap_new_transp_info_rtp(&addr, true);
+	printf("  transportLayerAddress = %s\n",
+	       osmo_hexdump_nospc(tli->transportLayerAddress.buf, tli->transportLayerAddress.size));
+	printf("  bindingID = %s\n",
+	       osmo_hexdump_nospc(tli->iuTransportAssociation.choice.bindingID.buf,
+				  tli->iuTransportAssociation.choice.bindingID.size));
+	ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
+
+	printf(" ipv6\n");
+	tli = ranap_new_transp_info_rtp(&addr, false);
+	printf("  transportLayerAddress = %s\n",
+	       osmo_hexdump_nospc(tli->transportLayerAddress.buf, tli->transportLayerAddress.size));
+	printf("  bindingID = %s\n",
+	       osmo_hexdump_nospc(tli->iuTransportAssociation.choice.bindingID.buf,
+				  tli->iuTransportAssociation.choice.bindingID.size));
+	ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
+
+	addr.u.sin.sin_family = AF_X25;
+	printf(" unsupported address family\n");
+	tli = ranap_new_transp_info_rtp(&addr, false);
+	OSMO_ASSERT(tli == NULL);
+}
+
+void test_ranap_new_transp_info_gtp(void)
+{
+	RANAP_TransportLayerInformation_t *tli;
+
+	printf("Testing function ranap_new_transp_info_gtp()\n");
+
+	struct osmo_sockaddr addr;
+
+	addr.u.sin.sin_family = AF_INET;
+	inet_pton(AF_INET, "1.2.3.4", &addr.u.sin.sin_addr);
+
+	printf(" ipv4, x213_nsap\n");
+	tli = ranap_new_transp_info_gtp(&addr, 0x11223344, true);
+	printf("  transportLayerAddress = %s\n",
+	       osmo_hexdump_nospc(tli->transportLayerAddress.buf, tli->transportLayerAddress.size));
+	printf("  gTP_TEI = %s\n",
+	       osmo_hexdump_nospc(tli->iuTransportAssociation.choice.gTP_TEI.buf,
+				  tli->iuTransportAssociation.choice.gTP_TEI.size));
+	ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
+
+	printf(" ipv4\n");
+	tli = ranap_new_transp_info_gtp(&addr, 0x11223344, false);
+	printf("  transportLayerAddress = %s\n",
+	       osmo_hexdump_nospc(tli->transportLayerAddress.buf, tli->transportLayerAddress.size));
+	printf("  gTP_TEI = %s\n",
+	       osmo_hexdump_nospc(tli->iuTransportAssociation.choice.gTP_TEI.buf,
+				  tli->iuTransportAssociation.choice.gTP_TEI.size));
+	ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
+
+	addr.u.sin.sin_family = AF_INET6;
+	inet_pton(AF_INET6, "f11f:f22f:f33f:f44f:f55f:f66f:f77f:f88f", &addr.u.sin6.sin6_addr);
+
+	printf(" ipv6, x213_nsap\n");
+	tli = ranap_new_transp_info_gtp(&addr, 0x11223344, true);
+	printf("  transportLayerAddress = %s\n",
+	       osmo_hexdump_nospc(tli->transportLayerAddress.buf, tli->transportLayerAddress.size));
+	printf("  gTP_TEI = %s\n",
+	       osmo_hexdump_nospc(tli->iuTransportAssociation.choice.gTP_TEI.buf,
+				  tli->iuTransportAssociation.choice.gTP_TEI.size));
+	ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
+
+	printf(" ipv6\n");
+	tli = ranap_new_transp_info_gtp(&addr, 0x11223344, false);
+	printf("  transportLayerAddress = %s\n",
+	       osmo_hexdump_nospc(tli->transportLayerAddress.buf, tli->transportLayerAddress.size));
+	printf("  gTP_TEI = %s\n",
+	       osmo_hexdump_nospc(tli->iuTransportAssociation.choice.gTP_TEI.buf,
+				  tli->iuTransportAssociation.choice.gTP_TEI.size));
+	ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
+
+	addr.u.sin.sin_family = AF_X25;
+	printf(" unsupported address family\n");
+	tli = ranap_new_transp_info_gtp(&addr, 0x11223344, false);
+	OSMO_ASSERT(tli == NULL);
+}
+
 int main(int argc, char **argv)
 {
 	asn1_xer_print = 0;
@@ -214,6 +329,8 @@ int main(int argc, char **argv)
 	test_iu_helpers();
 	test_asn1_helpers();
 	test_ranap_common();
+	test_ranap_new_transp_info_gtp();
+	test_ranap_new_transp_info_rtp();
 
 	test_common_cleanup();
 	return 0;

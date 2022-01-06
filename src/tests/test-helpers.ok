@@ -23,3 +23,31 @@ PLMN-Id [ 21 43 ], LAC [ ab cd ]
  rc == -1
 PLMN-Id [ 21 43 65 ], LAC [ ab ]
  rc == -1
+Testing function ranap_new_transp_info_gtp()
+ ipv4, x213_nsap
+  transportLayerAddress = 3500010102030400000000000000000000000000
+  gTP_TEI = 11223344
+ ipv4
+  transportLayerAddress = 01020304
+  gTP_TEI = 11223344
+ ipv6, x213_nsap
+  transportLayerAddress = 350000f11ff22ff33ff44ff55ff66ff77ff88f00
+  gTP_TEI = 11223344
+ ipv6
+  transportLayerAddress = f11ff22ff33ff44ff55ff66ff77ff88f
+  gTP_TEI = 11223344
+ unsupported address family
+Testing function ranap_new_transp_info_rtp()
+ ipv4, x213_nsap
+  transportLayerAddress = 3500010102030400000000000000000000000000
+  bindingID = 11220000
+ ipv4
+  transportLayerAddress = 01020304
+  bindingID = 11220000
+ ipv6, x213_nsap
+  transportLayerAddress = 350000f11ff22ff33ff44ff55ff66ff77ff88f00
+  bindingID = 11220000
+ ipv6
+  transportLayerAddress = f11ff22ff33ff44ff55ff66ff77ff88f
+  bindingID = 11220000
+ unsupported address family

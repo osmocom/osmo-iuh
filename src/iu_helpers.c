@@ -24,8 +24,12 @@
 #include <arpa/inet.h>
 #include "asn1helpers.h"
 #include <osmocom/core/utils.h>
+#include <osmocom/core/socket.h>
+#include <osmocom/core/bit16gen.h>
+
 #include <osmocom/ranap/RANAP_IuTransportAssociation.h>
 #include <osmocom/ranap/RANAP_TransportLayerAddress.h>
+#include <osmocom/ranap/RANAP_TransportLayerInformation.h>
 
 /* decode a BCD-string as used inside ASN.1 encoded Iu interface protocols */
 int ranap_bcd_decode(char *out, size_t out_len, const uint8_t *in, size_t in_len)
@@ -120,4 +124,103 @@ int ranap_transp_layer_addr_decode(char *addr, unsigned int addr_len,
 		return -EINVAL;
 
 	return 0;
+}
+
+static int new_transp_layer_addr(BIT_STRING_t *out, struct osmo_sockaddr *addr, bool use_x213_nsap)
+{
+	uint8_t *buf;
+	unsigned int len;
+	size_t ip_len;
+	uint8_t *ip_addr;
+	uint16_t icp;
+
+	switch (addr->u.sa.sa_family) {
+	case AF_INET:
+		ip_len = sizeof(addr->u.sin.sin_addr.s_addr);
+		ip_addr = (uint8_t *) &addr->u.sin.sin_addr.s_addr;
+		icp = 0x0001; /* See X.213, section A.5.2.1.2.7 */
+		break;
+	case AF_INET6:
+		ip_len = sizeof(addr->u.sin6.sin6_addr.s6_addr);
+		ip_addr = addr->u.sin6.sin6_addr.s6_addr;
+		icp = 0x0000; /* See X.213, section A.5.2.1.2.7 */
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	if (use_x213_nsap) {
+		/* 3 bytes IDP (AFI+ICP) + 17 bytes DSP */
+		len = 3 + 17;
+		buf = CALLOC(len, sizeof(uint8_t));
+
+		/* 1 byte AFI to announce IANA ICP, see also X.213, table A.4 */
+		buf[0] = 0x35;
+
+		/* 2 byte IANA ICP IDI, see also X.213, A.5.2.1.2.7 */
+		osmo_store16be(icp, &buf[1]);
+
+		/* 17 byte DSP, see also X.213, table A.5 and A.5.2.1.2.7 */
+		memcpy(&buf[3], ip_addr, ip_len);
+	} else {
+		len = ip_len;
+		buf = CALLOC(len, sizeof(uint8_t));
+		memcpy(buf, ip_addr, ip_len);
+	}
+	out->buf = buf;
+	out->size = len;
+	out->bits_unused = 0;
+
+	return 0;
+}
+
+RANAP_TransportLayerInformation_t *ranap_new_transp_info_rtp(struct osmo_sockaddr *addr, bool use_x213_nsap)
+{
+	RANAP_TransportLayerInformation_t *tli;
+	uint8_t binding_id[4] = { 0 };
+	int rc;
+
+	switch (addr->u.sin.sin_family) {
+	case AF_INET:
+		osmo_store16be(ntohs(addr->u.sin.sin_port), binding_id);
+		break;
+	case AF_INET6:
+		osmo_store16be(ntohs(addr->u.sin6.sin6_port), binding_id);
+		break;
+	default:
+		return NULL;
+	}
+
+	tli = CALLOC(1, sizeof(*tli));
+	rc = new_transp_layer_addr(&tli->transportLayerAddress, addr, use_x213_nsap);
+	if (rc < 0) {
+		ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
+		return NULL;
+	}
+
+	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_bindingID;
+	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.bindingID,
+			     (const char *)binding_id, sizeof(binding_id));
+
+	return tli;
+}
+
+RANAP_TransportLayerInformation_t *ranap_new_transp_info_gtp(struct osmo_sockaddr *addr, uint32_t tei,
+							     bool use_x213_nsap)
+{
+	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
+	uint32_t binding_buf = htonl(tei);
+	int rc;
+
+	rc = new_transp_layer_addr(&tli->transportLayerAddress, addr, use_x213_nsap);
+	if (rc < 0) {
+		ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
+		return NULL;
+	}
+
+	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_gTP_TEI;
+	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.gTP_TEI,
+			     (const char *)&binding_buf, sizeof(binding_buf));
+
+	return tli;
 }

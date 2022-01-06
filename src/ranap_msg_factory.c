@@ -20,6 +20,7 @@
 
 #include <osmocom/core/utils.h>
 #include <osmocom/core/msgb.h>
+#include <osmocom/core/socket.h>
 
 #include "asn1helpers.h"
 #include <osmocom/ranap/iu_helpers.h>
@@ -691,61 +692,6 @@ static RANAP_RAB_Parameters_t *new_rab_par_data(uint32_t dl_max_bitrate, uint32_
 	return rab;
 }
 
-static void new_transp_layer_addr(BIT_STRING_t *out, uint32_t ip, bool use_x213_nsap)
-{
-	uint8_t *buf;
-	unsigned int len;
-	uint32_t ip_h = ntohl(ip);
-
-	if (use_x213_nsap) {
-		len = 160/8;
-		buf = CALLOC(len, sizeof(uint8_t));
-		buf[0] = 0x35;	/* AFI For IANA ICP */
-		buf[1] = 0x00;	/* See A.5.2.1.2.7 of X.213 */
-		buf[2] = 0x01;
-		memcpy(&buf[3], &ip_h, sizeof(ip_h));
-	} else {
-		len = sizeof(ip_h);
-		buf = CALLOC(len, sizeof(uint8_t));
-		memcpy(buf, &ip_h, sizeof(ip_h));
-	}
-	out->buf = buf;
-	out->size = len;
-	out->bits_unused = 0;
-}
-
-static RANAP_TransportLayerInformation_t *new_transp_info_rtp(uint32_t ip, uint16_t port,
-							      bool use_x213_nsap)
-{
-	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
-	uint8_t binding_id[4];
-
-	binding_id[0] = port >> 8;
-	binding_id[1] = port & 0xff;
-	binding_id[2] = binding_id[3] = 0;
-
-	new_transp_layer_addr(&tli->transportLayerAddress, ip, use_x213_nsap);
-	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_bindingID;
-	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.bindingID,
-				(const char *) binding_id, sizeof(binding_id));
-
-	return tli;
-}
-
-static RANAP_TransportLayerInformation_t *new_transp_info_gtp(uint32_t ip, uint32_t tei,
-							      bool use_x213_nsap)
-{
-	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));
-	uint32_t binding_buf = htonl(tei);
-
-	new_transp_layer_addr(&tli->transportLayerAddress, ip, use_x213_nsap);
-	tli->iuTransportAssociation.present = RANAP_IuTransportAssociation_PR_gTP_TEI;
-	OCTET_STRING_fromBuf(&tli->iuTransportAssociation.choice.gTP_TEI,
-			     (const char *) &binding_buf, sizeof(binding_buf));
-
-	return tli;
-}
-
 static RANAP_UserPlaneInformation_t *new_upi(long mode, uint8_t mode_versions)
 {
 	RANAP_UserPlaneInformation_t *upi = CALLOC(1, sizeof(*upi));
@@ -786,6 +732,7 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	RANAP_RAB_AssignmentRequest_t out;
 	struct msgb *msg;
 	int rc;
+	struct osmo_sockaddr rtp_addr;
 
 	memset(&ies, 0, sizeof(ies));
 	memset(&out, 0, sizeof(out));
@@ -800,8 +747,11 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	first.nAS_SynchronisationIndicator = new_rab_nas_sync_ind(60);
 	first.rAB_Parameters = new_rab_par_voice(6700, 12200);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_support_mode_for_predefined_SDU_sizes, 1); /* 2? */
-	first.transportLayerInformation = new_transp_info_rtp(rtp_ip, rtp_port,
-							      use_x213_nsap);
+
+	rtp_addr.u.sin.sin_family = AF_INET;
+	rtp_addr.u.sin.sin_port = htons(rtp_port);
+	rtp_addr.u.sin.sin_addr.s_addr = htonl(rtp_ip);
+	first.transportLayerInformation = ranap_new_transp_info_rtp(&rtp_addr, use_x213_nsap);
 
 	/* put together the 'Second' part */
 	RANAP_RAB_SetupOrModifyItemSecond_t second;
@@ -855,6 +805,7 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
 	RANAP_DataVolumeReportingIndication_t *dat_vol_ind;
 	struct msgb *msg;
 	int rc;
+	struct osmo_sockaddr gtp_addr;
 
 	memset(&ies, 0, sizeof(ies));
 	memset(&out, 0, sizeof(out));
@@ -870,8 +821,10 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
 
 	first.rAB_Parameters = new_rab_par_data(1600000, 800000);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_transparent_mode, 1);
-	first.transportLayerInformation = new_transp_info_gtp(gtp_ip, gtp_tei,
-							      use_x213_nsap);
+
+	gtp_addr.u.sin.sin_family = AF_INET;
+	gtp_addr.u.sin.sin_addr.s_addr = htonl(gtp_ip);
+	first.transportLayerInformation = ranap_new_transp_info_gtp(&gtp_addr, gtp_tei, use_x213_nsap);
 
 	/* put together the 'Second' part */
 	RANAP_RAB_SetupOrModifyItemSecond_t second;
