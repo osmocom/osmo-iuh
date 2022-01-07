@@ -27,9 +27,6 @@ BuildRequires:  lksctp-tools-devel
 BuildRequires:  pkgconfig >= 0.20
 # python3 for asn1tostruct.py
 BuildRequires:  python3
-%if 0%{?suse_version}
-BuildRequires:  systemd-rpm-macros
-%endif
 BuildRequires:  pkgconfig(libasn1c) >= 0.9.30
 BuildRequires:  pkgconfig(libosmo-netif) >= 1.1.0
 BuildRequires:  pkgconfig(libosmo-sigtran) >= 1.4.0
@@ -38,7 +35,6 @@ BuildRequires:  pkgconfig(libosmoctrl) >= 1.5.0
 BuildRequires:  pkgconfig(libosmogb) >= 1.5.0
 BuildRequires:  pkgconfig(libosmogsm) >= 1.5.0
 BuildRequires:  pkgconfig(libosmovty) >= 1.5.0
-%{?systemd_requires}
 
 %description
 Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
@@ -118,8 +114,7 @@ echo "%{version}" >.tarball-version
 autoreconf -fi
 %configure \
   --disable-static \
-  --docdir="%{_docdir}/%{name}" \
-  --with-systemdsystemunitdir=%{_unitdir}
+  --docdir="%{_docdir}/%{name}"
 make %{?_smp_mflags}
 
 %install
