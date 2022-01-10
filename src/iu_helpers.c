@@ -126,6 +126,56 @@ int ranap_transp_layer_addr_decode(char *addr, unsigned int addr_len,
 	return 0;
 }
 
+/* (same as ranap_transp_layer_addr_decode, but AF agnostic) */
+int ranap_transp_layer_addr_decode2(struct osmo_sockaddr *addr, bool *uses_x213_nsap,
+				    const RANAP_TransportLayerAddress_t *trasp_layer_addr)
+{
+	unsigned char *buf;
+	int len;
+	bool x213_nsap = false;
+	uint16_t icp;
+
+	buf = trasp_layer_addr->buf;
+	len = trasp_layer_addr->size;
+
+	memset(addr, 0, sizeof(*addr));
+
+	if (len == 20 && buf[0] == 0x35) {
+		/* For an X.213 NSAP encoded address we expect a buffer of exactly 20 bytes (3 bytes IDP + 17 bytes
+		 * DSP). we also expect AFI = 0x35, which means that two byte IDI and an IP address follows. (see also
+		 * comments in function new_transp_layer_addr below) */
+		x213_nsap = true;
+		icp = osmo_load16be(&buf[1]);
+		switch (icp) {
+		case 0x0000:
+			addr->u.sa.sa_family = AF_INET6;
+			memcpy(addr->u.sin6.sin6_addr.s6_addr, buf + 3, sizeof(addr->u.sin6.sin6_addr.s6_addr));
+			break;
+		case 0x0001:
+			addr->u.sa.sa_family = AF_INET;
+			memcpy((uint8_t *) &addr->u.sin.sin_addr.s_addr, buf + 3, sizeof(addr->u.sin.sin_addr.s_addr));
+			break;
+		default:
+			return -EINVAL;
+		}
+	} else if (len == 4) {
+		/* A non X.213 NSAP encoded IPv4 address is 4 bytes long */
+		addr->u.sa.sa_family = AF_INET;
+		memcpy((uint8_t *) &addr->u.sin.sin_addr.s_addr, buf, sizeof(addr->u.sin.sin_addr.s_addr));
+	} else if (len == 16) {
+		/* A non X.213 NSAP encoded IPv6 address is 16 bytes long */
+		addr->u.sa.sa_family = AF_INET6;
+		memcpy(addr->u.sin6.sin6_addr.s6_addr, buf, sizeof(addr->u.sin6.sin6_addr.s6_addr));
+	} else
+		return -EINVAL;
+
+	/* In case the caller is interested in the encoding method that was used */
+	if (uses_x213_nsap)
+		*uses_x213_nsap = x213_nsap;
+
+	return 0;
+}
+
 static int new_transp_layer_addr(BIT_STRING_t *out, struct osmo_sockaddr *addr, bool use_x213_nsap)
 {
 	uint8_t *buf;

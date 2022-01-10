@@ -56,3 +56,12 @@ Testing function ranap_transp_layer_addr_decode()
   addr=1.2.3.4
  ipv4
   addr=1.2.3.4
+Testing function ranap_transp_layer_addr_decode2()
+ ipv4, x213_nsap
+  addr=1.2.3.4, af=2, x213_nsap=1
+ ipv4
+  addr=1.2.3.4, af=2, x213_nsap=0
+ ipv6, x213_nsap
+  addr=f11f:f22f:f33f:f44f:f55f:f66f:f77f:f88f, af=10, x213_nsap=1
+ ipv6
+  addr=f11f:f22f:f33f:f44f:f55f:f66f:f77f:f88f, af=10, x213_nsap=0

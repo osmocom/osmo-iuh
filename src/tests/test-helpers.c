@@ -29,6 +29,7 @@
 
 #include <osmocom/core/utils.h>
 #include <osmocom/core/socket.h>
+#include <osmocom/core/sockaddr_str.h>
 #include <osmocom/gsm/gsm48.h>
 
 #include <osmocom/ranap/RANAP_LAI.h>
@@ -347,6 +348,65 @@ void test_ranap_transp_layer_addr_decode(void)
 	OSMO_ASSERT(rc == 0);
 }
 
+void test_ranap_transp_layer_addr_decode2(void)
+{
+	int rc;
+	struct osmo_sockaddr addr;
+	struct osmo_sockaddr_str sockaddr_str;
+	bool uses_x213_nsap;
+	RANAP_TransportLayerAddress_t trasp_layer_addr = { 0 };
+	uint8_t encoded_ipv4_addr_x213_nsap[] = {
+		0x35, 0x00, 0x01, 0x01, 0x02, 0x03, 0x04, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00 };
+	uint8_t encoded_ipv4_addr[] = { 0x01, 0x02, 0x03, 0x04 };
+	uint8_t encoded_ipv6_addr_x213_nsap[] =	{
+		0x35, 0x00, 0x00, 0xf1, 0x1f, 0xf2, 0x2f, 0xf3,
+		0x3f, 0xf4, 0x4f, 0xf5, 0x5f, 0xf6, 0x6f, 0xf7,
+		0x7f, 0xf8, 0x8f, 0x00 };
+	uint8_t encoded_ipv6_addr[] = {
+		0xf1, 0x1f, 0xf2, 0x2f, 0xf3, 0x3f, 0xf4, 0x4f,
+		0xf5, 0x5f, 0xf6, 0x6f, 0xf7, 0x7f, 0xf8, 0x8f };
+
+	printf("Testing function ranap_transp_layer_addr_decode2()\n");
+
+	printf(" ipv4, x213_nsap\n");
+	trasp_layer_addr.buf = encoded_ipv4_addr_x213_nsap;
+	trasp_layer_addr.size = sizeof(encoded_ipv4_addr_x213_nsap);
+	rc = ranap_transp_layer_addr_decode2(&addr, &uses_x213_nsap, &trasp_layer_addr);
+	OSMO_ASSERT(rc == 0);
+	memset(&sockaddr_str, 0, sizeof(sockaddr_str));
+	osmo_sockaddr_str_from_sockaddr_in(&sockaddr_str, &addr.u.sin);
+	printf("  addr=%s, af=%d, x213_nsap=%u\n", sockaddr_str.ip, sockaddr_str.af, uses_x213_nsap);
+
+	printf(" ipv4\n");
+	trasp_layer_addr.buf = encoded_ipv4_addr;
+	trasp_layer_addr.size = sizeof(encoded_ipv4_addr);
+	rc = ranap_transp_layer_addr_decode2(&addr, &uses_x213_nsap, &trasp_layer_addr);
+	OSMO_ASSERT(rc == 0);
+	memset(&sockaddr_str, 0, sizeof(sockaddr_str));
+	osmo_sockaddr_str_from_sockaddr_in(&sockaddr_str, &addr.u.sin);
+	printf("  addr=%s, af=%d, x213_nsap=%u\n", sockaddr_str.ip, sockaddr_str.af, uses_x213_nsap);
+
+	printf(" ipv6, x213_nsap\n");
+	trasp_layer_addr.buf = encoded_ipv6_addr_x213_nsap;
+	trasp_layer_addr.size = sizeof(encoded_ipv6_addr_x213_nsap);
+	rc = ranap_transp_layer_addr_decode2(&addr, &uses_x213_nsap, &trasp_layer_addr);
+	OSMO_ASSERT(rc == 0);
+	memset(&sockaddr_str, 0, sizeof(sockaddr_str));
+	osmo_sockaddr_str_from_sockaddr_in6(&sockaddr_str, &addr.u.sin6);
+	printf("  addr=%s, af=%d, x213_nsap=%u\n", sockaddr_str.ip, sockaddr_str.af, uses_x213_nsap);
+
+	printf(" ipv6\n");
+	trasp_layer_addr.buf = encoded_ipv6_addr;
+	trasp_layer_addr.size = sizeof(encoded_ipv6_addr);
+	rc = ranap_transp_layer_addr_decode2(&addr, &uses_x213_nsap, &trasp_layer_addr);
+	OSMO_ASSERT(rc == 0);
+	memset(&sockaddr_str, 0, sizeof(sockaddr_str));
+	osmo_sockaddr_str_from_sockaddr_in6(&sockaddr_str, &addr.u.sin6);
+	printf("  addr=%s, af=%d, x213_nsap=%u\n", sockaddr_str.ip, sockaddr_str.af, uses_x213_nsap);
+}
+
 int main(int argc, char **argv)
 {
 	asn1_xer_print = 0;
@@ -360,6 +420,7 @@ int main(int argc, char **argv)
 	test_ranap_new_transp_info_gtp();
 	test_ranap_new_transp_info_rtp();
 	test_ranap_transp_layer_addr_decode();
+	test_ranap_transp_layer_addr_decode2();
 
 	test_common_cleanup();
 	return 0;
