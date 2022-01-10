@@ -51,3 +51,8 @@ Testing function ranap_new_transp_info_rtp()
   transportLayerAddress = f11ff22ff33ff44ff55ff66ff77ff88f
   bindingID = 11220000
  unsupported address family
+Testing function ranap_transp_layer_addr_decode()
+ ipv4, x213_nsap
+  addr=1.2.3.4
+ ipv4
+  addr=1.2.3.4

@@ -319,6 +319,34 @@ void test_ranap_new_transp_info_gtp(void)
 	OSMO_ASSERT(tli == NULL);
 }
 
+void test_ranap_transp_layer_addr_decode(void)
+{
+	int rc;
+	char addr[100];
+	RANAP_TransportLayerAddress_t trasp_layer_addr = { 0 };
+	uint8_t encoded_addr_x213_nsap[] = {
+		0x35, 0x00, 0x01, 0x01, 0x02, 0x03, 0x04, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00 };
+	uint8_t encoded_addr[] = { 0x01, 0x02, 0x03, 0x04 };
+
+	printf("Testing function ranap_transp_layer_addr_decode()\n");
+
+	printf(" ipv4, x213_nsap\n");
+	trasp_layer_addr.buf = encoded_addr_x213_nsap;
+	trasp_layer_addr.size = sizeof(encoded_addr_x213_nsap);
+	rc = ranap_transp_layer_addr_decode(addr, sizeof(addr), &trasp_layer_addr);
+	printf("  addr=%s\n", addr);
+	OSMO_ASSERT(rc == 0);
+
+	printf(" ipv4\n");
+	trasp_layer_addr.buf = encoded_addr;
+	trasp_layer_addr.size = sizeof(encoded_addr);
+	rc = ranap_transp_layer_addr_decode(addr, sizeof(addr), &trasp_layer_addr);
+	printf("  addr=%s\n", addr);
+	OSMO_ASSERT(rc == 0);
+}
+
 int main(int argc, char **argv)
 {
 	asn1_xer_print = 0;
@@ -331,6 +359,7 @@ int main(int argc, char **argv)
 	test_ranap_common();
 	test_ranap_new_transp_info_gtp();
 	test_ranap_new_transp_info_rtp();
+	test_ranap_transp_layer_addr_decode();
 
 	test_common_cleanup();
 	return 0;
