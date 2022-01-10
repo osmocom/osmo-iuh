@@ -461,6 +461,12 @@ int ranap_iu_tx(struct msgb *msg_nas, uint8_t sapi)
 	struct msgb *msg;
 	struct osmo_scu_prim *prim;
 
+	if (!uectx) {
+		LOGPIU(LOGL_ERROR, "Discarding to-be-transmitted L3 Message as RANAP DT with unset dst SCCP conn_id!\n",
+		       uectx->conn_id);
+		return -ENOTCONN;
+	}
+
 	LOGPIU(LOGL_INFO, "Transmitting L3 Message as RANAP DT (SCCP conn_id %u)\n",
 	       uectx->conn_id);
 
