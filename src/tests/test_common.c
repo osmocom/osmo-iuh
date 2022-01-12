@@ -70,16 +70,18 @@ static const struct log_info test_log_info = {
 	.num_cat = ARRAY_SIZE(log_cat),
 };
 
+static void *tall_hnb_ctx;
 static void *msgb_ctx;
 
 int test_common_init(void)
 {
 	int rc;
 
+	tall_hnb_ctx = talloc_named_const(NULL, 0, "hnb_context");
 	msgb_ctx = msgb_talloc_ctx_init(NULL, 0);
 	talloc_asn1_ctx = talloc_named_const(NULL, 0, "asn1_context");
 
-	rc = osmo_init_logging(&test_log_info);
+	rc = osmo_init_logging2(tall_hnb_ctx, &test_log_info);
 	if (rc < 0)
 		exit(1);
 
