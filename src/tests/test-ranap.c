@@ -77,7 +77,7 @@ static void test_aper_causemisc(uint32_t inp, uint8_t exp_enc)
 	ASN_STRUCT_FREE(asn_DEF_RANAP_Cause, c_dec);
 }
 
-int main(int argc, char **argv)
+static void test_ranap_messages(void)
 {
 	uint8_t nas_buf[] = { 0xaa, 0xbb, 0xcc };
 	struct msgb *msg;
@@ -90,26 +90,6 @@ int main(int argc, char **argv)
 	uint8_t ik[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	uint8_t ck[16] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 };
 	int i;
-
-	asn1_xer_print = 1;
-
-	//asn_debug = 1;
-
-	test_common_init();
-	ranap_set_log_area(DRANAP);
-
-	test_aper_int(1);
-	test_aper_int(2);
-	test_aper_int(3);
-	test_aper_int(255);
-	test_aper_int(256);
-	test_aper_int(257);
-	test_aper_int(64000);
-	test_aper_int(0xffff);
-	test_aper_int(0xffff+1);
-	test_aper_int(0xffff+2);
-	test_aper_int(16000000);
-	test_aper_causemisc(RANAP_CauseMisc_unspecified_failure, 0x42);
 
 	for (i = 0; i < 1; i++) {
 		printf("\n==> DIRECT TRANSFER\n");
@@ -191,6 +171,30 @@ int main(int argc, char **argv)
 			printf("%s\n", msgb_hexdump(msg));
 		msgb_free(msg);
 	}
+}
+
+int main(int argc, char **argv)
+{
+	asn1_xer_print = 1;
+
+	//asn_debug = 1;
+
+	test_common_init();
+	ranap_set_log_area(DRANAP);
+
+	test_aper_int(1);
+	test_aper_int(2);
+	test_aper_int(3);
+	test_aper_int(255);
+	test_aper_int(256);
+	test_aper_int(257);
+	test_aper_int(64000);
+	test_aper_int(0xffff);
+	test_aper_int(0xffff+1);
+	test_aper_int(0xffff+2);
+	test_aper_int(16000000);
+	test_aper_causemisc(RANAP_CauseMisc_unspecified_failure, 0x42);
+	test_ranap_messages();
 
 	printf("report\n");
 	talloc_report(talloc_asn1_ctx, stdout);
