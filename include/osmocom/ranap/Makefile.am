@@ -10,6 +10,7 @@ ranap_HEADERS = \
 	ranap_ies_defs.h \
 	ranap_common.h \
 	ranap_common_cn.h \
+	ranap_common_ran.h \
 	ranap_msg_factory.h \
 	iu_helpers.h \
 	iu_client.h \

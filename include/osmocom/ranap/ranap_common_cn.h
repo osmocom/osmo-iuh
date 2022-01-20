@@ -5,8 +5,6 @@
 #include <osmocom/ranap/ranap_common.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
 
-typedef void (*ranap_handle_cb)(void *ctx, ranap_message *ranap_msg);
-
 /* free a decoded connection-less RANAP message */
 void ranap_cn_rx_cl_free(ranap_message *message);
 
