@@ -257,7 +257,8 @@ static int _cn_ranap_rx_co(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *mes
 	return rc;
 }
 
-static void _cn_ranap_free_co(ranap_message *message)
+/* free a decoded connection-oriented RANAP message */
+void ranap_cn_rx_co_free(ranap_message *message)
 {
 	switch (message->direction) {
 	case RANAP_RANAP_PDU_PR_initiatingMessage:
@@ -281,27 +282,38 @@ static void _cn_ranap_free_co(ranap_message *message)
 	}
 }
 
-/* receive a connection-oriented RANAP message and call
- * cn_ranap_handle_co() with the resulting ranap_message struct */
-int ranap_cn_rx_co(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
+/* decode a connection-oriented RANAP message */
+int ranap_cn_rx_co_decode(void *ctx, ranap_message *message, uint8_t *data, size_t len)
 {
 	RANAP_RANAP_PDU_t *pdu = NULL;
-	ranap_message message;
 	asn_dec_rval_t dec_ret;
 	int rc;
 
-	memset(&message, 0, sizeof(message));
+	memset(message, 0, sizeof(*message));
 
-	dec_ret = aper_decode(NULL,&asn_DEF_RANAP_RANAP_PDU, (void **) &pdu,
-			      data, len, 0, 0);
+	dec_ret = aper_decode(NULL, &asn_DEF_RANAP_RANAP_PDU, (void **)&pdu, data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DRANAP, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
 		return -1;
 	}
 
-	message.direction = pdu->present;
+	message->direction = pdu->present;
 
-	rc = _cn_ranap_rx_co(ctx, pdu, &message);
+	rc = _cn_ranap_rx_co(ctx, pdu, message);
+
+	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
+
+	return rc;
+}
+
+/* receive a connection-oriented RANAP message and call
+ * cn_ranap_handle_co() with the resulting ranap_message struct */
+int ranap_cn_rx_co(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
+{
+	ranap_message message;
+	int rc;
+
+	rc = ranap_cn_rx_co_decode(ctx, &message, data, len);
 
 	if (rc == 0)
 		(*cb)(ctx, &message);
@@ -309,9 +321,7 @@ int ranap_cn_rx_co(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 		LOGP(DRANAP, LOGL_ERROR, "Not calling cn_ranap_handle_co() due to rc=%d\n", rc);
 
 	/* Free the asn1 structs in message */
-	_cn_ranap_free_co(&message);
-
-	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
+	ranap_cn_rx_co_free(&message);
 
 	return rc;
 }
@@ -496,7 +506,8 @@ static int _cn_ranap_rx_cl(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *mes
 	return rc;
 }
 
-static void _cn_ranap_free_cl(ranap_message *message)
+/* free a decoded connection-less RANAP message */
+void ranap_cn_rx_cl_free(ranap_message *message)
 {
 	switch (message->direction) {
 	case RANAP_RANAP_PDU_PR_initiatingMessage:
@@ -516,27 +527,38 @@ static void _cn_ranap_free_cl(ranap_message *message)
 	}
 }
 
-/* receive a connection-less RANAP message and call
- * cn_ranap_handle_co() with the resulting ranap_message struct */
-int ranap_cn_rx_cl(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
+/* decode a connection-less RANAP message */
+int ranap_cn_rx_cl_decode(void *ctx, ranap_message *message, uint8_t *data, size_t len)
 {
 	RANAP_RANAP_PDU_t *pdu = NULL;
-	ranap_message message;
 	asn_dec_rval_t dec_ret;
 	int rc;
 
-	memset(&message, 0, sizeof(message));
+	memset(message, 0, sizeof(*message));
 
-	dec_ret = aper_decode(NULL,&asn_DEF_RANAP_RANAP_PDU, (void **) &pdu,
-			      data, len, 0, 0);
+	dec_ret = aper_decode(NULL, &asn_DEF_RANAP_RANAP_PDU, (void **)&pdu, data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DRANAP, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
 		return -1;
 	}
 
-	message.direction = pdu->present;
+	message->direction = pdu->present;
 
-	rc = _cn_ranap_rx_cl(ctx, pdu, &message);
+	rc = _cn_ranap_rx_cl(ctx, pdu, message);
+
+	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
+
+	return rc;
+}
+
+/* receive a connection-less RANAP message and call
+ * cn_ranap_handle_co() with the resulting ranap_message struct */
+int ranap_cn_rx_cl(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
+{
+	ranap_message message;
+	int rc;
+
+	rc = ranap_cn_rx_cl_decode(ctx, &message, data, len);
 
 	if (rc == 0)
 		(*cb)(ctx, &message);
@@ -544,9 +566,7 @@ int ranap_cn_rx_cl(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 		LOGP(DRANAP, LOGL_ERROR, "Not calling cn_ranap_handle_cl() due to rc=%d\n", rc);
 
 	/* Free the asn1 structs in message */
-	_cn_ranap_free_cl(&message);
-
-	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
+	ranap_cn_rx_cl_free(&message);
 
 	return rc;
 }
