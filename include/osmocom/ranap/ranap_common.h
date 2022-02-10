@@ -648,6 +648,11 @@ int ranap_decode_rab_setupormodifieditemies_fromlist(
 	ANY_t *any_p);
 
 /* There is no generated decoder available, this is a custom one */
+int ranap_decode_rab_faileditemies_fromlist(
+	RANAP_RAB_FailedItemIEs_t *raB_FailedItemIEs,
+	ANY_t *any_p);
+
+/* There is no generated decoder available, this is a custom one */
 int ranap_decode_rab_setupormodifyitemfirst(
 	RANAP_RAB_SetupOrModifyItemFirst_t *raB_SetupOrModifyItemFirst,
 	ANY_t *any_p);
