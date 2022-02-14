@@ -571,7 +571,7 @@ int ranap_decode_rab_setupormodifieditemies_fromlist(
 	RANAP_DEBUG("Decoding message RANAP_RAB_SetupOrModifiedItemIEs (%s:%d)\n", __FILE__, __LINE__);
 	decoded = ANY_to_type_aper(any_p, &asn_DEF_RANAP_RAB_SetupOrModifiedItem, (void**)&ranaP_RABSetupOrModifiedItem_p);
 	if (decoded < 0) {
-		RANAP_DEBUG("Decoding of IE raB_SetupOrModifiedItem failed\n");
+		LOGP(DRANAP, LOGL_ERROR, "Decoding of IE raB_SetupOrModifiedItem failed\n");
 		return -1;
 	}
 	if (asn1_xer_print)
@@ -643,7 +643,7 @@ int ranap_decode_rab_setupormodifyitemfirst(
 	decoded = ANY_to_type_aper(any_p, &asn_DEF_RANAP_RAB_SetupOrModifyItemFirst,
 				   (void **)&ranaP_RABSetupOrModifyItemFirst_p);
 	if (decoded < 0) {
-		RANAP_DEBUG("Decoding of RANAP_RAB_SetupOrModifyItemFirst_t failed\n");
+		LOGP(DRANAP, LOGL_ERROR, "Decoding of RANAP_RAB_SetupOrModifyItemFirst_t failed\n");
 		return -1;
 	}
 	if (asn1_xer_print)
