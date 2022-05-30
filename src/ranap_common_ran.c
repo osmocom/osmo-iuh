@@ -50,7 +50,8 @@ static int ran_ranap_rx_initiating_msg_co(void *ctx, RANAP_InitiatingMessage_t *
 		rc = ranap_decode_iu_releasecommandies(&message->msg.iu_ReleaseCommandIEs, &imsg->value);
 		break;
 	default:
-		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP Procedure %s (CO, IM) from CN, ignoring\n",
+		LOGP(DRANAP, LOGL_INFO,
+		     "Received RANAP Procedure %s (CO, IM) from CN. Decode not implemented\n",
 		     get_value_string(ranap_procedure_code_vals, imsg->procedureCode));
 		rc = -1;
 		break;
@@ -69,8 +70,8 @@ static void ran_ranap_free_initiating_msg_co(ranap_message *message)
 		ranap_free_iu_releasecommandies(&message->msg.iu_ReleaseCommandIEs);
 		break;
 	default:
-		LOGP(DRANAP, LOGL_NOTICE, "Not freeing suspicious RANAP "
-		     "Procedure %s (CO, IM) from CN\n",
+		LOGP(DRANAP, LOGL_INFO,
+		     "Freeing RANAP Procedure %s (CO, IM) from CN not implemented\n",
 		     get_value_string(ranap_procedure_code_vals, message->procedureCode));
 		break;
 	}
@@ -103,8 +104,9 @@ static int _ran_ranap_rx_co(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *me
 		rc = -1;
 		break;
 	default:
-		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
-		     "presence %s (CO) from CN, ignoring\n", get_value_string(ranap_presence_vals, pdu->present));
+		LOGP(DRANAP, LOGL_INFO,
+		     "Received RANAP Procedure %s (CO) from CN. Decode not implemented\n",
+		      get_value_string(ranap_presence_vals, pdu->present));
 		rc = -1;
 		break;
 	}
@@ -132,8 +134,8 @@ void ranap_ran_rx_co_free(ranap_message *message)
 		     "outcome procedure (CO) from CN\n");
 		break;
 	default:
-		LOGP(DRANAP, LOGL_NOTICE, "Received suspicious RANAP "
-		     "presence %s (CO) from CN, ignoring\n",
+		LOGP(DRANAP, LOGL_INFO,
+		     "Freeing RANAP Procedure %s (CO) from CN not implemented\n",
 		     get_value_string(ranap_presence_vals, message->direction));
 		break;
 	}
