@@ -143,7 +143,7 @@ int ranap_transp_layer_addr_decode2(struct osmo_sockaddr *addr, bool *uses_x213_
 	if (len == 20 && buf[0] == 0x35) {
 		/* For an X.213 NSAP encoded address we expect a buffer of exactly 20 bytes (3 bytes IDP + 17 bytes
 		 * DSP). we also expect AFI = 0x35, which means that two byte IDI and an IP address follows. (see also
-		 * comments in function new_transp_layer_addr below) */
+		 * comments in function ranap_new_transp_layer_addr below) */
 		x213_nsap = true;
 		icp = osmo_load16be(&buf[1]);
 		switch (icp) {
@@ -176,7 +176,7 @@ int ranap_transp_layer_addr_decode2(struct osmo_sockaddr *addr, bool *uses_x213_
 	return 0;
 }
 
-static int new_transp_layer_addr(BIT_STRING_t *out, struct osmo_sockaddr *addr, bool use_x213_nsap)
+int ranap_new_transp_layer_addr(BIT_STRING_t *out, struct osmo_sockaddr *addr, bool use_x213_nsap)
 {
 	uint8_t *buf;
 	unsigned int len;
@@ -242,7 +242,7 @@ RANAP_TransportLayerInformation_t *ranap_new_transp_info_rtp(struct osmo_sockadd
 	}
 
 	tli = CALLOC(1, sizeof(*tli));
-	rc = new_transp_layer_addr(&tli->transportLayerAddress, addr, use_x213_nsap);
+	rc = ranap_new_transp_layer_addr(&tli->transportLayerAddress, addr, use_x213_nsap);
 	if (rc < 0) {
 		ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
 		return NULL;
@@ -262,7 +262,7 @@ RANAP_TransportLayerInformation_t *ranap_new_transp_info_gtp(struct osmo_sockadd
 	uint32_t binding_buf = htonl(tei);
 	int rc;
 
-	rc = new_transp_layer_addr(&tli->transportLayerAddress, addr, use_x213_nsap);
+	rc = ranap_new_transp_layer_addr(&tli->transportLayerAddress, addr, use_x213_nsap);
 	if (rc < 0) {
 		ASN_STRUCT_FREE(asn_DEF_RANAP_TransportLayerInformation, tli);
 		return NULL;

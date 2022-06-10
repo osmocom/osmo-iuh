@@ -20,3 +20,4 @@ int ranap_transp_layer_addr_decode2(struct osmo_sockaddr *addr, bool *uses_x213_
 RANAP_TransportLayerInformation_t *ranap_new_transp_info_rtp(struct osmo_sockaddr *addr, bool use_x213_nsap);
 RANAP_TransportLayerInformation_t *ranap_new_transp_info_gtp(struct osmo_sockaddr *addr, uint32_t tei,
 							     bool use_x213_nsap);
+int ranap_new_transp_layer_addr(BIT_STRING_t *out, struct osmo_sockaddr *addr, bool use_x213_nsap);
