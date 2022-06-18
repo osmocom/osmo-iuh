@@ -80,12 +80,6 @@ After that, run the usual
     make
     [sudo] make install
 
-Using
------
-
-Note: osmo-iuh just left very active development (December 2015, January
-2016), so your mileage may vary.
-
 Regenerating C code from ASN.1 source
 -------------------------------------
 
