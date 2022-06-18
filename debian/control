@@ -17,8 +17,8 @@ Build-Depends: debhelper (>=9),
                osmo-gsm-manuals-dev (>= 1.1.0),
                python3
 Standards-Version: 3.9.8
-Vcs-Git: git://git.osmocom.org/osmo-iuh.git
-Vcs-Browser: https://git.osmocom.org/osmo-iuh/
+Vcs-Git: https://gitea.osmocom.org/cellular-infrastructure/osmo-iuh
+Vcs-Browser: https://gitea.osmocom.org/cellular-infrastructure/osmo-iuh
 Homepage: https://projects.osmocom.org/projects/osmohnbgw
 
 Package: libosmo-hnbap0

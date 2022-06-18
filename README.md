@@ -19,9 +19,9 @@ GIT Repository
 
 You can clone from the official libosmocore.git repository using
 
-	git clone git://git.osmocom.org/osmo-iuh.git
+	git clone https://gitea.osmocom.org/cellular-infrastructure/osmo-iuh
 
-There is a cgit interface at http://git.osmocom.org/osmo-iuh/
+There is a web interface at <https://gitea.osmocom.org/cellular-infrastructure/osmo-iuh>
 
 Documentation
 -------------
@@ -64,11 +64,11 @@ It is generally best to check the wiki for the most up-to-date build
 instructions.
 
 As external library dependencies, you will need
-* libosmocore from git://git.osmocom.org/libosmocore
-* libasn1c from git://git.osmocom.org/libasn1c
+* libosmocore from https://gitea.osmocom.org/osmocom/libosmocore
+* libasn1c from https://gitea.osmocom.org/cellular-infrastructure/libasn1c
 * libsctp-dev (this is the package name in Debian)
-* libosmo-netif from git://git.osmocom.org/libosmo-netif (sysmocom/sctp branch)
-* libosmo-sccp from git://git.osmocom.org/libosmo-sccp (sysmocom/iu branch)
+* libosmo-netif from https://gitea.osmocom.org/osmocom/libosmo-netif
+* libosmo-sccp from https://gitea.osmocom.org/osmocom/libosmo-sccp
 
 To bootstrap the build, in the root directory, run:
 
@@ -92,7 +92,7 @@ Regenerating C code from ASN.1 source
 In order to re-generate the C source code from the ASN.1 source,
 you will need a modified asn1c which has the following features:
 * APER support (the patch from Eurecom, or its forward-ported version
-  from the aper branch of git://git.osmocom.org/asn1c)
+  from the aper branch of https://gitea.osmocom.org/osmocom/asn1c)
 * Support for prefixing the generated types (aper-prefix branch of
-  git://git.osmocom.org/asn1c)
+  https://gitea.osmocom.org/osmocom/asn1c)
 * Then in osmo-iuh.git: make -C src/ regen

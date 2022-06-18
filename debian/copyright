@@ -1,6 +1,6 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: osmo-iuh
-Source: git://git.osmocom.org/
+Source: https://gitea.osmocom.org/cellular-infrastructure/osmo-iuh
 
 Files:     *
 Copyright: 2015 Daniel Willmann <dwillmann@sysmocom.de>
