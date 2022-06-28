@@ -1,3 +1,39 @@
+osmo-iuh (1.3.0) unstable; urgency=medium
+
+  [ Philipp Maier ]
+  * test-hnbap: remove unused variable rc
+  * test-hnbap: cosmetic: fix sourcecode formatting
+  * ranap_common: add decoder for RAB SetupOrModifyItemFirst
+  * cosmetic: don't use 4 speaces instead of tabs
+  * iu_helpers: make new_transp_info_(rtp|gtp) public
+  * iu_helpers: check length before accessing buf
+  * add unittest for ranap_transp_layer_addr_decode()
+  * iu_helpers: add function ranap_transp_layer_addr_decode2
+  * test_common: use osmo_init_logging2 instead of osmo_init_logging
+  * test-ranap: put message gen tests into function
+  * ranap_common_cn: add functions for direct access to decoder
+  * ranap_common_ran: add decoder for CN/MSC originated messages
+  * ranap_msg_factory: add missing apidoc
+  * ranap_common: add decoder for RAB-FailedList
+  * ranap_common: add decoder for RAB-ReleaseList
+  * ranap_common: log decoder errors to LOGL_ERROR
+
+  [ Pau Espin Pedrol ]
+  * Drop no longer needed systemd config in build system
+  * jenkins.sh: osmo-iuh no longer has doc/manuals/ make target
+  * iu_client: Prevent crash if msgb passed to ranap_iu_tx has no dst
+  * iu_client: Fix incorrect access to null pointer
+  * Make logging message about received RANAP message more meaningful
+
+  [ Neels Hofmeyr ]
+  * move new_transp_layer_addr to public API
+
+  [ Harald Welte ]
+  * update git URLs (git -> https; gitea)
+  * README.md: remove obsolete notice from 7 years ago
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 28 Jun 2022 18:59:56 +0200
+
 osmo-iuh (1.2.0) unstable; urgency=medium
 
   [ Oliver Smith ]
