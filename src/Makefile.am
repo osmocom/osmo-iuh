@@ -77,7 +77,7 @@ libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSM
 libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_msg_factory.c iu_helpers.c \
 			   ranap_common_cn.c ranap_common_ran.c iu_client.c iu_client_vty.c
 
-libosmo_rua_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(HNBAP_LIBVERSION)
+libosmo_rua_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RUA_LIBVERSION)
 libosmo_rua_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
 			  $(ASN1C_LIBS) rua/libosmo-asn1-rua.la
 libosmo_rua_la_SOURCES = rua_common.c rua_encoder.c rua_decoder.c rua_msg_factory.c
