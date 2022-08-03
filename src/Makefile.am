@@ -66,23 +66,23 @@ RANAP_LIBVERSION=6:0:1
 RUA_LIBVERSION=0:0:0
 SABP_LIBVERSION=1:0:0
 lib_LTLIBRARIES = libosmo-hnbap.la libosmo-ranap.la libosmo-rua.la libosmo-sabp.la
-libosmo_hnbap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(HNBAP_LIBVERSION)
+libosmo_hnbap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(HNBAP_LIBVERSION) -no-undefined
 libosmo_hnbap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
 			  $(ASN1C_LIBS) hnbap/libosmo-asn1-hnbap.la
 libosmo_hnbap_la_SOURCES = hnbap_common.c hnbap_encoder.c hnbap_decoder.c
 
-libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION)
+libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION) -no-undefined
 libosmo_ranap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
 			  $(ASN1C_LIBS) ranap/libosmo-asn1-ranap.la
 libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_msg_factory.c iu_helpers.c \
 			   ranap_common_cn.c ranap_common_ran.c iu_client.c iu_client_vty.c
 
-libosmo_rua_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RUA_LIBVERSION)
+libosmo_rua_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RUA_LIBVERSION) -no-undefined
 libosmo_rua_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
 			  $(ASN1C_LIBS) rua/libosmo-asn1-rua.la
 libosmo_rua_la_SOURCES = rua_common.c rua_encoder.c rua_decoder.c rua_msg_factory.c
 
-libosmo_sabp_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(SABP_LIBVERSION)
+libosmo_sabp_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(SABP_LIBVERSION) -no-undefined
 libosmo_sabp_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
 			  $(ASN1C_LIBS) sabp/libosmo-asn1-sabp.la
 libosmo_sabp_la_SOURCES = sabp_common.c sabp_encoder.c sabp_decoder.c
