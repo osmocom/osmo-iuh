@@ -35,7 +35,35 @@ struct msgb *ranap_new_msg_iu_rel_compl(void);
 /*! \brief generate RANAP PAGING COMMAND message */
 struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, int is_ps, uint32_t cause);
 
-/*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for CS (voice) */
+/* Bit index of AMR or AMR-WB bitrates as passed to ranap_new_msg_rab_assign_voice_2() in order to select SDUs that
+ * should be added to a RAB Assignment Request. */
+enum osmo_ranap_rab_mode {
+	/* This part intentionally corresponds to gsm0808_amr_mode */
+	OSMO_RANAP_RAB_MODE_AMR_4_75 = 0,
+	OSMO_RANAP_RAB_MODE_AMR_5_15,
+	OSMO_RANAP_RAB_MODE_AMR_5_90,
+	OSMO_RANAP_RAB_MODE_AMR_6_70,
+	OSMO_RANAP_RAB_MODE_AMR_7_40,
+	OSMO_RANAP_RAB_MODE_AMR_7_95,
+	OSMO_RANAP_RAB_MODE_AMR_10_2,
+	OSMO_RANAP_RAB_MODE_AMR_12_2,
+
+	/* Additional modes used on UTRAN: */
+	OSMO_RANAP_RAB_MODE_AMR_SID,
+
+	/* TODO: add AMR-WB modes */
+
+	OSMO_RANAP_RAB_MODE_COUNT
+};
+
+/*! generate RANAP RAB ASSIGNMENT REQUEST message for CS (voice) */
+struct msgb *ranap_new_msg_rab_assign_voice_2(uint8_t rab_id, uint32_t rtp_ip,
+					      uint16_t rtp_port,
+					      bool use_x213_nsap,
+					      uint16_t modes);
+
+/*! same as ranap_new_msg_rab_assign_voice_2() with modes passed as
+ * (1 << OSMO_RANAP_RAB_MODE_AMR_12_2) | (1 << * OSMO_RANAP_RAB_MODE_AMR_SID) */
 struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 					    uint16_t rtp_port,
 					    bool use_x213_nsap);
