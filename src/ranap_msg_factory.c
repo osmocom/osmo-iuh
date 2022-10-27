@@ -561,16 +561,31 @@ static RANAP_SDU_ParameterItem_t *new_sdu_par_item(enum sdu_par_profile profile)
 
 	switch (profile) {
 	case SDUPAR_P_VOICE0:
-		sdui->sDU_ErrorRatio = new_sdu_error_ratio(1, 5);
+		sdui->sDU_ErrorRatio = new_sdu_error_ratio(7, 3);
 		sdui->residualBitErrorRatio.mantissa = 1;
-		sdui->residualBitErrorRatio.exponent = 6;
+		sdui->residualBitErrorRatio.exponent = 4;
 		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_yes;
 		sdui->sDU_FormatInformationParameters = fmtip;
 		fmti = new_format_info_pars(81);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(65);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(75);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(61);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(58);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(55);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(49);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(42);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		fmti = new_format_info_pars(39);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
-		/* FIXME: could be 10 SDU descriptors for AMR! */
+		fmti = new_format_info_pars(0);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		break;
 	case SDUPAR_P_VOICE1:
 		sdui->residualBitErrorRatio.mantissa = 1;
@@ -579,16 +594,47 @@ static RANAP_SDU_ParameterItem_t *new_sdu_par_item(enum sdu_par_profile profile)
 		sdui->sDU_FormatInformationParameters = fmtip;
 		fmti = new_format_info_pars(103);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(99);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(84);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(87);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(76);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(63);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(54);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(53);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		fmti = new_format_info_pars(0);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
-		/* FIXME: could be 10 SDU descriptors for AMR! */
+		fmti = new_format_info_pars(0);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
 		break;
 	case SDUPAR_P_VOICE2:
-		sdui->residualBitErrorRatio.mantissa = 5;
+		sdui->residualBitErrorRatio.mantissa = 1;
 		sdui->residualBitErrorRatio.exponent = 3;
 		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no_error_detection_consideration;
 		sdui->sDU_FormatInformationParameters = fmtip;
 		fmti = new_format_info_pars(60);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(40);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(0);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(0);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(0);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(0);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(0);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(0);
+		ASN_SEQUENCE_ADD(fmtip, fmti);
+		fmti = new_format_info_pars(0);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
 		fmti = new_format_info_pars(0);
 		ASN_SEQUENCE_ADD(fmtip, fmti);
@@ -655,7 +701,7 @@ static RANAP_RAB_Parameters_t *new_rab_par_voice(long bitrate_guaranteed,
 	sdui = new_sdu_par_item(SDUPAR_P_VOICE2);
 	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdui);
 
-	rab->transferDelay = new_long(80);
+	rab->transferDelay = new_long(100);
 	rab->allocationOrRetentionPriority = new_alloc_ret_prio(RANAP_PriorityLevel_no_priority, 0, 1, 0);
 
 	rab->sourceStatisticsDescriptor = new_long(RANAP_SourceStatisticsDescriptor_speech);
@@ -761,7 +807,7 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	memset(&first, 0, sizeof(first));
 	assign_new_ra_id(&first.rAB_ID, rab_id);
 	first.nAS_SynchronisationIndicator = new_rab_nas_sync_ind(60);
-	first.rAB_Parameters = new_rab_par_voice(6700, 12200);
+	first.rAB_Parameters = new_rab_par_voice(4750, 12200);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_support_mode_for_predefined_SDU_sizes, 1); /* 2? */
 
 	rtp_addr.u.sin.sin_family = AF_INET;
