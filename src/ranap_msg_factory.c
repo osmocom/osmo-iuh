@@ -546,18 +546,83 @@ new_format_info_pars(long sdu_size)
 }
 
 enum sdu_par_profile {
-	SDUPAR_P_VOICE0,
-	SDUPAR_P_VOICE1,
-	SDUPAR_P_VOICE2,
+	SDUPAR_P_VOICE0 = 0,
+	SDUPAR_P_VOICE1 = 1,
+	SDUPAR_P_VOICE2 = 2,
 	SDUPAR_P_DATA,
 };
 
+/* See 3GPP TS 26.102 Table 6-2:
+ *
+ *  RAB subflows    Total
+ *  1   2    3      bits    Source rate
+ *
+ *  42  53   0      95      AMR 4,75 kbps
+ *  49  54   0      103     AMR 5,15 kbps
+ *  55  63   0      118     AMR 5,9 kbps
+ *  58  76   0      134     AMR 6,7 kbps
+ *  61  87   0      148     AMR 7,4 kbps
+ *  75  84   0      159     AMR 7,95 kbps
+ *  65  99   40     204     AMR 10,2 kbps
+ *  81  103  60     244     AMR 12,2 kbps
+ *  39  0    0      39      AMR SID
+ *  43  0    0      43      GSM-EFR SID
+ *
+ * See 3GPP TS 26.201 Table 2 and Table 3:
+ *
+ *  RAB subflows    Total
+ *  1   2    3      bits    Source rate
+ * 54  78    0      132     AMR-WB 6,60 kbps
+ * 64  113   0      177     AMR-WB 8,85 kbps
+ * 72  181   0      253     AMR-WB 12,65 kbps
+ * 72  213   0      285     AMR-WB 14,25 kbps
+ * 72  245   0      317     AMR-WB 15,85 kbps
+ * 72  293   0      365     AMR-WB 18,25 kbps
+ * 72  325   0      397     AMR-WB 19,85 kbps
+ * 72  389   0      461     AMR-WB 23,05 kbps
+ * 72  405   0      477     AMR-WB 23,85 kbps
+ * 40  0     0      40      AMR-WB SID
+ *
+ * for example, to get AMR 12.2k with 244 bits in total,
+ * put 81 in subflow 1, 103 in subflow 2, 60 in subflow 3.
+ * Here that means 81 in VOICE0, 103 in VOICE1, 60 in VOICE2 (see enum sdu_par_profile).
+ */
+static int amr_mode_to_sdu_subflows[OSMO_RANAP_RAB_MODE_COUNT][3] = {
+	[OSMO_RANAP_RAB_MODE_AMR_4_75] = { 42, 53, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_5_15] = { 49, 54, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_5_90] = { 55, 63, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_6_70] = { 58, 76, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_7_40] = { 61, 87, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_7_95] = { 75, 84, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_10_2] = { 65, 99, 40 },
+	[OSMO_RANAP_RAB_MODE_AMR_12_2] = { 81, 103, 60 },
+	[OSMO_RANAP_RAB_MODE_AMR_SID] = { 39, 0, 0 },
+	[OSMO_RANAP_RAB_MODE_GSM_EFR_SID] = { 43, 0, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_WB_6_60] = { 54, 78, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_WB_8_85] = { 64, 113, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_WB_12_65] = { 72, 181, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_WB_14_25] = { 72, 213, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_WB_15_85] = { 72, 245, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_WB_18_25] = { 72, 293, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_WB_19_85] = { 72, 325, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_WB_23_05] = { 72, 389, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_WB_23_85] = { 72, 405, 0 },
+	[OSMO_RANAP_RAB_MODE_AMR_WB_SID] = { 40, 0, 0 },
+	/* Unset values remain 0 */
+};
+
+static inline int amr_mode_to_sdu_size(enum osmo_ranap_rab_mode mode)
+{
+	return amr_mode_to_sdu_subflows[mode][SDUPAR_P_VOICE0]
+		+ amr_mode_to_sdu_subflows[mode][SDUPAR_P_VOICE1]
+		+ amr_mode_to_sdu_subflows[mode][SDUPAR_P_VOICE2];
+}
+
 /* See Chapter 5 of TS 26.102 */
-static RANAP_SDU_ParameterItem_t *new_sdu_par_item(enum sdu_par_profile profile)
+static RANAP_SDU_ParameterItem_t *new_sdu_par_item(enum sdu_par_profile profile, uint32_t rab_modes)
 {
 	RANAP_SDU_ParameterItem_t *sdui = CALLOC(1, sizeof(*sdui));
-	RANAP_SDU_FormatInformationParameters_t *fmtip = CALLOC(1, sizeof(*fmtip));
-	RANAP_SDU_FormatInformationParameterItem_t *fmti;
+	int i;
 
 	switch (profile) {
 	case SDUPAR_P_VOICE0:
@@ -565,44 +630,41 @@ static RANAP_SDU_ParameterItem_t *new_sdu_par_item(enum sdu_par_profile profile)
 		sdui->residualBitErrorRatio.mantissa = 1;
 		sdui->residualBitErrorRatio.exponent = 6;
 		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_yes;
-		sdui->sDU_FormatInformationParameters = fmtip;
-		fmti = new_format_info_pars(81);
-		ASN_SEQUENCE_ADD(fmtip, fmti);
-		fmti = new_format_info_pars(39);
-		ASN_SEQUENCE_ADD(fmtip, fmti);
-		/* FIXME: could be 10 SDU descriptors for AMR! */
+		/* continue below to add SDU subflows */
 		break;
 	case SDUPAR_P_VOICE1:
 		sdui->residualBitErrorRatio.mantissa = 1;
 		sdui->residualBitErrorRatio.exponent = 3;
 		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no_error_detection_consideration;
-		sdui->sDU_FormatInformationParameters = fmtip;
-		fmti = new_format_info_pars(103);
-		ASN_SEQUENCE_ADD(fmtip, fmti);
-		fmti = new_format_info_pars(0);
-		ASN_SEQUENCE_ADD(fmtip, fmti);
-		/* FIXME: could be 10 SDU descriptors for AMR! */
 		break;
 	case SDUPAR_P_VOICE2:
 		sdui->residualBitErrorRatio.mantissa = 5;
 		sdui->residualBitErrorRatio.exponent = 3;
 		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no_error_detection_consideration;
-		sdui->sDU_FormatInformationParameters = fmtip;
-		fmti = new_format_info_pars(60);
-		ASN_SEQUENCE_ADD(fmtip, fmti);
-		fmti = new_format_info_pars(0);
-		ASN_SEQUENCE_ADD(fmtip, fmti);
-		/* FIXME: could be 10 SDU descriptors for AMR! */
+		/* continue below to add SDU subflows */
 		break;
 	case SDUPAR_P_DATA:
 		sdui->sDU_ErrorRatio = new_sdu_error_ratio(1, 4);
 		sdui->residualBitErrorRatio.mantissa = 1;
 		sdui->residualBitErrorRatio.exponent = 5;
 		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no;
-		FREEMEM(fmtip);
-		break;
+		/* do not add voice subflows */
+		goto return_ok;
 	}
 
+	/* 'profile' is now one of SDUPAR_P_VOICE[012] and indicates whether this is subflow 0, 1 or 2.
+	 * Add each AMR mode's subflow size for this subflow. */
+	sdui->sDU_FormatInformationParameters = CALLOC(1, sizeof(*sdui->sDU_FormatInformationParameters));
+	for (i = 0; (i < OSMO_RANAP_RAB_MODE_COUNT) && ((1 << i) <= rab_modes); i++) {
+		/* only add modes that are present in the bitmask */
+		if ((rab_modes & (1 << i)) == 0)
+			continue;
+
+		ASN_SEQUENCE_ADD(sdui->sDU_FormatInformationParameters,
+				 new_format_info_pars(amr_mode_to_sdu_subflows[i][profile]));
+	}
+
+return_ok:
 	return sdui;
 }
 
@@ -632,12 +694,29 @@ new_alloc_ret_prio(RANAP_PriorityLevel_t level, int capability, int vulnerabilit
 	return arp;
 }
 
-/* See Chapter 5 of TS 26.102 */
-static RANAP_RAB_Parameters_t *new_rab_par_voice(long bitrate_guaranteed,
-						 long bitrate_max)
+/* See Chapter 5 of TS 26.102.
+ * \param[in] rab_modes  Bitmask composed from (1<<OSMO_RANAP_RAB_MODE_XX) bits. Each bit that is set results in a
+ * predefined set of SDUs to be added to the RAB Assignment Request message. */
+static RANAP_RAB_Parameters_t *new_rab_par_voice(uint32_t rab_modes)
 {
 	RANAP_RAB_Parameters_t *rab = CALLOC(1, sizeof(*rab));
 	RANAP_SDU_ParameterItem_t *sdui;
+
+	int bitrate_guaranteed = 6700;
+	int bitrate_max = 12200;
+	int sdu_size_max = 0;
+	int i;
+	for (i = 0; i < OSMO_RANAP_RAB_MODE_COUNT && (1 << i) <= rab_modes; i++) {
+		int sdu_size;
+
+		/* only add modes that are present in the bitmask */
+		if ((rab_modes & (1 << i)) == 0)
+			continue;
+
+		sdu_size = amr_mode_to_sdu_size(i);
+		if (sdu_size > sdu_size_max)
+			sdu_size_max = sdu_size;
+	}
 
 	rab->trafficClass = RANAP_TrafficClass_conversational;
 	rab->rAB_AsymmetryIndicator = RANAP_RAB_AsymmetryIndicator_symmetric_bidirectional;
@@ -646,13 +725,13 @@ static RANAP_RAB_Parameters_t *new_rab_par_voice(long bitrate_guaranteed,
 	rab->guaranteedBitRate = CALLOC(1, sizeof(*rab->guaranteedBitRate));
 	ASN_SEQUENCE_ADD(rab->guaranteedBitRate, new_long(bitrate_guaranteed));
 	rab->deliveryOrder = RANAP_DeliveryOrder_delivery_order_requested;
-	rab->maxSDU_Size = 244;
+	rab->maxSDU_Size = sdu_size_max;
 
-	sdui = new_sdu_par_item(SDUPAR_P_VOICE0);
+	sdui = new_sdu_par_item(SDUPAR_P_VOICE0, rab_modes);
 	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdui);
-	sdui = new_sdu_par_item(SDUPAR_P_VOICE1);
+	sdui = new_sdu_par_item(SDUPAR_P_VOICE1, rab_modes);
 	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdui);
-	sdui = new_sdu_par_item(SDUPAR_P_VOICE2);
+	sdui = new_sdu_par_item(SDUPAR_P_VOICE2, rab_modes);
 	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdui);
 
 	rab->transferDelay = new_long(80);
@@ -684,7 +763,7 @@ static RANAP_RAB_Parameters_t *new_rab_par_data(uint32_t dl_max_bitrate, uint32_
 	rab->deliveryOrder = RANAP_DeliveryOrder_delivery_order_requested;
 	rab->maxSDU_Size = 8000;
 
-	sdui = new_sdu_par_item(SDUPAR_P_DATA);
+	sdui = new_sdu_par_item(SDUPAR_P_DATA, 0);
 	ASN_SEQUENCE_ADD(&rab->sDU_Parameters, sdui);
 
 	rab->allocationOrRetentionPriority = new_alloc_ret_prio(RANAP_PriorityLevel_no_priority, 0, 0, 0);
@@ -737,11 +816,15 @@ static void assign_new_ra_id(RANAP_RAB_ID_t *id, uint8_t rab_id)
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for CS (voice).
  * See 3GPP TS 25.413 8.2.
  * RAB ID: 3GPP TS 25.413 9.2.1.2.
+ * Add SDUs according to the 'rab_modes' argument, a bitmask indicating which AMR modes should be present.
+ * The subflow sizes to add for specific AMR rates are chosen according to 3GPP TS 26.102 Table 6-2.
  * \param rtp_ip  MGW's RTP IPv4 address in *network* byte order.
+ * \param rab_modes  Bitmask of AMR modes, indicating which SDUs to include in the generated message.
  */
-struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
-					    uint16_t rtp_port,
-					    bool use_x213_nsap)
+struct msgb *ranap_new_msg_rab_assign_voice_2(uint8_t rab_id, uint32_t rtp_ip,
+					      uint16_t rtp_port,
+					      bool use_x213_nsap,
+					      uint32_t rab_modes)
 {
 	RANAP_ProtocolIE_FieldPair_t *pair;
 	RANAP_RAB_AssignmentRequestIEs_t ies;
@@ -761,7 +844,7 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	memset(&first, 0, sizeof(first));
 	assign_new_ra_id(&first.rAB_ID, rab_id);
 	first.nAS_SynchronisationIndicator = new_rab_nas_sync_ind(60);
-	first.rAB_Parameters = new_rab_par_voice(6700, 12200);
+	first.rAB_Parameters = new_rab_par_voice(rab_modes);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_support_mode_for_predefined_SDU_sizes, 1); /* 2? */
 
 	rtp_addr.u.sin.sin_family = AF_INET;
@@ -808,6 +891,15 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_AssignmentRequest, &out);
 
 	return msg;
+}
+
+struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
+					    uint16_t rtp_port,
+					    bool use_x213_nsap)
+{
+	return ranap_new_msg_rab_assign_voice_2(rab_id, rtp_ip, rtp_port, use_x213_nsap,
+						(1 << OSMO_RANAP_RAB_MODE_AMR_12_2)
+						| (1 << OSMO_RANAP_RAB_MODE_AMR_SID));
 }
 
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for PS (data)
