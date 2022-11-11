@@ -70,7 +70,7 @@ static void test_aper_causemisc(uint32_t inp, uint8_t exp_enc)
 	OSMO_ASSERT(rv.encoded == 8);
 
 	/* test re-decoding */
-	aper_decode(NULL, &asn_DEF_RANAP_Cause, &c_dec, buf, 1, 0, 0);
+	aper_decode(NULL, &asn_DEF_RANAP_Cause, (void **)&c_dec, buf, 1, 0, 0);
 	printf("Decoded Cause Misc=%ld\n", c_dec->choice.misc);
 	OSMO_ASSERT(c_dec->present == RANAP_Cause_PR_misc);
 	OSMO_ASSERT(c_dec->choice.misc == inp);
