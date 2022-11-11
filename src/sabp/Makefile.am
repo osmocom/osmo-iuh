@@ -17,7 +17,9 @@ ASN_MODULE_SRC=	\
 	SABP_Cause.c	\
 	SABP_Criticality-Diagnostics.c	\
 	SABP_CriticalityDiagnostics-IE-List.c	\
+	SABP_CriticalityDiagnostics-IE-List-Value.c	\
 	SABP_MessageStructure.c	\
+	SABP_MessageStructure-Value.c	\
 	SABP_Data-Coding-Scheme.c	\
 	SABP_Failure-List.c	\
 	SABP_Failure-List-Item.c	\
@@ -81,7 +83,9 @@ ASN_MODULE_INC=	\
 	SABP_Cause.h	\
 	SABP_Criticality-Diagnostics.h	\
 	SABP_CriticalityDiagnostics-IE-List.h	\
+	SABP_CriticalityDiagnostics-IE-List-Value.h	\
 	SABP_MessageStructure.h	\
+	SABP_MessageStructure-Value.h	\
 	SABP_Data-Coding-Scheme.h	\
 	SABP_Failure-List.h	\
 	SABP_Failure-List-Item.h	\

@@ -22,6 +22,7 @@ ASN_MODULE_SOURCES=	\
 	RUA_CauseMisc.c	\
 	RUA_CriticalityDiagnostics.c	\
 	RUA_CriticalityDiagnostics-IE-List.c	\
+	RUA_CriticalityDiagnostics-IE-List-Value.c	\
 	RUA_TypeOfError.c	\
 	RUA_RUA-PDU.c	\
 	RUA_InitiatingMessage.c	\
@@ -59,6 +60,7 @@ ASN_MODULE_INC=	\
 	RUA_CauseMisc.h	\
 	RUA_CriticalityDiagnostics.h	\
 	RUA_CriticalityDiagnostics-IE-List.h	\
+	RUA_CriticalityDiagnostics-IE-List-Value.h	\
 	RUA_TypeOfError.h	\
 	RUA_RUA-PDU.h	\
 	RUA_InitiatingMessage.h	\

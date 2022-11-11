@@ -12,11 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
+#include <osmocom/ranap/RANAP_PLMNs-in-shared-network-Value.h>
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/ranap/RANAP_PLMNidentity.h>
-#include <osmocom/ranap/RANAP_LA-LIST.h>
-#include <osmocom/ranap/RANAP_IE-Extensions.h>
-#include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 
 #ifdef __cplusplus
@@ -25,18 +22,7 @@ extern "C" {
 
 /* RANAP_PLMNs-in-shared-network */
 typedef struct RANAP_PLMNs_in_shared_network {
-	A_SEQUENCE_OF(struct RANAP_PLMNs_in_shared_network__Member {
-		RANAP_PLMNidentity_t	 pLMNidentity;
-		RANAP_LA_LIST_t	 lA_LIST;
-		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;
-		/*
-		 * This type is extensible,
-		 * possible extensions are below.
-		 */
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SEQUENCE_OF(RANAP_PLMNs_in_shared_network_Value_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

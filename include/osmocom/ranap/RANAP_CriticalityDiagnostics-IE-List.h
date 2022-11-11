@@ -12,12 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
+#include <osmocom/ranap/RANAP_CriticalityDiagnostics-IE-List-Value.h>
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/ranap/RANAP_Criticality.h>
-#include <osmocom/ranap/RANAP_ProtocolIE-ID.h>
-#include <osmocom/ranap/RANAP_RepetitionNumber0.h>
-#include <osmocom/ranap/RANAP_IE-Extensions.h>
-#include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 
 #ifdef __cplusplus
@@ -26,19 +22,7 @@ extern "C" {
 
 /* RANAP_CriticalityDiagnostics-IE-List */
 typedef struct RANAP_CriticalityDiagnostics_IE_List {
-	A_SEQUENCE_OF(struct RANAP_CriticalityDiagnostics_IE_List__Member {
-		RANAP_Criticality_t	 iECriticality;
-		RANAP_ProtocolIE_ID_t	 iE_ID;
-		RANAP_RepetitionNumber0_t	*repetitionNumber	/* OPTIONAL */;
-		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;
-		/*
-		 * This type is extensible,
-		 * possible extensions are below.
-		 */
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SEQUENCE_OF(RANAP_CriticalityDiagnostics_IE_List_Value_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

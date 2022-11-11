@@ -735,7 +735,8 @@ CNMBMSLinkingInformation ::= SEQUENCE {
 	...
 }
 
-JoinedMBMSBearerService-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF
+JoinedMBMSBearerService-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF JoinedMBMSBearerService-IEs-Value
+JoinedMBMSBearerService-IEs-Value ::=
 	SEQUENCE {
 		tMGI			TMGI,
 		mBMS-PTP-RAB-ID		MBMS-PTP-RAB-ID,
@@ -885,7 +886,8 @@ RAB-ReleasedItem ::= SEQUENCE {
 	...
 }
 
-DataVolumeList ::= SEQUENCE (SIZE (1..maxNrOfVol)) OF
+DataVolumeList ::= SEQUENCE (SIZE (1..maxNrOfVol)) OF DataVolumeList-Value
+DataVolumeList-Value ::=
 	SEQUENCE {
 		dl-UnsuccessfullyTransmittedDataVolume	UnsuccessfullyTransmittedDataVolume,
 		dataVolumeReference			DataVolumeReference	OPTIONAL,
@@ -1004,14 +1006,16 @@ MBMSSynchronisationInformation ::= SEQUENCE {
 	...
 }
 
-LeftMBMSBearerService-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF
+LeftMBMSBearerService-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF LeftMBMSBearerService-IEs-Value
+LeftMBMSBearerService-IEs-Value ::=
 	SEQUENCE {
 		tMGI		TMGI,
 		iE-Extensions	ProtocolExtensionContainer OPTIONAL,
 		...
 	}
 
-UnsuccessfulLinking-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF
+UnsuccessfulLinking-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF UnsuccessfulLinking-IEs-Value
+UnsuccessfulLinking-IEs-Value ::=
 	SEQUENCE {
 		tMGI		TMGI,
 		cause		Cause,

@@ -12,11 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
+#include <osmocom/ranap/RANAP_LA-LIST-Value.h>
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/ranap/RANAP_LAC.h>
-#include <osmocom/ranap/RANAP_ListOF-SNAs.h>
-#include <osmocom/ranap/RANAP_IE-Extensions.h>
-#include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 
 #ifdef __cplusplus
@@ -25,18 +22,7 @@ extern "C" {
 
 /* RANAP_LA-LIST */
 typedef struct RANAP_LA_LIST {
-	A_SEQUENCE_OF(struct RANAP_LA_LIST__Member {
-		RANAP_LAC_t	 lAC;
-		RANAP_ListOF_SNAs_t	 listOF_SNAs;
-		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;
-		/*
-		 * This type is extensible,
-		 * possible extensions are below.
-		 */
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SEQUENCE_OF(RANAP_LA_LIST_Value_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

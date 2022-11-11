@@ -75,7 +75,8 @@ Criticality-Diagnostics ::= SEQUENCE {
 CriticalityDiagnostics-ExtIEs SABP-PROTOCOL-EXTENSION ::= {
  ...
 }
-CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF
+CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF CriticalityDiagnostics-IE-List-Value
+CriticalityDiagnostics-IE-List-Value ::=
  SEQUENCE {
  iECriticality Criticality,
  iE-ID ProtocolIE-ID,
@@ -88,7 +89,8 @@ CriticalityDiagnostics-IE-List-ExtIEs SABP-PROTOCOL-EXTENSION ::= {
  -- { ID id-TypeOfError CRITICALITY ignore EXTENSION TypeOfError PRESENCE mandatory },
  ...
 }
-MessageStructure ::= SEQUENCE (SIZE (1..maxNrOfLevels)) OF
+MessageStructure ::= SEQUENCE (SIZE (1..maxNrOfLevels)) OF MessageStructure-Value
+MessageStructure-Value ::=
  SEQUENCE {
  iE-ID ProtocolIE-ID,
  repetitionNumber RepetitionNumber1 OPTIONAL,

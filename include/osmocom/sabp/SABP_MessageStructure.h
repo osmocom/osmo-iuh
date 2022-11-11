@@ -12,11 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
+#include <osmocom/sabp/SABP_MessageStructure-Value.h>
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/sabp/SABP_ProtocolIE-ID.h>
-#include <osmocom/sabp/SABP_RepetitionNumber1.h>
-#include <osmocom/sabp/SABP_IE-Extensions.h>
-#include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 
 #ifdef __cplusplus
@@ -25,18 +22,7 @@ extern "C" {
 
 /* SABP_MessageStructure */
 typedef struct SABP_MessageStructure {
-	A_SEQUENCE_OF(struct SABP_MessageStructure__Member {
-		SABP_ProtocolIE_ID_t	 iE_ID;
-		SABP_RepetitionNumber1_t	*repetitionNumber	/* OPTIONAL */;
-		SABP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;
-		/*
-		 * This type is extensible,
-		 * possible extensions are below.
-		 */
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SEQUENCE_OF(SABP_MessageStructure_Value_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

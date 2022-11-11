@@ -127,7 +127,8 @@ CriticalityDiagnostics ::= SEQUENCE {
 	...
 }
 
-CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF
+CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF CriticalityDiagnostics-IE-List-Value
+CriticalityDiagnostics-IE-List-Value ::=
 	SEQUENCE {
 		iECriticality		Criticality,
 		iE-ID			ProtocolIE-ID,

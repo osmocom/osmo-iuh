@@ -44,6 +44,7 @@ ranap_HEADERS = \
 	RANAP_Ass-RAB-Parameter-MaxBitrateList.h \
 	RANAP_Ass-RAB-Parameters.h \
 	RANAP_AuthorisedPLMNs.h \
+	RANAP_AuthorisedPLMNs-Value.h \
 	RANAP_AuthorisedSNAs.h \
 	RANAP_BindingID.h \
 	RANAP_BroadcastAssistanceDataDecipheringKeys.h \
@@ -79,6 +80,7 @@ ranap_HEADERS = \
 	RANAP_Correlation-ID.h \
 	RANAP_CriticalityDiagnostics.h \
 	RANAP_CriticalityDiagnostics-IE-List.h \
+	RANAP_CriticalityDiagnostics-IE-List-Value.h \
 	RANAP_Criticality.h \
 	RANAP_CSFB-Information.h \
 	RANAP_CSG-Id.h \
@@ -86,6 +88,7 @@ ranap_HEADERS = \
 	RANAP_CSG-Membership-Status.h \
 	RANAP_DataPDUType.h \
 	RANAP_DataVolumeList.h \
+	RANAP_DataVolumeList-Value.h \
 	RANAP_DataVolumeReference.h \
 	RANAP_DataVolumeReport.h \
 	RANAP_DataVolumeReportingIndication.h \
@@ -119,6 +122,7 @@ ranap_HEADERS = \
 	RANAP_EquipmentsToBeTraced.h \
 	RANAP_ErrorIndication.h \
 	RANAP_EUTRANFrequencies.h \
+	RANAP_EUTRANFrequencies-Value.h \
 	RANAP_E-UTRAN-Service-Handover.h \
 	RANAP_Event1F-Parameters.h \
 	RANAP_Event1I-Parameters.h \
@@ -140,6 +144,7 @@ ranap_HEADERS = \
 	RANAP_GA-PointWithUnCertaintyEllipse.h \
 	RANAP_GA-PointWithUnCertainty.h \
 	RANAP_GA-Polygon.h \
+	RANAP_GA-Polygon-Value.h \
 	RANAP_GA-UncertaintyEllipse.h \
 	RANAP_GeographicalArea.h \
 	RANAP_GeographicalCoordinates.h \
@@ -197,6 +202,7 @@ ranap_HEADERS = \
 	RANAP_IuSignallingConnectionIdentifier.h \
 	RANAP_IuTransportAssociation.h \
 	RANAP_JoinedMBMSBearerService-IEs.h \
+	RANAP_JoinedMBMSBearerService-IEs-Value.h \
 	RANAP_KeyStatus.h \
 	RANAP_L3-Information.h \
 	RANAP_LABased.h \
@@ -204,10 +210,12 @@ ranap_HEADERS = \
 	RANAP_LAI.h \
 	RANAP_LAI-List.h \
 	RANAP_LA-LIST.h \
+	RANAP_LA-LIST-Value.h \
 	RANAP_LAListofIdleModeUEs.h \
 	RANAP_LastKnownServiceArea.h \
 	RANAP_LastVisitedUTRANCell-Item.h \
 	RANAP_LeftMBMSBearerService-IEs.h \
+	RANAP_LeftMBMSBearerService-IEs-Value.h \
 	RANAP_LHN-ID.h \
 	RANAP_Links-to-log.h \
 	RANAP_ListOfInterfacesToTrace.h \
@@ -282,6 +290,7 @@ ranap_HEADERS = \
 	RANAP_MeasurementQuantity.h \
 	RANAP_MeasurementsToActivate.h \
 	RANAP_MessageStructure.h \
+	RANAP_MessageStructure-Value.h \
 	RANAP_MSISDN.h \
 	RANAP_NAS-PDU.h \
 	RANAP_NAS-SequenceNumber.h \
@@ -316,6 +325,7 @@ ranap_HEADERS = \
 	RANAP_PermittedIntegrityProtectionAlgorithms.h \
 	RANAP_PLMNidentity.h \
 	RANAP_PLMNs-in-shared-network.h \
+	RANAP_PLMNs-in-shared-network-Value.h \
 	RANAP_Port-Number.h \
 	RANAP_PositionData.h \
 	RANAP_PositionDataSpecificToGERANIuMode.h \
@@ -355,6 +365,7 @@ ranap_HEADERS = \
 	RANAP_RAB-DataForwardingList.h \
 	RANAP_RAB-DataForwardingList-SRNS-CtxReq.h \
 	RANAP_RABDataVolumeReport.h \
+	RANAP_RABDataVolumeReport-Value.h \
 	RANAP_RAB-DataVolumeReportItem.h \
 	RANAP_RAB-DataVolumeReportList.h \
 	RANAP_RAB-DataVolumeReportRequestItem.h \
@@ -375,6 +386,7 @@ ranap_HEADERS = \
 	RANAP_RAB-Parameter-MaxBitrateList.h \
 	RANAP_RAB-Parameters.h \
 	RANAP_RABParametersList.h \
+	RANAP_RABParametersList-Value.h \
 	RANAP_RAB-QueuedItem.h \
 	RANAP_RAB-QueuedList.h \
 	RANAP_RAB-ReleasedItem.h \
@@ -576,6 +588,7 @@ ranap_HEADERS = \
 	RANAP_UL-GTP-PDU-SequenceNumber.h \
 	RANAP_UL-N-PDU-SequenceNumber.h \
 	RANAP_UnsuccessfulLinking-IEs.h \
+	RANAP_UnsuccessfulLinking-IEs-Value.h \
 	RANAP_UnsuccessfullyTransmittedDataVolume.h \
 	RANAP_UnsuccessfulOutcome.h \
 	RANAP_UPInformation.h \

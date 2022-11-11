@@ -37,6 +37,7 @@ ASN_MODULE_SRC=	\
 	RANAP_Ass-RAB-Parameter-GuaranteedBitrateList.c	\
 	RANAP_Ass-RAB-Parameter-MaxBitrateList.c	\
 	RANAP_AuthorisedPLMNs.c	\
+	RANAP_AuthorisedPLMNs-Value.c	\
 	RANAP_AuthorisedSNAs.c	\
 	RANAP_BindingID.c	\
 	RANAP_BroadcastAssistanceDataDecipheringKeys.c	\
@@ -59,7 +60,9 @@ ASN_MODULE_SRC=	\
 	RANAP_ClientType.c	\
 	RANAP_CriticalityDiagnostics.c	\
 	RANAP_CriticalityDiagnostics-IE-List.c	\
+	RANAP_CriticalityDiagnostics-IE-List-Value.c	\
 	RANAP_MessageStructure.c	\
+	RANAP_MessageStructure-Value.c	\
 	RANAP_CGI.c	\
 	RANAP_ChosenEncryptionAlgorithm.c	\
 	RANAP_ChosenIntegrityProtectionAlgorithm.c	\
@@ -117,6 +120,7 @@ ASN_MODULE_SRC=	\
 	RANAP_GA-PointWithUnCertainty.c	\
 	RANAP_GA-PointWithUnCertaintyEllipse.c	\
 	RANAP_GA-Polygon.c	\
+	RANAP_GA-Polygon-Value.c	\
 	RANAP_GA-UncertaintyEllipse.c	\
 	RANAP_GERAN-BSC-Container.c	\
 	RANAP_GERAN-Cell-ID.c	\
@@ -152,6 +156,7 @@ ASN_MODULE_SRC=	\
 	RANAP_IuTransportAssociation.c	\
 	RANAP_KeyStatus.c	\
 	RANAP_LA-LIST.c	\
+	RANAP_LA-LIST-Value.c	\
 	RANAP_LAC.c	\
 	RANAP_LAI.c	\
 	RANAP_LastKnownServiceArea.c	\
@@ -237,6 +242,7 @@ ASN_MODULE_SRC=	\
 	RANAP_LoggingDuration.c	\
 	RANAP_PLMNidentity.c	\
 	RANAP_PLMNs-in-shared-network.c	\
+	RANAP_PLMNs-in-shared-network-Value.c	\
 	RANAP_Port-Number.c	\
 	RANAP_PositioningDataDiscriminator.c	\
 	RANAP_PositioningDataSet.c	\
@@ -255,6 +261,7 @@ ASN_MODULE_SRC=	\
 	RANAP_RABased.c	\
 	RANAP_RAI-List.c	\
 	RANAP_RABDataVolumeReport.c	\
+	RANAP_RABDataVolumeReport-Value.c	\
 	RANAP_RAB-ID.c	\
 	RANAP_RAB-Parameter-ExtendedGuaranteedBitrateList.c	\
 	RANAP_RAB-Parameter-ExtendedMaxBitrateList.c	\
@@ -262,6 +269,7 @@ ASN_MODULE_SRC=	\
 	RANAP_RAB-Parameter-MaxBitrateList.c	\
 	RANAP_RAB-Parameters.c	\
 	RANAP_RABParametersList.c	\
+	RANAP_RABParametersList-Value.c	\
 	RANAP_RAB-SubflowCombinationBitRate.c	\
 	RANAP_RAB-TrCH-Mapping.c	\
 	RANAP_RAB-TrCH-MappingItem.c	\
@@ -335,6 +343,7 @@ ASN_MODULE_SRC=	\
 	RANAP_RSRQ-Type.c	\
 	RANAP_RSRQ-Extension.c	\
 	RANAP_EUTRANFrequencies.c	\
+	RANAP_EUTRANFrequencies-Value.c	\
 	RANAP_MeasBand.c	\
 	RANAP_SubscriberProfileIDforRFP.c	\
 	RANAP_SourceStatisticsDescriptor.c	\
@@ -544,6 +553,7 @@ ASN_MODULE_SRC=	\
 	RANAP_UserPlaneInformation.c	\
 	RANAP_CNMBMSLinkingInformation.c	\
 	RANAP_JoinedMBMSBearerService-IEs.c	\
+	RANAP_JoinedMBMSBearerService-IEs-Value.c	\
 	RANAP_RAB-SetupItem-RelocReqAck.c	\
 	RANAP_RAB-FailedItem.c	\
 	RANAP_RAB-ContextItem.c	\
@@ -563,6 +573,7 @@ ASN_MODULE_SRC=	\
 	RANAP_RAB-SetupOrModifiedItem.c	\
 	RANAP_RAB-ReleasedItem.c	\
 	RANAP_DataVolumeList.c	\
+	RANAP_DataVolumeList-Value.c	\
 	RANAP_RAB-QueuedItem.c	\
 	RANAP_RAB-ReleaseFailedList.c	\
 	RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-List.c	\
@@ -577,7 +588,9 @@ ASN_MODULE_SRC=	\
 	RANAP_RAB-ModifyItem.c	\
 	RANAP_MBMSSynchronisationInformation.c	\
 	RANAP_LeftMBMSBearerService-IEs.c	\
-	RANAP_UnsuccessfulLinking-IEs.c
+	RANAP_LeftMBMSBearerService-IEs-Value.c	\
+	RANAP_UnsuccessfulLinking-IEs.c		\
+	RANAP_UnsuccessfulLinking-IEs-Value.c
 
 ASN_MODULE_INC=	\
 	RANAP_Criticality.h	\
@@ -618,6 +631,7 @@ ASN_MODULE_INC=	\
 	RANAP_Ass-RAB-Parameter-GuaranteedBitrateList.h	\
 	RANAP_Ass-RAB-Parameter-MaxBitrateList.h	\
 	RANAP_AuthorisedPLMNs.h	\
+	RANAP_AuthorisedPLMNs-Value.h	\
 	RANAP_AuthorisedSNAs.h	\
 	RANAP_BindingID.h	\
 	RANAP_BroadcastAssistanceDataDecipheringKeys.h	\
@@ -640,7 +654,9 @@ ASN_MODULE_INC=	\
 	RANAP_ClientType.h	\
 	RANAP_CriticalityDiagnostics.h	\
 	RANAP_CriticalityDiagnostics-IE-List.h	\
+	RANAP_CriticalityDiagnostics-IE-List-Value.h	\
 	RANAP_MessageStructure.h	\
+	RANAP_MessageStructure-Value.h	\
 	RANAP_CGI.h	\
 	RANAP_ChosenEncryptionAlgorithm.h	\
 	RANAP_ChosenIntegrityProtectionAlgorithm.h	\
@@ -698,6 +714,7 @@ ASN_MODULE_INC=	\
 	RANAP_GA-PointWithUnCertainty.h	\
 	RANAP_GA-PointWithUnCertaintyEllipse.h	\
 	RANAP_GA-Polygon.h	\
+	RANAP_GA-Polygon-Value.h	\
 	RANAP_GA-UncertaintyEllipse.h	\
 	RANAP_GERAN-BSC-Container.h	\
 	RANAP_GERAN-Cell-ID.h	\
@@ -733,6 +750,7 @@ ASN_MODULE_INC=	\
 	RANAP_IuTransportAssociation.h	\
 	RANAP_KeyStatus.h	\
 	RANAP_LA-LIST.h	\
+	RANAP_LA-LIST-Value.h	\
 	RANAP_LAC.h	\
 	RANAP_LAI.h	\
 	RANAP_LastKnownServiceArea.h	\
@@ -818,6 +836,7 @@ ASN_MODULE_INC=	\
 	RANAP_LoggingDuration.h	\
 	RANAP_PLMNidentity.h	\
 	RANAP_PLMNs-in-shared-network.h	\
+	RANAP_PLMNs-in-shared-network-Value.h	\
 	RANAP_Port-Number.h	\
 	RANAP_PositioningDataDiscriminator.h	\
 	RANAP_PositioningDataSet.h	\
@@ -836,6 +855,7 @@ ASN_MODULE_INC=	\
 	RANAP_RABased.h	\
 	RANAP_RAI-List.h	\
 	RANAP_RABDataVolumeReport.h	\
+	RANAP_RABDataVolumeReport-Value.h	\
 	RANAP_RAB-ID.h	\
 	RANAP_RAB-Parameter-ExtendedGuaranteedBitrateList.h	\
 	RANAP_RAB-Parameter-ExtendedMaxBitrateList.h	\
@@ -843,6 +863,7 @@ ASN_MODULE_INC=	\
 	RANAP_RAB-Parameter-MaxBitrateList.h	\
 	RANAP_RAB-Parameters.h	\
 	RANAP_RABParametersList.h	\
+	RANAP_RABParametersList-Value.h	\
 	RANAP_RAB-SubflowCombinationBitRate.h	\
 	RANAP_RAB-TrCH-Mapping.h	\
 	RANAP_RAB-TrCH-MappingItem.h	\
@@ -916,6 +937,7 @@ ASN_MODULE_INC=	\
 	RANAP_RSRQ-Type.h	\
 	RANAP_RSRQ-Extension.h	\
 	RANAP_EUTRANFrequencies.h	\
+	RANAP_EUTRANFrequencies-Value.h	\
 	RANAP_MeasBand.h	\
 	RANAP_SubscriberProfileIDforRFP.h	\
 	RANAP_SourceStatisticsDescriptor.h	\
@@ -1125,6 +1147,7 @@ ASN_MODULE_INC=	\
 	RANAP_UserPlaneInformation.h	\
 	RANAP_CNMBMSLinkingInformation.h	\
 	RANAP_JoinedMBMSBearerService-IEs.h	\
+	RANAP_JoinedMBMSBearerService-IEs-Value.h	\
 	RANAP_RAB-SetupItem-RelocReqAck.h	\
 	RANAP_RAB-FailedItem.h	\
 	RANAP_RAB-ContextItem.h	\
@@ -1144,6 +1167,7 @@ ASN_MODULE_INC=	\
 	RANAP_RAB-SetupOrModifiedItem.h	\
 	RANAP_RAB-ReleasedItem.h	\
 	RANAP_DataVolumeList.h	\
+	RANAP_DataVolumeList-Value.h	\
 	RANAP_RAB-QueuedItem.h	\
 	RANAP_RAB-ReleaseFailedList.h	\
 	RANAP_GERAN-Iumode-RAB-Failed-RABAssgntResponse-List.h	\
@@ -1158,7 +1182,9 @@ ASN_MODULE_INC=	\
 	RANAP_RAB-ModifyItem.h	\
 	RANAP_MBMSSynchronisationInformation.h	\
 	RANAP_LeftMBMSBearerService-IEs.h	\
-	RANAP_UnsuccessfulLinking-IEs.h
+	RANAP_LeftMBMSBearerService-IEs-Value.h	\
+	RANAP_UnsuccessfulLinking-IEs.h		\
+	RANAP_UnsuccessfulLinking-IEs-Value.h
 
 AM_CFLAGS = -I$(top_srcdir)/include $(ASN1C_CFLAGS) $(OSMOCORE_CFLAGS)
 

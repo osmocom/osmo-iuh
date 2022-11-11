@@ -20,6 +20,7 @@ hnbap_HEADERS = \
 	HNBAP_Context-ID.h \
 	HNBAP_CriticalityDiagnostics.h \
 	HNBAP_CriticalityDiagnostics-IE-List.h \
+	HNBAP_CriticalityDiagnostics-IE-List-Value.h \
 	HNBAP_Criticality.h \
 	HNBAP_CSG-Capability.h \
 	HNBAP_CSG-ID.h \

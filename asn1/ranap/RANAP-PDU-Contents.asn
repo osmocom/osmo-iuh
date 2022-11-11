@@ -780,7 +780,8 @@ CNMBMSLinkingInformation-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
 	...
 }
 
-JoinedMBMSBearerService-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF
+JoinedMBMSBearerService-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF JoinedMBMSBearerService-IEs-Value
+JoinedMBMSBearerService-IEs-Value ::=
 	SEQUENCE {
 		tMGI			TMGI,
 		mBMS-PTP-RAB-ID		MBMS-PTP-RAB-ID,
@@ -2301,7 +2302,8 @@ RAB-ReleasedItem-ExtIEs RANAP-PROTOCOL-EXTENSION ::= {
 	...
 }
 
-DataVolumeList ::= SEQUENCE (SIZE (1..maxNrOfVol)) OF
+DataVolumeList ::= SEQUENCE (SIZE (1..maxNrOfVol)) OF DataVolumeList-Value
+DataVolumeList-Value ::=
 	SEQUENCE {
 		dl-UnsuccessfullyTransmittedDataVolume	UnsuccessfullyTransmittedDataVolume,
 		dataVolumeReference			DataVolumeReference	OPTIONAL,
@@ -3210,7 +3212,8 @@ MBMSUELinkingRequestIEs RANAP-PROTOCOL-IES ::= {
 	...
 }
 
-LeftMBMSBearerService-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF
+LeftMBMSBearerService-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF LeftMBMSBearerService-IEs-Value
+LeftMBMSBearerService-IEs-Value ::=
 	SEQUENCE {
 		tMGI		TMGI,
 		iE-Extensions	ProtocolExtensionContainer { {LeftMBMSBearerService-ExtIEs} } OPTIONAL,
@@ -3243,7 +3246,8 @@ MBMSUELinkingResponseIEs RANAP-PROTOCOL-IES ::= {
 	...
 }
 
-UnsuccessfulLinking-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF
+UnsuccessfulLinking-IEs ::= SEQUENCE (SIZE (1.. maxnoofMulticastServicesPerUE)) OF UnsuccessfulLinking-IEs-Value
+UnsuccessfulLinking-IEs-Value ::=
 	SEQUENCE {
 		tMGI		TMGI,
 		cause		Cause,

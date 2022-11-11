@@ -12,10 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
+#include <osmocom/ranap/RANAP_LeftMBMSBearerService-IEs-Value.h>
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/ranap/RANAP_TMGI.h>
-#include <osmocom/ranap/RANAP_ProtocolExtensionContainer.h>
-#include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 
 #ifdef __cplusplus
@@ -24,17 +22,7 @@ extern "C" {
 
 /* RANAP_LeftMBMSBearerService-IEs */
 typedef struct RANAP_LeftMBMSBearerService_IEs {
-	A_SEQUENCE_OF(struct RANAP_LeftMBMSBearerService_IEs__Member {
-		RANAP_TMGI_t	 tMGI;
-		RANAP_ProtocolExtensionContainer_t	*iE_Extensions	/* OPTIONAL */;
-		/*
-		 * This type is extensible,
-		 * possible extensions are below.
-		 */
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SEQUENCE_OF(RANAP_LeftMBMSBearerService_IEs_Value_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

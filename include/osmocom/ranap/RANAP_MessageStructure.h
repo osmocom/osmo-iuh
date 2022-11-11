@@ -12,11 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
+#include <osmocom/ranap/RANAP_MessageStructure-Value.h>
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/ranap/RANAP_ProtocolIE-ID.h>
-#include <osmocom/ranap/RANAP_RepetitionNumber1.h>
-#include <osmocom/ranap/RANAP_IE-Extensions.h>
-#include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 
 #ifdef __cplusplus
@@ -25,18 +22,7 @@ extern "C" {
 
 /* RANAP_MessageStructure */
 typedef struct RANAP_MessageStructure {
-	A_SEQUENCE_OF(struct RANAP_MessageStructure__Member {
-		RANAP_ProtocolIE_ID_t	 iE_ID;
-		RANAP_RepetitionNumber1_t	*repetitionNumber	/* OPTIONAL */;
-		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;
-		/*
-		 * This type is extensible,
-		 * possible extensions are below.
-		 */
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SEQUENCE_OF(RANAP_MessageStructure_Value_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

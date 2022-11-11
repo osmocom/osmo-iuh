@@ -12,11 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
+#include <osmocom/ranap/RANAP_EUTRANFrequencies-Value.h>
 #include <asn_SEQUENCE_OF.h>
-#include <NativeInteger.h>
-#include <osmocom/ranap/RANAP_MeasBand.h>
-#include <osmocom/ranap/RANAP_IE-Extensions.h>
-#include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 
 #ifdef __cplusplus
@@ -25,14 +22,7 @@ extern "C" {
 
 /* RANAP_EUTRANFrequencies */
 typedef struct RANAP_EUTRANFrequencies {
-	A_SEQUENCE_OF(struct RANAP_EUTRANFrequencies__Member {
-		long	 earfcn;
-		RANAP_MeasBand_t	*measBand	/* OPTIONAL */;
-		RANAP_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SEQUENCE_OF(RANAP_EUTRANFrequencies_Value_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

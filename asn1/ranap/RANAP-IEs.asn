@@ -265,7 +265,8 @@ Ass-RAB-Parameter-GuaranteedBitrateList	::= SEQUENCE (SIZE (1..maxNrOfSeparateTr
 
 Ass-RAB-Parameter-MaxBitrateList ::= SEQUENCE (SIZE (1..maxNrOfSeparateTrafficDirections)) OF MaxBitrate
 
-AuthorisedPLMNs ::= SEQUENCE (SIZE (1..maxNrOfPLMNsSN)) OF
+AuthorisedPLMNs ::= SEQUENCE (SIZE (1..maxNrOfPLMNsSN)) OF AuthorisedPLMNs-Value
+AuthorisedPLMNs-Value ::=
 	SEQUENCE {
 		pLMNidentity		PLMNidentity,
 		authorisedSNAsList	AuthorisedSNAs		OPTIONAL,
@@ -479,7 +480,8 @@ CriticalityDiagnostics ::= SEQUENCE {
 	...
 }
 
-CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF
+CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF CriticalityDiagnostics-IE-List-Value
+CriticalityDiagnostics-IE-List-Value ::=
 	SEQUENCE {
 		iECriticality		Criticality,
 		iE-ID			ProtocolIE-ID,
@@ -488,7 +490,8 @@ CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE (1..maxNrOfErrors)) OF
 		...
 	}
 
-MessageStructure ::= SEQUENCE (SIZE (1..maxNrOfLevels)) OF
+MessageStructure ::= SEQUENCE (SIZE (1..maxNrOfLevels)) OF MessageStructure-Value
+MessageStructure-Value ::=
 	SEQUENCE {
 		iE-ID			ProtocolIE-ID,
 		repetitionNumber	RepetitionNumber1		OPTIONAL,
@@ -753,7 +756,8 @@ GA-PointWithUnCertaintyEllipse ::= SEQUENCE {
 	...
 }
 
-GA-Polygon ::= SEQUENCE (SIZE (1..maxNrOfPoints)) OF
+GA-Polygon ::= SEQUENCE (SIZE (1..maxNrOfPoints)) OF GA-Polygon-Value
+GA-Polygon-Value ::=
 	SEQUENCE {
 		geographicalCoordinates	GeographicalCoordinates,
 		iE-Extensions		IE-Extensions			OPTIONAL,
@@ -923,7 +927,8 @@ KeyStatus	::= ENUMERATED {
 }
 -- L
 
-LA-LIST ::= SEQUENCE (SIZE (1..maxNrOfLAs)) OF
+LA-LIST ::= SEQUENCE (SIZE (1..maxNrOfLAs)) OF LA-LIST-Value
+LA-LIST-Value ::=
 	SEQUENCE {
 		lAC			LAC,
 		listOF-SNAs		ListOF-SNAs,
@@ -1336,7 +1341,8 @@ LoggingDuration	::=	ENUMERATED {
 
 PLMNidentity 				::= OCTET STRING (SIZE (3))
 
-PLMNs-in-shared-network ::= SEQUENCE (SIZE (1..maxNrOfPLMNsSN)) OF
+PLMNs-in-shared-network ::= SEQUENCE (SIZE (1..maxNrOfPLMNsSN)) OF PLMNs-in-shared-network-Value
+PLMNs-in-shared-network-Value ::=
 	SEQUENCE {
 		pLMNidentity	PLMNidentity,
 		lA-LIST		LA-LIST,
@@ -1414,7 +1420,8 @@ RABased	::= SEQUENCE {
 RAI-List	::= SEQUENCE (SIZE (1..maxNrOfRAIs)) OF
 	RAI
 
-RABDataVolumeReport ::= SEQUENCE (SIZE (1..maxNrOfVol)) OF
+RABDataVolumeReport ::= SEQUENCE (SIZE (1..maxNrOfVol)) OF RABDataVolumeReport-Value
+RABDataVolumeReport-Value ::=
 	SEQUENCE {
 		dl-UnsuccessfullyTransmittedDataVolume	UnsuccessfullyTransmittedDataVolume,
 		dataVolumeReference			DataVolumeReference	OPTIONAL,
@@ -1456,7 +1463,8 @@ RAB-Parameters ::= SEQUENCE {
 	...
 }
 
-RABParametersList	::=	SEQUENCE (SIZE (1.. maxNrOfRABs)) OF SEQUENCE	{
+RABParametersList	::=	SEQUENCE (SIZE (1.. maxNrOfRABs)) OF RABParametersList-Value
+RABParametersList-Value ::= SEQUENCE {
 	rab-Id			RAB-ID,
 	cn-domain		CN-DomainIndicator,
 	rabDataVolumeReport	RABDataVolumeReport	OPTIONAL,
@@ -1848,7 +1856,8 @@ RSRQ-Type ::= SEQUENCE {
 
 RSRQ-Extension ::= INTEGER (-30..46, ...)
 
-EUTRANFrequencies ::= SEQUENCE (SIZE (1..maxNrOfEUTRAFreqs)) OF SEQUENCE {
+EUTRANFrequencies ::= SEQUENCE (SIZE (1..maxNrOfEUTRAFreqs)) OF EUTRANFrequencies-Value
+EUTRANFrequencies-Value ::= SEQUENCE {
 	earfcn			INTEGER (0..65535),
 	measBand		MeasBand			OPTIONAL,
 	iE-Extensions		IE-Extensions OPTIONAL}

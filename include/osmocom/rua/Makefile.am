@@ -12,6 +12,7 @@ rua_HEADERS = \
 	RUA_Context-ID.h \
 	RUA_CriticalityDiagnostics.h \
 	RUA_CriticalityDiagnostics-IE-List.h \
+	RUA_CriticalityDiagnostics-IE-List-Value.h \
 	RUA_Criticality.h \
 	RUA_CSGMembershipStatus.h \
 	RUA_DirectTransfer.h \

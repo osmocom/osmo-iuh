@@ -27,7 +27,9 @@ sabp_HEADERS = \
 	SABP_Cause.h	\
 	SABP_Criticality-Diagnostics.h	\
 	SABP_CriticalityDiagnostics-IE-List.h	\
+	SABP_CriticalityDiagnostics-IE-List-Value.h	\
 	SABP_MessageStructure.h	\
+	SABP_MessageStructure-Value.h	\
 	SABP_Data-Coding-Scheme.h	\
 	SABP_Failure-List.h	\
 	SABP_Failure-List-Item.h	\

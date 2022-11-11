@@ -21,6 +21,7 @@ ASN_MODULE_SOURCES=	\
 	HNBAP_Context-ID.c	\
 	HNBAP_CriticalityDiagnostics.c	\
 	HNBAP_CriticalityDiagnostics-IE-List.c	\
+	HNBAP_CriticalityDiagnostics-IE-List-Value.c	\
 	HNBAP_CSG-ID.c	\
 	HNBAP_CSG-Capability.c	\
 	HNBAP_CSGMembershipStatus.c	\
@@ -138,6 +139,7 @@ ASN_MODULE_INC=	\
 	HNBAP_Context-ID.h	\
 	HNBAP_CriticalityDiagnostics.h	\
 	HNBAP_CriticalityDiagnostics-IE-List.h	\
+	HNBAP_CriticalityDiagnostics-IE-List-Value.h	\
 	HNBAP_CSG-ID.h	\
 	HNBAP_CSG-Capability.h	\
 	HNBAP_CSGMembershipStatus.h	\

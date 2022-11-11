@@ -12,12 +12,8 @@
 #include <asn_application.h>
 
 /* Including external dependencies */
+#include <osmocom/rua/RUA_CriticalityDiagnostics-IE-List-Value.h>
 #include <asn_SEQUENCE_OF.h>
-#include <osmocom/rua/RUA_Criticality.h>
-#include <osmocom/rua/RUA_ProtocolIE-ID.h>
-#include <osmocom/rua/RUA_TypeOfError.h>
-#include <osmocom/rua/RUA_IE-Extensions.h>
-#include <constr_SEQUENCE.h>
 #include <constr_SEQUENCE_OF.h>
 
 #ifdef __cplusplus
@@ -26,19 +22,7 @@ extern "C" {
 
 /* RUA_CriticalityDiagnostics-IE-List */
 typedef struct RUA_CriticalityDiagnostics_IE_List {
-	A_SEQUENCE_OF(struct RUA_CriticalityDiagnostics_IE_List__Member {
-		RUA_Criticality_t	 iECriticality;
-		RUA_ProtocolIE_ID_t	 iE_ID;
-		RUA_TypeOfError_t	 typeOfError;
-		RUA_IE_Extensions_t	*iE_Extensions	/* OPTIONAL */;
-		/*
-		 * This type is extensible,
-		 * possible extensions are below.
-		 */
-		
-		/* Context for parsing across buffer boundaries */
-		asn_struct_ctx_t _asn_ctx;
-	} ) list;
+	A_SEQUENCE_OF(RUA_CriticalityDiagnostics_IE_List_Value_t) list;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
