@@ -79,6 +79,29 @@ def usage():
     print("-p [pfx]  Prefix all types with given prefix")
     print("-h        Print this help and return")
 
+def getUniqueIENameForDefine(ies, ie):
+    """ Usually the type of the IE is used for defines. However a struct may
+        use the same type multiple times, in that case we use the actual name
+        of the field. """
+    unique = True
+
+    for ie_other in ies:
+        if ie_other == ie:
+            continue
+        if ie_other[2] == ie[2]:
+            unique = False
+        assert ie[0] != ie_other[0], "failed to find a unique name for" \
+                    f" IE {ie}. Found another entry in ies {ie_other}" \
+                    " that has the same ie[0] value."
+
+    if unique:
+        ret = ie[2]
+    else:
+        ret = ie[0]
+
+    ret = re.sub('-', '_', ret.upper())
+    return ret
+
 try:
     opts, args = getopt.getopt(sys.argv[1:], "df:ho:p:", ["debug", "file", "help", "outdir", "prefix"])
 except getopt.GetoptError as err:
@@ -167,7 +190,7 @@ for key in iesDefs:
 
     # Presence mask
     for ie in iesDefs[key]["ies"]:
-        ieupperunderscore = re.sub('-', '_', ie[2].upper())
+        ieupperunderscore = getUniqueIENameForDefine(iesDefs[key]["ies"], ie)
         if ie[3] == "optional" or ie[3] == "conditional":
             f.write("#define {0:<{pad}} {1}\n".format("%s_%s%s_PRESENT" % (keyupperunderscore, prefix, ieupperunderscore), "(1 << %d)" % shift,
             pad=iesDefs[key]["length"] + len(keyupperunderscore) + 9))
@@ -328,7 +351,7 @@ for key in iesDefs:
         ienameunderscorefirstlower = lowerFirstCamelWord(ienameunderscore)
         ietypesubst = prefix + re.sub('-', '', ie[2])
         ietypeunderscore = prefix + re.sub('-', '_', ie[2])
-        ieupperunderscore = prefix + re.sub('-', '_', ie[2]).upper()
+        ieupperunderscore = prefix + getUniqueIENameForDefine(iesDefs[key]["ies"], ie)
         if ie[3] == "optional":
             f.write("            /* Optional field */\n")
         elif ie[3] == "conditional":
@@ -377,7 +400,7 @@ for key in iesDefs:
 
     for ie in iesDefs[key]["ies"]:
         ietypeunderscore = prefix + re.sub('-', '_', ie[2])
-        ieupperunderscore = prefix + re.sub('-', '_', ie[2]).upper()
+        ieupperunderscore = prefix + getUniqueIENameForDefine(iesDefs[key]["ies"], ie)
         if ie[3] != "mandatory":
             if ie[3] == "optional":
                 f.write("    /* Optional field */\n")
@@ -471,7 +494,7 @@ for key in iesDefs:
         iename = re.sub('-', '_', re.sub('id-', '', ie[0]))
         ienameunderscore = prefix + re.sub('-', '_', iename)
         ienamefirstwordlower = lowerFirstCamelWord(iename)
-        ieupperunderscore = prefix + re.sub('-', '_', ie[2]).upper()
+        ieupperunderscore = prefix + getUniqueIENameForDefine(iesDefs[key]["ies"], ie)
         ietypeunderscore = prefix + re.sub('-', '_', ie[2])
         if ie[3] != "mandatory":
             if ie[3] == "optional":

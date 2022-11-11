@@ -8,3 +8,4 @@
 # If any interfaces have been removed or changed since the last public release: c:r:0.
 #library	what		description / commit summary line
 libosmo-ranap	API/ABI change	deprecate ranap_cn_rx_{cl,co}_decode, use ranap_cn_rx_{cl,co}_decode2 instead
+all		API change	rename duplicate generated defines from asn1tostruct
