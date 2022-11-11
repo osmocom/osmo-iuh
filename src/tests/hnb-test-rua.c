@@ -1,5 +1,6 @@
 
 #include <asn1c/ANY.h>
+#include <osmocom/ranap/ranap_common_cn.h>
 #include <osmocom/rua/rua_ies_defs.h>
 
 #include "hnb-test-layers.h"
