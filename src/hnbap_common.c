@@ -103,6 +103,9 @@ char *hnbap_cause_str(HNBAP_Cause_t *cause)
 			get_value_string(hnbap_cause_misc_vals,
 					cause->choice.misc));
 		break;
+	case HNBAP_Cause_PR_NOTHING:
+		snprintf(buf, sizeof(buf), "NOTHING");
+		break;
 	}
 	return buf;
 }
