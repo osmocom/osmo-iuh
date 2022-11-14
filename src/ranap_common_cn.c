@@ -310,7 +310,7 @@ int ranap_cn_rx_co_decode(void *unused, ranap_message *message, uint8_t *data, s
 
 /* receive a connection-oriented RANAP message and call
  * cn_ranap_handle_co() with the resulting ranap_message struct */
-int ranap_cn_rx_co(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
+int ranap_cn_rx_co(ranap_handle_cb cb, void *priv, uint8_t *data, size_t len)
 {
 	ranap_message message;
 	int rc;
@@ -318,7 +318,7 @@ int ranap_cn_rx_co(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 	rc = ranap_cn_rx_co_decode2(&message, data, len);
 
 	if (rc == 0)
-		(*cb)(ctx, &message);
+		(*cb)(priv, &message);
 	else
 		LOGP(DRANAP, LOGL_ERROR, "Not calling cn_ranap_handle_co() due to rc=%d\n", rc);
 
@@ -556,7 +556,7 @@ int ranap_cn_rx_cl_decode(void *unused, ranap_message *message, uint8_t *data, s
 
 /* receive a connection-less RANAP message and call
  * cn_ranap_handle_co() with the resulting ranap_message struct */
-int ranap_cn_rx_cl(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
+int ranap_cn_rx_cl(ranap_handle_cb cb, void *priv, uint8_t *data, size_t len)
 {
 	ranap_message message;
 	int rc;
@@ -564,7 +564,7 @@ int ranap_cn_rx_cl(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 	rc = ranap_cn_rx_cl_decode2(&message, data, len);
 
 	if (rc == 0)
-		(*cb)(ctx, &message);
+		(*cb)(priv, &message);
 	else
 		LOGP(DRANAP, LOGL_ERROR, "Not calling cn_ranap_handle_cl() due to rc=%d\n", rc);
 

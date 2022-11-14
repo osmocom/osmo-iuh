@@ -597,7 +597,7 @@ extern int _ranap_DRANAP;
 #define RANAP_DEBUG(x, args ...) DEBUGP(_ranap_DRANAP, x, ## args)
 
 /* Callback to be used with decoder functions in ranap_common_cn.c  ranap_common_ran.c */
-typedef void (*ranap_handle_cb)(void *ctx, ranap_message *ranap_msg);
+typedef void (*ranap_handle_cb)(void *priv, ranap_message *ranap_msg);
 
 extern int asn1_xer_print;
 
