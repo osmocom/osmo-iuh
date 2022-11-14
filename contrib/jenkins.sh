@@ -26,9 +26,9 @@ osmo-build-dep.sh libasn1c
 # the asn1c binary is used by the 'regen' target below
 osmo-build-dep.sh asn1c aper-prefix
 
-CONFIG=""
+CONFIG="--enable-werror"
 if [ "$WITH_MANUALS" = "1" ]; then
-	CONFIG="--enable-manuals"
+	CONFIG=" --enable-manuals"
 fi
 
 set +x
