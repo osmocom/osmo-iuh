@@ -31,8 +31,7 @@
 
 #define DRANAP _ranap_DRANAP
 
-static int cn_ranap_rx_initiating_msg_co(void *ctx, RANAP_InitiatingMessage_t *imsg,
-					 ranap_message *message)
+static int cn_ranap_rx_initiating_msg_co(RANAP_InitiatingMessage_t *imsg, ranap_message *message)
 {
 	int rc = 0;
 
@@ -125,8 +124,7 @@ static void cn_ranap_free_initiating_msg_co(ranap_message *message)
 	}
 }
 
-static int cn_ranap_rx_successful_msg_co(void *ctx, RANAP_SuccessfulOutcome_t *imsg,
-					 ranap_message *message)
+static int cn_ranap_rx_successful_msg_co(RANAP_SuccessfulOutcome_t *imsg, ranap_message *message)
 {
 	int rc = 0;
 
@@ -183,8 +181,7 @@ static void cn_ranap_free_successful_msg_co(ranap_message *message)
 	}
 }
 
-static int cn_ranap_rx_outcome_msg_co(void *ctx, RANAP_Outcome_t *imsg,
-					ranap_message *message)
+static int cn_ranap_rx_outcome_msg_co(RANAP_Outcome_t *imsg, ranap_message *message)
 {
 	int rc = 0;
 
@@ -225,16 +222,16 @@ static void cn_ranap_free_outcome_msg_co(ranap_message *message)
 	}
 }
 
-static int _cn_ranap_rx_co(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *message)
+static int _cn_ranap_rx_co(RANAP_RANAP_PDU_t *pdu, ranap_message *message)
 {
 	int rc = 0;
 
 	switch (pdu->present) {
 	case RANAP_RANAP_PDU_PR_initiatingMessage:
-		rc = cn_ranap_rx_initiating_msg_co(ctx, &pdu->choice.initiatingMessage, message);
+		rc = cn_ranap_rx_initiating_msg_co(&pdu->choice.initiatingMessage, message);
 		break;
 	case RANAP_RANAP_PDU_PR_successfulOutcome:
-		rc = cn_ranap_rx_successful_msg_co(ctx, &pdu->choice.successfulOutcome, message);
+		rc = cn_ranap_rx_successful_msg_co(&pdu->choice.successfulOutcome, message);
 		break;
 	case RANAP_RANAP_PDU_PR_unsuccessfulOutcome:
 		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
@@ -244,7 +241,7 @@ static int _cn_ranap_rx_co(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *mes
 		rc = -1;
 		break;
 	case RANAP_RANAP_PDU_PR_outcome:
-		rc = cn_ranap_rx_outcome_msg_co(ctx, &pdu->choice.outcome, message);
+		rc = cn_ranap_rx_outcome_msg_co(&pdu->choice.outcome, message);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_INFO,
@@ -283,7 +280,7 @@ void ranap_cn_rx_co_free(ranap_message *message)
 }
 
 /* decode a connection-oriented RANAP message */
-int ranap_cn_rx_co_decode(void *ctx, ranap_message *message, uint8_t *data, size_t len)
+int ranap_cn_rx_co_decode2(ranap_message *message, uint8_t *data, size_t len)
 {
 	RANAP_RANAP_PDU_t *pdu = NULL;
 	asn_dec_rval_t dec_ret;
@@ -299,11 +296,16 @@ int ranap_cn_rx_co_decode(void *ctx, ranap_message *message, uint8_t *data, size
 
 	message->direction = pdu->present;
 
-	rc = _cn_ranap_rx_co(ctx, pdu, message);
+	rc = _cn_ranap_rx_co(pdu, message);
 
 	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
 
 	return rc;
+}
+
+int ranap_cn_rx_co_decode(void *unused, ranap_message *message, uint8_t *data, size_t len)
+{
+	return ranap_cn_rx_co_decode2(message, data, len);
 }
 
 /* receive a connection-oriented RANAP message and call
@@ -313,7 +315,7 @@ int ranap_cn_rx_co(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 	ranap_message message;
 	int rc;
 
-	rc = ranap_cn_rx_co_decode(ctx, &message, data, len);
+	rc = ranap_cn_rx_co_decode2(&message, data, len);
 
 	if (rc == 0)
 		(*cb)(ctx, &message);
@@ -326,8 +328,7 @@ int ranap_cn_rx_co(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 	return rc;
 }
 
-static int cn_ranap_rx_initiating_msg_cl(void *ctx, RANAP_InitiatingMessage_t *imsg,
-					 ranap_message *message)
+static int cn_ranap_rx_initiating_msg_cl(RANAP_InitiatingMessage_t *imsg, ranap_message *message)
 {
 	int rc = 0;
 
@@ -412,8 +413,7 @@ static void cn_ranap_free_initiating_msg_cl(ranap_message *message)
 	}
 }
 
-static int cn_ranap_rx_successful_msg_cl(void *ctx, RANAP_SuccessfulOutcome_t *imsg,
-					 ranap_message *message)
+static int cn_ranap_rx_successful_msg_cl(RANAP_SuccessfulOutcome_t *imsg, ranap_message *message)
 {
 	int rc = 0;
 
@@ -475,7 +475,7 @@ static void cn_ranap_free_successful_msg_cl(ranap_message *message)
 	}
 }
 
-static int _cn_ranap_rx_cl(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *message)
+static int _cn_ranap_rx_cl(RANAP_RANAP_PDU_t *pdu, ranap_message *message)
 {
 	int rc = 0;
 
@@ -483,12 +483,10 @@ static int _cn_ranap_rx_cl(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *mes
 
 	switch (pdu->present) {
 	case RANAP_RANAP_PDU_PR_initiatingMessage:
-		rc = cn_ranap_rx_initiating_msg_cl(ctx, &pdu->choice.initiatingMessage,
-						   message);
+		rc = cn_ranap_rx_initiating_msg_cl(&pdu->choice.initiatingMessage, message);
 		break;
 	case RANAP_RANAP_PDU_PR_successfulOutcome:
-		rc = cn_ranap_rx_successful_msg_cl(ctx, &pdu->choice.successfulOutcome,
-						   message);
+		rc = cn_ranap_rx_successful_msg_cl(&pdu->choice.successfulOutcome, message);
 		break;
 	case RANAP_RANAP_PDU_PR_unsuccessfulOutcome:
 		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
@@ -528,7 +526,7 @@ void ranap_cn_rx_cl_free(ranap_message *message)
 }
 
 /* decode a connection-less RANAP message */
-int ranap_cn_rx_cl_decode(void *ctx, ranap_message *message, uint8_t *data, size_t len)
+int ranap_cn_rx_cl_decode2(ranap_message *message, uint8_t *data, size_t len)
 {
 	RANAP_RANAP_PDU_t *pdu = NULL;
 	asn_dec_rval_t dec_ret;
@@ -544,11 +542,16 @@ int ranap_cn_rx_cl_decode(void *ctx, ranap_message *message, uint8_t *data, size
 
 	message->direction = pdu->present;
 
-	rc = _cn_ranap_rx_cl(ctx, pdu, message);
+	rc = _cn_ranap_rx_cl(pdu, message);
 
 	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
 
 	return rc;
+}
+
+int ranap_cn_rx_cl_decode(void *unused, ranap_message *message, uint8_t *data, size_t len)
+{
+	return ranap_cn_rx_cl_decode2(message, data, len);
 }
 
 /* receive a connection-less RANAP message and call
@@ -558,7 +561,7 @@ int ranap_cn_rx_cl(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 	ranap_message message;
 	int rc;
 
-	rc = ranap_cn_rx_cl_decode(ctx, &message, data, len);
+	rc = ranap_cn_rx_cl_decode2(&message, data, len);
 
 	if (rc == 0)
 		(*cb)(ctx, &message);
