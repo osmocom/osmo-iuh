@@ -91,8 +91,8 @@ def getUniqueIENameForDefine(ies, ie):
         if ie_other[2] == ie[2]:
             unique = False
         assert ie[0] != ie_other[0], "failed to find a unique name for" \
-                    f" IE {ie}. Found another entry in ies {ie_other}" \
-                    " that has the same ie[0] value."
+                    " IE {}. Found another entry in ies {}" \
+                    " that has the same ie[0] value.".format(ie, ie_other)
 
     if unique:
         ret = ie[2]
