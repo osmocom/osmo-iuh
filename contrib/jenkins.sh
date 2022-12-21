@@ -28,7 +28,7 @@ osmo-build-dep.sh asn1c aper-prefix
 
 CONFIG="--enable-werror"
 if [ "$WITH_MANUALS" = "1" ]; then
-	CONFIG=" --enable-manuals"
+	CONFIG="$CONFIG --enable-manuals"
 fi
 
 set +x
