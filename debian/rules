@@ -11,7 +11,7 @@ VERSION := $(shell echo '$(DEBVERS)' | sed -e 's/[+-].*//' -e 's/~//g')
 # See https://www.debian.org/doc/manuals/developers-reference/best-pkging-practices.html#bpp-dbg
 override_dh_strip:
 	dh_strip -plibosmo-hnbap0 --dbg-package=libosmo-hnbap-dbg
-	dh_strip -plibosmo-ranap5 --dbg-package=libosmo-ranap-dbg
+	dh_strip -plibosmo-ranap7 --dbg-package=libosmo-ranap-dbg
 	dh_strip -plibosmo-rua0 --dbg-package=libosmo-rua-dbg
 	dh_strip -plibosmo-sabp1 --dbg-package=libosmo-sabp-dbg
 

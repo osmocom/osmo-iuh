@@ -61,10 +61,10 @@ AM_CFLAGS = -Wall -I$(top_srcdir)/include -I$(top_builddir)/include \
 
 # build the shared RANAP + SABP library
 #
-HNBAP_LIBVERSION=0:0:0
-RANAP_LIBVERSION=6:0:1
-RUA_LIBVERSION=0:0:0
-SABP_LIBVERSION=1:0:0
+HNBAP_LIBVERSION=1:0:1
+RANAP_LIBVERSION=7:0:0
+RUA_LIBVERSION=1:0:1
+SABP_LIBVERSION=2:0:1
 lib_LTLIBRARIES = libosmo-hnbap.la libosmo-ranap.la libosmo-rua.la libosmo-sabp.la
 libosmo_hnbap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(HNBAP_LIBVERSION) -no-undefined
 libosmo_hnbap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \

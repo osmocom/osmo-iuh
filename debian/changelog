@@ -1,3 +1,27 @@
+osmo-iuh (1.4.0) unstable; urgency=medium
+
+  [ Vadim Yanitskiy ]
+  * libosmo-rua: fix copy-pasted -version-info: {HNBAP->RUA}_LIBVERSION
+  * libosmo-{hnbap,ranap,rua,sabp}: add -no-undefined to *_la_LDFLAGS
+
+  [ Oliver Smith ]
+  * move-asn1-header-files: error for wrong asn1c
+  * asn1: fix visibility warnings from generated code
+  * tests/hnb-test-rua: add missing include
+  * tests/test-hnbap: add missing include
+  * tests/test-ranap: fix missing (void **) cast
+  * ranap_common_cn: remove unused ctx args
+  * ranap_common_cn: rename ctx -> priv
+  * tests/hnb-test-rua: fix incompat pointer type
+  * test-hnbap: fix defined but not used error
+  * hnbap_common: hnbap_cause_str: handle nothing val
+  * asn1tostruct: fix defines getting redefined
+  * contrib/jenkins.sh: use --enable-werror
+  * asn1tostruct: don't use f-strings
+  * contrib/jenkins.sh: werror with WITH_MANUALS too
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 07 Feb 2023 16:39:24 +0100
+
 osmo-iuh (1.3.0) unstable; urgency=medium
 
   [ Philipp Maier ]
