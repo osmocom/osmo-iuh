@@ -71,7 +71,7 @@ static const struct log_info test_log_info = {
 };
 
 static void *tall_hnb_ctx;
-static void *msgb_ctx;
+void *msgb_ctx;
 
 int test_common_init(void)
 {

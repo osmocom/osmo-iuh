@@ -32,7 +32,7 @@
 
 #include "test_common.h"
 
-extern void *tall_msgb_ctx;
+extern void *msgb_ctx;
 
 static void test_aper_int(uint32_t inp)
 {
@@ -198,7 +198,7 @@ int main(int argc, char **argv)
 
 	printf("report\n");
 	talloc_report(talloc_asn1_ctx, stdout);
-	talloc_report(tall_msgb_ctx, stdout);
+	talloc_report(msgb_ctx, stdout);
 	//talloc_report(NULL, stdout);
 
 	test_common_cleanup();
