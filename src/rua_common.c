@@ -134,6 +134,7 @@ struct msgb *rua_generate_initiating_message(
 {
 	RUA_RUA_PDU_t pdu;
 	int rc;
+	struct msgb *msg;
 
 	memset(&pdu, 0, sizeof(pdu));
 
@@ -146,7 +147,9 @@ struct msgb *rua_generate_initiating_message(
 		return NULL;
 	}
 
-	return _rua_gen_msg(&pdu);
+	msg = _rua_gen_msg(&pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_RUA_PDU, &pdu);
+	return msg;
 }
 
 struct msgb *rua_generate_successful_outcome(
@@ -157,6 +160,7 @@ struct msgb *rua_generate_successful_outcome(
 {
 	RUA_RUA_PDU_t pdu;
 	int rc;
+	struct msgb *msg;
 
 	memset(&pdu, 0, sizeof(pdu));
 
@@ -169,7 +173,9 @@ struct msgb *rua_generate_successful_outcome(
 		return NULL;
 	}
 
-	return _rua_gen_msg(&pdu);
+	msg = _rua_gen_msg(&pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_RUA_PDU, &pdu);
+	return msg;
 }
 
 struct msgb *rua_generate_unsuccessful_outcome(
@@ -180,6 +186,7 @@ struct msgb *rua_generate_unsuccessful_outcome(
 {
 	RUA_RUA_PDU_t pdu;
 	int rc;
+	struct msgb *msg;
 
 	memset(&pdu, 0, sizeof(pdu));
 
@@ -192,7 +199,9 @@ struct msgb *rua_generate_unsuccessful_outcome(
 		return NULL;
 	}
 
-	return _rua_gen_msg(&pdu);
+	msg = _rua_gen_msg(&pdu);
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RUA_RUA_PDU, &pdu);
+	return msg;
 }
 
 RUA_IE_t *rua_new_ie(RUA_ProtocolIE_ID_t id,
