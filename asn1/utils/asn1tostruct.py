@@ -328,6 +328,7 @@ for key in iesDefs:
     f.write("    int i, decoded = 0;\n")
     if len(iesDefs[key]["ies"]) != 0:
         f.write("    int tempDecoded = 0;\n")
+    f.write("    int rc = -1;\n")
 
     f.write("    assert(any_p != NULL);\n")
     if len(iesDefs[key]["ies"]) != 0:
@@ -364,7 +365,7 @@ for key in iesDefs:
         f.write("                tempDecoded = ANY_to_type_aper(&ie_p->value, &asn_DEF_%s, (void**)&%s_p);\n" % (ietypeunderscore, lowerFirstCamelWord(ietypesubst)))
         f.write("                if (tempDecoded < 0) {\n")
         f.write("                    %s_DEBUG(\"Decoding of IE %s failed\\n\");\n" % (fileprefix.upper(), ienameunderscore))
-        f.write("                    return -1;\n")
+        f.write("                    goto free_and_return_rc;\n")
         f.write("                }\n")
         f.write("                decoded += tempDecoded;\n")
         f.write("                if (asn1_xer_print)\n")
@@ -379,11 +380,14 @@ for key in iesDefs:
         f.write("            } break;\n")
     f.write("            default:\n")
     f.write("                %s_DEBUG(\"Unknown protocol IE id (%%d) for message %s\\n\", (int)ie_p->id);\n" % (fileprefix.upper(), re.sub('-', '_', structName.lower())))
-    f.write("                return -1;\n")
+    f.write("                goto free_and_return_rc;\n")
     f.write("        }\n")
     f.write("    }\n")
+    f.write("    rc = decoded;\n")
+    f.write("\n")
+    f.write("free_and_return_rc:\n")
     f.write("    ASN_STRUCT_FREE(asn_DEF_%s, %s_p);\n" % (asn1cStruct, asn1cStructfirstlower))
-    f.write("    return decoded;\n")
+    f.write("    return rc;\n")
     f.write("}\n\n")
 
 for key in iesDefs:
