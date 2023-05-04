@@ -1,4 +1,4 @@
-SUBDIRS = hnbap rua ranap sabp tests
+SUBDIRS = hnbap rua ranap sabp
 
 # Build {hnbap,rua,ranap}_{encoder,decoder}.c using asn1tostruct
 ASN1_ROOT = $(top_srcdir)/asn1

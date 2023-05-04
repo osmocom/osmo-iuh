@@ -11,7 +11,7 @@ AM_INIT_AUTOMAKE([foreign dist-bzip2 no-dist-gzip 1.9 tar-ustar])
 dnl tar-ustar: some asn1 filenames surpass the 99 char limit of tar, so we need
 dnl to make tar allow longer filenames.
 
-AC_CONFIG_TESTDIR(src/tests)
+AC_CONFIG_TESTDIR(tests)
 
 CFLAGS="$CFLAGS -std=gnu11"
 
@@ -143,7 +143,7 @@ AC_OUTPUT(
 	src/ranap/Makefile
 	src/rua/Makefile
 	src/sabp/Makefile
-	src/tests/Makefile
+	tests/Makefile
 	Makefile
 	include/Makefile
 	include/osmocom/Makefile
