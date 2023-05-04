@@ -217,6 +217,8 @@ int ranap_new_transp_layer_addr(BIT_STRING_t *out, struct osmo_sockaddr *addr, b
 		buf = CALLOC(len, sizeof(uint8_t));
 		memcpy(buf, ip_addr, ip_len);
 	}
+	if (out->buf)
+		FREEMEM(out->buf);
 	out->buf = buf;
 	out->size = len;
 	out->bits_unused = 0;
