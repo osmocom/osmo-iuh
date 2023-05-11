@@ -43,6 +43,14 @@ static long *new_long(long in)
 struct msgb *ranap_new_msg_reset(RANAP_CN_DomainIndicator_t domain,
 				 const RANAP_Cause_t *cause)
 {
+	return ranap_new_msg_reset2(domain, cause, NULL);
+}
+
+/*! generate RANAP RESET message. Like ranap_new_msg_reset(), but allows passing a Global-RNC-ID. */
+struct msgb *ranap_new_msg_reset2(RANAP_CN_DomainIndicator_t domain,
+				  const RANAP_Cause_t *cause,
+				  RANAP_GlobalRNC_ID_t *rnc_id)
+{
 	RANAP_ResetIEs_t ies;
 	RANAP_Reset_t out;
 	struct msgb *msg;
@@ -52,6 +60,14 @@ struct msgb *ranap_new_msg_reset(RANAP_CN_DomainIndicator_t domain,
 	ies.cN_DomainIndicator = domain;
 	if (cause)
 		memcpy(&ies.cause, cause, sizeof(ies.cause));
+
+	if (rnc_id) {
+		ies.presenceMask = RESETIES_RANAP_GLOBALRNC_ID_PRESENT;
+		OCTET_STRING_noalloc(&ies.globalRNC_ID.pLMNidentity,
+				     rnc_id->pLMNidentity.buf,
+				     rnc_id->pLMNidentity.size);
+		ies.globalRNC_ID.rNC_ID = rnc_id->rNC_ID;
+	}
 
 	memset(&out, 0, sizeof(out));
 	rc = ranap_encode_reseties(&out, &ies);

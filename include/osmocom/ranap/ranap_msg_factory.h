@@ -47,6 +47,9 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
 /*! \brief generate RANAP RESET message */
 struct msgb *ranap_new_msg_reset(RANAP_CN_DomainIndicator_t domain,
 				 const RANAP_Cause_t *cause);
+struct msgb *ranap_new_msg_reset2(RANAP_CN_DomainIndicator_t domain,
+				 const RANAP_Cause_t *cause,
+				 RANAP_GlobalRNC_ID_t *rnc_id);
 
 /*! \brief generate RANAP RESET ACK message */
 struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
