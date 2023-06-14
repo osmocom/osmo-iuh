@@ -340,7 +340,7 @@ static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct gsm48_hdr *gh,
 	/* Generate SRES from *HARDCODED* Ki for Iuh testing */
 	struct osmo_auth_vector vec;
 	/* Ki 000102030405060708090a0b0c0d0e0f */
-	struct osmo_sub_auth_data auth = {
+	struct osmo_sub_auth_data2 auth = {
 		.type	= OSMO_AUTH_TYPE_GSM,
 		.algo	= OSMO_AUTH_ALG_COMP128v1,
 		.u.gsm.ki = {
@@ -351,7 +351,7 @@ static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct gsm48_hdr *gh,
 	};
 
 	memset(&vec, 0, sizeof(vec));
-	osmo_auth_gen_vec(&vec, &auth, ar->rand);
+	osmo_auth_gen_vec2(&vec, &auth, ar->rand);
 
 	printf("seq %d rand %s",
 	       seq, osmo_hexdump(ar->rand, sizeof(ar->rand)));
