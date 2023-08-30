@@ -545,6 +545,18 @@ new_format_info_pars(long sdu_size)
 	return fmti;
 }
 
+static int amr_mode_to_bitrate[OSMO_RANAP_RAB_MODE_COUNT] = {
+	[OSMO_RANAP_RAB_MODE_AMR_4_75] = 4750,
+	[OSMO_RANAP_RAB_MODE_AMR_5_15] = 5150,
+	[OSMO_RANAP_RAB_MODE_AMR_5_90] = 5900,
+	[OSMO_RANAP_RAB_MODE_AMR_6_70] = 6700,
+	[OSMO_RANAP_RAB_MODE_AMR_7_40] = 7400,
+	[OSMO_RANAP_RAB_MODE_AMR_7_95] = 7950,
+	[OSMO_RANAP_RAB_MODE_AMR_10_2] = 10200,
+	[OSMO_RANAP_RAB_MODE_AMR_12_2] = 12200,
+	/* Unset values remain 0 */
+};
+
 enum sdu_par_profile {
 	SDUPAR_P_VOICE0 = 0,
 	SDUPAR_P_VOICE1 = 1,
@@ -675,16 +687,25 @@ static RANAP_RAB_Parameters_t *new_rab_par_voice(uint16_t modes)
 	RANAP_RAB_Parameters_t *rab = CALLOC(1, sizeof(*rab));
 	RANAP_SDU_ParameterItem_t *sdui;
 
-	int bitrate_guaranteed = 6700;
-	int bitrate_max = 12200;
+	int bitrate_min = INT_MAX;
+	int bitrate_max = 0;
 	int sdu_size_max = 0;
 	int i;
 	for (i = 0; i < OSMO_RANAP_RAB_MODE_COUNT && (1 << i) <= modes; i++) {
+		int bitrate;
 		int sdu_size;
 
 		/* only add modes that are present in the bitmask */
 		if ((modes & (1 << i)) == 0)
 			continue;
+
+		bitrate = amr_mode_to_bitrate[i];
+		if (bitrate) {
+			if (bitrate < bitrate_min)
+				bitrate_min = bitrate;
+			if (bitrate > bitrate_max)
+				bitrate_max = bitrate;
+		}
 
 		sdu_size = amr_mode_to_sdu_size(i);
 		if (sdu_size > sdu_size_max)
@@ -696,7 +717,7 @@ static RANAP_RAB_Parameters_t *new_rab_par_voice(uint16_t modes)
 
 	ASN_SEQUENCE_ADD(&rab->maxBitrate.list, new_long(bitrate_max));
 	rab->guaranteedBitRate = CALLOC(1, sizeof(*rab->guaranteedBitRate));
-	ASN_SEQUENCE_ADD(rab->guaranteedBitRate, new_long(bitrate_guaranteed));
+	ASN_SEQUENCE_ADD(rab->guaranteedBitRate, new_long(bitrate_min));
 	rab->deliveryOrder = RANAP_DeliveryOrder_delivery_order_requested;
 	rab->maxSDU_Size = sdu_size_max;
 
