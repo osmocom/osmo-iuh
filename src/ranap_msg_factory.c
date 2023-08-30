@@ -638,19 +638,15 @@ static RANAP_SDU_ParameterItem_t *new_sdu_par_item(enum sdu_par_profile profile,
 
 	switch (profile) {
 	case SDUPAR_P_VOICE0:
-		sdui->sDU_ErrorRatio = new_sdu_error_ratio(1, 5);
+		sdui->sDU_ErrorRatio = new_sdu_error_ratio(7, 3);
 		sdui->residualBitErrorRatio.mantissa = 1;
-		sdui->residualBitErrorRatio.exponent = 6;
+		sdui->residualBitErrorRatio.exponent = 4;
 		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_yes;
 		/* continue below to add SDU subflows */
 		break;
 	case SDUPAR_P_VOICE1:
-		sdui->residualBitErrorRatio.mantissa = 1;
-		sdui->residualBitErrorRatio.exponent = 3;
-		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no_error_detection_consideration;
-		break;
 	case SDUPAR_P_VOICE2:
-		sdui->residualBitErrorRatio.mantissa = 5;
+		sdui->residualBitErrorRatio.mantissa = 1;
 		sdui->residualBitErrorRatio.exponent = 3;
 		sdui->deliveryOfErroneousSDU = RANAP_DeliveryOfErroneousSDU_no_error_detection_consideration;
 		/* continue below to add SDU subflows */
