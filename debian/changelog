@@ -1,3 +1,29 @@
+osmo-iuh (1.5.0) unstable; urgency=medium
+
+  [ arehbein ]
+  * Transition to use of 'telnet_init_default'
+
+  [ Oliver Smith ]
+  * test-ranap: don't use libosmocore's tall_msgb_ctx
+  * debian: set compat level to 10
+
+  [ Neels Hofmeyr ]
+  * fix PDU leaks in rua_generate_*() functions
+  * asn1tostruct.py: fix leak in error paths of iesDefs
+  * fix leak in ranap_new_transp_layer_addr()
+  * add ranap_new_msg_reset2() with GlobalRNC-ID
+
+  [ Pau Espin Pedrol ]
+  * Move testdir src/tests/ -> tests/
+
+  [ Vadim Yanitskiy ]
+  * copyright: fix typo: sysmocom s/s.m.f.c./s.f.m.c./ GmbH
+
+  [ Harald Welte ]
+  * hnb-test.c: Update to libosmocore osmo_auth_gen_vec2
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 12 Sep 2023 14:13:41 +0200
+
 osmo-iuh (1.4.0) unstable; urgency=medium
 
   [ Vadim Yanitskiy ]
