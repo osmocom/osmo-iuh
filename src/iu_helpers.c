@@ -140,14 +140,21 @@ int ranap_transp_layer_addr_decode2(struct osmo_sockaddr *addr, bool *uses_x213_
 
 	memset(addr, 0, sizeof(*addr));
 
-	if (len == 20 && buf[0] == 0x35) {
-		/* For an X.213 NSAP encoded address we expect a buffer of exactly 20 bytes (3 bytes IDP + 17 bytes
-		 * DSP). we also expect AFI = 0x35, which means that two byte IDI and an IP address follows. (see also
-		 * comments in function ranap_new_transp_layer_addr below) */
+	if ((len == 7 || len == 20) && buf[0] == 0x35) {
+		/* ITU-T Rec. X.213 A.5.2.1.2.7, RFC 1888 section 6
+		 * For an X.213 NSAP encoded address we expect:
+		 * 3 bytes IDP (first byte AFI = 0x35, which means that two byte IDI and an IP address follows)
+		 * Either 4 or 17 bytes of DSP containing the IP address.
+		 * (see also comments in function ranap_new_transp_layer_addr below) */
 		x213_nsap = true;
 		icp = osmo_load16be(&buf[1]);
 		switch (icp) {
 		case 0x0000:
+			/* "RFC 1888 provides guidance on how to embed an IPv6 address within the DSP of an NSAP
+			 * address. The IPv6  address is carried in the first 16 octets of the DSP.
+			 * Octet 17 of the DSP is set to zero, but has no significance for IPv6." */
+			if (len != 20)
+				return -EINVAL;
 			addr->u.sa.sa_family = AF_INET6;
 			memcpy(addr->u.sin6.sin6_addr.s6_addr, buf + 3, sizeof(addr->u.sin6.sin6_addr.s6_addr));
 			break;
