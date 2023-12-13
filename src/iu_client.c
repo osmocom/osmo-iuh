@@ -55,6 +55,14 @@ struct iu_lac_rac_entry {
 	uint8_t rac;
 };
 
+/* Entry to cache conn_id <-> sccp_addr mapping in case we receive an empty CR */
+struct iu_new_ctx_entry {
+	struct llist_head list;
+
+	uint32_t conn_id;
+	struct osmo_sccp_addr sccp_addr;
+};
+
 /* A remote RNC (Radio Network Controller, like BSC but for UMTS) that has
  * called us and is currently reachable at the given osmo_sccp_addr. So, when we
  * know a LAC for a subscriber, we can page it at the RNC matching that LAC or
@@ -94,6 +102,7 @@ int iu_log_subsystem = 0;
 #define LOGPIUC(level, fmt, args...) \
 	LOGPC(iu_log_subsystem, level, fmt, ## args)
 
+static LLIST_HEAD(ue_conn_sccp_addr_list);
 static LLIST_HEAD(ue_conn_ctx_list);
 static LLIST_HEAD(rnc_list);
 
@@ -166,6 +175,38 @@ void ranap_iu_free_ue(struct ranap_ue_conn_ctx *ue_ctx)
 	osmo_sccp_tx_disconn(g_scu, ue_ctx->conn_id, NULL, 0);
 	llist_del(&ue_ctx->list);
 	talloc_free(ue_ctx);
+}
+
+static void ue_conn_sccp_addr_add(uint32_t conn_id, const struct osmo_sccp_addr *calling_addr)
+{
+	struct iu_new_ctx_entry *entry = talloc_zero(talloc_iu_ctx, struct iu_new_ctx_entry);
+
+	entry->conn_id = conn_id;
+	entry->sccp_addr = *calling_addr;
+
+	llist_add(&entry->list, &ue_conn_sccp_addr_list);
+}
+
+static const struct osmo_sccp_addr *ue_conn_sccp_addr_find(uint32_t conn_id)
+{
+	struct iu_new_ctx_entry *entry;
+	llist_for_each_entry(entry, &ue_conn_sccp_addr_list, list) {
+		if (entry->conn_id == conn_id)
+			return &entry->sccp_addr;
+	}
+	return NULL;
+}
+
+static void ue_conn_sccp_addr_del(uint32_t conn_id)
+{
+	struct iu_new_ctx_entry *entry;
+	llist_for_each_entry(entry, &ue_conn_sccp_addr_list, list) {
+		if (entry->conn_id == conn_id) {
+			llist_del(&entry->list);
+			talloc_free(entry);
+			return;
+		}
+	}
 }
 
 static struct ranap_iu_rnc *iu_rnc_alloc(uint16_t rnc_id, struct osmo_sccp_addr *addr)
@@ -831,24 +872,29 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		/* indication of new inbound connection request*/
 		conn_id = prim->u.connect.conn_id;
 		LOGPIU(LOGL_DEBUG, "N-CONNECT.ind(X->%u)\n", conn_id);
-		if (/*  prim->u.connect.called_addr.ssn != OSMO_SCCP_SSN_RANAP || */
-		    !msgb_l2(oph->msg) || msgb_l2len(oph->msg) == 0) {
-			LOGPIU(LOGL_NOTICE,
-			     "Received invalid N-CONNECT.ind\n");
-			return 0;
-		}
+
 		new_ctx.sccp_addr = prim->u.connect.calling_addr;
 		new_ctx.conn_id = conn_id;
+
 		/* first ensure the local SCCP socket is ACTIVE */
 		resp = make_conn_resp(&prim->u.connect);
 		osmo_sccp_user_sap_down(scu, resp);
 		/* then handle the RANAP payload */
-		rc = ranap_cn_rx_co(cn_ranap_handle_co_initial, &new_ctx, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+		if (/*  prim->u.connect.called_addr.ssn != OSMO_SCCP_SSN_RANAP || */
+		    !msgb_l2(oph->msg) || msgb_l2len(oph->msg) == 0) {
+			LOGPIU(LOGL_DEBUG,
+			     "Received N-CONNECT.ind without data\n");
+			ue_conn_sccp_addr_add(conn_id, &prim->u.connect.calling_addr);
+		} else {
+			rc = ranap_cn_rx_co(cn_ranap_handle_co_initial, &new_ctx, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+		}
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DISCONNECT, PRIM_OP_INDICATION):
 		/* indication of disconnect */
 		conn_id = prim->u.disconnect.conn_id;
 		LOGPIU(LOGL_DEBUG, "N-DISCONNECT.ind(%u)\n", conn_id);
+
+		ue_conn_sccp_addr_del(conn_id);
 		ue = ue_conn_ctx_find(conn_id);
 		if (!ue)
 			break;
@@ -876,10 +922,23 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		conn_id = prim->u.data.conn_id;
 		LOGPIU(LOGL_DEBUG, "N-DATA.ind(%u, %s)\n", conn_id,
 		       osmo_hexdump(msgb_l2(oph->msg), msgb_l2len(oph->msg)));
+
 		/* resolve UE context */
 		ue = ue_conn_ctx_find(conn_id);
-		if (!ue)
+		if (!ue) {
+			/* Could be an InitialUE-Message after an empty CR, recreate new_ctx */
+			const struct osmo_sccp_addr *sccp_addr = ue_conn_sccp_addr_find(conn_id);
+			if (!sccp_addr) {
+				LOGPIU(LOGL_NOTICE,
+				       "N-DATA.ind for unknown conn_id (%u)\n", conn_id);
+				break;
+			}
+			new_ctx.conn_id = conn_id;
+			new_ctx.sccp_addr = *sccp_addr;
+			ue_conn_sccp_addr_del(conn_id);
+			rc = ranap_cn_rx_co(cn_ranap_handle_co_initial, &new_ctx, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 			break;
+		}
 
 		rc = ranap_cn_rx_co(cn_ranap_handle_co, ue, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 		break;
