@@ -819,6 +819,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 	int rc = -1;
 	struct ranap_ue_conn_ctx *ue;
 	struct new_ue_conn_ctx new_ctx = {};
+	uint32_t conn_id;
 
 	LOGPIU(LOGL_DEBUG, "sccp_sap_up(%s)\n", osmo_scu_prim_name(oph));
 
@@ -828,7 +829,8 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_CONNECT, PRIM_OP_INDICATION):
 		/* indication of new inbound connection request*/
-		LOGPIU(LOGL_DEBUG, "N-CONNECT.ind(X->%u)\n", prim->u.connect.conn_id);
+		conn_id = prim->u.connect.conn_id;
+		LOGPIU(LOGL_DEBUG, "N-CONNECT.ind(X->%u)\n", conn_id);
 		if (/*  prim->u.connect.called_addr.ssn != OSMO_SCCP_SSN_RANAP || */
 		    !msgb_l2(oph->msg) || msgb_l2len(oph->msg) == 0) {
 			LOGPIU(LOGL_NOTICE,
@@ -836,7 +838,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 			return 0;
 		}
 		new_ctx.sccp_addr = prim->u.connect.calling_addr;
-		new_ctx.conn_id = prim->u.connect.conn_id;
+		new_ctx.conn_id = conn_id;
 		/* first ensure the local SCCP socket is ACTIVE */
 		resp = make_conn_resp(&prim->u.connect);
 		osmo_sccp_user_sap_down(scu, resp);
@@ -845,9 +847,9 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DISCONNECT, PRIM_OP_INDICATION):
 		/* indication of disconnect */
-		LOGPIU(LOGL_DEBUG, "N-DISCONNECT.ind(%u)\n",
-		       prim->u.disconnect.conn_id);
-		ue = ue_conn_ctx_find(prim->u.disconnect.conn_id);
+		conn_id = prim->u.disconnect.conn_id;
+		LOGPIU(LOGL_DEBUG, "N-DISCONNECT.ind(%u)\n", conn_id);
+		ue = ue_conn_ctx_find(conn_id);
 		if (!ue)
 			break;
 
@@ -856,14 +858,14 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 			rc = ranap_cn_rx_co(cn_ranap_handle_co, ue, msgb_l2(oph->msg), msgb_l2len(oph->msg));
 
 		/* A Iu Release event might be used to free the UE in cn_ranap_handle_co. */
-		ue = ue_conn_ctx_find(prim->u.disconnect.conn_id);
+		ue = ue_conn_ctx_find(conn_id);
 		if (!ue)
 			break;
 
 		global_iu_event(ue, RANAP_IU_EVENT_LINK_INVALIDATED, NULL);
 
 		/* A RANAP_IU_EVENT_LINK_INVALIDATED, can lead to a free */
-		ue = ue_conn_ctx_find(prim->u.disconnect.conn_id);
+		ue = ue_conn_ctx_find(conn_id);
 		if (!ue)
 			break;
 		if (ue->free_on_release)
@@ -871,10 +873,11 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DATA, PRIM_OP_INDICATION):
 		/* connection-oriented data received */
-		LOGPIU(LOGL_DEBUG, "N-DATA.ind(%u, %s)\n", prim->u.data.conn_id,
+		conn_id = prim->u.data.conn_id;
+		LOGPIU(LOGL_DEBUG, "N-DATA.ind(%u, %s)\n", conn_id,
 		       osmo_hexdump(msgb_l2(oph->msg), msgb_l2len(oph->msg)));
 		/* resolve UE context */
-		ue = ue_conn_ctx_find(prim->u.data.conn_id);
+		ue = ue_conn_ctx_find(conn_id);
 		if (!ue)
 			break;
 
