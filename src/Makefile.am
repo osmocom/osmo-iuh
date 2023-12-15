@@ -62,7 +62,7 @@ AM_CFLAGS = -Wall -I$(top_srcdir)/include -I$(top_builddir)/include \
 # build the shared RANAP + SABP library
 #
 HNBAP_LIBVERSION=1:0:1
-RANAP_LIBVERSION=8:0:1
+RANAP_LIBVERSION=8:1:1
 RUA_LIBVERSION=1:1:1
 SABP_LIBVERSION=2:0:1
 lib_LTLIBRARIES = libosmo-hnbap.la libosmo-ranap.la libosmo-rua.la libosmo-sabp.la

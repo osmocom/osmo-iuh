@@ -1,3 +1,14 @@
+osmo-iuh (1.5.1) unstable; urgency=medium
+
+  [ Pau Espin Pedrol ]
+  * ranap_transp_layer_addr_decode2(): Fix decoding X.213 IPv4 address len=7
+
+  [ Daniel Willmann ]
+  * iu_client: Use local variable to track conn_id
+  * iu_client: Handle empty CR and InitialUE Message in DATA.ind
+
+ -- Oliver Smith <osmith@sysmocom.de>  Fri, 15 Dec 2023 15:05:11 +0100
+
 osmo-iuh (1.5.0) unstable; urgency=medium
 
   [ arehbein ]
