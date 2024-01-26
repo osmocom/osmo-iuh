@@ -11,6 +11,7 @@ EXTRA_DIST = \
 	     asn1 \
 	     contrib/osmo-iuh.spec.in \
 	     debian \
+	     git-version-gen \
 	     $(NULL)
 
 @RELMAKE@
