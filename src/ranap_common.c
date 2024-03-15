@@ -607,7 +607,7 @@ int ranap_decode_rab_faileditemies_fromlist(RANAP_RAB_FailedItemIEs_t *raB_Faile
 
 int ranap_decode_rab_releaseitemies_fromlist(RANAP_RAB_ReleaseItemIEs_t *raB_ReleaseItemIEs, ANY_t *any_p)
 {
-	RANAP_RAB_FailedItem_t *ranaP_RABReleaseItem_p = NULL;
+	RANAP_RAB_ReleaseItem_t *ranaP_RABReleaseItem_p = NULL;
 	int decoded;
 
 	assert(any_p != NULL);
