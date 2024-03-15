@@ -661,3 +661,8 @@ int ranap_decode_rab_releaseitemies_fromlist(
 int ranap_decode_rab_setupormodifyitemfirst(
 	RANAP_RAB_SetupOrModifyItemFirst_t *raB_SetupOrModifyItemFirst,
 	ANY_t *any_p);
+
+/* There is no generated decoder available, this is a custom one */
+int ranap_decode_rab_releaseditemies_fromlist(
+	RANAP_RAB_ReleasedItemIEs_t *raB_ReleasedItemIEs,
+	ANY_t *any_p);

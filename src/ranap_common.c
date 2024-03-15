@@ -628,6 +628,29 @@ int ranap_decode_rab_releaseitemies_fromlist(RANAP_RAB_ReleaseItemIEs_t *raB_Rel
 	return decoded;
 }
 
+int ranap_decode_rab_releaseditemies_fromlist(RANAP_RAB_ReleasedItemIEs_t *raB_ReleasedItemIEs, ANY_t *any_p)
+{
+	RANAP_RAB_ReleasedItem_t *ranaP_RABReleasedItem_p = NULL;
+	int decoded;
+
+	assert(any_p != NULL);
+	assert(raB_ReleasedItemIEs != NULL);
+
+	memset(raB_ReleasedItemIEs, 0, sizeof(RANAP_RAB_ReleasedItemIEs_t));
+	RANAP_DEBUG("Decoding message RANAP_RAB_ReleasedItemIEs (%s:%d)\n", __FILE__, __LINE__);
+	decoded = ANY_to_type_aper(any_p, &asn_DEF_RANAP_RAB_ReleasedItem, (void **)&ranaP_RABReleasedItem_p);
+	if (decoded < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "Decoding of IE raB_ReleasedItem failed\n");
+		return -1;
+	}
+	if (asn1_xer_print)
+		xer_fprint(stdout, &asn_DEF_RANAP_RAB_ReleasedItem, ranaP_RABReleasedItem_p);
+	memcpy(&raB_ReleasedItemIEs->raB_ReleasedItem, ranaP_RABReleasedItem_p, sizeof(RANAP_RAB_ReleasedItem_t));
+	FREEMEM(ranaP_RABReleasedItem_p);
+
+	return decoded;
+}
+
 int ranap_decode_rab_setupormodifyitemfirst(
 		RANAP_RAB_SetupOrModifyItemFirst_t *raB_SetupOrModifyItemFirst,
 		ANY_t *any_p)
