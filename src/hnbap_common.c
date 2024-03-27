@@ -78,7 +78,7 @@ static const struct value_string hnbap_cause_misc_vals[] = {
 	{ 0, NULL }
 };
 
-char *hnbap_cause_str(HNBAP_Cause_t *cause)
+char *hnbap_cause_str(const HNBAP_Cause_t *cause)
 {
 	static char buf[32];
 

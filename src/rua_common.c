@@ -67,7 +67,7 @@ static const struct value_string rua_cause_misc_vals[] = {
 	{ 0, NULL }
 };
 
-char *rua_cause_str(RUA_Cause_t *cause)
+char *rua_cause_str(const RUA_Cause_t *cause)
 {
 	static char buf[32];
 

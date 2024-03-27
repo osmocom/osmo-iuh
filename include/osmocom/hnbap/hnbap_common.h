@@ -149,6 +149,6 @@ struct msgb *hnbap_generate_unsuccessful_outcome(
 HNBAP_IE_t *hnbap_new_ie(HNBAP_ProtocolIE_ID_t id, HNBAP_Criticality_t criticality,
 		  asn_TYPE_descriptor_t *type, void *sptr);
 
-char *hnbap_cause_str(HNBAP_Cause_t *cause);
+char *hnbap_cause_str(const HNBAP_Cause_t *cause);
 
 void hnbap_set_log_area(int log_area);
