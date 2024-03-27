@@ -152,7 +152,7 @@ struct msgb *hnbap_generate_initiating_message(
 	pdu.choice.initiatingMessage.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.initiatingMessage.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DHNBAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DHNBAP, LOGL_ERROR, "%s: Error in ANY_fromType_aper (%s)\n", __func__, td->name);
 		return NULL;
 	}
 
@@ -179,7 +179,7 @@ struct msgb *hnbap_generate_successful_outcome(
 	pdu.choice.successfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.successfulOutcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DHNBAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DHNBAP, LOGL_ERROR, "%s: Error in ANY_fromType_aper (%s)\n", __func__, td->name);
 		return NULL;
 	}
 
@@ -206,7 +206,7 @@ struct msgb *hnbap_generate_unsuccessful_outcome(
 	pdu.choice.unsuccessfulOutcome.criticality = criticality;
 	rc = ANY_fromType_aper(&pdu.choice.unsuccessfulOutcome.value, td, sptr);
 	if (rc < 0) {
-		LOGP(DHNBAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DHNBAP, LOGL_ERROR, "%s: Error in ANY_fromType_aper (%s)\n", __func__, td->name);
 		return NULL;
 	}
 
@@ -234,7 +234,7 @@ HNBAP_IE_t *hnbap_new_ie(HNBAP_ProtocolIE_ID_t id,
 
 	rc = ANY_fromType_aper(&buff->value, type, sptr);
 	if (rc < 0) {
-		LOGP(DHNBAP, LOGL_ERROR, "Error in ANY_fromType_aper\n");
+		LOGP(DHNBAP, LOGL_ERROR, "%s: Error in ANY_fromType_aper(%s)\n", __func__, type->name);
 		FREEMEM(buff);
 		return NULL;
 	}
