@@ -9,7 +9,6 @@ EXTRA_DIST = \
 	     .version \
 	     README.md \
 	     asn1 \
-	     contrib/osmo-iuh.spec.in \
 	     debian \
 	     git-version-gen \
 	     $(NULL)

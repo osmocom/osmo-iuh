@@ -153,5 +153,4 @@ AC_OUTPUT(
 	include/osmocom/sabp/Makefile
 	include/osmocom/iuh/Makefile
 	doc/Makefile
-	contrib/osmo-iuh.spec
 	)
