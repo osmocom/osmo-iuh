@@ -46,8 +46,47 @@ static int ran_ranap_rx_initiating_msg_co(void *ctx, RANAP_InitiatingMessage_t *
 	case RANAP_ProcedureCode_id_RAB_Assignment:
 		rc = ranap_decode_rab_assignmentrequesties(&message->msg.raB_AssignmentRequestIEs, &imsg->value);
 		break;
+	case RANAP_ProcedureCode_id_DirectTransfer:
+		rc = ranap_decode_directtransferies(&message->msg.directTransferIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_ErrorIndication:
+		rc = ranap_decode_errorindicationies(&message->msg.errorIndicationIEs, &imsg->value);
+		break;
 	case RANAP_ProcedureCode_id_Iu_Release:
 		rc = ranap_decode_iu_releasecommandies(&message->msg.iu_ReleaseCommandIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_RelocationResourceAllocation:
+		rc = ranap_decode_relocationrequesties(&message->msg.relocationRequestIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_SRNS_ContextTransfer:
+		rc = ranap_decode_srns_contextrequesties(&message->msg.srnS_ContextRequestIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_SRNS_DataForward:
+		rc = ranap_decode_srns_dataforwardcommandies(&message->msg.srnS_DataForwardCommandIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_ForwardSRNS_Context:
+		rc = ranap_decode_forwardsrns_contexties(&message->msg.forwardSRNS_ContextIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_CommonID:
+		rc = ranap_decode_commonid_ies(&message->msg.commonID_IEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_CN_InvokeTrace:
+		rc = ranap_decode_cn_invoketraceies(&message->msg.cN_InvokeTraceIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_SecurityModeControl:
+		rc = ranap_decode_securitymodecommandies(&message->msg.securityModeCommandIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_LocationReportingControl:
+		rc = ranap_decode_locationreportingcontrolies(&message->msg.locationReportingControlIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_DataVolumeReport:
+		rc = ranap_decode_datavolumereportrequesties(&message->msg.dataVolumeReportRequestIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_CN_DeactivateTrace:
+		rc = ranap_decode_cn_deactivatetraceies(&message->msg.cN_DeactivateTraceIEs, &imsg->value);
+		break;
+	case RANAP_ProcedureCode_id_LocationRelatedData:
+		rc = ranap_decode_locationrelateddatarequesties(&message->msg.locationRelatedDataRequestIEs, &imsg->value);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_INFO,
@@ -66,12 +105,128 @@ static void ran_ranap_free_initiating_msg_co(ranap_message *message)
 	case RANAP_ProcedureCode_id_RAB_Assignment:
 		ranap_free_rab_assignmentrequesties(&message->msg.raB_AssignmentRequestIEs);
 		break;
+	case RANAP_ProcedureCode_id_DirectTransfer:
+		ranap_free_directtransferies(&message->msg.directTransferIEs);
+		break;
+	case RANAP_ProcedureCode_id_ErrorIndication:
+		ranap_free_errorindicationies(&message->msg.errorIndicationIEs);
+		break;
 	case RANAP_ProcedureCode_id_Iu_Release:
 		ranap_free_iu_releasecommandies(&message->msg.iu_ReleaseCommandIEs);
+		break;
+	case RANAP_ProcedureCode_id_RelocationResourceAllocation:
+		ranap_free_relocationrequesties(&message->msg.relocationRequestIEs);
+		break;
+	case RANAP_ProcedureCode_id_SRNS_ContextTransfer:
+		ranap_free_srns_contextrequesties(&message->msg.srnS_ContextRequestIEs);
+		break;
+	case RANAP_ProcedureCode_id_SRNS_DataForward:
+		ranap_free_srns_dataforwardcommandies(&message->msg.srnS_DataForwardCommandIEs);
+		break;
+	case RANAP_ProcedureCode_id_ForwardSRNS_Context:
+		ranap_free_forwardsrns_contexties(&message->msg.forwardSRNS_ContextIEs);
+		break;
+	case RANAP_ProcedureCode_id_CommonID:
+		ranap_free_commonid_ies(&message->msg.commonID_IEs);
+		break;
+	case RANAP_ProcedureCode_id_CN_InvokeTrace:
+		ranap_free_cn_invoketraceies(&message->msg.cN_InvokeTraceIEs);
+		break;
+	case RANAP_ProcedureCode_id_SecurityModeControl:
+		ranap_free_securitymodecommandies(&message->msg.securityModeCommandIEs);
+		break;
+	case RANAP_ProcedureCode_id_LocationReportingControl:
+		ranap_free_locationreportingcontrolies(&message->msg.locationReportingControlIEs);
+		break;
+	case RANAP_ProcedureCode_id_DataVolumeReport:
+		ranap_free_datavolumereportrequesties(&message->msg.dataVolumeReportRequestIEs);
+		break;
+	case RANAP_ProcedureCode_id_CN_DeactivateTrace:
+		ranap_free_cn_deactivatetraceies(&message->msg.cN_DeactivateTraceIEs);
+		break;
+	case RANAP_ProcedureCode_id_LocationRelatedData:
+		ranap_free_locationrelateddatarequesties(&message->msg.locationRelatedDataRequestIEs);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_INFO,
 		     "Freeing RANAP Procedure %s (CO, IM) from CN not implemented\n",
+		     get_value_string(ranap_procedure_code_vals, message->procedureCode));
+		break;
+	}
+}
+
+static int ran_ranap_rx_successful_msg_co(RANAP_SuccessfulOutcome_t *imsg, ranap_message *message)
+{
+	int rc = 0;
+
+	message->procedureCode = imsg->procedureCode;
+	message->criticality = imsg->criticality;
+
+	DEBUGP(DRANAP, "Rx CO SO (%s)\n", get_value_string(ranap_procedure_code_vals, imsg->procedureCode));
+
+	switch (imsg->procedureCode) {
+	case RANAP_ProcedureCode_id_RelocationPreparation: /* RELOCATION COMMAND */
+		rc = ranap_decode_relocationcommandies(&message->msg.relocationCommandIEs, &imsg->value);
+		break;
+	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
+		     "successful outcome procedure %s (CO) from CN, ignoring\n",
+		     get_value_string(ranap_procedure_code_vals, imsg->procedureCode));
+		rc = -1;
+		break;
+	}
+
+	return rc;
+}
+
+static void ran_ranap_free_successful_msg_co(ranap_message *message)
+{
+	switch (message->procedureCode) {
+	case RANAP_ProcedureCode_id_RelocationPreparation:
+		ranap_free_relocationcommandies(&message->msg.relocationCommandIEs);
+		break;
+	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Freeing RANAP "
+		     "successful outcome procedure %s (CO) from CN not implemented\n",
+		     get_value_string(ranap_procedure_code_vals, message->procedureCode));
+		break;
+	}
+}
+
+static int ran_ranap_rx_unsuccessful_msg_co(RANAP_SuccessfulOutcome_t *imsg, ranap_message *message)
+{
+	int rc = 0;
+
+	message->procedureCode = imsg->procedureCode;
+	message->criticality = imsg->criticality;
+
+	DEBUGP(DRANAP, "Rx CO USO (%s)\n", get_value_string(ranap_procedure_code_vals, imsg->procedureCode));
+
+	switch (imsg->procedureCode) {
+	case RANAP_ProcedureCode_id_RelocationPreparation: /* RELOCATION PREPARATION FAILURE */
+		rc = ranap_decode_relocationpreparationfailureies(&message->msg.relocationPreparationFailureIEs, &imsg->value);
+		break;
+	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
+		     "unsuccessful outcome procedure %s (CO) from CN, ignoring\n",
+		     get_value_string(ranap_procedure_code_vals, imsg->procedureCode));
+		rc = -1;
+		break;
+
+	}
+
+	return rc;
+}
+
+static void ran_ranap_free_unsuccessful_msg_co(ranap_message *message)
+{
+	switch (message->procedureCode) {
+	case RANAP_ProcedureCode_id_RelocationPreparation:
+		ranap_free_relocationpreparationfailureies(&message->msg.relocationPreparationFailureIEs);
+		break;
+	default:
+		LOGP(DRANAP, LOGL_NOTICE, "Freeing RANAP "
+		     "unsuccessful outcome procedure %s (CO) from CN not implemented\n",
 		     get_value_string(ranap_procedure_code_vals, message->procedureCode));
 		break;
 	}
@@ -86,16 +241,10 @@ static int _ran_ranap_rx_co(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *me
 		rc = ran_ranap_rx_initiating_msg_co(ctx, &pdu->choice.initiatingMessage, message);
 		break;
 	case RANAP_RANAP_PDU_PR_successfulOutcome:
-		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
-		     "successful outcome procedure %s (CO) from CN, ignoring\n",
-		     get_value_string(ranap_procedure_code_vals, pdu->choice.successfulOutcome.procedureCode));
-		rc = -1;
+		rc = ran_ranap_rx_successful_msg_co(&pdu->choice.successfulOutcome, message);
 		break;
 	case RANAP_RANAP_PDU_PR_unsuccessfulOutcome:
-		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
-		     "unsuccessful outcome procedure %s (CO) from CN, ignoring\n",
-		     get_value_string(ranap_procedure_code_vals, pdu->choice.unsuccessfulOutcome.procedureCode));
-		rc = -1;
+		rc = ran_ranap_rx_unsuccessful_msg_co(&pdu->choice.successfulOutcome, message);
 		break;
 	case RANAP_RANAP_PDU_PR_outcome:
 		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
@@ -122,12 +271,10 @@ void ranap_ran_rx_co_free(ranap_message *message)
 		ran_ranap_free_initiating_msg_co(message);
 		break;
 	case RANAP_RANAP_PDU_PR_successfulOutcome:
-		LOGP(DRANAP, LOGL_NOTICE, "Not freeing unsupported RANAP "
-		     "successful outcome procedure (CO) from CN\n");
+		ran_ranap_free_successful_msg_co(message);
 		break;
 	case RANAP_RANAP_PDU_PR_unsuccessfulOutcome:
-		LOGP(DRANAP, LOGL_NOTICE, "Not freeing unsupported RANAP "
-		     "unsuccessful outcome procedure (CO) from CN\n");
+		ran_ranap_free_unsuccessful_msg_co(message);
 		break;
 	case RANAP_RANAP_PDU_PR_outcome:
 		LOGP(DRANAP, LOGL_NOTICE, "Not freeing unsupported RANAP "
