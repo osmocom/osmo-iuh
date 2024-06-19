@@ -293,6 +293,9 @@ static int cn_ranap_rx_unsuccessful_msg_co(RANAP_UnsuccessfulOutcome_t *imsg, ra
 	case RANAP_ProcedureCode_id_LocationRelatedData:
 		rc = ranap_decode_locationrelateddatafailureies(&message->msg.locationRelatedDataFailureIEs, &imsg->value);
 		break;
+	case RANAP_ProcedureCode_id_RAB_Assignment:
+		rc = ranap_decode_rab_assignmentresponseies(&message->msg.raB_AssignmentResponseIEs, &imsg->value);
+		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
 		     "unsuccessful outcome procedure %s (CO) from RNC, ignoring\n",
@@ -315,6 +318,9 @@ static void cn_ranap_free_unsuccessful_msg_co(ranap_message *message)
 		break;
 	case RANAP_ProcedureCode_id_LocationRelatedData:
 		ranap_free_locationrelateddatafailureies(&message->msg.locationRelatedDataFailureIEs);
+		break;
+	case RANAP_ProcedureCode_id_RAB_Assignment:
+		ranap_free_rab_assignmentresponseies(&message->msg.raB_AssignmentResponseIEs);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_INFO, "Freeing RANAP unsuccessful outcome procedure %s (CO) from RNC "
