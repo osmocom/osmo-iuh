@@ -48,6 +48,9 @@ static int cn_ranap_rx_initiating_msg_co(RANAP_InitiatingMessage_t *imsg, ranap_
 	case RANAP_ProcedureCode_id_DirectTransfer:
 		rc = ranap_decode_directtransferies(&message->msg.directTransferIEs, &imsg->value);
 		break;
+	case RANAP_ProcedureCode_id_RAB_Assignment:
+		rc = ranap_decode_rab_assignmentrequesties(&message->msg.raB_AssignmentRequestIEs, &imsg->value);
+		break;
 	case RANAP_ProcedureCode_id_RAB_ReleaseRequest:
 		/* RNC requests the release of RAB */
 		rc = ranap_decode_rab_releaserequesties(&message->msg.raB_ReleaseRequestIEs, &imsg->value);
@@ -105,6 +108,9 @@ static void cn_ranap_free_initiating_msg_co(ranap_message *message)
 		break;
 	case RANAP_ProcedureCode_id_DirectTransfer:
 		ranap_free_directtransferies(&message->msg.directTransferIEs);
+		break;
+	case RANAP_ProcedureCode_id_RAB_Assignment:
+		ranap_free_rab_assignmentrequesties(&message->msg.raB_AssignmentRequestIEs);
 		break;
 	case RANAP_ProcedureCode_id_RAB_ReleaseRequest:
 		/* RNC requests the release of RAB */
@@ -293,6 +299,9 @@ static int cn_ranap_rx_unsuccessful_msg_co(RANAP_UnsuccessfulOutcome_t *imsg, ra
 	case RANAP_ProcedureCode_id_LocationRelatedData:
 		rc = ranap_decode_locationrelateddatafailureies(&message->msg.locationRelatedDataFailureIEs, &imsg->value);
 		break;
+	case RANAP_ProcedureCode_id_RAB_Assignment:
+		rc = ranap_decode_rab_assignmentresponseies(&message->msg.raB_AssignmentResponseIEs, &imsg->value);
+		break;
 	default:
 		LOGP(DRANAP, LOGL_NOTICE, "Received unsupported RANAP "
 		     "unsuccessful outcome procedure %s (CO) from RNC, ignoring\n",
@@ -315,6 +324,9 @@ static void cn_ranap_free_unsuccessful_msg_co(ranap_message *message)
 		break;
 	case RANAP_ProcedureCode_id_LocationRelatedData:
 		ranap_free_locationrelateddatafailureies(&message->msg.locationRelatedDataFailureIEs);
+		break;
+	case RANAP_ProcedureCode_id_RAB_Assignment:
+		ranap_free_rab_assignmentresponseies(&message->msg.raB_AssignmentResponseIEs);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_INFO, "Freeing RANAP unsuccessful outcome procedure %s (CO) from RNC "
