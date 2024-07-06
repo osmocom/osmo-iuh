@@ -414,16 +414,16 @@ int ranap_cn_rx_co(ranap_handle_cb cb, void *priv, uint8_t *data, size_t len)
 	int rc;
 
 	rc = ranap_cn_rx_co_decode2(&message, data, len);
-
-	if (rc == 0)
-		(*cb)(priv, &message);
-	else
+	if (rc) {
 		LOGP(DRANAP, LOGL_ERROR, "Not calling cn_ranap_handle_co() due to rc=%d\n", rc);
+		return rc;
+	}
+
+	(*cb)(priv, &message);
 
 	/* Free the asn1 structs in message */
 	ranap_cn_rx_co_free(&message);
-
-	return rc;
+	return 0;
 }
 
 static int cn_ranap_rx_initiating_msg_cl(RANAP_InitiatingMessage_t *imsg, ranap_message *message)
