@@ -11,10 +11,10 @@ Build-Depends: debhelper (>= 10),
                git,
                libasn1c-dev,
                libsctp-dev,
-               libosmocore-dev (>= 1.9.0),
-               libosmo-netif-dev (>= 1.4.0),
-               libosmo-sigtran-dev (>= 1.8.0),
-               osmo-gsm-manuals-dev (>= 1.5.0),
+               libosmocore-dev (>= 1.10.0),
+               libosmo-netif-dev (>= 1.5.0),
+               libosmo-sigtran-dev (>= 1.9.0),
+               osmo-gsm-manuals-dev (>= 1.6.0),
                python3
 Standards-Version: 3.9.8
 Vcs-Git: https://gitea.osmocom.org/cellular-infrastructure/osmo-iuh

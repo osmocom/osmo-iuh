@@ -1,3 +1,26 @@
+osmo-iuh (1.6.0) unstable; urgency=medium
+
+  [ Vadim Yanitskiy ]
+  * build: include git-version-gen into the release tarball
+  * README.md: cosmetic: fix a typo
+
+  [ Harald Welte ]
+  * Fix license headers: Should have been AGPLv3+, not GPLv2+
+  * Add ranap_decode_rab_releaseditemies_fromlist()
+  * ranap_common: fix pointer type in ranap_decode_rab_releaseitemies_fromlist()
+  * constify {hnbap_rua}_cause_str() argument
+  * hnbap_common: Make error message more verbose (which type failed)
+  * ranap_common: Implement support for missing procedures
+
+  [ Oliver Smith ]
+  * contrib: remove rpm spec file
+
+  [ Neels Hofmeyr ]
+  * fix memleak: free after aper_decode() also on error
+  * ranap_cn_rx_co(): do not ranap_cn_rx_co_free() on error
+
+ -- Oliver Smith <osmith@sysmocom.de>  Wed, 24 Jul 2024 12:42:56 +0200
+
 osmo-iuh (1.5.1) unstable; urgency=medium
 
   [ Pau Espin Pedrol ]
