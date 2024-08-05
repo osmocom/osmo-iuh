@@ -89,6 +89,9 @@ static int cn_ranap_rx_initiating_msg_co(RANAP_InitiatingMessage_t *imsg, ranap_
 	case RANAP_ProcedureCode_id_LocationReport:
 		rc = ranap_decode_locationreporties(&message->msg.locationReportIEs, &imsg->value);
 		break;
+	case RANAP_ProcedureCode_id_CommonID:
+		rc = ranap_decode_commonid_ies(&message->msg.commonID_IEs, &imsg->value);
+		break;
 	default:
 		LOGP(DRANAP, LOGL_INFO,
 		     "Received RANAP Procedure %s (CO, IM) from RNC. Decode not implemented\n",
@@ -149,6 +152,9 @@ static void cn_ranap_free_initiating_msg_co(ranap_message *message)
 		break;
 	case RANAP_ProcedureCode_id_LocationReport:
 		ranap_free_locationreporties(&message->msg.locationReportIEs);
+		break;
+	case RANAP_ProcedureCode_id_CommonID:
+		ranap_free_commonid_ies(&message->msg.commonID_IEs);
 		break;
 	default:
 		LOGP(DRANAP, LOGL_INFO,
