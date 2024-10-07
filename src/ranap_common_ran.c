@@ -300,13 +300,15 @@ int ranap_ran_rx_co_decode(void *ctx, ranap_message *message, uint8_t *data, siz
 	dec_ret = aper_decode(NULL, &asn_DEF_RANAP_RANAP_PDU, (void **)&pdu, data, len, 0, 0);
 	if (dec_ret.code != RC_OK) {
 		LOGP(DRANAP, LOGL_ERROR, "Error in RANAP ASN.1 decode\n");
-		return -1;
+		rc = -1;
+		goto error_free;
 	}
 
 	message->direction = pdu->present;
 
 	rc = _ran_ranap_rx_co(ctx, pdu, message);
 
+error_free:
 	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
 
 	return rc;
