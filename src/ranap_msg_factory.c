@@ -965,3 +965,72 @@ struct msgb *ranap_new_msg_rab_rel_req(uint8_t rab_id, const RANAP_Cause_t *caus
 
 	return msg;
 }
+
+/*! \brief generate RANAP RAB RELEASE REQUEST message */
+struct msgb *ranap_new_msg_reset_resource(RANAP_CN_DomainIndicator_t domain,
+					  const RANAP_Cause_t *cause,
+					  const uint32_t *conn_id_list,
+					  unsigned int conn_id_list_len,
+					  RANAP_GlobalRNC_ID_t *rnc_id)
+{
+	RANAP_ResetResourceItemIEs_t item_ies;
+	RANAP_ResetResourceIEs_t ies;
+	RANAP_ResetResource_t out;
+	uint32_t ctxidbuf;
+	struct msgb *msg;
+	int rc;
+
+	OSMO_ASSERT(conn_id_list);
+	OSMO_ASSERT(cause);
+
+	memset(&item_ies, 0, sizeof(item_ies));
+	memset(&ies, 0, sizeof(ies));
+	memset(&out, 0, sizeof(out));
+
+	/* CN Domain Indicator */
+	ies.cN_DomainIndicator = domain;
+
+	/* Cause */
+	memcpy(&ies.cause, cause, sizeof(ies.cause));
+
+	/* Reset Resource Item IEs */
+	if (conn_id_list_len != 1) {
+		LOGP(DRANAP, LOGL_ERROR, "Encoding ResourceReset len %u != 1 not supported!\n", conn_id_list_len);
+		return NULL;
+	}
+	asn1_u24_to_bitstring(&item_ies.iuSigConIdItem.iuSigConId, &ctxidbuf, conn_id_list[0]);
+
+	/* Encode items into the list: */
+	rc = ranap_encode_resetresourceitemies(&ies.iuSigConIdList, &item_ies);
+	if (rc < 0)
+		return NULL;
+
+	/* Global RNC-ID */
+	if (rnc_id) {
+		ies.presenceMask = RESETIES_RANAP_GLOBALRNC_ID_PRESENT;
+		OCTET_STRING_noalloc(&ies.globalRNC_ID.pLMNidentity,
+				     rnc_id->pLMNidentity.buf,
+				     rnc_id->pLMNidentity.size);
+		ies.globalRNC_ID.rNC_ID = rnc_id->rNC_ID;
+	}
+
+	/* encode the list IEs into the output */
+	rc = ranap_encode_resetresourceies(&out, &ies);
+
+	/* 'out' has been generated, we can release the input */
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_ResetResourceList, &ies.iuSigConIdList);
+
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding Reset Resource IEs: %d\n", rc);
+		return NULL;
+	}
+
+	/* encode the output into the msgb */
+	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_ResetResource,
+						RANAP_Criticality_reject,
+						&asn_DEF_RANAP_ResetResource, &out);
+
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_ResetResource, &out);
+
+	return msg;
+}

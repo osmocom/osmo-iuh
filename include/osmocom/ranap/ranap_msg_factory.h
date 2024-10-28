@@ -66,3 +66,10 @@ struct msgb *ranap_new_msg_iu_rel_req(const RANAP_Cause_t *cause);
 
 /*! \brief generate RANAP RAB RELEASE REQUEST message */
 struct msgb *ranap_new_msg_rab_rel_req(uint8_t rab_id, const RANAP_Cause_t *cause);
+
+/*! \brief generate RANAP RESET RESOURCE message */
+struct msgb *ranap_new_msg_reset_resource(RANAP_CN_DomainIndicator_t domain,
+					  const RANAP_Cause_t *cause,
+					  const uint32_t *conn_id_list,
+					  unsigned int conn_id_list_len,
+					  RANAP_GlobalRNC_ID_t *rnc_id);
