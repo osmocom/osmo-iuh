@@ -27,6 +27,7 @@
 
 #include <asn1c/asn1helpers.h>
 
+#include <osmocom/gsm/protocol/gsm_04_08_gprs.h>
 #include <osmocom/ranap/iu_client.h>
 
 #include <osmocom/core/logging.h>
@@ -73,7 +74,7 @@ struct iu_new_ctx_entry {
 struct ranap_iu_rnc {
 	struct llist_head entry;
 
-	uint16_t rnc_id;
+	struct osmo_rnc_id rnc_id;
 	struct osmo_sccp_addr sccp_addr;
 
 	/* A list of struct iu_lac_rac_entry */
@@ -209,18 +210,18 @@ static void ue_conn_sccp_addr_del(uint32_t conn_id)
 	}
 }
 
-static struct ranap_iu_rnc *iu_rnc_alloc(uint16_t rnc_id, struct osmo_sccp_addr *addr)
+static struct ranap_iu_rnc *iu_rnc_alloc(const struct osmo_rnc_id *rnc_id, struct osmo_sccp_addr *addr)
 {
 	struct ranap_iu_rnc *rnc = talloc_zero(talloc_iu_ctx, struct ranap_iu_rnc);
 	OSMO_ASSERT(rnc);
 
 	INIT_LLIST_HEAD(&rnc->lac_rac_list);
 
-	rnc->rnc_id = rnc_id;
+	rnc->rnc_id = *rnc_id;
 	rnc->sccp_addr = *addr;
 	llist_add(&rnc->entry, &rnc_list);
 
-	LOGPIU(LOGL_NOTICE, "New RNC %d at %s\n", rnc->rnc_id, osmo_sccp_addr_dump(addr));
+	LOGPIU(LOGL_NOTICE, "New RNC %s at %s\n", osmo_rnc_id_name(&rnc->rnc_id), osmo_sccp_addr_dump(addr));
 
 	return rnc;
 }
@@ -253,11 +254,11 @@ static bool iu_rnc_lac_rac_find(struct ranap_iu_rnc **rnc, struct iu_lac_rac_ent
 	return false;
 }
 
-static struct ranap_iu_rnc *iu_rnc_id_find(uint16_t rnc_id)
+static struct ranap_iu_rnc *iu_rnc_id_find(struct osmo_rnc_id *rnc_id)
 {
 	struct ranap_iu_rnc *rnc;
 	llist_for_each_entry(rnc, &rnc_list, entry) {
-		if (rnc->rnc_id == rnc_id)
+		if (!osmo_rnc_id_cmp(&rnc->rnc_id, rnc_id))
 			return rnc;
 	}
 	return NULL;
@@ -270,7 +271,7 @@ static bool same_sccp_addr(struct osmo_sccp_addr *a, struct osmo_sccp_addr *b)
 	return !strcmp(buf, osmo_sccp_addr_dump(b));
 }
 
-static struct ranap_iu_rnc *iu_rnc_register(uint16_t rnc_id, uint16_t lac,
+static struct ranap_iu_rnc *iu_rnc_register(struct osmo_rnc_id *rnc_id, uint16_t lac,
 					    uint8_t rac, struct osmo_sccp_addr *addr)
 {
 	struct ranap_iu_rnc *rnc;
@@ -282,8 +283,8 @@ static struct ranap_iu_rnc *iu_rnc_register(uint16_t rnc_id, uint16_t lac,
 
 	if (rnc) {
 		if (!same_sccp_addr(&rnc->sccp_addr, addr)) {
-			LOGPIU(LOGL_NOTICE, "RNC %u changed its SCCP addr to %s (LAC=%u RAC=%u)\n",
-			       rnc_id, osmo_sccp_addr_dump(addr), lac, rac);
+			LOGPIU(LOGL_NOTICE, "RNC %s changed its SCCP addr to %s (LAC=%u RAC=%u)\n",
+			       osmo_rnc_id_name(rnc_id), osmo_sccp_addr_dump(addr), lac, rac);
 			rnc->sccp_addr = *addr;
 		}
 	} else
@@ -294,16 +295,16 @@ static struct ranap_iu_rnc *iu_rnc_register(uint16_t rnc_id, uint16_t lac,
 
 	if (old_rnc && old_rnc != rnc) {
 		/* LAC,RAC already exists in a different RNC */
-		LOGPIU(LOGL_NOTICE, "LAC %u RAC %u moved from RNC %u %s",
-		       lac, rac, old_rnc->rnc_id, osmo_sccp_addr_dump(&old_rnc->sccp_addr));
-		LOGPIUC(LOGL_NOTICE, " to RNC %u %s\n",
-			rnc->rnc_id, osmo_sccp_addr_dump(&rnc->sccp_addr));
+		LOGPIU(LOGL_NOTICE, "LAC %u RAC %u moved from RNC %s %s",
+		       lac, rac, osmo_rnc_id_name(&old_rnc->rnc_id), osmo_sccp_addr_dump(&old_rnc->sccp_addr));
+		LOGPIUC(LOGL_NOTICE, " to RNC %s %s\n",
+			osmo_rnc_id_name(&rnc->rnc_id), osmo_sccp_addr_dump(&rnc->sccp_addr));
 
 		llist_del(&lre->entry);
 		llist_add(&lre->entry, &rnc->lac_rac_list);
 	} else if (!old_rnc) {
 		/* LAC,RAC not recorded yet */
-		LOGPIU(LOGL_NOTICE, "RNC %u: new LAC %u RAC %u\n", rnc_id, lac, rac);
+		LOGPIU(LOGL_NOTICE, "RNC %s: new LAC %u RAC %u\n", osmo_rnc_id_name(rnc_id), lac, rac);
 		lre = talloc_zero(rnc, struct iu_lac_rac_entry);
 		lre->lac = lac;
 		lre->rac = rac;
@@ -376,7 +377,7 @@ int ranap_iu_tx_common_id(struct ranap_ue_conn_ctx *uectx, const char *imsi)
 	return osmo_sccp_user_sap_down(g_scu, &prim->oph);
 }
 
-static int iu_grnc_id_parse(struct iu_grnc_id *dst, struct RANAP_GlobalRNC_ID *src)
+static int iu_grnc_id_parse(struct osmo_rnc_id *dst, struct RANAP_GlobalRNC_ID *src)
 {
 	/* The size is coming from arbitrary sender, check it gracefully */
 	if (src->pLMNidentity.size != 3) {
@@ -411,7 +412,7 @@ static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *i
 {
 	struct new_ue_conn_ctx *new_ctx = ctx;
 	struct gprs_ra_id ra_id;
-	struct iu_grnc_id grnc_id;
+	struct osmo_rnc_id rnc_id = {};
 	uint16_t sai;
 	struct ranap_ue_conn_ctx *ue;
 	struct msgb *msg = msgb_alloc(256, "RANAP->NAS");
@@ -426,7 +427,7 @@ static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *i
 		ra_id.rac = asn1str_to_u8(&ies->rac);
 	}
 
-	if (iu_grnc_id_parse(&grnc_id, &ies->globalRNC_ID) != 0) {
+	if (iu_grnc_id_parse(&rnc_id, &ies->globalRNC_ID) != 0) {
 		LOGPIU(LOGL_ERROR,
 		       "Failed to parse RANAP Global-RNC-ID IE\n");
 		return -1;
@@ -437,7 +438,7 @@ static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *i
 	memcpy(msgb_gmmh(msg), ies->nas_pdu.buf, ies->nas_pdu.size);
 
 	/* Make sure we know the RNC Id and LAC+RAC coming in on this connection. */
-	rnc = iu_rnc_register(grnc_id.rnc_id, ra_id.lac, ra_id.rac, &new_ctx->sccp_addr);
+	rnc = iu_rnc_register(&rnc_id, ra_id.lac, ra_id.rac, &new_ctx->sccp_addr);
 
 	ue = ue_conn_ctx_alloc(rnc, new_ctx->conn_id);
 	OSMO_ASSERT(ue);
