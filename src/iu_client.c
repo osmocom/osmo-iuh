@@ -116,6 +116,7 @@ const struct value_string ranap_iu_event_type_names[] = {
 	OSMO_VALUE_STRING(RANAP_IU_EVENT_SECURITY_MODE_COMPLETE),
 	OSMO_VALUE_STRING(RANAP_IU_EVENT_IU_RELEASE),
 	OSMO_VALUE_STRING(RANAP_IU_EVENT_LINK_INVALIDATED),
+	OSMO_VALUE_STRING(RANAP_IU_EVENT_NEW_AREA),
 	{ 0, NULL }
 };
 
@@ -126,13 +127,32 @@ static int global_iu_event(struct ranap_ue_conn_ctx *ue_ctx,
 	if (!global_iu_event_cb)
 		return 0;
 
-	if (!ue_ctx->notification)
+	if (ue_ctx && !ue_ctx->notification)
 		return 0;
 
 	LOGPIU(LOGL_DEBUG, "Submit Iu event to upper layer: %s\n", ranap_iu_event_type_str(type));
 
 	return global_iu_event_cb(ue_ctx, type, data);
 }
+
+static void global_iu_event_new_area(const struct osmo_rnc_id *rnc_id, const struct osmo_routing_area_id *rai)
+{
+	struct ranap_iu_event_new_area new_area = (struct ranap_iu_event_new_area) {
+	    .rnc_id = rnc_id,
+	    .cell_type = RANAP_IU_NEW_RAC
+	};
+
+	if (rai->rac == OSMO_RESERVED_RAC) {
+		new_area.cell_type = RANAP_IU_NEW_LAC;
+		new_area.u.lai = &rai->lac;
+	} else {
+		new_area.cell_type = RANAP_IU_NEW_RAC;
+		new_area.u.rai = rai;
+	}
+
+	global_iu_event(NULL, RANAP_IU_EVENT_NEW_AREA, &new_area);
+}
+
 
 static void ue_conn_ctx_release_timeout_cb(void *ctx_)
 {
@@ -330,12 +350,14 @@ static struct ranap_iu_rnc *iu_rnc_register(struct osmo_rnc_id *rnc_id,
 
 		llist_del(&lre->entry);
 		llist_add(&lre->entry, &rnc->lac_rac_list);
+		global_iu_event_new_area(rnc_id, rai);
 	} else if (!old_rnc) {
 		/* LAC, RAC not recorded yet */
 		LOGPIU(LOGL_NOTICE, "RNC %s: new LAC/RAC %s\n", osmo_rnc_id_name(rnc_id), osmo_rai_name2(rai));
 		lre = talloc_zero(rnc, struct iu_lac_rac_entry);
 		lre->rai = *rai;
 		llist_add(&lre->entry, &rnc->lac_rac_list);
+		global_iu_event_new_area(rnc_id, rai);
 	}
 	/* else, LAC,RAC already recorded with the current RNC. */
 
@@ -958,7 +980,6 @@ int ranap_iu_page_ps2(const char *imsi, const uint32_t *ptmsi, const struct osmo
 
 	return paged;
 }
-
 
 /***********************************************************************
  *

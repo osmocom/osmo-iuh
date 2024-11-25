@@ -38,11 +38,26 @@ struct ranap_ue_conn_ctx {
 	struct osmo_timer_list release_timeout;
 };
 
+enum ranap_iu_event_new_area_type {
+	RANAP_IU_NEW_LAC,
+	RANAP_IU_NEW_RAC,
+};
+
+struct ranap_iu_event_new_area {
+	const struct osmo_rnc_id *rnc_id;
+	enum ranap_iu_event_new_area_type cell_type;
+	union {
+		const struct osmo_location_area_id *lai;
+		const struct osmo_routing_area_id *rai;
+	} u;
+};
+
 enum ranap_iu_event_type {
 	RANAP_IU_EVENT_RAB_ASSIGN,
 	RANAP_IU_EVENT_SECURITY_MODE_COMPLETE,
 	RANAP_IU_EVENT_IU_RELEASE, /* An actual Iu Release message was received */
 	RANAP_IU_EVENT_LINK_INVALIDATED, /* A SUA link was lost or closed down */
+	RANAP_IU_EVENT_NEW_AREA, /* Either a new LAC/RAC has been detected */
 };
 
 extern const struct value_string ranap_iu_event_type_names[];
