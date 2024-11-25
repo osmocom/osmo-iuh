@@ -50,10 +50,7 @@ struct iu_grnc_id {
 struct iu_lac_rac_entry {
 	struct llist_head entry;
 
-	/* LAC: Location Area Code (for CS and PS) */
-	uint16_t lac;
-	/* RAC: Routing Area Code (for PS only) */
-	uint8_t rac;
+	struct osmo_routing_area_id rai;
 };
 
 /* Entry to cache conn_id <-> sccp_addr mapping in case we receive an empty CR */
@@ -110,6 +107,9 @@ static LLIST_HEAD(rnc_list);
 static struct osmo_sccp_instance *g_sccp;
 static struct osmo_sccp_user *g_scu;
 static struct osmo_sccp_addr g_local_sccp_addr;
+
+/* This rac will be used internally. RAC with 0xff will be rejected */
+#define OSMO_RESERVED_RAC 0xff
 
 const struct value_string ranap_iu_event_type_names[] = {
 	OSMO_VALUE_STRING(RANAP_IU_EVENT_RAB_ASSIGN),
@@ -230,7 +230,7 @@ static struct ranap_iu_rnc *iu_rnc_alloc(const struct osmo_rnc_id *rnc_id, struc
  * If rnc and lre pointers are not NULL, *rnc / *lre are set to NULL if no match is found, or to the
  * match if a match is found.  Return true if a match is found. */
 static bool iu_rnc_lac_rac_find(struct ranap_iu_rnc **rnc, struct iu_lac_rac_entry **lre,
-				uint16_t lac, uint8_t rac)
+				const struct osmo_routing_area_id *ra_id)
 {
 	struct ranap_iu_rnc *r;
 	struct iu_lac_rac_entry *e;
@@ -242,7 +242,33 @@ static bool iu_rnc_lac_rac_find(struct ranap_iu_rnc **rnc, struct iu_lac_rac_ent
 
 	llist_for_each_entry(r, &rnc_list, entry) {
 		llist_for_each_entry(e, &r->lac_rac_list, entry) {
-			if (e->lac == lac && e->rac == rac) {
+			if (!osmo_rai_cmp(&e->rai, ra_id)) {
+				if (rnc)
+					*rnc = r;
+				if (lre)
+					*lre = e;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+/* legacy, do a first match with ignoring PLMN */
+static bool iu_rnc_lac_rac_find_legacy(struct ranap_iu_rnc **rnc, struct iu_lac_rac_entry **lre,
+				       uint16_t lac, uint8_t rac)
+{
+	struct ranap_iu_rnc *r;
+	struct iu_lac_rac_entry *e;
+
+	if (rnc)
+		*rnc = NULL;
+	if (lre)
+		*lre = NULL;
+
+	llist_for_each_entry(r, &rnc_list, entry) {
+		llist_for_each_entry(e, &r->lac_rac_list, entry) {
+			if (e->rai.lac.lac == lac && e->rai.rac == rac) {
 				if (rnc)
 					*rnc = r;
 				if (lre)
@@ -271,8 +297,9 @@ static bool same_sccp_addr(struct osmo_sccp_addr *a, struct osmo_sccp_addr *b)
 	return !strcmp(buf, osmo_sccp_addr_dump(b));
 }
 
-static struct ranap_iu_rnc *iu_rnc_register(struct osmo_rnc_id *rnc_id, uint16_t lac,
-					    uint8_t rac, struct osmo_sccp_addr *addr)
+static struct ranap_iu_rnc *iu_rnc_register(struct osmo_rnc_id *rnc_id,
+					    const struct osmo_routing_area_id *rai,
+					    struct osmo_sccp_addr *addr)
 {
 	struct ranap_iu_rnc *rnc;
 	struct ranap_iu_rnc *old_rnc;
@@ -283,31 +310,31 @@ static struct ranap_iu_rnc *iu_rnc_register(struct osmo_rnc_id *rnc_id, uint16_t
 
 	if (rnc) {
 		if (!same_sccp_addr(&rnc->sccp_addr, addr)) {
-			LOGPIU(LOGL_NOTICE, "RNC %s changed its SCCP addr to %s (LAC=%u RAC=%u)\n",
-			       osmo_rnc_id_name(rnc_id), osmo_sccp_addr_dump(addr), lac, rac);
+			LOGPIU(LOGL_NOTICE, "RNC %s changed its SCCP addr to %s (LAC/RAC %s)\n",
+			       osmo_rnc_id_name(rnc_id), osmo_sccp_addr_dump(addr), osmo_rai_name2(rai));
 			rnc->sccp_addr = *addr;
 		}
 	} else
 		rnc = iu_rnc_alloc(rnc_id, addr);
 
 	/* Detect whether the LAC,RAC is already recorded in another RNC */
-	iu_rnc_lac_rac_find(&old_rnc, &lre, lac, rac);
+	iu_rnc_lac_rac_find(&old_rnc, &lre, rai);
 
 	if (old_rnc && old_rnc != rnc) {
-		/* LAC,RAC already exists in a different RNC */
-		LOGPIU(LOGL_NOTICE, "LAC %u RAC %u moved from RNC %s %s",
-		       lac, rac, osmo_rnc_id_name(&old_rnc->rnc_id), osmo_sccp_addr_dump(&old_rnc->sccp_addr));
+		/* LAC, RAC already exists in a different RNC */
+		LOGPIU(LOGL_NOTICE, "LAC/RAC %s moved from RNC %s %s",
+		       osmo_rai_name2(rai),
+		       osmo_rnc_id_name(&old_rnc->rnc_id), osmo_sccp_addr_dump(&old_rnc->sccp_addr));
 		LOGPIUC(LOGL_NOTICE, " to RNC %s %s\n",
 			osmo_rnc_id_name(&rnc->rnc_id), osmo_sccp_addr_dump(&rnc->sccp_addr));
 
 		llist_del(&lre->entry);
 		llist_add(&lre->entry, &rnc->lac_rac_list);
 	} else if (!old_rnc) {
-		/* LAC,RAC not recorded yet */
-		LOGPIU(LOGL_NOTICE, "RNC %s: new LAC %u RAC %u\n", osmo_rnc_id_name(rnc_id), lac, rac);
+		/* LAC, RAC not recorded yet */
+		LOGPIU(LOGL_NOTICE, "RNC %s: new LAC/RAC %s\n", osmo_rnc_id_name(rnc_id), osmo_rai_name2(rai));
 		lre = talloc_zero(rnc, struct iu_lac_rac_entry);
-		lre->lac = lac;
-		lre->rac = rac;
+		lre->rai = *rai;
 		llist_add(&lre->entry, &rnc->lac_rac_list);
 	}
 	/* else, LAC,RAC already recorded with the current RNC. */
@@ -411,7 +438,8 @@ struct new_ue_conn_ctx {
 static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *ies)
 {
 	struct new_ue_conn_ctx *new_ctx = ctx;
-	struct gprs_ra_id ra_id;
+	struct gprs_ra_id ra_id = {};
+	struct osmo_routing_area_id ra_id2 = {};
 	struct osmo_rnc_id rnc_id = {};
 	uint16_t sai;
 	struct ranap_ue_conn_ctx *ue;
@@ -425,6 +453,13 @@ static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *i
 
 	if (ies->presenceMask & INITIALUE_MESSAGEIES_RANAP_RAC_PRESENT) {
 		ra_id.rac = asn1str_to_u8(&ies->rac);
+		if (ra_id.rac == OSMO_RESERVED_RAC) {
+			LOGPIU(LOGL_ERROR,
+			       "Rejecting RNC with invalid/internally used RAC 0x%02x\n", ra_id.rac);
+			return -1;
+		}
+	} else {
+		ra_id.rac = OSMO_RESERVED_RAC;
 	}
 
 	if (iu_grnc_id_parse(&rnc_id, &ies->globalRNC_ID) != 0) {
@@ -437,8 +472,10 @@ static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *i
 	msgb_gmmh(msg) = msgb_put(msg, ies->nas_pdu.size);
 	memcpy(msgb_gmmh(msg), ies->nas_pdu.buf, ies->nas_pdu.size);
 
+	gprs_rai_to_osmo(&ra_id2, &ra_id);
+
 	/* Make sure we know the RNC Id and LAC+RAC coming in on this connection. */
-	rnc = iu_rnc_register(&rnc_id, ra_id.lac, ra_id.rac, &new_ctx->sccp_addr);
+	rnc = iu_rnc_register(&rnc_id, &ra_id2, &new_ctx->sccp_addr);
 
 	ue = ue_conn_ctx_alloc(rnc, new_ctx->conn_id);
 	OSMO_ASSERT(ue);
@@ -790,7 +827,7 @@ static int iu_page(const char *imsi, const uint32_t *tmsi_or_ptmsi,
 	int log_level;
 	int paged = 0;
 
-	iu_rnc_lac_rac_find(&rnc, NULL, lac, rac);
+	iu_rnc_lac_rac_find_legacy(&rnc, NULL, lac, rac);
 	if (rnc) {
 		if (iu_tx_paging_cmd(&rnc->sccp_addr, imsi, tmsi_or_ptmsi, is_ps, 0) == 0) {
 			log_msg = "Paging";
