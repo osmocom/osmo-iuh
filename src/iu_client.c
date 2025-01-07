@@ -814,7 +814,7 @@ static int iu_tx_paging_cmd(struct osmo_sccp_addr *called_addr,
 			    bool is_ps, uint32_t paging_cause)
 {
 	struct msgb *msg;
-	msg = ranap_new_msg_paging_cmd(imsi, tmsi, is_ps? 1 : 0, paging_cause);
+	msg = ranap_new_msg_paging_cmd(imsi, tmsi, is_ps ? 1 : 0, paging_cause);
 	msg->l2h = msg->data;
 	return osmo_sccp_tx_unitdata_msg(g_scu, &g_local_sccp_addr, called_addr, msg);
 }
@@ -856,14 +856,107 @@ static int iu_page(const char *imsi, const uint32_t *tmsi_or_ptmsi,
 	return paged;
 }
 
+/*! Old paging() doesn't use PLMN and transmit paging command only to the first RNC  */
 int ranap_iu_page_cs(const char *imsi, const uint32_t *tmsi, uint16_t lac)
 {
 	return iu_page(imsi, tmsi, lac, 0, false);
 }
 
+/*! Old paging() doesn't use PLMN and transmit paging command only to the first RNC  */
 int ranap_iu_page_ps(const char *imsi, const uint32_t *ptmsi, uint16_t lac, uint8_t rac)
 {
 	return iu_page(imsi, ptmsi, lac, rac, true);
+}
+
+/*! Transmit a single page request towards all RNCs serving the specific LAI (no page retransmission).
+ *
+ * \param imsi the imsi as human readable string
+ * \param tmsi NULL or pointer to the tmsi
+ * \param lai full Location Area Identifier
+ * \return amount of paged RNCs. 0 when no RNC found.
+ */
+int ranap_iu_page_cs2(const char *imsi, const uint32_t *tmsi, const struct osmo_location_area_id *lai)
+{
+	struct ranap_iu_rnc *rnc;
+	struct iu_lac_rac_entry *entry;
+	char log_msg[32] = {};
+	int paged = 0;
+	int rc = 0;
+
+	/* find all RNCs which are serving this LA */
+	llist_for_each_entry(rnc, &rnc_list, entry) {
+		llist_for_each_entry(entry, &rnc->lac_rac_list, entry) {
+			if (osmo_lai_cmp(&entry->rai.lac, lai))
+				continue;
+
+			rc = iu_tx_paging_cmd(&rnc->sccp_addr, imsi, tmsi, false, 0);
+			if (rc > 0) {
+				LOGPIU(LOGL_ERROR, "IuCS: Failed to tx Paging RNC %s for LAC %s for IMSI %s / TMSI %08x",
+				       osmo_rnc_id_name(&rnc->rnc_id),
+				       osmo_lai_name(lai), imsi, tmsi ? *tmsi : GSM_RESERVED_TMSI);
+			}
+			paged++;
+			break;
+		}
+	}
+
+	if (tmsi)
+		snprintf(log_msg, sizeof(log_msg), "for TMSI %08x\n", *tmsi);
+	else
+		snprintf(log_msg, sizeof(log_msg) - 1, "for IMSI %s\n", imsi);
+
+	if (paged)
+		LOGPIU(LOGL_DEBUG, "IuPS: Paged %d RNCs on LAI %s for %s", paged, osmo_lai_name(lai), log_msg);
+	else
+		LOGPIU(LOGL_INFO, "IuPS: Found no RNC to Page on LAI %s for %s", osmo_lai_name(lai), log_msg);
+
+
+	return paged;
+}
+
+/*! Transmit a single page request towards all RNCs serving the specific RAI (no page retransmission).
+ *
+ * \param imsi the imsi as human readable string
+ * \param ptmsi NULL or pointer to the tmsi
+ * \param rai full Location Area Identifier
+ * \return amount of paged RNCs. 0 when no RNC found.
+ */
+int ranap_iu_page_ps2(const char *imsi, const uint32_t *ptmsi, const struct osmo_routing_area_id *rai)
+{
+	struct ranap_iu_rnc *rnc;
+	struct iu_lac_rac_entry *entry;
+	char log_msg[32] = {};
+	int paged = 0;
+	int rc = 0;
+
+	/* find all RNCs which are serving this RAC */
+	llist_for_each_entry(rnc, &rnc_list, entry) {
+		llist_for_each_entry(entry, &rnc->lac_rac_list, entry) {
+			if (osmo_rai_cmp(&entry->rai, rai))
+				continue;
+
+			rc = iu_tx_paging_cmd(&rnc->sccp_addr, imsi, ptmsi, true, 0);
+			if (rc > 0) {
+				LOGPIU(LOGL_ERROR, "IuPS: Failed to tx Paging RNC %s for RAC %s for IMSI %s / P-TMSI %08x",
+				       osmo_rnc_id_name(&rnc->rnc_id),
+				       osmo_rai_name2(rai), imsi, ptmsi ? *ptmsi : GSM_RESERVED_TMSI);
+			}
+			paged++;
+			break;
+		}
+	}
+
+	if (ptmsi)
+		snprintf(log_msg, sizeof(log_msg) - 1, "for PTMSI %08x\n", *ptmsi);
+	else
+		snprintf(log_msg, sizeof(log_msg) - 1, "for IMSI %s\n", imsi);
+
+	if (paged)
+		LOGPIU(LOGL_DEBUG, "IuPS: Paged %d RNCs on RAI %s for %s", paged, osmo_rai_name2(rai), log_msg);
+	else
+		LOGPIU(LOGL_INFO, "IuPS: Found no RNC to Page on RAI %s for %s", osmo_rai_name2(rai), log_msg);
+
+	return paged;
 }
 
 

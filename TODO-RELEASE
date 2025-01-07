@@ -9,3 +9,4 @@
 #library	what			description / commit summary line
 libosmo-ranap add API         ranap_ran_rx_co_decode2()
 libosmo-ranap deprecate API   ranap_ran_rx_co_decode()
+libosmo-ranap	add API			iu_client.h: add ranap_iu_page_cs2/ranap_iu_page_ps2

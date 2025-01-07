@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 
+#include <osmocom/core/defs.h>
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/gsm/gsm48.h>
 #include <osmocom/sigtran/sccp_sap.h>
@@ -65,8 +66,14 @@ int ranap_iu_init(void *ctx, int log_subsystem, const char *sccp_user_name, stru
 
 int ranap_iu_tx(struct msgb *msg, uint8_t sapi);
 
-int ranap_iu_page_cs(const char *imsi, const uint32_t *tmsi, uint16_t lac);
-int ranap_iu_page_ps(const char *imsi, const uint32_t *ptmsi, uint16_t lac, uint8_t rac);
+int ranap_iu_page_cs(const char *imsi, const uint32_t *tmsi, uint16_t lac)
+	OSMO_DEPRECATED("Use ranap_iu_page_cs2 instead");
+
+int ranap_iu_page_ps(const char *imsi, const uint32_t *ptmsi, uint16_t lac, uint8_t rac)
+	OSMO_DEPRECATED("Use ranap_iu_page_ps2 instead");
+
+int ranap_iu_page_cs2(const char *imsi, const uint32_t *tmsi, const struct osmo_location_area_id *lai);
+int ranap_iu_page_ps2(const char *imsi, const uint32_t *ptmsi, const struct osmo_routing_area_id *rai);
 
 int ranap_iu_rab_act(struct ranap_ue_conn_ctx *ue_ctx, struct msgb *msg);
 int ranap_iu_rab_deact(struct ranap_ue_conn_ctx *ue_ctx, uint8_t rab_id);
