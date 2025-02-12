@@ -1,3 +1,19 @@
+osmo-iuh (1.7.0) unstable; urgency=medium
+
+  [ Oliver Smith ]
+  * contrib/jenkins: libosmo-sccp -> libosmo-sigtran
+
+  [ Neels Hofmeyr ]
+  * fix memleak in ran_decode: free after aper_decode() on error
+
+  [ Pau Espin Pedrol ]
+  * ranap: Add API to encode Reset Resource into msgb
+  * jenkins.sh: libosmo-netif no longer depends on libosmo-abis
+  * jenkins.sh: Skip building unneeded libosmo-abis
+  * jenkins.sh: No need to build libosmo-sigtran with doxygen
+
+ -- Oliver Smith <osmith@sysmocom.de>  Wed, 12 Feb 2025 11:45:22 +0100
+
 osmo-iuh (1.6.0) unstable; urgency=medium
 
   [ Vadim Yanitskiy ]
