@@ -33,7 +33,7 @@
 
 #define DRANAP _ranap_DRANAP
 
-static int ran_ranap_rx_initiating_msg_co(void *ctx, RANAP_InitiatingMessage_t *imsg, ranap_message *message)
+static int ran_ranap_rx_initiating_msg_co(RANAP_InitiatingMessage_t *imsg, ranap_message *message)
 {
 	int rc = 0;
 
@@ -232,13 +232,13 @@ static void ran_ranap_free_unsuccessful_msg_co(ranap_message *message)
 	}
 }
 
-static int _ran_ranap_rx_co(void *ctx, RANAP_RANAP_PDU_t *pdu, ranap_message *message)
+static int _ran_ranap_rx_co(RANAP_RANAP_PDU_t *pdu, ranap_message *message)
 {
 	int rc = 0;
 
 	switch (pdu->present) {
 	case RANAP_RANAP_PDU_PR_initiatingMessage:
-		rc = ran_ranap_rx_initiating_msg_co(ctx, &pdu->choice.initiatingMessage, message);
+		rc = ran_ranap_rx_initiating_msg_co(&pdu->choice.initiatingMessage, message);
 		break;
 	case RANAP_RANAP_PDU_PR_successfulOutcome:
 		rc = ran_ranap_rx_successful_msg_co(&pdu->choice.successfulOutcome, message);
@@ -289,7 +289,7 @@ void ranap_ran_rx_co_free(ranap_message *message)
 }
 
 /* decode a connection-oriented RANAP message */
-int ranap_ran_rx_co_decode(void *ctx, ranap_message *message, uint8_t *data, size_t len)
+int ranap_ran_rx_co_decode2(ranap_message *message, uint8_t *data, size_t len)
 {
 	RANAP_RANAP_PDU_t *pdu = NULL;
 	asn_dec_rval_t dec_ret;
@@ -306,12 +306,17 @@ int ranap_ran_rx_co_decode(void *ctx, ranap_message *message, uint8_t *data, siz
 
 	message->direction = pdu->present;
 
-	rc = _ran_ranap_rx_co(ctx, pdu, message);
+	rc = _ran_ranap_rx_co(pdu, message);
 
 error_free:
 	ASN_STRUCT_FREE(asn_DEF_RANAP_RANAP_PDU, pdu);
 
 	return rc;
+}
+
+int ranap_ran_rx_co_decode(void *unused, ranap_message *message, uint8_t *data, size_t len)
+{
+	return ranap_ran_rx_co_decode2(message, data, len);
 }
 
 /* receive a connection-oriented RANAP message and call
@@ -321,7 +326,7 @@ int ranap_ran_rx_co(ranap_handle_cb cb, void *ctx, uint8_t *data, size_t len)
 	ranap_message message;
 	int rc;
 
-	rc = ranap_ran_rx_co_decode(ctx, &message, data, len);
+	rc = ranap_ran_rx_co_decode2(&message, data, len);
 
 	if (rc == 0)
 		(*cb) (ctx, &message);
