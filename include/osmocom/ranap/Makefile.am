@@ -6,6 +6,19 @@
 ranap_ies_defs.h:
 	$(MAKE) -C $(top_builddir)/src/ gen_ranap.stamp
 
+version.h: version.h.tpl
+	$(AM_V_GEN)$(MKDIR_P) $(dir $@)
+	$(AM_V_GEN)sed \
+		-e "s/{{VERSION}}/$$(echo '@VERSION@' | cut -d. -f1-3)/g" \
+		-e "s/{{VERSION_MAJOR}}/$$(echo '@VERSION@' | cut -d. -f1)/g" \
+		-e "s/{{VERSION_MINOR}}/$$(echo '@VERSION@' | cut -d. -f2)/g" \
+		-e "s/{{VERSION_PATCH}}/$$(echo '@VERSION@' | cut -d. -f3)/g" \
+		$< > $@
+
+EXTRA_DIST = \
+	version.h.tpl \
+	$(NULL)
+
 ranap_HEADERS = \
 	ranap_ies_defs.h \
 	ranap_common.h \
@@ -605,9 +618,13 @@ ranap_HEADERS = \
 	RANAP_VerticalAccuracyCode.h \
 	RANAP_VerticalSpeedDirection.h \
 	RANAP_VerticalVelocity.h \
-	RANAP_VoiceSupportMatchIndicator.h
+	RANAP_VoiceSupportMatchIndicator.h \
+	version.h \
+	$(NULL)
 
 ranapdir = $(includedir)/osmocom/ranap
 
 DISTCLEANFILES = \
-	ranap_ies_defs.h
+	ranap_ies_defs.h \
+	version.h \
+	$(NULL)

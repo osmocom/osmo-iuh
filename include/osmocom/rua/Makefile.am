@@ -1,3 +1,16 @@
+version.h: version.h.tpl
+	$(AM_V_GEN)$(MKDIR_P) $(dir $@)
+	$(AM_V_GEN)sed \
+		-e "s/{{VERSION}}/$$(echo '@VERSION@' | cut -d. -f1-3)/g" \
+		-e "s/{{VERSION_MAJOR}}/$$(echo '@VERSION@' | cut -d. -f1)/g" \
+		-e "s/{{VERSION_MINOR}}/$$(echo '@VERSION@' | cut -d. -f2)/g" \
+		-e "s/{{VERSION_PATCH}}/$$(echo '@VERSION@' | cut -d. -f3)/g" \
+		$< > $@
+
+EXTRA_DIST = \
+	version.h.tpl \
+	$(NULL)
+
 rua_HEADERS = \
 	rua_common.h rua_ies_defs.h rua_msg_factory.h \
 	RUA_Ansi-41-IDNNS.h \
@@ -35,9 +48,13 @@ rua_HEADERS = \
 	RUA_SuccessfulOutcome.h \
 	RUA_TriggeringMessage.h \
 	RUA_TypeOfError.h \
-	RUA_UnsuccessfulOutcome.h
+	RUA_UnsuccessfulOutcome.h \
+	version.h \
+	$(NULL)
 
 ruadir = $(includedir)/osmocom/rua
 
 DISTCLEANFILES = \
-	rua_ies_defs.h
+	rua_ies_defs.h \
+	version.h \
+	$(NULL)

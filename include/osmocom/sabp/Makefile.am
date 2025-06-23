@@ -6,6 +6,19 @@
 sabp_ies_defs.h:
 	$(MAKE) -C $(top_builddir)/src/ gen_sabp.stamp
 
+version.h: version.h.tpl
+	$(AM_V_GEN)$(MKDIR_P) $(dir $@)
+	$(AM_V_GEN)sed \
+		-e "s/{{VERSION}}/$$(echo '@VERSION@' | cut -d. -f1-3)/g" \
+		-e "s/{{VERSION_MAJOR}}/$$(echo '@VERSION@' | cut -d. -f1)/g" \
+		-e "s/{{VERSION_MINOR}}/$$(echo '@VERSION@' | cut -d. -f2)/g" \
+		-e "s/{{VERSION_PATCH}}/$$(echo '@VERSION@' | cut -d. -f3)/g" \
+		$< > $@
+
+EXTRA_DIST = \
+	version.h.tpl \
+	$(NULL)
+
 sabp_HEADERS = \
 	sabp_ies_defs.h \
 	sabp_common.h \
@@ -72,9 +85,12 @@ sabp_HEADERS = \
 	SABP_Failure.h	\
 	SABP_Error-Indication.h	\
 	SABP_IE.h \
+	version.h \
 	$(NULL)
 
 sabpdir = $(includedir)/osmocom/sabp
 
 DISTCLEANFILES = \
-	sabp_ies_defs.h
+	sabp_ies_defs.h \
+	version.h \
+	$(NULL)

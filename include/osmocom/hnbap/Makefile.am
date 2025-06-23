@@ -1,3 +1,16 @@
+version.h: version.h.tpl
+	$(AM_V_GEN)$(MKDIR_P) $(dir $@)
+	$(AM_V_GEN)sed \
+		-e "s/{{VERSION}}/$$(echo '@VERSION@' | cut -d. -f1-3)/g" \
+		-e "s/{{VERSION_MAJOR}}/$$(echo '@VERSION@' | cut -d. -f1)/g" \
+		-e "s/{{VERSION_MINOR}}/$$(echo '@VERSION@' | cut -d. -f2)/g" \
+		-e "s/{{VERSION_PATCH}}/$$(echo '@VERSION@' | cut -d. -f3)/g" \
+		$< > $@
+
+EXTRA_DIST = \
+	version.h.tpl \
+	$(NULL)
+
 hnbap_HEADERS = \
 	hnbap_common.h hnbap_ies_defs.h \
 	HNBAP_AccessResult.h \
@@ -115,9 +128,13 @@ hnbap_HEADERS = \
 	HNBAP_U-RNTI.h \
 	HNBAP_U-RNTIQueryRequest.h \
 	HNBAP_U-RNTIQueryResponse.h \
-	HNBAP_UTRANCellID.h
+	HNBAP_UTRANCellID.h \
+	version.h \
+	$(NULL)
 
 hnbapdir = $(includedir)/osmocom/hnbap
 
 DISTCLEANFILES = \
-	hnbap_ies_defs.h
+	hnbap_ies_defs.h \
+	version.h \
+	$(NULL)

@@ -53,3 +53,4 @@ doc/manuals/generated
 doc/manuals/*.pdf
 
 contrib/osmo-iuh.spec
+include/osmocom/*/version.h
