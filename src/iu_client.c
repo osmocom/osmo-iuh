@@ -1004,10 +1004,127 @@ static struct osmo_prim_hdr *make_conn_resp(struct osmo_scu_connect_param *param
 	return &prim->oph;
 }
 
+static void ue_ctx_link_invalidated_free(struct ranap_ue_conn_ctx *ue)
+{
+	uint32_t conn_id = ue->conn_id;
+	global_iu_event(ue, RANAP_IU_EVENT_LINK_INVALIDATED, NULL);
+
+	/* A RANAP_IU_EVENT_LINK_INVALIDATED, can lead to a free */
+	ue = ue_conn_ctx_find(conn_id);
+	if (!ue)
+		return;
+	if (ue->free_on_release)
+		ranap_iu_free_ue(ue);
+}
+
+static void handle_pcstate_ind(struct osmo_ss7_instance *cs7, const struct osmo_scu_pcstate_param *pcst)
+{
+	struct osmo_sccp_addr rem_addr;
+	struct ranap_iu_rnc *rnc;
+	bool connected;
+	bool disconnected;
+
+	LOGPIU(LOGL_DEBUG, "N-PCSTATE ind: affected_pc=%u=%s sp_status=%s remote_sccp_status=%s\n",
+	       pcst->affected_pc, osmo_ss7_pointcode_print(cs7, pcst->affected_pc),
+	       osmo_sccp_sp_status_name(pcst->sp_status),
+	       osmo_sccp_rem_sccp_status_name(pcst->remote_sccp_status));
+
+	osmo_sccp_make_addr_pc_ssn(&rem_addr, pcst->affected_pc, OSMO_SCCP_SSN_RANAP);
+
+	/* See if this marks the point code to have become available, or to have been lost.
+	 *
+	 * I want to detect two events:
+	 * - connection event (both indicators say PC is reachable).
+	 * - disconnection event (at least one indicator says the PC is not reachable).
+	 *
+	 * There are two separate incoming indicators with various possible values -- the incoming events can be:
+	 *
+	 * - neither connection nor disconnection indicated -- just indicating congestion
+	 *   connected == false, disconnected == false --> do nothing.
+	 * - both incoming values indicate that we are connected
+	 *   --> trigger connected
+	 * - both indicate we are disconnected
+	 *   --> trigger disconnected
+	 * - one value indicates 'connected', the other indicates 'disconnected'
+	 *   --> trigger disconnected
+	 *
+	 * Congestion could imply that we're connected, but it does not indicate
+	 * that a PC's reachability changed, so no need to trigger on that.
+	 */
+	connected = false;
+	disconnected = false;
+
+	switch (pcst->sp_status) {
+	case OSMO_SCCP_SP_S_ACCESSIBLE:
+		connected = true;
+		break;
+	case OSMO_SCCP_SP_S_INACCESSIBLE:
+		disconnected = true;
+		break;
+	default:
+	case OSMO_SCCP_SP_S_CONGESTED:
+		/* Neither connecting nor disconnecting */
+		break;
+	}
+
+	switch (pcst->remote_sccp_status) {
+	case OSMO_SCCP_REM_SCCP_S_AVAILABLE:
+		if (!disconnected)
+			connected = true;
+		break;
+	case OSMO_SCCP_REM_SCCP_S_UNAVAILABLE_UNKNOWN:
+	case OSMO_SCCP_REM_SCCP_S_UNEQUIPPED:
+	case OSMO_SCCP_REM_SCCP_S_INACCESSIBLE:
+		disconnected = true;
+		connected = false;
+		break;
+	default:
+	case OSMO_SCCP_REM_SCCP_S_CONGESTED:
+		/* Neither connecting nor disconnecting */
+		break;
+	}
+
+	if (disconnected) {
+		/* A previously usable RNC has disconnected. Signal to user that all related ue_ctx are invalid. */
+		llist_for_each_entry(rnc, &rnc_list, entry) {
+			struct ranap_ue_conn_ctx *ue_ctx, *ue_ctx_tmp;
+			if (osmo_sccp_addr_cmp(&rnc->sccp_addr, &rem_addr, OSMO_SCCP_ADDR_T_SSN | OSMO_SCCP_ADDR_T_PC))
+				continue;
+			LOGPIU(LOGL_NOTICE,
+			       "RNC %s now unreachable: N-PCSTATE ind: pc=%u=%s sp_status=%s remote_sccp_status=%s\n",
+			       osmo_rnc_id_name(&rnc->rnc_id),
+			       pcst->affected_pc, osmo_ss7_pointcode_print(cs7, pcst->affected_pc),
+			       osmo_sccp_sp_status_name(pcst->sp_status),
+			       osmo_sccp_rem_sccp_status_name(pcst->remote_sccp_status));
+			llist_for_each_entry_safe(ue_ctx, ue_ctx_tmp, &ue_conn_ctx_list, list) {
+				if (ue_ctx->rnc != rnc)
+					continue;
+				ue_ctx_link_invalidated_free(ue_ctx);
+			}
+			/* TODO: ideally we'd have some event to submit to upper
+			 * layer to inform about peer availability change... */
+		}
+	} else if (connected) {
+		llist_for_each_entry(rnc, &rnc_list, entry) {
+			if (osmo_sccp_addr_cmp(&rnc->sccp_addr, &rem_addr, OSMO_SCCP_ADDR_T_SSN | OSMO_SCCP_ADDR_T_PC))
+				continue;
+			LOGPIU(LOGL_NOTICE,
+			       "RNC %s now available: N-PCSTATE ind: pc=%u=%s sp_status=%s remote_sccp_status=%s\n",
+			       osmo_rnc_id_name(&rnc->rnc_id),
+			       pcst->affected_pc, osmo_ss7_pointcode_print(cs7, pcst->affected_pc),
+			       osmo_sccp_sp_status_name(pcst->sp_status),
+			       osmo_sccp_rem_sccp_status_name(pcst->remote_sccp_status));
+			/* TODO: ideally we'd have some event to submit to upper
+			 * layer to inform about peer availability change... */
+		}
+	}
+}
+
 static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 {
 	struct osmo_sccp_user *scu = _scu;
 	struct osmo_scu_prim *prim = (struct osmo_scu_prim *) oph;
+	struct osmo_sccp_instance *sccp = osmo_sccp_get_sccp(scu);
 	struct osmo_prim_hdr *resp = NULL;
 	int rc = -1;
 	struct ranap_ue_conn_ctx *ue;
@@ -1059,15 +1176,7 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		ue = ue_conn_ctx_find(conn_id);
 		if (!ue)
 			break;
-
-		global_iu_event(ue, RANAP_IU_EVENT_LINK_INVALIDATED, NULL);
-
-		/* A RANAP_IU_EVENT_LINK_INVALIDATED, can lead to a free */
-		ue = ue_conn_ctx_find(conn_id);
-		if (!ue)
-			break;
-		if (ue->free_on_release)
-			ranap_iu_free_ue(ue);
+		ue_ctx_link_invalidated_free(ue);
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_DATA, PRIM_OP_INDICATION):
 		/* connection-oriented data received */
@@ -1099,6 +1208,14 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		LOGPIU(LOGL_DEBUG, "N-UNITDATA.ind(%s)\n",
 		       osmo_hexdump(msgb_l2(oph->msg), msgb_l2len(oph->msg)));
 		rc = ranap_cn_rx_cl(cn_ranap_handle_cl, prim, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+		break;
+	case OSMO_PRIM(OSMO_SCU_PRIM_N_PCSTATE, PRIM_OP_INDICATION):
+		handle_pcstate_ind(osmo_sccp_get_ss7(sccp), &prim->u.pcstate);
+		break;
+	case OSMO_PRIM(OSMO_SCU_PRIM_N_STATE, PRIM_OP_INDICATION):
+		LOGPIU(LOGL_DEBUG, "SCCP-User-SAP: Ignoring %s.%s\n",
+		       osmo_scu_prim_type_name(oph->primitive),
+		       get_value_string(osmo_prim_op_names, oph->operation));
 		break;
 	default:
 		break;
