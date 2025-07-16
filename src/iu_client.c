@@ -35,6 +35,7 @@
 #include <osmocom/gprs/gprs_msgb.h>
 #include <osmocom/sigtran/sccp_sap.h>
 #include <osmocom/sigtran/sccp_helpers.h>
+#include <osmocom/sccp/sccp_types.h>
 #include <osmocom/ranap/ranap_common_cn.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_msg_factory.h>
@@ -1017,6 +1018,44 @@ static void ue_ctx_link_invalidated_free(struct ranap_ue_conn_ctx *ue)
 		ranap_iu_free_ue(ue);
 }
 
+static void handle_notice_ind(struct osmo_ss7_instance *cs7, const struct osmo_scu_notice_param *ni)
+{
+	struct ranap_iu_rnc *rnc;
+
+	LOGPIU(LOGL_DEBUG, "(calling_addr=%s) N-NOTICE.ind cause=%u='%s' importance=%u\n",
+	       osmo_sccp_addr_dump(&ni->calling_addr),
+	       ni->cause, osmo_sccp_return_cause_name(ni->cause),
+	       ni->importance);
+
+	switch (ni->cause) {
+	case SCCP_RETURN_CAUSE_SUBSYSTEM_CONGESTION:
+	case SCCP_RETURN_CAUSE_NETWORK_CONGESTION:
+		/* Transient failures (hopefully), keep going. */
+		return;
+	default:
+		break;
+	}
+
+	/* Messages are not arriving to RNC. Signal to user that all related ue_ctx are invalid. */
+	llist_for_each_entry(rnc, &rnc_list, entry) {
+		struct ranap_ue_conn_ctx *ue_ctx, *ue_ctx_tmp;
+		if (osmo_sccp_addr_ri_cmp(&rnc->sccp_addr, &ni->calling_addr))
+			continue;
+		LOGPIU(LOGL_NOTICE,
+		       "RNC %s now unreachable: N-NOTICE.ind cause=%u='%s' importance=%u\n",
+		       osmo_rnc_id_name(&rnc->rnc_id),
+		       ni->cause, osmo_sccp_return_cause_name(ni->cause),
+		       ni->importance);
+		llist_for_each_entry_safe(ue_ctx, ue_ctx_tmp, &ue_conn_ctx_list, list) {
+			if (ue_ctx->rnc != rnc)
+				continue;
+			ue_ctx_link_invalidated_free(ue_ctx);
+		}
+		/* TODO: ideally we'd have some event to submit to upper
+		 * layer to inform about peer availability change... */
+	}
+}
+
 static void handle_pcstate_ind(struct osmo_ss7_instance *cs7, const struct osmo_scu_pcstate_param *pcst)
 {
 	struct osmo_sccp_addr rem_addr;
@@ -1208,6 +1247,11 @@ static int sccp_sap_up(struct osmo_prim_hdr *oph, void *_scu)
 		LOGPIU(LOGL_DEBUG, "N-UNITDATA.ind(%s)\n",
 		       osmo_hexdump(msgb_l2(oph->msg), msgb_l2len(oph->msg)));
 		rc = ranap_cn_rx_cl(cn_ranap_handle_cl, prim, msgb_l2(oph->msg), msgb_l2len(oph->msg));
+		break;
+	case OSMO_PRIM(OSMO_SCU_PRIM_N_NOTICE, PRIM_OP_INDICATION):
+		LOGPIU(LOGL_DEBUG, "N-NOTICE.ind(%s)\n",
+		       osmo_hexdump(msgb_l2(oph->msg), msgb_l2len(oph->msg)));
+		handle_notice_ind(osmo_sccp_get_ss7(sccp), &prim->u.notice);
 		break;
 	case OSMO_PRIM(OSMO_SCU_PRIM_N_PCSTATE, PRIM_OP_INDICATION):
 		handle_pcstate_ind(osmo_sccp_get_ss7(sccp), &prim->u.pcstate);
