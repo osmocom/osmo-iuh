@@ -387,7 +387,7 @@ int ranap_iu_tx_sec_mode_cmd(struct ranap_ue_conn_ctx *uectx, struct osmo_auth_v
 	struct msgb *msg;
 
 	/* create RANAP message */
-	msg = ranap_new_msg_sec_mod_cmd(vec->ik, send_ck? vec->ck : NULL,
+	msg = ranap_new_msg_sec_mod_cmd(vec->ik, send_ck ? vec->ck : NULL,
 			new_key ? RANAP_KeyStatus_new : RANAP_KeyStatus_old);
 	msg->l2h = msg->data;
 	/* wrap RANAP message in SCCP N-DATA.req */
@@ -431,7 +431,7 @@ static int iu_grnc_id_parse(struct osmo_rnc_id *dst, struct RANAP_GlobalRNC_ID *
 }
 
 #if 0
- -- not used at present --
+/* not used at present */
 static int iu_grnc_id_compose(struct iu_grnc_id *src, struct RANAP_GlobalRNC_ID *dst)
 {
 	/* The caller must ensure proper size */
@@ -515,9 +515,9 @@ static int ranap_handle_co_dt(void *ctx, RANAP_DirectTransferIEs_t *ies)
 			return -1;
 		}
 		ra_id = &_ra_id;
-		if (ies->presenceMask & DIRECTTRANSFERIES_RANAP_RAC_PRESENT) {
+		if (ies->presenceMask & DIRECTTRANSFERIES_RANAP_RAC_PRESENT)
 			_ra_id.rac = asn1str_to_u8(&ies->rac);
-		}
+
 		if (ies->presenceMask & DIRECTTRANSFERIES_RANAP_SAI_PRESENT) {
 			_sai = asn1str_to_u16(&ies->sai.sAC);
 			sai = &_sai;
@@ -656,9 +656,9 @@ static void cn_ranap_handle_co_initial(void *ctx, ranap_message *message)
 		       " procedureCode 'InitialUE_Message', instead got %u and %u\n",
 		       message->direction, message->procedureCode);
 		rc = -1;
-	}
-	else
+	} else {
 		rc = ranap_handle_co_initial_ue(ctx, &message->msg.initialUE_MessageIEs);
+	}
 
 	if (rc) {
 		LOGPIU(LOGL_ERROR, "Error in %s (%d)\n", __func__, rc);
@@ -862,7 +862,7 @@ static int iu_page(const char *imsi, const uint32_t *tmsi_or_ptmsi,
 	if (rnc)
 		LOGPIUC(log_level, " at SCCP-addr %s", osmo_sccp_addr_dump(&rnc->sccp_addr));
 	if (tmsi_or_ptmsi)
-		LOGPIUC(log_level, ", for %s %08x\n", is_ps? "PTMSI" : "TMSI", *tmsi_or_ptmsi);
+		LOGPIUC(log_level, ", for %s %08x\n", is_ps ? "PTMSI" : "TMSI", *tmsi_or_ptmsi);
 	else
 		LOGPIUC(log_level, ", for IMSI %s\n", imsi);
 

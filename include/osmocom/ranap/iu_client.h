@@ -61,14 +61,14 @@ static inline const char *ranap_iu_event_type_str(enum ranap_iu_event_type e)
 }
 
 /* Implementations of iu_recv_cb_t shall find the ranap_ue_conn_ctx in msg->dst. */
-typedef int (* ranap_iu_recv_cb_t )(struct msgb *msg, struct gprs_ra_id *ra_id,
-				    uint16_t *sai);
+typedef int (*ranap_iu_recv_cb_t)(struct msgb *msg, struct gprs_ra_id *ra_id,
+				  uint16_t *sai);
 
-typedef int (* ranap_iu_event_cb_t )(struct ranap_ue_conn_ctx *ue_ctx,
-				     enum ranap_iu_event_type type, void *data);
+typedef int (*ranap_iu_event_cb_t)(struct ranap_ue_conn_ctx *ue_ctx,
+				   enum ranap_iu_event_type type, void *data);
 
-typedef int (* ranap_iu_rab_ass_resp_cb_t )(struct ranap_ue_conn_ctx *ue_ctx, uint8_t rab_id,
-					    struct RANAP_RAB_SetupOrModifiedItemIEs_s *setup_ies);
+typedef int (*ranap_iu_rab_ass_resp_cb_t)(struct ranap_ue_conn_ctx *ue_ctx, uint8_t rab_id,
+					  struct RANAP_RAB_SetupOrModifiedItemIEs_s *setup_ies);
 
 int ranap_iu_init(void *ctx, int log_subsystem, const char *sccp_user_name, struct osmo_sccp_instance *sccp,
 		  ranap_iu_recv_cb_t iu_recv_cb, ranap_iu_event_cb_t iu_event_cb);
