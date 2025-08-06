@@ -596,6 +596,11 @@ struct gprs_ra_id;
 extern int _ranap_DRANAP;
 #define RANAP_DEBUG(x, args ...) DEBUGP(_ranap_DRANAP, x, ## args)
 
+enum ranap_nsap_addr_enc {
+	RANAP_NSAP_ADDR_ENC_X213,
+	RANAP_NSAP_ADDR_ENC_V4RAW,
+};
+
 /* Callback to be used with decoder functions in ranap_common_cn.c  ranap_common_ran.c */
 typedef void (*ranap_handle_cb)(void *priv, ranap_message *ranap_msg);
 

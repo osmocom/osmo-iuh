@@ -28,6 +28,7 @@
 
 #include <osmocom/iuh/common.h>
 #include <osmocom/ranap/iu_client.h>
+#include <osmocom/ranap/ranap_common.h>
 
 static enum ranap_nsap_addr_enc *g_rab_assign_addr_enc = NULL;
 

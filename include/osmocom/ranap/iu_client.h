@@ -6,6 +6,7 @@
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/gsm/gsm48.h>
 #include <osmocom/iuh/common.h>
+#include <osmocom/ranap/ranap_common.h>
 #include <osmocom/sigtran/sccp_sap.h>
 
 struct msgb;
@@ -15,11 +16,6 @@ struct RANAP_RAB_SetupOrModifiedItemIEs_s;
 struct RANAP_Cause;
 
 struct ranap_iu_rnc;
-
-enum ranap_nsap_addr_enc {
-	RANAP_NSAP_ADDR_ENC_X213,
-	RANAP_NSAP_ADDR_ENC_V4RAW,
-};
 
 struct ranap_ue_conn_ctx {
 	struct llist_head list;
