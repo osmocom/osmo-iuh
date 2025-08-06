@@ -5,6 +5,7 @@
 #include <osmocom/core/defs.h>
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/gsm/gsm48.h>
+#include <osmocom/iuh/common.h>
 #include <osmocom/sigtran/sccp_sap.h>
 
 struct msgb;
@@ -14,10 +15,6 @@ struct RANAP_RAB_SetupOrModifiedItemIEs_s;
 struct RANAP_Cause;
 
 struct ranap_iu_rnc;
-
-/* Debugging switches from asn1c and osmo-iuh */
-extern int asn_debug;
-extern int asn1_xer_print;
 
 enum ranap_nsap_addr_enc {
 	RANAP_NSAP_ADDR_ENC_X213,

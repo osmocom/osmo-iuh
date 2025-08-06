@@ -33,6 +33,15 @@
 
 void *talloc_asn1_ctx;
 
+/* Implement the extern asn_debug from libasn1c to indicate whether to print
+ * asn.1 debug messages (see libasn1c). */
+int asn_debug = 0;
+
+/* Implement the extern asn1_xer_print to indicate whether the ASN.1 binary
+ * code decoded and encoded during Iu communication should be logged to stderr
+ * (see asn.1 generated code in osmo-iuh). */
+int asn1_xer_print = 0;
+
 /* decode a BCD-string as used inside ASN.1 encoded Iu interface protocols */
 int ranap_bcd_decode(char *out, size_t out_len, const uint8_t *in, size_t in_len)
 {
