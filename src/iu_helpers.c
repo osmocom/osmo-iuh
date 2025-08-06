@@ -31,6 +31,8 @@
 #include <osmocom/ranap/RANAP_TransportLayerAddress.h>
 #include <osmocom/ranap/RANAP_TransportLayerInformation.h>
 
+void *talloc_asn1_ctx;
+
 /* decode a BCD-string as used inside ASN.1 encoded Iu interface protocols */
 int ranap_bcd_decode(char *out, size_t out_len, const uint8_t *in, size_t in_len)
 {

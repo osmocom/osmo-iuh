@@ -80,7 +80,6 @@ struct ranap_iu_rnc {
 };
 
 void *talloc_iu_ctx;
-void *talloc_asn1_ctx;
 
 /* Implement the extern asn_debug from libasn1c to indicate whether to print
  * asn.1 debug messages (see libasn1c). */
