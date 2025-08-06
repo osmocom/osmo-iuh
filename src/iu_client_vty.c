@@ -26,9 +26,10 @@
 #include <osmocom/sigtran/osmo_ss7.h>
 #include <osmocom/sigtran/sccp_sap.h>
 
+#include <osmocom/iuh/iu_common.h>
 #include <osmocom/iuh/common.h>
-#include <osmocom/ranap/iu_client.h>
 #include <osmocom/ranap/ranap_common.h>
+#include <osmocom/ranap/vty.h>
 
 static enum ranap_nsap_addr_enc *g_rab_assign_addr_enc = NULL;
 

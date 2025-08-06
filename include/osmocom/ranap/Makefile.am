@@ -619,6 +619,7 @@ ranap_HEADERS = \
 	RANAP_VerticalSpeedDirection.h \
 	RANAP_VerticalVelocity.h \
 	RANAP_VoiceSupportMatchIndicator.h \
+	vty.h \
 	version.h \
 	$(NULL)
 

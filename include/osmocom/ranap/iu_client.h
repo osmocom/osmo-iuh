@@ -7,6 +7,7 @@
 #include <osmocom/gsm/gsm48.h>
 #include <osmocom/iuh/common.h>
 #include <osmocom/ranap/ranap_common.h>
+#include <osmocom/ranap/vty.h>
 #include <osmocom/sigtran/sccp_sap.h>
 
 struct msgb;
@@ -100,6 +101,3 @@ void ranap_iu_tx_release_free(struct ranap_ue_conn_ctx *ctx,
 /* freeing the UE will release all resources
  * This will close the SCCP connection connected to the UE */
 void ranap_iu_free_ue(struct ranap_ue_conn_ctx *ue_ctx);
-
-void ranap_iu_vty_init(int iu_parent_node, enum ranap_nsap_addr_enc *rab_assign_addr_enc);
-int ranap_iu_vty_config_write(struct vty *vty, const char *indent);
