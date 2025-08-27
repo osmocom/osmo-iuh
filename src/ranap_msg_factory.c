@@ -49,7 +49,7 @@ struct msgb *ranap_new_msg_reset(RANAP_CN_DomainIndicator_t domain,
 /*! generate RANAP RESET message. Like ranap_new_msg_reset(), but allows passing a Global-RNC-ID. */
 struct msgb *ranap_new_msg_reset2(RANAP_CN_DomainIndicator_t domain,
 				  const RANAP_Cause_t *cause,
-				  RANAP_GlobalRNC_ID_t *rnc_id)
+				  const RANAP_GlobalRNC_ID_t *rnc_id)
 {
 	RANAP_ResetIEs_t ies;
 	RANAP_Reset_t out;
@@ -89,7 +89,7 @@ struct msgb *ranap_new_msg_reset2(RANAP_CN_DomainIndicator_t domain,
 
 /*! \brief generate RANAP RESET ACK message */
 struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
-				     RANAP_GlobalRNC_ID_t *rnc_id)
+				     const RANAP_GlobalRNC_ID_t *rnc_id)
 {
 	RANAP_ResetAcknowledgeIEs_t ies;
 	RANAP_ResetAcknowledge_t out;
@@ -131,8 +131,8 @@ struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
 
 /*! \brief generate RANAP INITIAL UE message */
 struct msgb *ranap_new_msg_initial_ue(uint32_t conn_id, int is_ps,
-				     RANAP_GlobalRNC_ID_t *rnc_id,
-				     uint8_t *nas_pdu, unsigned int nas_len)
+				     const RANAP_GlobalRNC_ID_t *rnc_id,
+				     const uint8_t *nas_pdu, unsigned int nas_len)
 {
 	RANAP_InitialUE_MessageIEs_t ies;
 	RANAP_InitialUE_Message_t out;
@@ -971,7 +971,7 @@ struct msgb *ranap_new_msg_reset_resource(RANAP_CN_DomainIndicator_t domain,
 					  const RANAP_Cause_t *cause,
 					  const uint32_t *conn_id_list,
 					  unsigned int conn_id_list_len,
-					  RANAP_GlobalRNC_ID_t *rnc_id)
+					  const RANAP_GlobalRNC_ID_t *rnc_id)
 {
 	RANAP_ResetResourceItemIEs_t item_ies;
 	RANAP_ResetResourceIEs_t ies;

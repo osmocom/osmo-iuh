@@ -49,17 +49,17 @@ struct msgb *ranap_new_msg_reset(RANAP_CN_DomainIndicator_t domain,
 				 const RANAP_Cause_t *cause);
 struct msgb *ranap_new_msg_reset2(RANAP_CN_DomainIndicator_t domain,
 				 const RANAP_Cause_t *cause,
-				 RANAP_GlobalRNC_ID_t *rnc_id);
+				 const RANAP_GlobalRNC_ID_t *rnc_id);
 
 /*! \brief generate RANAP RESET ACK message */
 struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
-				     RANAP_GlobalRNC_ID_t *rnc_id);
+				     const RANAP_GlobalRNC_ID_t *rnc_id);
 
 
 /*! \brief generate RANAP INITIAL UE message */
 struct msgb *ranap_new_msg_initial_ue(uint32_t conn_id, int is_ps,
-				     RANAP_GlobalRNC_ID_t *rnc_id,
-				     uint8_t *nas_pdu, unsigned int nas_len);
+				     const RANAP_GlobalRNC_ID_t *rnc_id,
+				     const uint8_t *nas_pdu, unsigned int nas_len);
 
 /*! \brief generate RANAP IU RELEASE REQUEST message */
 struct msgb *ranap_new_msg_iu_rel_req(const RANAP_Cause_t *cause);
@@ -72,4 +72,4 @@ struct msgb *ranap_new_msg_reset_resource(RANAP_CN_DomainIndicator_t domain,
 					  const RANAP_Cause_t *cause,
 					  const uint32_t *conn_id_list,
 					  unsigned int conn_id_list_len,
-					  RANAP_GlobalRNC_ID_t *rnc_id);
+					  const RANAP_GlobalRNC_ID_t *rnc_id);

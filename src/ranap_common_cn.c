@@ -376,7 +376,7 @@ void ranap_cn_rx_co_free(ranap_message *message)
 }
 
 /* decode a connection-oriented RANAP message */
-int ranap_cn_rx_co_decode2(ranap_message *message, uint8_t *data, size_t len)
+int ranap_cn_rx_co_decode2(ranap_message *message, const uint8_t *data, size_t len)
 {
 	RANAP_RANAP_PDU_t *pdu = NULL;
 	asn_dec_rval_t dec_ret;
@@ -401,14 +401,14 @@ error_free:
 	return rc;
 }
 
-int ranap_cn_rx_co_decode(void *unused, ranap_message *message, uint8_t *data, size_t len)
+int ranap_cn_rx_co_decode(void *unused, ranap_message *message, const uint8_t *data, size_t len)
 {
 	return ranap_cn_rx_co_decode2(message, data, len);
 }
 
 /* receive a connection-oriented RANAP message and call
  * cn_ranap_handle_co() with the resulting ranap_message struct */
-int ranap_cn_rx_co(ranap_handle_cb cb, void *priv, uint8_t *data, size_t len)
+int ranap_cn_rx_co(ranap_handle_cb cb, void *priv, const uint8_t *data, size_t len)
 {
 	ranap_message message;
 	int rc;
@@ -624,7 +624,7 @@ void ranap_cn_rx_cl_free(ranap_message *message)
 }
 
 /* decode a connection-less RANAP message */
-int ranap_cn_rx_cl_decode2(ranap_message *message, uint8_t *data, size_t len)
+int ranap_cn_rx_cl_decode2(ranap_message *message, const uint8_t *data, size_t len)
 {
 	RANAP_RANAP_PDU_t *pdu = NULL;
 	asn_dec_rval_t dec_ret;
@@ -649,14 +649,14 @@ error_free:
 	return rc;
 }
 
-int ranap_cn_rx_cl_decode(void *unused, ranap_message *message, uint8_t *data, size_t len)
+int ranap_cn_rx_cl_decode(void *unused, ranap_message *message, const uint8_t *data, size_t len)
 {
 	return ranap_cn_rx_cl_decode2(message, data, len);
 }
 
 /* receive a connection-less RANAP message and call
  * cn_ranap_handle_co() with the resulting ranap_message struct */
-int ranap_cn_rx_cl(ranap_handle_cb cb, void *priv, uint8_t *data, size_t len)
+int ranap_cn_rx_cl(ranap_handle_cb cb, void *priv, const uint8_t *data, size_t len)
 {
 	ranap_message message;
 	int rc;
