@@ -7,6 +7,7 @@
 #include <osmocom/ranap/RANAP_GlobalRNC-ID.h>
 #include <osmocom/ranap/RANAP_ChosenIntegrityProtectionAlgorithm.h>
 #include <osmocom/ranap/RANAP_ChosenEncryptionAlgorithm.h>
+#include <osmocom/ranap/RANAP_CriticalityDiagnostics.h>
 #include <osmocom/ranap/RANAP_KeyStatus.h>
 
 /*! \brief generate RANAP DIRECT TRANSFER message */
@@ -53,6 +54,12 @@ struct msgb *ranap_new_msg_reset2(RANAP_CN_DomainIndicator_t domain,
 
 /*! \brief generate RANAP RESET ACK message */
 struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
+				     const RANAP_GlobalRNC_ID_t *rnc_id);
+
+/*! \brief generate RANAP ERROR INDICATION message */
+struct msgb *ranap_new_msg_error_ind(const RANAP_Cause_t *cause,
+				     const RANAP_CriticalityDiagnostics_t *criticalityDiagnostics,
+				     const RANAP_CN_DomainIndicator_t *domain,
 				     const RANAP_GlobalRNC_ID_t *rnc_id);
 
 

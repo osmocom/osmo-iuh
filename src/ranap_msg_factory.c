@@ -129,6 +129,60 @@ struct msgb *ranap_new_msg_reset_ack(RANAP_CN_DomainIndicator_t domain,
 	return msg;
 }
 
+/*! \brief generate RANAP ERROR INDICATION message */
+struct msgb *ranap_new_msg_error_ind(const RANAP_Cause_t *cause,
+				     const RANAP_CriticalityDiagnostics_t *criticalityDiagnostics,
+				     const RANAP_CN_DomainIndicator_t *domain,
+				     const RANAP_GlobalRNC_ID_t *rnc_id)
+{
+	RANAP_ErrorIndicationIEs_t ies;
+	RANAP_ErrorIndication_t out;
+	struct msgb *msg;
+	int rc;
+
+	memset(&ies, 0, sizeof(ies));
+
+	if (cause) {
+		ies.presenceMask |= ERRORINDICATIONIES_RANAP_CAUSE_PRESENT;
+		memcpy(&ies.cause, cause, sizeof(ies.cause));
+	}
+
+	if (criticalityDiagnostics) {
+		ies.presenceMask |= ERRORINDICATIONIES_RANAP_CRITICALITYDIAGNOSTICS_PRESENT;
+		memcpy(&ies.criticalityDiagnostics, criticalityDiagnostics, sizeof(ies.criticalityDiagnostics));
+	}
+
+	if (domain) {
+		ies.presenceMask |= ERRORINDICATIONIES_RANAP_CN_DOMAININDICATOR_PRESENT;
+		ies.cN_DomainIndicator = *domain;
+	}
+
+	if (rnc_id) {
+		ies.presenceMask = RESETACKNOWLEDGEIES_RANAP_GLOBALRNC_ID_PRESENT;
+		OCTET_STRING_noalloc(&ies.globalRNC_ID.pLMNidentity,
+				     rnc_id->pLMNidentity.buf,
+				     rnc_id->pLMNidentity.size);
+		ies.globalRNC_ID.rNC_ID = rnc_id->rNC_ID;
+	}
+
+	memset(&out, 0, sizeof(out));
+	rc = ranap_encode_errorindicationies(&out, &ies);
+	if (rc < 0) {
+		LOGP(DRANAP, LOGL_ERROR, "error encoding ErrorIndication IEs: %d\n", rc);
+		return NULL;
+	}
+
+	msg = ranap_generate_initiating_message(RANAP_ProcedureCode_id_ErrorIndication,
+						RANAP_Criticality_ignore,
+						&asn_DEF_RANAP_ErrorIndication,
+						&out);
+
+	/* release dynamic allocations attached to dt */
+	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_ErrorIndication, &out);
+
+	return msg;
+}
+
 /*! \brief generate RANAP INITIAL UE message */
 struct msgb *ranap_new_msg_initial_ue(uint32_t conn_id, int is_ps,
 				     const RANAP_GlobalRNC_ID_t *rnc_id,
