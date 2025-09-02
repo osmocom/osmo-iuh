@@ -544,10 +544,10 @@ struct msgb *ranap_new_msg_paging_cmd(const char *imsi, const uint32_t *tmsi, in
 		ies.presenceMask |= PAGINGIES_RANAP_TEMPORARYUE_ID_PRESENT;
 		if (is_ps) {
 			ies.temporaryUE_ID.present = RANAP_TemporaryUE_ID_PR_p_TMSI;
-			asn1_u32_to_str(&ies.temporaryUE_ID.choice.tMSI, tmsi_buf, *tmsi);
+			asn1_u32_to_str(&ies.temporaryUE_ID.choice.p_TMSI, tmsi_buf, *tmsi);
 		} else {
 			ies.temporaryUE_ID.present = RANAP_TemporaryUE_ID_PR_tMSI;
-			asn1_u32_to_str(&ies.temporaryUE_ID.choice.p_TMSI, tmsi_buf, *tmsi);
+			asn1_u32_to_str(&ies.temporaryUE_ID.choice.tMSI, tmsi_buf, *tmsi);
 		}
 	}
 
