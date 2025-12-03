@@ -1,3 +1,31 @@
+osmo-iuh (1.8.0) unstable; urgency=medium
+
+  [ Pau Espin Pedrol ]
+  * ranap_common_ran: remove unused ctx args
+  * ranap_common_ran: rename ctx -> priv
+  * iu_client: Initial N-PCSTATE.ind support
+  * iu_client: Initial N-NOTICE.ind support (Routing Failure of SCCP CL messages)
+  * ranap: Constify multiple ptr params
+  * ranap: Introduce ranap_new_msg_error_ind()
+  * ranap: Fix wrong PTMSI vs TMSI field passed during ranap_new_msg_paging_cmd()
+
+  [ Oliver Smith ]
+  * Generate version.h files
+  * debian: fix installing osmocom/iuh/common.h
+
+  [ Alexander Couzens ]
+  * iu_client: use new struct osmo_rnc_id
+  * iu_client: refactor LAC/RAC handling
+  * iu_client: add ranap_iu_page_cs2/ranap_iu_page_ps2
+  * iu_client: add a new event NEW_AREA
+  * move talloc_asn1_ctx into iu_helpers
+  * move general asn debug options into iu_helpers
+  * move enum ranap_nsap_addr_enc into ranap_common.h
+  * move vty functions into own vty.h
+  * iu_client: fix linter issues
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Wed, 03 Dec 2025 18:36:26 +0100
+
 osmo-iuh (1.7.0) unstable; urgency=medium
 
   [ Oliver Smith ]
