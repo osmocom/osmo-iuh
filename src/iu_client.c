@@ -482,6 +482,12 @@ static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *i
 	}
 
 	sai = asn1str_to_u16(&ies->sai.sAC);
+	if (ies->nas_pdu.size > msgb_tailroom(msg)) {
+		LOGPIU(LOGL_ERROR, "RANAP InitialUE: NAS-PDU size %d > tailroom %d, dropping\n",
+		       ies->nas_pdu.size, msgb_tailroom(msg));
+		msgb_free(msg);
+		return -1;
+	}
 	msgb_gmmh(msg) = msgb_put(msg, ies->nas_pdu.size);
 	memcpy(msgb_gmmh(msg), ies->nas_pdu.buf, ies->nas_pdu.size);
 
@@ -524,6 +530,12 @@ static int ranap_handle_co_dt(void *ctx, RANAP_DirectTransferIEs_t *ies)
 		}
 	}
 
+	if (ies->nas_pdu.size > msgb_tailroom(msg)) {
+		LOGPIU(LOGL_ERROR, "RANAP DirectTransfer: NAS-PDU size %d > tailroom %d, dropping\n",
+		       ies->nas_pdu.size, msgb_tailroom(msg));
+		msgb_free(msg);
+		return -1;
+	}
 	msgb_gmmh(msg) = msgb_put(msg, ies->nas_pdu.size);
 	memcpy(msgb_gmmh(msg), ies->nas_pdu.buf, ies->nas_pdu.size);
 
