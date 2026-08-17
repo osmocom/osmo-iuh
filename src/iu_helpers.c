@@ -194,12 +194,12 @@ int ranap_transp_layer_addr_decode2(struct osmo_sockaddr *addr, bool *uses_x213_
 	return 0;
 }
 
-int ranap_new_transp_layer_addr(BIT_STRING_t *out, struct osmo_sockaddr *addr, bool use_x213_nsap)
+int ranap_new_transp_layer_addr(BIT_STRING_t *out, const struct osmo_sockaddr *addr, bool use_x213_nsap)
 {
 	uint8_t *buf;
 	unsigned int len;
 	size_t ip_len;
-	uint8_t *ip_addr;
+	const uint8_t *ip_addr;
 	uint16_t icp;
 
 	switch (addr->u.sa.sa_family) {
@@ -244,7 +244,7 @@ int ranap_new_transp_layer_addr(BIT_STRING_t *out, struct osmo_sockaddr *addr, b
 	return 0;
 }
 
-RANAP_TransportLayerInformation_t *ranap_new_transp_info_rtp(struct osmo_sockaddr *addr, bool use_x213_nsap)
+RANAP_TransportLayerInformation_t *ranap_new_transp_info_rtp(const struct osmo_sockaddr *addr, bool use_x213_nsap)
 {
 	RANAP_TransportLayerInformation_t *tli;
 	uint8_t binding_id[4] = { 0 };
@@ -275,7 +275,7 @@ RANAP_TransportLayerInformation_t *ranap_new_transp_info_rtp(struct osmo_sockadd
 	return tli;
 }
 
-RANAP_TransportLayerInformation_t *ranap_new_transp_info_gtp(struct osmo_sockaddr *addr, uint32_t tei,
+RANAP_TransportLayerInformation_t *ranap_new_transp_info_gtp(const struct osmo_sockaddr *addr, uint32_t tei,
 							     bool use_x213_nsap)
 {
 	RANAP_TransportLayerInformation_t *tli = CALLOC(1, sizeof(*tli));

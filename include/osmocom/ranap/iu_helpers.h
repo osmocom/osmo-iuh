@@ -17,7 +17,7 @@ int ranap_transp_layer_addr_decode(char *addr, unsigned int addr_len,
 				   const RANAP_TransportLayerAddress_t *trasp_layer_addr);
 int ranap_transp_layer_addr_decode2(struct osmo_sockaddr *addr, bool *uses_x213_nsap,
 				    const RANAP_TransportLayerAddress_t *trasp_layer_addr);
-RANAP_TransportLayerInformation_t *ranap_new_transp_info_rtp(struct osmo_sockaddr *addr, bool use_x213_nsap);
-RANAP_TransportLayerInformation_t *ranap_new_transp_info_gtp(struct osmo_sockaddr *addr, uint32_t tei,
+RANAP_TransportLayerInformation_t *ranap_new_transp_info_rtp(const struct osmo_sockaddr *addr, bool use_x213_nsap);
+RANAP_TransportLayerInformation_t *ranap_new_transp_info_gtp(const struct osmo_sockaddr *addr, uint32_t tei,
 							     bool use_x213_nsap);
-int ranap_new_transp_layer_addr(BIT_STRING_t *out, struct osmo_sockaddr *addr, bool use_x213_nsap);
+int ranap_new_transp_layer_addr(BIT_STRING_t *out, const struct osmo_sockaddr *addr, bool use_x213_nsap);
