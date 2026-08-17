@@ -83,9 +83,20 @@ static void test_ranap_messages(void)
 	struct msgb *msg;
 	const char *imsi = "901700123456789";
 	uint32_t tmsi = 0x01234567;
-	uint32_t rtp_ip = 0x0a0b0c0d;
-	uint16_t rtp_port = 2342;
-	uint32_t gtp_ip = 0x1a1b1c1d;
+	struct osmo_sockaddr rtp_addr = {
+		.u.sin = {
+			.sin_family = AF_INET,
+			.sin_port = htons(2342),
+			.sin_addr.s_addr = htonl(0x0a0b0c0d),
+		}
+	};
+	struct osmo_sockaddr gtp_addr = {
+		.u.sin = {
+			.sin_family = AF_INET,
+			.sin_port = htons(2152),
+			.sin_addr.s_addr = htonl(0x1a1b1c1d),
+		}
+	};
 	uint32_t gtp_tei = 0x11223344;
 	uint8_t ik[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	uint8_t ck[16] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 };
@@ -125,13 +136,13 @@ static void test_ranap_messages(void)
 		msgb_free(msg);
 
 		printf("\n==> RAB ASSIGNMENT COMMAND (VOICE)\n");
-		msg = ranap_new_msg_rab_assign_voice(1, rtp_ip, rtp_port, 1);
+		msg = ranap_new_msg_rab_assign_voice2(1, &rtp_addr, 1);
 		if (msg)
 			printf("%s\n", msgb_hexdump(msg));
 		msgb_free(msg);
 
 		printf("\n==> RAB ASSIGNMENT COMMAND (DATA)\n");
-		msg = ranap_new_msg_rab_assign_data(2, gtp_ip, gtp_tei, 1);
+		msg = ranap_new_msg_rab_assign_data2(2, &gtp_addr, gtp_tei, 1);
 		if (msg)
 			printf("%s\n", msgb_hexdump(msg));
 		msgb_free(msg);

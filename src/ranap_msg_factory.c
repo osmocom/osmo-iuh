@@ -789,20 +789,18 @@ static void assign_new_ra_id(RANAP_RAB_ID_t *id, uint8_t rab_id)
 }
 
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for CS (voice).
- * See 3GPP TS 25.413 8.2.
- * RAB ID: 3GPP TS 25.413 9.2.1.2.
- * \param rtp_ip  MGW's RTP IPv4 address in *host* byte order.
+ *  \param[in] rab_id  The RAB ID of the RAB being assigned (3GPP TS 25.413 9.2.1.2).
+ *  \param[in] rtp_addr  MGW's RTP IPv4 address and port.
+ *  \param[in] use_x213_nsap  Whether to use X.213 NSAP address encoding.
  */
-struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
-					    uint16_t rtp_port,
-					    bool use_x213_nsap)
+struct msgb *ranap_new_msg_rab_assign_voice2(uint8_t rab_id, const struct osmo_sockaddr *rtp_addr,
+					     bool use_x213_nsap)
 {
 	RANAP_ProtocolIE_FieldPair_t *pair;
 	RANAP_RAB_AssignmentRequestIEs_t ies;
 	RANAP_RAB_AssignmentRequest_t out;
 	struct msgb *msg;
 	int rc;
-	struct osmo_sockaddr rtp_addr;
 
 	memset(&ies, 0, sizeof(ies));
 	memset(&out, 0, sizeof(out));
@@ -818,10 +816,11 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	first.rAB_Parameters = new_rab_par_voice(6700, 12200);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_support_mode_for_predefined_SDU_sizes, 1); /* 2? */
 
-	rtp_addr.u.sin.sin_family = AF_INET;
-	rtp_addr.u.sin.sin_port = htons(rtp_port);
-	rtp_addr.u.sin.sin_addr.s_addr = htonl(rtp_ip);
-	first.transportLayerInformation = ranap_new_transp_info_rtp(&rtp_addr, use_x213_nsap);
+	first.transportLayerInformation = ranap_new_transp_info_rtp(rtp_addr, use_x213_nsap);
+	if (!first.transportLayerInformation) {
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_SetupOrModifyItemFirst, &first);
+		return NULL;
+	}
 
 	/* put together the 'Second' part */
 	RANAP_RAB_SetupOrModifyItemSecond_t second;
@@ -864,10 +863,38 @@ struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
 	return msg;
 }
 
+/*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for CS (voice).
+ *  \param[in] rab_id  The RAB ID of the RAB being assigned (3GPP TS 25.413 9.2.1.2).
+ *  \param[in] rtp_ip  MGW's RTP IPv4 address in *host* byte order.
+ *  \param[in] rtp_port  MGW's RTP port in *host* byte order.
+ *  \param[in] use_x213_nsap  Whether to use X.213 NSAP address encoding.
+ *
+ * See 3GPP TS 25.413 8.2.
+ */
+struct msgb *ranap_new_msg_rab_assign_voice(uint8_t rab_id, uint32_t rtp_ip,
+					    uint16_t rtp_port,
+					    bool use_x213_nsap)
+{
+	struct osmo_sockaddr rtp_addr = {
+		.u.sin = {
+			.sin_family = AF_INET,
+			.sin_port = htons(rtp_port),
+			.sin_addr.s_addr = htonl(rtp_ip),
+		}
+	};
+	return ranap_new_msg_rab_assign_voice2(rab_id, &rtp_addr, use_x213_nsap);
+}
+
 /*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for PS (data)
- * \param gtp_ip  SGSN's GTP IPv4 address in *host* byte order. */
-struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
-					   uint32_t gtp_tei, bool use_x213_nsap)
+ *  \param[in] rab_id  The RAB ID of the RAB being assigned.
+ *  \param[in] gtp_addr  SGSN's GTP IP address. sockaddr port is not used, ignored.
+ *  \param[in] gtp_tei  SGSN's GTP TEID in *host* byte order.
+ *  \param[in] use_x213_nsap  Whether to use X.213 NSAP address encoding.
+ */
+struct msgb *ranap_new_msg_rab_assign_data2(uint8_t rab_id,
+					    const struct osmo_sockaddr *gtp_addr,
+					    uint32_t gtp_tei,
+					    bool use_x213_nsap)
 {
 	RANAP_ProtocolIE_FieldPair_t *pair;
 	RANAP_RAB_AssignmentRequestIEs_t ies;
@@ -875,7 +902,6 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
 	RANAP_DataVolumeReportingIndication_t *dat_vol_ind;
 	struct msgb *msg;
 	int rc;
-	struct osmo_sockaddr gtp_addr;
 
 	memset(&ies, 0, sizeof(ies));
 	memset(&out, 0, sizeof(out));
@@ -891,10 +917,11 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
 
 	first.rAB_Parameters = new_rab_par_data(1600000, 800000);
 	first.userPlaneInformation = new_upi(RANAP_UserPlaneMode_transparent_mode, 1);
-
-	gtp_addr.u.sin.sin_family = AF_INET;
-	gtp_addr.u.sin.sin_addr.s_addr = htonl(gtp_ip);
-	first.transportLayerInformation = ranap_new_transp_info_gtp(&gtp_addr, gtp_tei, use_x213_nsap);
+	first.transportLayerInformation = ranap_new_transp_info_gtp(gtp_addr, gtp_tei, use_x213_nsap);
+	if (!first.transportLayerInformation) {
+		ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_SetupOrModifyItemFirst, &first);
+		return NULL;
+	}
 
 	/* put together the 'Second' part */
 	RANAP_RAB_SetupOrModifyItemSecond_t second;
@@ -944,6 +971,24 @@ struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
 	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_RANAP_RAB_AssignmentRequest, &out);
 
 	return msg;
+}
+
+/*! \brief generate RANAP RAB ASSIGNMENT REQUEST message for PS (data)
+ *  \param[in] rab_id  The RAB ID of the RAB being assigned
+ *  \param[in] gtp_ip  SGSN's GTP IPv4 address in *host* byte order.
+ *  \param[in] gtp_tei  SGSN's GTP TEID in *host* byte order.
+ *  \param[in] use_x213_nsap  Whether to use X.213 NSAP address encoding.
+ */
+struct msgb *ranap_new_msg_rab_assign_data(uint8_t rab_id, uint32_t gtp_ip,
+					   uint32_t gtp_tei, bool use_x213_nsap)
+{
+	struct osmo_sockaddr gtp_addr = {
+		.u.sin = {
+			.sin_family = AF_INET,
+			.sin_addr.s_addr = htonl(gtp_ip),
+		}
+	};
+	return ranap_new_msg_rab_assign_data2(rab_id, &gtp_addr, gtp_tei, use_x213_nsap);
 }
 
 /*! \brief generate RANAP IU RELEASE REQUEST message */
