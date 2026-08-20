@@ -461,6 +461,7 @@ static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *i
 
 	if (ranap_parse_lai(&ra_id, &ies->lai) != 0) {
 		LOGPIU(LOGL_ERROR, "Failed to parse RANAP LAI IE\n");
+		msgb_free(msg);
 		return -1;
 	}
 
@@ -469,6 +470,7 @@ static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *i
 		if (ra_id.rac == OSMO_RESERVED_RAC) {
 			LOGPIU(LOGL_ERROR,
 			       "Rejecting RNC with invalid/internally used RAC 0x%02x\n", ra_id.rac);
+			msgb_free(msg);
 			return -1;
 		}
 	} else {
@@ -478,6 +480,7 @@ static int ranap_handle_co_initial_ue(void *ctx, RANAP_InitialUE_MessageIEs_t *i
 	if (iu_grnc_id_parse(&rnc_id, &ies->globalRNC_ID) != 0) {
 		LOGPIU(LOGL_ERROR,
 		       "Failed to parse RANAP Global-RNC-ID IE\n");
+		msgb_free(msg);
 		return -1;
 	}
 
@@ -518,6 +521,7 @@ static int ranap_handle_co_dt(void *ctx, RANAP_DirectTransferIEs_t *ies)
 	if (ies->presenceMask & DIRECTTRANSFERIES_RANAP_LAI_PRESENT) {
 		if (ranap_parse_lai(&_ra_id, &ies->lai) != 0) {
 			LOGPIU(LOGL_ERROR, "Failed to parse RANAP LAI IE\n");
+			msgb_free(msg);
 			return -1;
 		}
 		ra_id = &_ra_id;
