@@ -298,14 +298,20 @@ int hnb_test_nas_rx_lu_accept(struct gsm48_hdr *gh, int len, int *sent_tmsi)
 	int parse_res;
 
 	len -= (const char *)&gh->data[0] - (const char *)gh;
-	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[0], len, 0, 0);
+
+	/* The Location Area Identification is a mandatory V IE of five octets
+	 * at the start of the message body (TS 24.008 section 9.2.13); the
+	 * TLV parser must start after it, or it takes the first LAI octet for
+	 * an unknown IEI and fails. */
+	parse_res = tlv_parse(&tp, &gsm48_mm_att_tlvdef, &gh->data[sizeof(*lai)],
+			      len - sizeof(*lai), 0, 0);
 	if (parse_res <= 0) {
 		printf("Error parsing Location Update Accept message: %d\n", parse_res);
 		return -1;
 	}
 
 	if (TLVP_PRESENT(&tp, GSM48_IE_MOBILE_ID)) {
-		uint8_t type = TLVP_VAL(&tp, GSM48_IE_NAME_SHORT)[0] & 0x0f;
+		uint8_t type = TLVP_VAL(&tp, GSM48_IE_MOBILE_ID)[0] & 0x0f;
 		if (type == GSM_MI_TYPE_TMSI)
 			*sent_tmsi = 1;
 		else *sent_tmsi = 0;
