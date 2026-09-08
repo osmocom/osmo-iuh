@@ -191,11 +191,24 @@ static int hnb_test_rx_ue_register_acc(struct hnb_test *hnb, ANY_t *in)
 	return 0;
 }
 
-static struct msgb *gen_nas_id_resp()
+/* Message type octet of an uplink MM message with the send sequence number
+ * N(SD) in bits 7 and 6 (3GPP TS 24.007 section 11.2.3.2.3). The network
+ * drops a message whose N(SD) is not the one it expects as a duplicate,
+ * so every uplink MM message on a connection has to count: the Location
+ * Updating Request in the InitialUE-Message is number 0. */
+static uint8_t mm_msg_type_nsd(struct hnb_test *hnb, uint8_t msg_type)
+{
+	struct hnbtest_chan *chan = hnb->cur_chan ? hnb->cur_chan : hnb->cs.chan;
+	uint8_t n_sd = chan ? chan->n_sd++ : 0;
+
+	return (msg_type & 0x3f) | ((n_sd & 0x03) << 6);
+}
+
+static struct msgb *gen_nas_id_resp(struct hnb_test *hnb)
 {
 	uint8_t id_resp[] = {
 		GSM48_PDISC_MM,
-		GSM48_MT_MM_ID_RESP,
+		mm_msg_type_nsd(hnb, GSM48_MT_MM_ID_RESP),
 		/* IMEISV */
 		0x09, /* len */
 		0x03, /* first digit (0000) + even (0) + id IMEISV (011) */
@@ -206,11 +219,11 @@ static struct msgb *gen_nas_id_resp()
 	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
 }
 
-static struct msgb *gen_nas_tmsi_realloc_compl()
+static struct msgb *gen_nas_tmsi_realloc_compl(struct hnb_test *hnb)
 {
 	uint8_t id_resp[] = {
 		GSM48_PDISC_MM,
-		GSM48_MT_MM_TMSI_REALL_COMPL,
+		mm_msg_type_nsd(hnb, GSM48_MT_MM_TMSI_REALL_COMPL),
 	};
 
 	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
@@ -219,10 +232,8 @@ static struct msgb *gen_nas_tmsi_realloc_compl()
 /* MM Authentication Response, 3GPP TS 24.008 section 9.2.3. For GSM AKA
  * only the four octet SRES is present. For UMTS AKA the first four octets
  * of RES go into that field and the rest into the Authentication Response
- * Parameter (extension) IE, as a UE does. The message type octet carries
- * N(SD) = 1: it is the second uplink MM message on the connection, after
- * the Location Updating Request (TS 24.007 section 11.2.3.2.3). */
-static struct msgb *gen_nas_auth_resp(const uint8_t *res, unsigned int res_len)
+ * Parameter (extension) IE, as a UE does. */
+static struct msgb *gen_nas_auth_resp(struct hnb_test *hnb, const uint8_t *res, unsigned int res_len)
 {
 	uint8_t buf[2 + 4 + 2 + 12];
 	unsigned int len = 0;
@@ -230,7 +241,7 @@ static struct msgb *gen_nas_auth_resp(const uint8_t *res, unsigned int res_len)
 	OSMO_ASSERT(res_len >= 4 && res_len <= 16);
 
 	buf[len++] = GSM48_PDISC_MM;
-	buf[len++] = 0x40 | GSM48_MT_MM_AUTH_RESP;
+	buf[len++] = mm_msg_type_nsd(hnb, GSM48_MT_MM_AUTH_RESP);
 	memcpy(buf + len, res, 4);
 	len += 4;
 	if (res_len > 4) {
@@ -439,7 +450,7 @@ static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct gsm48_hdr *gh,
 	if (res_len < 0)
 		return res_len;
 
-	return hnb_test_tx_dt(hnb, gen_nas_auth_resp(res, res_len));
+	return hnb_test_tx_dt(hnb, gen_nas_auth_resp(hnb, res, res_len));
 }
 
 void hnb_test_tx_iu_release_req(struct hnb_test *hnb)
@@ -473,13 +484,13 @@ static int hnb_test_nas_rx_mm(struct hnb_test *hnb, struct gsm48_hdr *gh, int le
 
 	switch (msg_type) {
 	case GSM48_MT_MM_ID_REQ:
-		return hnb_test_tx_dt(hnb, gen_nas_id_resp());
+		return hnb_test_tx_dt(hnb, gen_nas_id_resp(hnb));
 
 	case GSM48_MT_MM_LOC_UPD_ACCEPT:
 		if (hnb_test_nas_rx_lu_accept(gh, len, &sent_tmsi))
 			return -1;
 		if (sent_tmsi)
-			return hnb_test_tx_dt(hnb, gen_nas_tmsi_realloc_compl());
+			return hnb_test_tx_dt(hnb, gen_nas_tmsi_realloc_compl(hnb));
 		else
 			return 0;
 
@@ -965,6 +976,7 @@ DEFUN(chan, chan_cmd,
 	chan->imsi = talloc_strdup(chan, argv[1]);
 	chan->conn_id = conn_id;
 	conn_id++;
+	chan->n_sd = 1;	/* the Location Updating Request below is number 0 */
 
 	msg = gen_initue_lu(chan->is_ps, chan->conn_id, chan->imsi);
 	rua = rua_new_conn(chan->is_ps, chan->conn_id, msg);

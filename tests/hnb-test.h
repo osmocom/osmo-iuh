@@ -43,6 +43,9 @@ struct hnbtest_chan {
 	int is_ps;
 	uint32_t conn_id;
 	char *imsi;
+	/*! N(SD) of the next uplink MM message on this connection,
+	 *  3GPP TS 24.007 section 11.2.3.2.3 */
+	uint8_t n_sd;
 };
 
 struct hnb_test {
