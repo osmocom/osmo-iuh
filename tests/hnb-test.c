@@ -220,7 +220,7 @@ static struct msgb *gen_nas_auth_resp(uint8_t *sres)
 {
 	uint8_t id_resp[] = {
 		GSM48_PDISC_MM,
-		0x80 | GSM48_MT_MM_AUTH_RESP, /* simulate sequence nr 2 */
+		0x40 | GSM48_MT_MM_AUTH_RESP, /* N(SD) = 1: second uplink MM message after the LU Request */
 		0x61, 0xb5, 0x69, 0xf5 /* hardcoded SRES */
 	};
 
