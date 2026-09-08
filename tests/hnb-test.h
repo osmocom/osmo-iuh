@@ -72,6 +72,12 @@ struct hnb_test {
 	struct {
 		struct hnbtest_chan *chan;
 	} cs;
+	struct {
+		struct hnbtest_chan *chan;
+	} ps;
+	/*! channel the RANAP/NAS message being handled arrived on, set by the
+	 *  RUA layer from the CN domain indicator of the DirectTransfer */
+	struct hnbtest_chan *cur_chan;
 };
 
 extern struct hnb_test g_hnb_test;

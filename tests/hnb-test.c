@@ -216,17 +216,31 @@ static struct msgb *gen_nas_tmsi_realloc_compl()
 	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
 }
 
-static struct msgb *gen_nas_auth_resp(uint8_t *sres)
+/* MM Authentication Response, 3GPP TS 24.008 section 9.2.3. For GSM AKA
+ * only the four octet SRES is present. For UMTS AKA the first four octets
+ * of RES go into that field and the rest into the Authentication Response
+ * Parameter (extension) IE, as a UE does. The message type octet carries
+ * N(SD) = 1: it is the second uplink MM message on the connection, after
+ * the Location Updating Request (TS 24.007 section 11.2.3.2.3). */
+static struct msgb *gen_nas_auth_resp(const uint8_t *res, unsigned int res_len)
 {
-	uint8_t id_resp[] = {
-		GSM48_PDISC_MM,
-		0x40 | GSM48_MT_MM_AUTH_RESP, /* N(SD) = 1: second uplink MM message after the LU Request */
-		0x61, 0xb5, 0x69, 0xf5 /* hardcoded SRES */
-	};
+	uint8_t buf[2 + 4 + 2 + 12];
+	unsigned int len = 0;
 
-	memcpy(id_resp + 2, sres, 4);
+	OSMO_ASSERT(res_len >= 4 && res_len <= 16);
 
-	return ranap_new_msg_dt(0, id_resp, sizeof(id_resp));
+	buf[len++] = GSM48_PDISC_MM;
+	buf[len++] = 0x40 | GSM48_MT_MM_AUTH_RESP;
+	memcpy(buf + len, res, 4);
+	len += 4;
+	if (res_len > 4) {
+		buf[len++] = GSM48_IE_AUTH_RES_EXT;
+		buf[len++] = res_len - 4;
+		memcpy(buf + len, res + 4, res_len - 4);
+		len += res_len - 4;
+	}
+
+	return ranap_new_msg_dt(0, buf, len);
 }
 
 static int hnb_test_tx_dt(struct hnb_test *hnb, struct msgb *txm)
@@ -234,9 +248,12 @@ static int hnb_test_tx_dt(struct hnb_test *hnb, struct msgb *txm)
 	struct hnbtest_chan *chan;
 	struct msgb *rua;
 
-	chan = hnb->cs.chan;
+	/* Reply on the connection the message being handled arrived on;
+	 * outside of a receive path fall back to the CS connection. */
+	chan = hnb->cur_chan ? hnb->cur_chan : hnb->cs.chan;
 	if (!chan) {
-		printf("hnb_test_nas_tx_tmsi_realloc_compl(): No CS channel established yet.\n");
+		printf("hnb_test_tx_dt(): No signalling connection established yet.\n");
+		msgb_free(txm);
 		return -1;
 	}
 
@@ -320,10 +337,77 @@ void hnb_test_nas_rx_mm_info(struct gsm48_hdr *gh, int len)
 	}
 }
 
+/* Secret of the test subscriber: Ki for GSM AKA (COMP128v1) and K for
+ * UMTS AKA (Milenage, OP = 0). The same 16 octets are used for both so
+ * that one HLR entry serves both algorithms. */
+const uint8_t hnb_test_subscr_key[16] = {
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+	0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
+};
+
+/* Compute the answer to an authentication challenge. With an AUTN the
+ * challenge is UMTS AKA and the answer is the full RES from Milenage;
+ * without one it is GSM AKA and the answer is the SRES from COMP128v1.
+ * Returns the length of the answer written to res, or negative. */
+int hnb_test_auth_answer(const uint8_t *rand, const uint8_t *autn,
+			 uint8_t *res, size_t res_size)
+{
+	struct osmo_auth_vector vec;
+	struct osmo_sub_auth_data2 auth;
+	int rc;
+
+	memset(&vec, 0, sizeof(vec));
+	memset(&auth, 0, sizeof(auth));
+
+	if (autn) {
+		/* Milenage wants the RES length it shall produce (4 or 8) */
+		vec.res_len = 8;
+		auth.type = OSMO_AUTH_TYPE_UMTS;
+		auth.algo = OSMO_AUTH_ALG_MILENAGE;
+		memcpy(auth.u.umts.k, hnb_test_subscr_key, sizeof(hnb_test_subscr_key));
+		auth.u.umts.k_len = sizeof(hnb_test_subscr_key);
+		auth.u.umts.opc_len = 16;	/* OP = 0, derived to OPc */
+		auth.u.umts.opc_is_op = 1;
+		auth.u.umts.ind_bitlen = 5;
+	} else {
+		auth.type = OSMO_AUTH_TYPE_GSM;
+		auth.algo = OSMO_AUTH_ALG_COMP128v1;
+		memcpy(auth.u.gsm.ki, hnb_test_subscr_key, sizeof(hnb_test_subscr_key));
+	}
+
+	rc = osmo_auth_gen_vec2(&vec, &auth, rand);
+	if (rc < 0) {
+		printf("osmo_auth_gen_vec2() failed: %d\n", rc);
+		return rc;
+	}
+
+	if (autn) {
+		if (vec.res_len > res_size)
+			return -ENOSPC;
+		memcpy(res, vec.res, vec.res_len);
+		printf("UMTS AKA: rand %s", osmo_hexdump_nospc(rand, 16));
+		printf(" autn %s", osmo_hexdump_nospc(autn, 16));
+		printf(" --> res %s\n", osmo_hexdump_nospc(vec.res, vec.res_len));
+		return vec.res_len;
+	}
+
+	if (res_size < sizeof(vec.sres))
+		return -ENOSPC;
+	memcpy(res, vec.sres, sizeof(vec.sres));
+	printf("GSM AKA: rand %s", osmo_hexdump_nospc(rand, 16));
+	printf(" --> sres %s\n", osmo_hexdump_nospc(vec.sres, sizeof(vec.sres)));
+	return sizeof(vec.sres);
+}
+
 static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct gsm48_hdr *gh,
 				    int len)
 {
 	struct gsm48_auth_req *ar;
+	const uint8_t *autn = NULL;
+	const uint8_t *ie;
+	int ie_len;
+	uint8_t res[16];
+	int res_len;
 
 	len -= (const char *)&gh->data[0] - (const char *)gh;
 
@@ -335,30 +419,21 @@ static int hnb_test_nas_rx_auth_req(struct hnb_test *hnb, struct gsm48_hdr *gh,
 	printf(" :) Authentication Request :)\n");
 
 	ar = (struct gsm48_auth_req*) &gh->data[0];
-	int seq = ar->key_seq;
 
-	/* Generate SRES from *HARDCODED* Ki for Iuh testing */
-	struct osmo_auth_vector vec;
-	/* Ki 000102030405060708090a0b0c0d0e0f */
-	struct osmo_sub_auth_data2 auth = {
-		.type	= OSMO_AUTH_TYPE_GSM,
-		.algo	= OSMO_AUTH_ALG_COMP128v1,
-		.u.gsm.ki = {
-			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-			0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d,
-			0x0e, 0x0f
-		},
-	};
+	/* Optional AUTN (TLV, IEI 0x20) after the fixed part marks a UMTS
+	 * AKA challenge, TS 24.008 section 9.2.2. */
+	ie = &gh->data[sizeof(*ar)];
+	ie_len = len - sizeof(*ar);
+	if (ie_len >= 2 + 16 && ie[0] == GSM48_IE_AUTN && ie[1] == 16)
+		autn = &ie[2];
 
-	memset(&vec, 0, sizeof(vec));
-	osmo_auth_gen_vec2(&vec, &auth, ar->rand);
+	printf("seq %d %s\n", ar->key_seq, autn ? "(UMTS AKA, AUTN present)" : "(GSM AKA)");
 
-	printf("seq %d rand %s",
-	       seq, osmo_hexdump(ar->rand, sizeof(ar->rand)));
-	printf(" --> sres %s\n",
-	       osmo_hexdump(vec.sres, 4));
+	res_len = hnb_test_auth_answer(ar->rand, autn, res, sizeof(res));
+	if (res_len < 0)
+		return res_len;
 
-	return hnb_test_tx_dt(hnb, gen_nas_auth_resp(vec.sres));
+	return hnb_test_tx_dt(hnb, gen_nas_auth_resp(res, res_len));
 }
 
 void hnb_test_tx_iu_release_req(struct hnb_test *hnb)
@@ -550,6 +625,7 @@ int hnb_test_rua_rx(struct hnb_test *hnb, struct msgb *msg)
 		break;
 	case RUA_ProcedureCode_id_Disconnect:
 		printf("RUA rx Disconnect\n");
+		hnb_test_rua_disc_handle(hnb, &pdu->choice.successfulOutcome.value);
 		break;
 	case RUA_ProcedureCode_id_ErrorIndication:
 		printf("RUA rx ErrorIndication\n");
@@ -892,7 +968,9 @@ DEFUN(chan, chan_cmd,
 	vty->index = chan;
 	vty->node = CHAN_NODE;
 
-	if (!chan->is_ps)
+	if (chan->is_ps)
+		g_hnb_test.ps.chan = chan;
+	else
 		g_hnb_test.cs.chan = chan;
 
 
