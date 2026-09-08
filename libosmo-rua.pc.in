@@ -6,5 +6,6 @@ includedir=@includedir@
 Name: Osmocom RUA protocol library
 Description: C Utility Library
 Version: @VERSION@
+Requires: libosmo-ranap
 Libs: -L${libdir} -losmo-rua
 Cflags: -I${includedir}/

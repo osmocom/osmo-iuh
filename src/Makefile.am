@@ -65,10 +65,14 @@ HNBAP_LIBVERSION=2:0:2
 RANAP_LIBVERSION=12:0:5
 RUA_LIBVERSION=2:0:2
 SABP_LIBVERSION=3:0:2
-lib_LTLIBRARIES = libosmo-hnbap.la libosmo-ranap.la libosmo-rua.la libosmo-sabp.la
+# libosmo-hnbap, libosmo-rua and libosmo-sabp use asn1_xer_print and
+# talloc_asn1_ctx, both defined in iu_helpers.c of libosmo-ranap, so they
+# depend on it. Link it explicitly: GNU ld lets a shared object keep such a
+# reference unresolved despite -no-undefined, ld64 on Darwin does not.
+lib_LTLIBRARIES = libosmo-ranap.la libosmo-hnbap.la libosmo-rua.la libosmo-sabp.la
 libosmo_hnbap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(HNBAP_LIBVERSION) -no-undefined
 libosmo_hnbap_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
-			  $(ASN1C_LIBS) hnbap/libosmo-asn1-hnbap.la
+			  $(ASN1C_LIBS) hnbap/libosmo-asn1-hnbap.la libosmo-ranap.la
 libosmo_hnbap_la_SOURCES = hnbap_common.c hnbap_encoder.c hnbap_decoder.c
 
 libosmo_ranap_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RANAP_LIBVERSION) -no-undefined
@@ -79,12 +83,12 @@ libosmo_ranap_la_SOURCES = ranap_common.c ranap_encoder.c ranap_decoder.c ranap_
 
 libosmo_rua_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(RUA_LIBVERSION) -no-undefined
 libosmo_rua_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
-			  $(ASN1C_LIBS) rua/libosmo-asn1-rua.la
+			  $(ASN1C_LIBS) rua/libosmo-asn1-rua.la libosmo-ranap.la
 libosmo_rua_la_SOURCES = rua_common.c rua_encoder.c rua_decoder.c rua_msg_factory.c
 
 libosmo_sabp_la_LDFLAGS = $(AM_LDFLAGS) -version-info $(SABP_LIBVERSION) -no-undefined
 libosmo_sabp_la_LIBADD = $(OSMOCORE_LIBS) $(OSMOGSM_LIBS) $(OSMOVTY_LIBS) $(OSMOSIGTRAN_LIBS) \
-			  $(ASN1C_LIBS) sabp/libosmo-asn1-sabp.la
+			  $(ASN1C_LIBS) sabp/libosmo-asn1-sabp.la libosmo-ranap.la
 libosmo_sabp_la_SOURCES = sabp_common.c sabp_encoder.c sabp_decoder.c
 
 

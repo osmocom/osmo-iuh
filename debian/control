@@ -40,7 +40,7 @@ Package: libosmo-hnbap-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libosmo-hnbap0 (= ${binary:Version}), ${misc:Depends}
+Depends: libosmo-hnbap0 (= ${binary:Version}), libosmo-ranap-dev, ${misc:Depends}
 Description: Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
 Package: libosmo-ranap7
@@ -84,7 +84,7 @@ Package: libosmo-rua-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libosmo-rua0 (= ${binary:Version}), ${misc:Depends}
+Depends: libosmo-rua0 (= ${binary:Version}), libosmo-ranap-dev, ${misc:Depends}
 Description: Osmocom code for the Iuh interface (HNBAP, RUA, RANAP)
 
 Package: libosmo-sabp1
@@ -106,7 +106,7 @@ Package: libosmo-sabp-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: libosmo-sabp1 (= ${binary:Version}), ${misc:Depends}
+Depends: libosmo-sabp1 (= ${binary:Version}), libosmo-ranap-dev, ${misc:Depends}
 Description: Osmocom code for the Iuh interface (SABP)
 
 Package: libosmo-iuh-dev
