@@ -184,7 +184,8 @@ void ranap_iu_free_ue(struct ranap_ue_conn_ctx *ue_ctx)
 		return;
 
 	osmo_timer_del(&ue_ctx->release_timeout);
-	osmo_sccp_tx_disconn(g_scu, ue_ctx->conn_id, NULL, 0);
+	osmo_sccp_tx_disconn(g_scu, ue_ctx->conn_id, NULL,
+			     OSMO_SCCP_REL_REASON_NSU_DISC_NORMAL);
 	llist_del(&ue_ctx->list);
 	talloc_free(ue_ctx);
 }
