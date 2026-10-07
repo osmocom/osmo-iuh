@@ -35,7 +35,6 @@
 #include <osmocom/gprs/gprs_msgb.h>
 #include <osmocom/sigtran/sccp_sap.h>
 #include <osmocom/sigtran/sccp_helpers.h>
-#include <osmocom/sccp/sccp_types.h>
 #include <osmocom/ranap/ranap_common_cn.h>
 #include <osmocom/ranap/ranap_ies_defs.h>
 #include <osmocom/ranap/ranap_msg_factory.h>
@@ -1031,12 +1030,12 @@ static void handle_notice_ind(struct osmo_ss7_instance *cs7, const struct osmo_s
 
 	LOGPIU(LOGL_DEBUG, "(calling_addr=%s) N-NOTICE.ind cause=%u='%s' importance=%u\n",
 	       osmo_sccp_addr_dump(&ni->calling_addr),
-	       ni->cause, osmo_sccp_return_cause_name(ni->cause),
+	       ni->cause, osmo_sccp_return_reason_name(ni->cause),
 	       ni->importance);
 
 	switch (ni->cause) {
-	case SCCP_RETURN_CAUSE_SUBSYSTEM_CONGESTION:
-	case SCCP_RETURN_CAUSE_NETWORK_CONGESTION:
+	case OSMO_SCCP_RETURN_REASON_SUBSYSTEM_CONGESTION:
+	case OSMO_SCCP_RETURN_REASON_NETWORK_CONGESTION:
 		/* Transient failures (hopefully), keep going. */
 		return;
 	default:
@@ -1051,7 +1050,7 @@ static void handle_notice_ind(struct osmo_ss7_instance *cs7, const struct osmo_s
 		LOGPIU(LOGL_NOTICE,
 		       "RNC %s now unreachable: N-NOTICE.ind cause=%u='%s' importance=%u\n",
 		       osmo_rnc_id_name(&rnc->rnc_id),
-		       ni->cause, osmo_sccp_return_cause_name(ni->cause),
+		       ni->cause, osmo_sccp_return_reason_name(ni->cause),
 		       ni->importance);
 		llist_for_each_entry_safe(ue_ctx, ue_ctx_tmp, &ue_conn_ctx_list, list) {
 			if (ue_ctx->rnc != rnc)
